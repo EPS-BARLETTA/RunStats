@@ -1,119 +1,155 @@
-body {
-  font-family: "Segoe UI", sans-serif;
+/* Reset & Base */
+* {
+  box-sizing: border-box;
   margin: 0;
-  background: #f2f2f2;
-  color: #333;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
 }
 
-.container {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 1rem;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+body {
+  background: #f4f4f4;
+  color: #333;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
 }
 
 h1 {
-  text-align: center;
-  margin-bottom: 2rem;
-  color: #005089;
+  font-size: 2.5em;
+  color: #007acc;
 }
 
 h2 {
-  color: #333;
-  margin-top: 1rem;
+  font-size: 1.2em;
+  color: #555;
+  margin-top: 10px;
 }
 
-input[type="text"],
-input[type="number"] {
-  width: 100%;
-  padding: 0.6rem;
-  margin-bottom: 0.8rem;
+/* Input zone */
+.input-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+input {
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  min-width: 150px;
+  font-size: 1em;
 }
 
-.btns button,
-#groupe-actions button,
-.etatBtn {
-  padding: 0.6rem 1.2rem;
-  margin: 0.5rem 0.3rem;
+/* Chrono */
+#chrono {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#chronoDisplay {
+  font-size: 3em;
+  margin: 15px 0;
+}
+
+#chronoDisplay.red {
+  color: red;
+}
+
+/* Buttons */
+button {
+  padding: 10px 20px;
+  margin: 5px;
   border: none;
-  border-radius: 5px;
-  background-color: #005089;
+  background: #007acc;
   color: white;
-  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: 0.2s ease;
 }
 
-.btns button:hover,
-#groupe-actions button:hover,
-.etatBtn:hover {
-  background-color: #003c66;
+button:hover {
+  background: #005fa3;
+}
+
+button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+/* Stats */
+#stats {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#etatForme {
+  text-align: center;
+  margin: 20px 0;
 }
 
 .etatBtn {
-  font-size: 1.5rem;
-  background-color: #e0e0e0;
-  color: #333;
+  font-size: 1.2em;
+  margin: 5px;
 }
 
-.etatBtn.selected {
-  background-color: #00aa88;
+/* QR Code */
+#qrContainer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#qrCodeBox {
+  margin: auto;
+  padding: 20px;
+  background: white;
+  width: fit-content;
+  border: 1px solid #ccc;
+}
+
+/* Prof zone */
+#profDashboard {
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+#qr-reader {
+  margin: 20px auto;
+}
+
+#profAccess {
+  margin: 20px 0;
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 0.9em;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+table th {
+  background: #007acc;
   color: white;
-}
-
-.eleve-block {
-  background-color: #f9f9f9;
-  padding: 1rem;
-  margin-bottom: 2rem;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-}
-
-.chrono-block {
-  display: flex;
-  justify-content: space-between;
-  font-weight: bold;
-  margin-top: 0.5rem;
-}
-
-#groupe-actions {
-  text-align: center;
-  margin-top: 2rem;
-}
-
-#qrResult {
-  margin-top: 1rem;
-  text-align: center;
 }
 
 footer {
+  margin-top: 30px;
   text-align: center;
-  padding: 1rem;
-  background-color: #005089;
-  color: white;
-  font-size: 0.9rem;
-  margin-top: 2rem;
-  border-top: 4px solid #003c66;
-}
-
-@media screen and (max-width: 600px) {
-  .container {
-    margin: 1rem;
-    padding: 1rem;
-  }
-
-  .btns button,
-  #groupe-actions button {
-    width: 100%;
-    margin: 0.4rem 0;
-  }
-
-  .chrono-block {
-    flex-direction: column;
-    align-items: center;
-  }
+  font-size: 0.9em;
+  color: #666;
 }
