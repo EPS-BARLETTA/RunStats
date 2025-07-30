@@ -1,55 +1,79 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>RunStats</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RunStats - Binômes</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <main class="container">
-    <h1>RunStats</h1>
+  <div class="container">
+    <h1>RunStats – Binôme</h1>
 
-    <form id="studentForm">
-      <input type="text" id="nom" placeholder="Nom" required>
-      <input type="text" id="prenom" placeholder="Prénom" required>
-      <input type="text" id="classe" placeholder="Classe" required>
-      <input type="number" id="duree" placeholder="Durée (min)" required>
-      <input type="number" id="distanceTour" placeholder="Distance 1 tour (m)" required>
-      <input type="number" id="vmaRef" placeholder="VMA de référence (km/h)">
-    </form>
-
-    <div class="chrono-section">
-      <h2 id="chronoDisplay">00:00</h2>
-      <button id="startBtn">Démarrer</button>
-      <button id="lapBtn" disabled>+1 Tour</button>
-      <button id="resetBtn" disabled>Réinitialiser</button>
-    </div>
-
-    <div class="stats">
-      <p>Tours : <span id="lapsCount">0</span></p>
-      <p>Distance totale : <span id="distanceTotal">0</span> m</p>
-      <p>Distance (km) : <span id="distanceKm">0.00</span> km</p>
-      <p>Vitesse moyenne : <span id="vitesseMoy">0.00</span> km/h</p>
-      <p>VMA réalisée : <span id="vmaReal">0.00</span> km/h</p>
-    </div>
-
-    <div id="etatForme" style="display:none;">
-      <h3>Comment tu te sens ?</h3>
-      <div class="etat-options">
-        <button class="etatBtn" data-etat="Très bien">😄 Très bien</button>
-        <button class="etatBtn" data-etat="Bien">🙂 Bien</button>
-        <button class="etatBtn" data-etat="Moyen">😐 Moyen</button>
-        <button class="etatBtn" data-etat="Mal">😓 Mal</button>
+    <!-- Formulaire élève 1 -->
+    <div class="eleve-block">
+      <h2>Élève 1 (Coureur)</h2>
+      <input type="text" id="nom1" placeholder="Nom" />
+      <input type="text" id="prenom1" placeholder="Prénom" />
+      <input type="text" id="classe1" placeholder="Classe" />
+      <input type="number" id="duree1" placeholder="Durée (min)" />
+      <input type="number" id="distanceTour1" placeholder="Distance d’un tour (m)" />
+      <input type="number" id="vmaRef1" placeholder="VMA de référence (km/h)" />
+      <div class="chrono-block">
+        <p>Chrono : <span id="chronoDisplay1">00:00</span></p>
+        <p>Tours : <span id="lapsCount1">0</span></p>
+      </div>
+      <div class="btns">
+        <button id="startBtn1">Démarrer</button>
+        <button id="lapBtn1" disabled>+1 Tour</button>
+        <button id="resetBtn1">Reset</button>
+      </div>
+      <div id="etatForme1" class="etat-forme" style="display:none;">
+        <p>Sensations :</p>
+        <button class="etatBtn" data-eleve="1" data-etat="Très Bien">😄</button>
+        <button class="etatBtn" data-eleve="1" data-etat="Fatigué">😐</button>
+        <button class="etatBtn" data-eleve="1" data-etat="Mal">🤢</button>
       </div>
     </div>
-  </main>
+
+    <!-- Formulaire élève 2 -->
+    <div class="eleve-block">
+      <h2>Élève 2 (Observateur puis Coureur)</h2>
+      <input type="text" id="nom2" placeholder="Nom" />
+      <input type="text" id="prenom2" placeholder="Prénom" />
+      <input type="text" id="classe2" placeholder="Classe" />
+      <input type="number" id="duree2" placeholder="Durée (min)" />
+      <input type="number" id="distanceTour2" placeholder="Distance d’un tour (m)" />
+      <input type="number" id="vmaRef2" placeholder="VMA de référence (km/h)" />
+      <div class="chrono-block">
+        <p>Chrono : <span id="chronoDisplay2">00:00</span></p>
+        <p>Tours : <span id="lapsCount2">0</span></p>
+      </div>
+      <div class="btns">
+        <button id="startBtn2">Démarrer</button>
+        <button id="lapBtn2" disabled>+1 Tour</button>
+        <button id="resetBtn2">Reset</button>
+      </div>
+      <div id="etatForme2" class="etat-forme" style="display:none;">
+        <p>Sensations :</p>
+        <button class="etatBtn" data-eleve="2" data-etat="Très Bien">😄</button>
+        <button class="etatBtn" data-eleve="2" data-etat="Fatigué">😐</button>
+        <button class="etatBtn" data-eleve="2" data-etat="Mal">🤢</button>
+      </div>
+    </div>
+
+    <div class="groupe-actions">
+      <button id="generateQR">🎯 Générer QR Code du groupe</button>
+      <div id="qrResult"></div>
+    </div>
+  </div>
 
   <footer id="footer">
-    <p>© RunStats</p>
+    <p>Équipe EPS Lycée Vauban – JB</p>
   </footer>
 
+  <script src="https://unpkg.com/html5-qrcode"></script>
   <script src="script.js"></script>
 </body>
 </html>
