@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>RunStats</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -12,20 +12,38 @@
 
     <form id="formCourse">
       <div class="ligne-formulaire">
-        <input type="text" id="nom" placeholder="Nom Prénom Classe" required autocomplete="off"/>
-        <input type="number" id="duree" placeholder="Durée (min)" min="1" required />
-        <input type="number" id="distance" placeholder="Distance d’un tour (m)" min="1" required />
+        <input type="text" id="nom" placeholder="Nom Prénom Classe" required />
+        <input type="number" id="duree" placeholder="Durée (min)" required />
+        <input type="number" id="distance" placeholder="Distance d’un tour (m)" required />
       </div>
       <div class="ligne-formulaire">
-        <input type="number" id="vmaEleve" placeholder="VMA de référence (optionnel)" min="0" step="0.01" />
+        <input type="number" id="vmaEleve" placeholder="VMA de référence (optionnel)" />
       </div>
       <button type="submit">🎬 Démarrer</button>
+      <button type="button" id="resetBtn" style="margin-left: 10px;">🔁 Réinitialiser</button>
     </form>
 
-    <div id="interfaceCourse" style="display:none;"></div>
+    <div id="interfaceCourse" style="display: none;"></div>
 
     <button id="btnModeProf">👩‍🏫 Mode Professeur</button>
-    <div id="interfaceProf" style="display:none;"></div>
+    <div id="interfaceProf" style="display: none;">
+      <h3>Données scannées :</h3>
+      <button id="scanBtn">📷 Scanner un QR Code</button>
+      <table id="tableEleves">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Distance (m)</th>
+            <th>Temps (min)</th>
+            <th>Vitesse (km/h)</th>
+            <th>VMA</th>
+            <th>État</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <button id="exportBtn">⬇️ Exporter CSV</button>
+    </div>
 
     <footer id="signature">RunStats — Équipe EPS Lycée Vauban — JB</footer>
   </div>
