@@ -1,206 +1,209 @@
-// Variables globales
-let duree, longueurTour, nom, prenom, classe, vmaRef;
-let secondesRestantes, timerInterval, nbTours = 0;
-let etat = "";
-let resultatQR = "";
-let profPIN = localStorage.getItem("profPIN") || "0000";
-let tableauResultats = [];
+let chronoInterval, totalSecondes, secondesRestantes;
+let nbTours = 0, etatForme = "";
+let resultatsEleves = [];
+let currentPIN = "0000";
+let scanner;
 
-// ⏱️ Lancer la course
 function demarrerCourse() {
-  nom = document.getElementById("nom").value.trim();
-  prenom = document.getElementById("prenom").value.trim();
-  classe = document.getElementById("classe").value.trim();
-  duree = parseFloat(document.getElementById("duree").value);
-  longueurTour = parseFloat(document.getElementById("longueurTour").value);
-  vmaRef = parseFloat(document.getElementById("vmaRef").value) || null;
+  const nom = document.getElementById("nom").value.trim();
+  const prenom = document.getElementById("prenom").value.trim();
+  const classe = document.getElementById("classe").value.trim();
+  const duree = parseInt(document.getElementById("duree").value);
+  const longueurTour = parseFloat(document.getElementById("longueurTour").value);
 
   if (!nom || !prenom || !classe || !duree || !longueurTour) {
-    alert("Merci de remplir tous les champs.");
+    alert("Merci de remplir tous les champs obligatoires.");
     return;
   }
 
-  secondesRestantes = duree * 60;
   nbTours = 0;
-  etat = "";
-  updateChrono();
-
+  totalSecondes = duree * 60;
+  secondesRestantes = totalSecondes;
+  etatForme = "";
   document.getElementById("courseSection").style.display = "block";
   document.getElementById("resultats").style.display = "none";
-  document.getElementById("infosCourse").innerText = "Tours : 0 — Distance : 0 m";
+  updateChrono();
+  updateInfosCourse();
 
-  timerInterval = setInterval(() => {
+  chronoInterval = setInterval(() => {
     secondesRestantes--;
     updateChrono();
     if (secondesRestantes <= 0) {
-      clearInterval(timerInterval);
-      finCourse();
+      clearInterval(chronoInterval);
+      afficherResultats();
     }
   }, 1000);
 }
 
 function updateChrono() {
-  const chrono = document.getElementById("chrono");
   const minutes = Math.floor(secondesRestantes / 60);
   const secondes = secondesRestantes % 60;
-  chrono.innerText = `${minutes.toString().padStart(2, '0')}:${secondes.toString().padStart(2, '0')}`;
+  const chrono = document.getElementById("chrono");
+  chrono.innerText = `${minutes.toString().padStart(2, "0")}:${secondes.toString().padStart(2, "0")}`;
   chrono.style.color = secondesRestantes <= 10 ? "red" : "black";
 }
 
 function compterTour() {
   nbTours++;
-  const distance = nbTours * longueurTour;
-  document.getElementById("infosCourse").innerText = `Tours : ${nbTours} — Distance : ${distance} m`;
+  updateInfosCourse();
+}
+
+function updateInfosCourse() {
+  const longueurTour = parseFloat(document.getElementById("longueurTour").value);
+  const distanceTotale = nbTours * longueurTour;
+  document.getElementById("infosCourse").innerText =
+    `Tours : ${nbTours} — Distance : ${distanceTotale} m (${(distanceTotale / 1000).toFixed(2)} km)`;
 }
 
 function resetCourse() {
-  clearInterval(timerInterval);
+  clearInterval(chronoInterval);
   nbTours = 0;
   secondesRestantes = 0;
   document.getElementById("courseSection").style.display = "none";
   document.getElementById("resultats").style.display = "none";
+  document.getElementById("infosCourse").innerText = "";
+  document.getElementById("resumeCourse").innerText = "";
+  document.getElementById("qrContainer").innerHTML = "";
 }
 
-function setEtat(e) {
-  etat = e;
-  document.getElementById("qrContainer").innerHTML = "QR généré ci-dessous.";
-  genererQRCode();
-}
+function afficherResultats() {
+  const nom = document.getElementById("nom").value.trim();
+  const prenom = document.getElementById("prenom").value.trim();
+  const classe = document.getElementById("classe").value.trim();
+  const longueurTour = parseFloat(document.getElementById("longueurTour").value);
+  const duree = parseInt(document.getElementById("duree").value);
+  const vmaRef = parseFloat(document.getElementById("vmaRef").value);
 
-// 🏁 Fin de la course
-function finCourse() {
+  const distanceTotale = nbTours * longueurTour;
+  const vitesseMoyenne = (distanceTotale / 1000) / (duree / 60); // en km/h
+  const vmaEstimee = vitesseMoyenne / 0.9;
+
   document.getElementById("courseSection").style.display = "none";
   document.getElementById("resultats").style.display = "block";
-
-  const distanceM = nbTours * longueurTour;
-  const distanceKm = distanceM / 1000;
-  const vitesse = (distanceKm / (duree / 60)).toFixed(2);
-  const vmaReelle = (distanceM / duree).toFixed(2); // m/min
-
-  let comparaison = "";
-  if (vmaRef) {
-    const ecart = (vmaReelle - vmaRef).toFixed(2);
-    comparaison = `<br>VMA estimée : ${vmaReelle} m/min — Référence : ${vmaRef} m/min (${ecart > 0 ? "+" : ""}${ecart})`;
-  }
-
   document.getElementById("resumeCourse").innerHTML = `
-    <p><strong>${prenom} ${nom} — ${classe}</strong></p>
-    <p>Durée : ${duree} min — Tours : ${nbTours}</p>
-    <p>Distance : ${distanceM} m (${distanceKm.toFixed(2)} km)</p>
-    <p>Vitesse moyenne : ${vitesse} km/h</p>
-    ${comparaison}
+    Nom : ${nom} ${prenom} (${classe})<br>
+    Temps : ${duree} min — Distance : ${distanceTotale} m<br>
+    Vitesse moyenne : ${vitesseMoyenne.toFixed(2)} km/h<br>
+    VMA estimée : ${vmaEstimee.toFixed(2)} km/h ${vmaRef ? `(Réf : ${vmaRef} km/h)` : ""}
   `;
 }
 
-// 📱 QR Code élève
-function genererQRCode() {
-  const distance = nbTours * longueurTour;
-  const vmaReelle = (distance / duree).toFixed(2);
-  const vitesse = ((distance / 1000) / (duree / 60)).toFixed(2);
+function setEtat(emoji) {
+  etatForme = emoji;
+  document.getElementById("resumeCourse").innerHTML += `<br>État ressenti : ${emoji}`;
+  const nom = document.getElementById("nom").value.trim();
+  const prenom = document.getElementById("prenom").value.trim();
+  const classe = document.getElementById("classe").value.trim();
+  const duree = parseInt(document.getElementById("duree").value);
+  const longueurTour = parseFloat(document.getElementById("longueurTour").value);
+  const distanceTotale = nbTours * longueurTour;
+  const vitesse = (distanceTotale / 1000) / (duree / 60);
+  const vmaEstimee = vitesse / 0.9;
 
   const data = {
-    nom, prenom, classe, duree,
-    distance, vitesse, vmaReelle, etat
+    nom, prenom, classe, duree, tours: nbTours, distance: distanceTotale,
+    vitesse: vitesse.toFixed(2), vma: vmaEstimee.toFixed(2), etat: emoji
   };
-  const json = JSON.stringify(data);
-  const qrURL = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(json)}&size=200x200`;
 
-  document.getElementById("qrContainer").innerHTML = `<img src="${qrURL}" alt="QR Code élève" />`;
+  generateQRCode(data);
 }
 
-// 🔐 Mode Prof : Vérification PIN
+function generateQRCode(data) {
+  const json = JSON.stringify(data);
+  const container = document.getElementById("qrContainer");
+  container.innerHTML = "";
+  const qr = document.createElement("img");
+  qr.src = "https://api.qrserver.com/v1/create-qr-code/?data=" + encodeURIComponent(json) + "&size=200x200";
+  container.appendChild(qr);
+}
+
 function checkProfPIN() {
-  const saisie = document.getElementById("inputProfPIN").value;
-  if (saisie === profPIN) {
-    document.getElementById("profLogin").style.display = "none";
+  const pin = document.getElementById("inputProfPIN").value;
+  if (pin === currentPIN) {
     document.getElementById("profDashboard").style.display = "block";
-    renderProfTable();
+    document.getElementById("profLogin").style.display = "none";
   } else {
     alert("Code incorrect.");
   }
 }
 
 function changeProfPIN() {
-  const nouveauPIN = document.getElementById("inputNewPIN").value;
-  if (/^\d{4}$/.test(nouveauPIN)) {
-    profPIN = nouveauPIN;
-    localStorage.setItem("profPIN", nouveauPIN);
-    alert("Code modifié !");
+  const newPIN = document.getElementById("inputNewPIN").value;
+  if (newPIN.length === 4 && /^\d+$/.test(newPIN)) {
+    currentPIN = newPIN;
+    alert("Code PIN mis à jour.");
+    document.getElementById("inputNewPIN").value = "";
   } else {
-    alert("Code PIN invalide (4 chiffres).");
+    alert("Code invalide.");
   }
 }
 
-// 📷 Scan QR
 function startQRScanner() {
-  const scan = prompt("Collez ici le texte du QR code scanné (simulateur)");
-  if (!scan) return;
+  if (!scanner) {
+    scanner = new Html5Qrcode("qr-reader");
+  }
+  scanner.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: 250 },
+    (decodedText) => {
+      try {
+        const data = JSON.parse(decodedText);
+        addResult(data);
+        scanner.stop();
+        document.getElementById("qr-reader").innerHTML = "";
+      } catch (e) {
+        alert("QR code invalide");
+      }
+    },
+    (err) => {
+      console.warn(err);
+    }
+  );
+}
 
-  try {
-    const data = JSON.parse(scan);
-    tableauResultats.push(data);
-    tableauResultats.sort((a, b) => a.nom.localeCompare(b.nom));
-    renderProfTable();
-  } catch (e) {
-    alert("QR invalide");
+function stopQRScanner() {
+  if (scanner) {
+    scanner.stop().then(() => {
+      document.getElementById("qr-reader").innerHTML = "";
+    });
   }
 }
 
-// 🧾 Affichage tableau prof
-function renderProfTable() {
+function addResult(data) {
+  resultatsEleves.push(data);
+  afficherTableau();
+}
+
+function afficherTableau() {
+  resultatsEleves.sort((a, b) => a.nom.localeCompare(b.nom));
   const table = document.getElementById("profResultsTable");
-  if (tableauResultats.length === 0) {
-    table.innerHTML = "<tr><td>Aucun résultat scanné</td></tr>";
-    return;
-  }
-
-  let html = `
-    <tr>
-      <th>Nom</th><th>Prénom</th><th>Classe</th>
-      <th>Distance (m)</th><th>Durée (min)</th>
-      <th>Vitesse (km/h)</th><th>VMA (m/min)</th><th>État</th>
-    </tr>
-  `;
-
-  tableauResultats.forEach(r => {
-    html += `
-      <tr>
-        <td>${r.nom}</td><td>${r.prenom}</td><td>${r.classe}</td>
-        <td>${r.distance}</td><td>${r.duree}</td>
-        <td>${r.vitesse}</td><td>${r.vmaReelle}</td><td>${r.etat}</td>
-      </tr>
-    `;
+  table.innerHTML = "<tr><th>Nom</th><th>Classe</th><th>Distance</th><th>Vitesse</th><th>VMA</th><th>État</th></tr>";
+  resultatsEleves.forEach(e => {
+    table.innerHTML += `<tr>
+      <td>${e.nom} ${e.prenom}</td>
+      <td>${e.classe}</td>
+      <td>${e.distance} m</td>
+      <td>${e.vitesse} km/h</td>
+      <td>${e.vma} km/h</td>
+      <td>${e.etat}</td>
+    </tr>`;
   });
-
-  table.innerHTML = html;
 }
 
-// 💾 Export CSV
 function exportCSV() {
-  if (tableauResultats.length === 0) return alert("Aucune donnée à exporter.");
-
-  const lignes = [
-    ["Nom", "Prénom", "Classe", "Distance (m)", "Durée (min)", "Vitesse (km/h)", "VMA (m/min)", "État"]
-  ];
-
-  tableauResultats.forEach(r => {
-    lignes.push([r.nom, r.prenom, r.classe, r.distance, r.duree, r.vitesse, r.vmaReelle, r.etat]);
+  let csv = "Nom,Prénom,Classe,Distance (m),Vitesse (km/h),VMA,État\n";
+  resultatsEleves.forEach(e => {
+    csv += `${e.nom},${e.prenom},${e.classe},${e.distance},${e.vitesse},${e.vma},${e.etat}\n`;
   });
-
-  const csvContent = lignes.map(l => l.join(",")).join("\n");
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const blob = new Blob([csv], { type: "text/csv" });
   const url = URL.createObjectURL(blob);
-
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "RunStats_Prof_Results.csv";
-  link.click();
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "RunStats_Prof_Results.csv";
+  a.click();
 }
 
-// ♻️ Reset tableau
 function resetProfData() {
-  if (confirm("Effacer tous les résultats ?")) {
-    tableauResultats = [];
-    renderProfTable();
-  }
+  resultatsEleves = [];
+  afficherTableau();
 }
