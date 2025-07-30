@@ -2,110 +2,94 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RunStats - Binômes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RunStats - Équipe EPS Vauban</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body>
 
-  <div class="container">
-    <h1>RunStats – Binôme</h1>
+  <header>
+    <h1>RunStats</h1>
+    <h2>Équipe EPS Lycée Vauban - JB</h2>
+  </header>
 
-    <!-- Formulaire élève 1 -->
-    <div class="eleve-block">
-      <h2>Élève 1 (Coureur)</h2>
-      <input type="text" id="nom1" placeholder="Nom" />
-      <input type="text" id="prenom1" placeholder="Prénom" />
-      <input type="text" id="classe1" placeholder="Classe" />
-      <input type="number" id="duree1" placeholder="Durée (min)" />
-      <input type="number" id="distanceTour1" placeholder="Distance d’un tour (m)" />
-      <input type="number" id="vmaRef1" placeholder="VMA de référence (km/h)" />
-      <div class="chrono-block">
-        <p>Chrono : <span id="chronoDisplay1">00:00</span></p>
-        <p>Tours : <span id="lapsCount1">0</span></p>
-      </div>
-      <div class="btns">
-        <button id="startBtn1">Démarrer</button>
-        <button id="lapBtn1" disabled>+1 Tour</button>
-        <button id="resetBtn1">Reset</button>
-      </div>
-      <div id="etatForme1" class="etat-forme" style="display:none;">
-        <p>Sensations :</p>
-        <button class="etatBtn" data-eleve="1" data-etat="Très Bien">😄</button>
-        <button class="etatBtn" data-eleve="1" data-etat="Fatigué">😐</button>
-        <button class="etatBtn" data-eleve="1" data-etat="Mal">🤢</button>
-      </div>
+  <main id="studentInput">
+    <div class="input-group">
+      <input type="text" id="nom" placeholder="Nom" />
+      <input type="text" id="prenom" placeholder="Prénom" />
+      <input type="text" id="classe" placeholder="Classe" />
+    </div>
+    <div class="input-group">
+      <input type="number" id="duree" placeholder="Durée de la course (min)" />
+      <input type="number" id="distanceTour" placeholder="Distance 1 tour (m)" />
+      <input type="number" id="vmaRef" placeholder="VMA de référence (km/h)" />
     </div>
 
-    <!-- Formulaire élève 2 -->
-    <div class="eleve-block">
-      <h2>Élève 2 (Observateur puis Coureur)</h2>
-      <input type="text" id="nom2" placeholder="Nom" />
-      <input type="text" id="prenom2" placeholder="Prénom" />
-      <input type="text" id="classe2" placeholder="Classe" />
-      <input type="number" id="duree2" placeholder="Durée (min)" />
-      <input type="number" id="distanceTour2" placeholder="Distance d’un tour (m)" />
-      <input type="number" id="vmaRef2" placeholder="VMA de référence (km/h)" />
-      <div class="chrono-block">
-        <p>Chrono : <span id="chronoDisplay2">00:00</span></p>
-        <p>Tours : <span id="lapsCount2">0</span></p>
-      </div>
-      <div class="btns">
-        <button id="startBtn2">Démarrer</button>
-        <button id="lapBtn2" disabled>+1 Tour</button>
-        <button id="resetBtn2">Reset</button>
-      </div>
-      <div id="etatForme2" class="etat-forme" style="display:none;">
-        <p>Sensations :</p>
-        <button class="etatBtn" data-eleve="2" data-etat="Très Bien">😄</button>
-        <button class="etatBtn" data-eleve="2" data-etat="Fatigué">😐</button>
-        <button class="etatBtn" data-eleve="2" data-etat="Mal">🤢</button>
-      </div>
+    <div id="chrono">
+      <p id="chronoDisplay">00:00</p>
+      <button id="startBtn">Démarrer</button>
+      <button id="lapBtn" disabled>Ajouter 1 tour</button>
+      <button id="resetBtn" disabled>Reset</button>
+      <p>Tours : <span id="lapsCount">0</span></p>
     </div>
 
-    <div class="groupe-actions">
-      <button id="generateQR">🎯 Générer QR Code du groupe</button>
-      <div id="qrResult"></div>
+    <div id="stats">
+      <p>Distance totale : <span id="distanceTotal">0</span> m</p>
+      <p>Distance (km) : <span id="distanceKm">0.00</span> km</p>
+      <p>Vitesse moyenne : <span id="vitesseMoy">0.00</span> km/h</p>
+      <p>VMA estimée : <span id="vmaReal">0.00</span> km/h</p>
     </div>
+
+    <div id="etatForme" style="display: none;">
+      <p>Comment te sens-tu ?</p>
+      <button class="etatBtn" data-etat="Très bien">💪 Très bien</button>
+      <button class="etatBtn" data-etat="Moyen">😐 Moyen</button>
+      <button class="etatBtn" data-etat="Fatigué">😫 Fatigué</button>
+    </div>
+
+    <div id="qrContainer" style="display: none;">
+      <h3>QR Code à scanner par le professeur</h3>
+      <div id="qrCodeBox"></div>
+    </div>
+  </main>
+
+  <main id="profDashboard" style="display: none;">
+    <h2>Espace Professeur</h2>
+
+    <div id="qr-scan-container">
+      <div id="qr-reader" style="width: 300px; margin: auto;"></div>
+      <button id="stopScanBtn">Arrêter le scan</button>
+    </div>
+
+    <button id="exportCsvBtn">Exporter en CSV</button>
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Classe</th>
+          <th>Durée</th>
+          <th>Distance</th>
+          <th>Vitesse</th>
+          <th>VMA</th>
+          <th>État</th>
+        </tr>
+      </thead>
+      <tbody id="resultsBody"></tbody>
+    </table>
+  </main>
+
+  <div id="profAccess">
+    <input type="password" id="profPinInput" placeholder="Code Prof" />
+    <button id="profPinSubmit">Entrer</button>
+    <button id="changePinBtn" style="display:none;">Changer le code PIN</button>
   </div>
 
   <footer id="footer">
-    <p>Équipe EPS Lycée Vauban – JB</p>
+    <p>RunStats – Équipe EPS Vauban</p>
   </footer>
 
-  <script src="https://unpkg.com/html5-qrcode"></script>
   <script src="script.js"></script>
-  <!-- Mode Prof -->
-<div id="profSection" style="display: none;">
-  <h2>👨‍🏫 Mode Prof</h2>
-
-  <div id="qr-reader" style="width: 250px;"></div>
-  <button id="stopScanBtn">Arrêter le scan</button>
-
-  <h3>Groupes scannés</h3>
-  <table id="profTable" border="1">
-    <thead>
-      <tr>
-        <th>Nom</th>
-        <th>Prénom</th>
-        <th>VMA</th>
-        <th>État</th>
-        <th>Chrono</th>
-      </tr>
-    </thead>
-    <tbody id="profTableBody"></tbody>
-  </table>
-
-  <button id="genererGroupesBtn">Générer groupes hétérogènes</button>
-  <button id="exportGroupesBtn">Exporter CSV</button>
-
-  <div id="groupesFinal"></div>
-</div>
-
-<!-- Bouton secret d’accès prof -->
-<footer id="footer" style="text-align: center; margin-top: 2rem;">
-  <small>Application équipe EPS Lycée Vauban - JB</small>
-</footer>
-  <script src="https://unpkg.com/html5-qrcode"></script>
 </body>
 </html>
