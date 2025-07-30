@@ -4,7 +4,6 @@ body {
   padding: 0;
   background: #f3f6fa;
 }
-
 .overlay {
   background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Running_track.svg/1024px-Running_track.svg.png');
   background-size: cover;
@@ -14,7 +13,6 @@ body {
   opacity: 0.08;
   z-index: -1;
 }
-
 .container {
   max-width: 600px;
   margin: 40px auto;
@@ -23,19 +21,16 @@ body {
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
-
 h1 {
   text-align: center;
   color: #1d4ed8;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
-
 label {
   font-weight: bold;
   display: block;
   margin-top: 15px;
 }
-
 input {
   width: 100%;
   padding: 10px;
@@ -44,26 +39,20 @@ input {
   border: 1px solid #ccc;
   border-radius: 6px;
 }
-
 .double-input {
   display: flex;
   gap: 10px;
 }
-
-.double-input input {
-  flex: 1;
-}
-
+.double-input input { flex: 1; }
 .boutons {
   margin-top: 20px;
   display: flex;
   gap: 15px;
 }
-
 button {
   flex: 1;
   padding: 14px;
-  font-size: 16px;
+  font-size: 18px;
   border: none;
   background-color: #1d4ed8;
   color: white;
@@ -71,39 +60,28 @@ button {
   cursor: pointer;
   transition: background 0.3s;
 }
-
-button:hover {
-  background-color: #153cc1;
-}
-
+button:hover { background-color: #153cc1; }
 .chrono {
   margin-top: 30px;
   font-size: 24px;
   text-align: center;
   font-weight: bold;
 }
-
-.chrono.red {
-  color: #dc2626;
-}
-
+.chrono.red { color: #dc2626; }
 .actions {
   margin-top: 20px;
   text-align: center;
 }
-
 .actions button {
   width: 100%;
   font-size: 20px;
   background-color: #10b981;
 }
-
 .resultats {
   margin-top: 30px;
   text-align: center;
   font-size: 18px;
 }
-
 .final {
   margin-top: 30px;
   background-color: #e9f5e9;
@@ -112,7 +90,10 @@ button:hover {
   font-size: 16px;
   color: #2c662d;
 }
-
+.bouton-csv {
+  margin-top: 20px;
+  text-align: center;
+}
 footer {
   position: fixed;
   bottom: 10px;
