@@ -1,31 +1,47 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculateur de performance</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Suivi de Course - EPS</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="overlay"></div>
+
   <div class="container">
-    <h1>Calculateur de performance</h1>
+    <h1>Suivi de Course</h1>
 
-    <form id="perfForm">
-      <label for="distance">Distance d'un tour (en mètres) :</label>
-      <input type="number" id="distance" required placeholder="ex : 400" />
+    <div class="formulaire">
+      <div class="double-input">
+        <label>Temps de course :</label>
+        <input type="number" id="tempsMinutes" placeholder="Min" min="0" />
+        <input type="number" id="tempsSecondes" placeholder="Sec" min="0" max="59" />
+      </div>
 
-      <label for="tours">Nombre de tours effectués :</label>
-      <input type="number" id="tours" required placeholder="ex : 5" />
+      <label>Distance d'un tour (en mètres) :</label>
+      <input type="number" id="distanceTour" placeholder="ex : 400" min="1" />
 
-      <label for="temps">Temps total (en secondes) :</label>
-      <input type="number" id="temps" required placeholder="ex : 480" />
-
-      <button type="submit">Calculer</button>
-    </form>
-
-    <div class="resultats" id="resultats">
-      <!-- Résultats affichés ici -->
+      <div class="boutons">
+        <button onclick="startChrono()">▶️ Lancer</button>
+        <button onclick="resetApp()">🔁 Réinitialiser</button>
+      </div>
     </div>
+
+    <div class="chrono" id="chronoBloc">
+      ⏳ Temps restant : <span id="affichageTemps">--:--</span>
+    </div>
+
+    <div class="actions">
+      <button onclick="ajouterTour()" id="tourBtn" disabled>➕ Ajouter un tour</button>
+    </div>
+
+    <div class="resultats">
+      <p><strong>Tours :</strong> <span id="nbTours">0</span></p>
+      <p><strong>Distance :</strong> <span id="distanceTotale">0</span> m</p>
+    </div>
+
+    <div class="final" id="resumeFinal"></div>
   </div>
 
   <footer>
