@@ -1,93 +1,121 @@
-let tours = 0, distance = 0, timer, secondesRestantes = 0;
+let tours = 0;
+let chronoInterval;
+let tempsRestant;
+let distance = 0;
+let resultats = [];
 
 function startChrono() {
-  const nom = document.getElementById("nomEleve").value.trim() || "Inconnu";
-  const min = parseInt(document.getElementById("tempsMinutes").value) || 0;
-  const sec = parseInt(document.getElementById("tempsSecondes").value) || 0;
-  const distanceInput = parseFloat(document.getElementById("distanceTour").value);
+  const nom = document.getElementById("nomEleve").value.trim();
+  const temps = parseFloat(document.getElementById("tempsCourse").value);
+  distance = parseFloat(document.getElementById("distanceTour").value);
+  const vmaInput = parseFloat(document.getElementById("vmaEleve").value);
 
-  if (min < 0 || sec < 0 || sec > 59 || distanceInput <= 0) {
-    alert("Merci de saisir des valeurs valides.");
-    return;
-  }
-  distance = distanceInput;
-  secondesRestantes = min * 60 + sec;
-  if (secondesRestantes <= 0) {
-    alert("Le temps doit être supérieur à 0.");
+  if (!nom || isNaN(temps) || isNaN(distance) || temps <= 0 || distance <= 0) {
+    alert("Merci de remplir correctement tous les champs obligatoires.");
     return;
   }
 
-  document.getElementById("tourBtn").disabled = false;
-  document.getElementById("affichageTemps").textContent = formatTemps(secondesRestantes);
+  tours = 0;
+  document.getElementById("nbTours").textContent = "0";
+  document.getElementById("resumeFinal").innerHTML = "";
+  document.getElementById("boutonsFinaux").style.display = "none";
 
-  timer = setInterval(() => {
-    secondesRestantes--;
-    document.getElementById("affichageTemps").textContent = formatTemps(secondesRestantes);
-    if (secondesRestantes <= 10) document.getElementById("chronoBloc").classList.add("red");
-    if (secondesRestantes <= 0) {
-      clearInterval(timer);
-      document.getElementById("tourBtn").disabled = true;
-      afficherResumeFinal(nom);
+  tempsRestant = temps * 60;
+  updateChronoDisplay();
+  document.getElementById("chronoSection").style.display = "block";
+
+  chronoInterval = setInterval(() => {
+    tempsRestant--;
+    updateChronoDisplay();
+    if (tempsRestant <= 0) {
+      clearInterval(chronoInterval);
+      afficherResumeFinal(nom, temps * 60);
     }
   }, 1000);
+}
+
+function updateChronoDisplay() {
+  const minutes = Math.floor(tempsRestant / 60);
+  const secondes = tempsRestant % 60;
+  document.getElementById("chrono").textContent =
+    String(minutes).padStart(2, "0") + ":" + String(secondes).padStart(2, "0");
 }
 
 function ajouterTour() {
   tours++;
   document.getElementById("nbTours").textContent = tours;
-  document.getElementById("distanceTotale").textContent = tours * distance;
 }
 
-function resetApp() {
-  clearInterval(timer);
-  tours = distance = secondesRestantes = 0;
-  ["affichageTemps", "nbTours", "distanceTotale", "resumeFinal"].forEach(id => {
-    document.getElementById(id).textContent = id === "resumeFinal" ? "" : (id === "affichageTemps" ? "--:--" : "0");
-  });
-  ["tempsMinutes", "tempsSecondes", "distanceTour", "nomEleve"].forEach(id => {
-    document.getElementById(id).value = "";
-  });
-  document.getElementById("tourBtn").disabled = true;
-  document.getElementById("chronoBloc").classList.remove("red");
-  document.getElementById("boutonCSV").innerHTML = "";
-}
-
-function afficherResumeFinal(nom) {
+function afficherResumeFinal(nom, tempsTotalSec) {
   const distanceFinale = tours * distance;
-  const totalSec = (parseInt(document.getElementById("tempsMinutes").value) || 0) * 60 +
-                    (parseInt(document.getElementById("tempsSecondes").value) || 0);
-  const vitesseMps = (distanceFinale / totalSec).toFixed(2);
-  const vitesseKmh = ((distanceFinale / 1000) / (totalSec / 3600)).toFixed(2);
+  const vitesseKmh = ((distanceFinale / 1000) / (tempsTotalSec / 3600)).toFixed(2);
+
+  const vmaInput = parseFloat(document.getElementById("vmaEleve").value);
+  let intensiteTexte = "";
+  let vmaAffichee = "";
+
+  if (!isNaN(vmaInput) && vmaInput > 0) {
+    const intensite = ((vitesseKmh / vmaInput) * 100).toFixed(0);
+    intensiteTexte = `<p>Intensité : <strong>${intensite}%</strong> de la VMA (${vmaInput} km/h)</p>`;
+    vmaAffichee = vmaInput.toFixed(2);
+  }
 
   document.getElementById("resumeFinal").innerHTML = `
     <h3>Résumé de course</h3>
     <p>Élève observé : <strong>${nom}</strong></p>
     <p>Distance totale : ${distanceFinale} m</p>
-    <p>Vitesse moyenne : ${vitesseMps} m/s (${vitesseKmh} km/h)</p>
+    <p>Vitesse moyenne : ${vitesseKmh} km/h</p>
+    ${intensiteTexte}
   `;
 
-  creerBoutonCSV(nom, distanceFinale, vitesseKmh);
+  document.getElementById("boutonsFinaux").style.display = "flex";
+
+  resultats.push({
+    date: new Date().toLocaleString('fr-FR'),
+    nom: nom,
+    tours: tours,
+    distance: distanceFinale,
+    vitesse: vitesseKmh,
+    vma: vmaAffichee
+  });
 }
 
-function formatTemps(sec) {
-  const min = Math.floor(sec / 60);
-  const s = sec % 60;
-  return `${min}:${s.toString().padStart(2, '0')}`;
+function reset() {
+  document.getElementById("chronoSection").style.display = "none";
+  document.getElementById("nomEleve").value = "";
+  document.getElementById("tempsCourse").value = "";
+  document.getElementById("distanceTour").value = "";
+  document.getElementById("vmaEleve").value = "";
+  document.getElementById("resumeFinal").innerHTML = "";
+  document.getElementById("boutonsFinaux").style.display = "none";
 }
 
-function creerBoutonCSV(nom, distanceFinale, vitesseKmh) {
-  const date = new Date().toLocaleString('fr-FR');
-  const header = ['Date', 'Élève', 'Tours', 'Distance_m', 'Vitesse_kmh'];
-  const data = [date, nom, tours, distanceFinale, vitesseKmh];
-  const csvContent = [header, data].map(e => e.join(',')).join('\n');
+function telechargerTous() {
+  if (resultats.length === 0) {
+    alert("Aucun résultat à télécharger.");
+    return;
+  }
 
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const headers = ["Date", "Élève", "Tours", "Distance_m", "Vitesse_kmh", "VMA_kmh"];
+  const lignes = resultats.map(r => [r.date, r.nom, r.tours, r.distance, r.vitesse, r.vma || ""]);
+
+  let csv = headers.join(",") + "\n";
+  lignes.forEach(ligne => {
+    csv += ligne.join(",") + "\n";
+  });
+
+  const blob = new Blob([csv], { type: "text/csv" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
-  a.download = `resultat_${nom}_${Date.now()}.csv`;
-  a.textContent = '📥 Télécharger les résultats';
-  a.className = 'csv-btn';
-  document.getElementById('boutonCSV').innerHTML = '';
-  document.getElementById('boutonCSV').appendChild(a);
+  a.download = "resultats_RunStats.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function viderResultats() {
+  if (confirm("Effacer tous les résultats enregistrés ?")) {
+    resultats = [];
+    alert("Session vidée.");
+  }
 }
