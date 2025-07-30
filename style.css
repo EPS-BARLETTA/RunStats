@@ -1,154 +1,60 @@
 body {
-  font-family: "Segoe UI", sans-serif;
-  background: linear-gradient(to bottom right, #e0f7fa, #80deea);
+  font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
+  background: #f2f2f2;
+  color: #333;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
 }
 
-.app-container {
+.container {
+  max-width: 500px;
+  width: 90%;
   background: white;
   padding: 20px;
-  margin: 30px auto;
-  max-width: 600px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
-  width: 90%;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-  text-align: center;
-  color: #00796b;
-  font-size: 1.8em;
-  margin-bottom: 20px;
-}
-
-.input-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.input-row input {
-  flex: 1;
+input {
+  display: block;
+  width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  margin: 8px 0;
+  box-sizing: border-box;
 }
 
-.controls {
-  text-align: center;
-  margin: 20px 0;
-}
-
-.controls button {
-  margin: 5px;
-  padding: 10px 16px;
-  font-size: 1em;
-  border: none;
-  border-radius: 6px;
-  background-color: #00796b;
-  color: white;
+button {
+  padding: 10px 15px;
+  margin: 10px 5px 0;
+  font-size: 16px;
   cursor: pointer;
 }
 
-.controls button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.chrono {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
 #chronoDisplay {
-  font-size: 2.5em;
-  margin: 10px 0;
-  color: #00796b;
+  font-size: 48px;
+  margin: 20px 0;
 }
 
-#chronoDisplay.red {
+.red {
   color: red;
   font-weight: bold;
 }
 
-#etatForme {
-  text-align: center;
-  margin: 20px 0;
-}
-
-.etatBtn {
-  font-size: 1.5em;
-  margin: 5px;
-  padding: 10px;
-  background-color: #eee;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-#qrCodeContainer {
-  text-align: center;
-  margin: 20px 0;
-}
-
-#profAccess {
-  text-align: center;
+.stats {
   margin-top: 20px;
 }
 
-#profAccess button {
-  background-color: #f57c00;
-  padding: 10px 20px;
-  font-size: 1em;
-  border-radius: 6px;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-#profDashboard {
-  margin-top: 30px;
-}
-
-#profDashboard input,
-#profDashboard button {
+.etat-options button {
   margin: 5px;
-  padding: 8px;
-  font-size: 1em;
-}
-
-#qr-reader {
-  margin: 20px auto;
-  width: 100%;
-  max-width: 300px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  font-size: 0.95em;
-}
-
-th, td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: center;
-}
-
-th {
-  background-color: #b2dfdb;
+  font-size: 18px;
 }
 
 footer {
-  text-align: center;
   margin-top: 30px;
-  font-size: 0.8em;
-  color: #555;
+  font-size: 14px;
+  color: #777;
 }
