@@ -12,9 +12,9 @@ h1 {
 
 .ligne-formulaire {
   display: flex;
-  flex-wrap: wrap;
   gap: 1rem;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
 }
 
 input {
@@ -22,28 +22,90 @@ input {
   padding: 0.5rem;
   font-size: 1rem;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 button {
-  padding: 0.6rem 1rem;
-  font-size: 1rem;
+  padding: 0.7rem 1.5rem;
+  font-size: 1.1rem;
   background-color: #0077cc;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
-  margin: 0.5rem 0;
+  margin-top: 0.5rem;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
   background-color: #005fa3;
 }
 
+#interfaceCourse {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+#interfaceCourse button {
+  font-size: 2rem;
+  padding: 1rem 3rem;
+  margin: 1rem 0;
+  background-color: #00aaff;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+#interfaceCourse button:hover {
+  background-color: #0077cc;
+  color: white;
+}
+
+#chrono {
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+#chrono.alerte {
+  color: red;
+  font-weight: 900;
+}
+
+#finCourse {
+  margin-top: 1.5rem;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#interfaceProf {
+  margin-top: 2rem;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+  padding: 0.5rem 1rem;
+  text-align: center;
+}
+
+th {
+  background-color: #0077cc;
+  color: white;
+}
+
 #signature {
   position: fixed;
   bottom: 10px;
   right: 10px;
-  color: #999;
+  color: #aaa;
   font-size: 0.9rem;
+  user-select: none;
 }
