@@ -3,53 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RunSats</title>
+  <title>RunStats</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="overlay"></div>
   <div class="container">
     <h1>RunStats</h1>
 
-    <div class="formulaire">
-      <label>Nom de l’élève observé :</label>
-      <input type="text" id="nomEleve" placeholder="ex : Martin" />
+    <label>Nom de l'élève observé :</label>
+    <input type="text" id="nomEleve" placeholder="Nom"/>
 
-      <div class="double-input">
-        <label>Temps de course :</label>
-        <input type="number" id="tempsMinutes" placeholder="Min" min="0" />
-        <input type="number" id="tempsSecondes" placeholder="Sec" min="0" max="59" />
-      </div>
+    <label>Durée de la course (en minutes) :</label>
+    <input type="number" id="tempsCourse" placeholder="ex : 6" min="1" />
 
-      <label>Distance d'un tour (en mètres) :</label>
-      <input type="number" id="distanceTour" placeholder="ex : 400" min="1" />
+    <label>Distance d'un tour (en mètres) :</label>
+    <input type="number" id="distanceTour" placeholder="ex : 200" min="1" />
 
-      <div class="boutons">
-        <button onclick="startChrono()">▶️ Lancer</button>
-        <button onclick="resetApp()">🔁 Réinitialiser</button>
-      </div>
+    <label>VMA de référence (km/h, optionnel) :</label>
+    <input type="number" id="vmaEleve" placeholder="ex : 13.5" step="0.1" min="0" />
+
+    <button onclick="startChrono()">▶️ Démarrer</button>
+
+    <div id="chronoSection" style="display:none;">
+      <h2 id="chrono">00:00</h2>
+      <button onclick="ajouterTour()">➕ Tour complété</button>
+      <p>Tours enregistrés : <span id="nbTours">0</span></p>
     </div>
 
-    <div class="chrono" id="chronoBloc">
-      ⏳ Temps restant : <span id="affichageTemps">--:--</span>
+    <div id="resumeFinal" class="resume"></div>
+
+    <div id="boutonsFinaux" style="display:none;">
+      <button onclick="reset()">🔄 Nouvelle course</button>
+      <button onclick="telechargerTous()">📥 Télécharger tous les résultats</button>
+      <button onclick="viderResultats()">❌ Vider session</button>
     </div>
-
-    <div class="actions">
-      <button onclick="ajouterTour()" id="tourBtn" disabled>➕ Ajouter un tour</button>
-    </div>
-
-    <div class="resultats">
-      <p><strong>Tours :</strong> <span id="nbTours">0</span></p>
-      <p><strong>Distance :</strong> <span id="distanceTotale">0</span> m</p>
-    </div>
-
-    <div class="final" id="resumeFinal"></div>
-
-    <div class="bouton-csv" id="boutonCSV"></div>
   </div>
 
   <footer>
-    <small>ChronoTracker – Équipe EPS lycée Vauban / JB</small>
+    <p class="signature">RunStats – équipe EPS Lycée Vauban – JB</p>
   </footer>
 
   <script src="script.js"></script>
