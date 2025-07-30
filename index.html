@@ -2,72 +2,71 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - Compteur de distance et vitesse</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RunStats</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 <body>
-  <header>
-    <h1>RunStats</h1>
-  </header>
+  <div class="container">
+    <h1>🏃‍♂️ RunStats</h1>
 
-  <main>
-    <section id="saisieSection">
-      <form id="formCourse">
-        <div class="ligne">
-          <input type="text" id="nom" placeholder="Nom Prénom Classe" required />
-          <input type="number" id="duree" placeholder="Durée course (min)" min="1" required />
-          <input type="number" id="distance" placeholder="Distance tour (m)" min="1" required />
-        </div>
-        <div class="ligne">
-          <input type="number" id="vmaEleve" placeholder="VMA de référence (optionnel)" min="0" step="0.01" />
-        </div>
-        <button type="submit">Démarrer la course</button>
-      </form>
-    </section>
+    <!-- Saisie données élève -->
+    <div class="form-line">
+      <input type="text" id="nom" placeholder="Nom">
+      <input type="text" id="prenom" placeholder="Prénom">
+      <input type="text" id="classe" placeholder="Classe">
+    </div>
+    <div class="form-line">
+      <input type="number" id="duree" placeholder="Durée (min)">
+      <input type="number" id="longueurTour" placeholder="Longueur du tour (m)">
+    </div>
+    <div class="form-line">
+      <input type="number" id="vmaRef" placeholder="VMA de référence (optionnelle)">
+    </div>
+    <button onclick="demarrerCourse()">🎬 Démarrer</button>
 
-    <section id="interfaceCourse" style="display:none;"></section>
+    <!-- Section course -->
+    <div id="courseSection" style="display:none;">
+      <h2 id="chrono">00:00</h2>
+      <button id="boutonTour" onclick="compterTour()">➕ Tour</button>
+      <button onclick="resetCourse()">🔄 Reset</button>
+      <div id="infosCourse"></div>
+    </div>
 
-    <button id="resetBtn">Réinitialiser</button>
-
-    <button id="btnModeProf">Mode Professeur 🔐</button>
-
-    <section id="interfaceProf" style="display:none;">
-      <h2>Mode Professeur</h2>
-      <div>
-        <label for="pinChanger">Changer code Prof (4 chiffres): </label>
-        <input type="password" id="pinChanger" maxlength="4" placeholder="0000" />
-        <button id="btnChangePin">Modifier</button>
+    <!-- Résultat final -->
+    <div id="resultats" style="display:none;">
+      <h2>📋 Résultats</h2>
+      <div id="resumeCourse"></div>
+      <p>État ressenti :</p>
+      <div class="emojis">
+        <button onclick="setEtat('😀')">😀 Bien</button>
+        <button onclick="setEtat('😐')">😐 Bof</button>
+        <button onclick="setEtat('🤢')">🤢 Mal</button>
       </div>
+      <div id="qrContainer"></div>
+    </div>
 
-      <div id="qr-reader" style="width: 100%; max-width: 400px; margin: 1em 0;"></div>
+    <!-- SECTION PROF -->
+    <div id="profLogin" style="margin-top: 50px;">
+      <h2>🔐 Accès Professeur</h2>
+      <input type="password" id="inputProfPIN" maxlength="4" placeholder="Code PIN (4 chiffres)">
+      <button onclick="checkProfPIN()">Se connecter</button>
+    </div>
 
-      <button id="scanStopBtn" style="display:none;">Arrêter le scan</button>
+    <div id="profDashboard" style="display:none;">
+      <h2>📊 Résultats des élèves</h2>
+      <button onclick="startQRScanner()">📷 Scanner un QR Code</button>
+      <button onclick="exportCSV()">💾 Exporter les données (CSV)</button>
+      <button onclick="resetProfData()">🗑️ Réinitialiser</button>
+      <table id="profResultsTable"></table>
 
-      <button id="exportBtn">Exporter CSV</button>
+      <h3>🔁 Changer le code PIN</h3>
+      <input type="password" id="inputNewPIN" maxlength="4" placeholder="Nouveau code PIN">
+      <button onclick="changeProfPIN()">Modifier le code PIN</button>
+    </div>
 
-      <table id="tableEleves" border="1" style="width: 100%; margin-top: 1em; border-collapse: collapse;">
-        <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Distance (m)</th>
-            <th>Durée (min)</th>
-            <th>Vitesse (km/h)</th>
-            <th>VMA</th>
-            <th>État</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </section>
-  </main>
-
-  <footer>
-    <p style="color: #bbb; font-size: 0.9em; position: fixed; bottom: 10px; right: 10px;">
-      RunStats - équipe EPS lycée Vauban - JB
-    </p>
-  </footer>
+    <footer>RunStats — Équipe EPS Lycée Vauban — JB</footer>
+  </div>
 
   <script src="script.js"></script>
 </body>
