@@ -1,14 +1,19 @@
+/* Reset basique */
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Arial', sans-serif;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-  background: #f4f4f4;
+  background: #f5f7fa;
   color: #333;
   padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 header {
@@ -16,168 +21,240 @@ header {
   margin-bottom: 30px;
 }
 
-h1 {
-  font-size: 2.5em;
+header h1 {
+  font-size: 2.5rem;
   color: #007acc;
 }
 
-h2 {
-  font-size: 1.2em;
+header h2 {
+  font-size: 1.2rem;
+  font-weight: normal;
   color: #555;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
+/* Conteneurs principaux */
+main {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px 30px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 30px;
+}
+
+/* Groupes d’input */
 .input-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
   margin-bottom: 20px;
 }
 
-input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  min-width: 150px;
-  font-size: 1em;
+.input-group h3 {
+  margin-bottom: 10px;
+  color: #007acc;
+  font-weight: 600;
 }
 
+.input-group input[type="text"],
+.input-group input[type="number"] {
+  width: calc(33.333% - 12px);
+  padding: 8px 10px;
+  margin-right: 12px;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.input-group input[type="text"]:focus,
+.input-group input[type="number"]:focus {
+  border-color: #007acc;
+  outline: none;
+}
+
+.input-group input[type="text"]:last-child,
+.input-group input[type="number"]:last-child {
+  margin-right: 0;
+}
+
+/* Chrono */
 #chrono {
   text-align: center;
   margin-bottom: 20px;
 }
 
 #chronoDisplay {
-  font-size: 3em;
-  margin: 15px 0;
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #222;
+  transition: color 0.3s ease;
 }
 
 #chronoDisplay.red {
-  color: red;
+  color: #e63946;
 }
 
-button {
-  padding: 10px 20px;
-  margin: 5px;
-  border: none;
-  background: #007acc;
+#chrono button {
+  background-color: #007acc;
   color: white;
-  font-weight: bold;
+  border: none;
+  padding: 10px 16px;
+  margin: 0 8px;
   border-radius: 5px;
   cursor: pointer;
-  transition: 0.2s ease;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background: #005fa3;
-}
-
-button:disabled {
-  background: #aaa;
+#chrono button:disabled {
+  background-color: #bbb;
   cursor: not-allowed;
 }
 
-#stats {
-  text-align: center;
-  margin-bottom: 20px;
+#chrono button:hover:not(:disabled) {
+  background-color: #005fa3;
 }
 
+/* Statistiques */
+#stats p {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+#stats span {
+  font-weight: 700;
+  color: #007acc;
+}
+
+/* État de forme */
 #etatForme {
   text-align: center;
-  margin: 20px 0;
+  margin-top: 20px;
+}
+
+#etatForme p {
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+  color: #444;
 }
 
 .etatBtn {
-  font-size: 1.5em;
-  padding: 10px 15px;
-  border: 2px solid #007acc;
+  background: #eee;
+  border: 1.5px solid #bbb;
   border-radius: 8px;
-  background-color: white;
-  color: #007acc;
-  transition: 0.2s ease;
+  padding: 10px 15px;
+  margin: 0 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+  user-select: none;
 }
 
 .etatBtn:hover {
   background-color: #007acc;
   color: white;
+  border-color: #005fa3;
 }
 
+/* QR code container */
 #qrContainer {
-  text-align: center;
   margin-top: 20px;
+  text-align: center;
 }
 
 #qrCodeBox {
-  margin: auto;
-  padding: 20px;
-  background: white;
-  width: fit-content;
-  border: 1px solid #ccc;
+  margin-top: 10px;
+  display: inline-block;
 }
 
-#qrCodeBox canvas {
-  display: block;
-  margin: 0 auto;
-  border: 2px solid #333;
-  padding: 10px;
-  background-color: #fff;
-}
-
-#profDashboard {
-  padding: 20px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
-}
-
-#qr-reader {
-  margin: 20px auto;
-}
-
-#profAccess {
-  margin: 20px 0;
-  text-align: center;
-}
-
-table {
+/* Tableau espace prof */
+#profDashboard table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-  font-size: 0.9em;
+  margin-top: 15px;
 }
 
-table th, table td {
-  border: 1px solid #ccc;
+#profDashboard th,
+#profDashboard td {
+  border: 1px solid #ddd;
   padding: 8px;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+#profDashboard th {
+  background-color: #007acc;
+  color: white;
+  font-weight: 600;
+}
+
+#profDashboard tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#profDashboard tr:hover {
+  background-color: #dbe9fb;
+}
+
+/* Prof access */
+#profAccess {
+  margin-bottom: 20px;
   text-align: center;
 }
 
-table th {
-  background: #007acc;
+#profAccess input[type="password"] {
+  padding: 8px 12px;
+  font-size: 1rem;
+  width: 150px;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  margin-right: 8px;
+  transition: border-color 0.3s ease;
+}
+
+#profAccess input[type="password"]:focus {
+  border-color: #007acc;
+  outline: none;
+}
+
+#profAccess button {
+  background-color: #007acc;
   color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
 }
 
-footer {
-  margin-top: 30px;
-  text-align: right;
-  font-size: 0.9em;
+#profAccess button:hover {
+  background-color: #005fa3;
+}
+
+/* Footer */
+footer#footer {
+  text-align: center;
+  font-size: 0.9rem;
   color: #666;
-  padding-right: 10px;
+  margin-top: auto;
 }
 
-@media screen and (max-width: 768px) {
-  table {
-    font-size: 0.75em;
-  }
-
-  input, button {
+/* Responsive */
+@media (max-width: 640px) {
+  .input-group input[type="text"],
+  .input-group input[type="number"] {
     width: 100%;
-    max-width: 300px;
+    margin: 6px 0;
   }
 
-  .input-group {
-    flex-direction: column;
-    align-items: center;
+  #chrono button {
+    margin: 8px 4px;
+    width: 100px;
+  }
+
+  main {
+    padding: 15px 20px;
   }
 }
