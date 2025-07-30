@@ -1,255 +1,276 @@
-// -------- Variables générales --------
-let chrono = 0;
-let intervalId = null;
-let etat1 = "", etat2 = "";
-let groupeData = [];
+// Variables course
+let timeElapsed = 0;
+let isRunning = false;
+let laps = 0;
+let timerInterval = null;
+let etatSelectionne = "";
 
-// -------- Sélecteurs DOM --------
+let dataGroupe = {
+  eleve1: null,
+  eleve2: null
+};
+
+const resultsData = [];
+let html5QrCode = null;
+let profPin = "7890";
+
+// DOM elements
 const chronoDisplay = document.getElementById("chronoDisplay");
 const startBtn = document.getElementById("startBtn");
-const stopBtn = document.getElementById("stopBtn");
+const lapBtn = document.getElementById("lapBtn");
 const resetBtn = document.getElementById("resetBtn");
+const lapsCount = document.getElementById("lapsCount");
 
-const etatBtns1 = document.querySelectorAll(".etatBtn1");
-const etatBtns2 = document.querySelectorAll(".etatBtn2");
+const nom1 = document.getElementById("nom1");
+const prenom1 = document.getElementById("prenom1");
+const classe1 = document.getElementById("classe1");
 
-const qrContainer = document.getElementById("qrResult");
-const exportBtn = document.getElementById("exportBtn");
+const nom2 = document.getElementById("nom2");
+const prenom2 = document.getElementById("prenom2");
+const classe2 = document.getElementById("classe2");
 
-// -------- Fonctions --------
-function formatTime(secs) {
-  const min = Math.floor(secs / 60);
-  const sec = secs % 60;
-  return `${min.toString().padStart(2,"0")}:${sec.toString().padStart(2,"0")}`;
+const dureeInput = document.getElementById("duree");
+const distanceTourInput = document.getElementById("distanceTour");
+const vmaRefInput = document.getElementById("vmaRef");
+
+const etatFormeDiv = document.getElementById("etatForme");
+const etatButtons = document.querySelectorAll(".etatBtn");
+
+const distanceTotalEl = document.getElementById("distanceTotal");
+const distanceKmEl = document.getElementById("distanceKm");
+const vitesseMoyEl = document.getElementById("vitesseMoy");
+const vmaRealEl = document.getElementById("vmaReal");
+
+const qrCodeBox = document.getElementById("qrCodeBox");
+
+const profDashboard = document.getElementById("profDashboard");
+const profPinInput = document.getElementById("profPinInput");
+const profPinSubmit = document.getElementById("profPinSubmit");
+const qrReaderDiv = document.getElementById("qr-reader");
+const resultsBody = document.getElementById("resultsBody");
+const exportCsvBtn = document.getElementById("exportCsvBtn");
+const stopScanBtn = document.getElementById("stopScanBtn");
+const footer = document.getElementById("footer");
+
+// Helpers
+function formatTime(seconds) {
+  const min = Math.floor(seconds / 60);
+  const sec = seconds % 60;
+  return `${min.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`;
 }
 
 function updateChrono() {
-  chrono++;
-  chronoDisplay.textContent = formatTime(chrono);
-}
-
-function startChrono() {
-  if (!intervalId) {
-    intervalId = setInterval(updateChrono, 1000);
+  timeElapsed++;
+  chronoDisplay.textContent = formatTime(timeElapsed);
+  let totalSec = parseInt(dureeInput.value) * 60;
+  if (totalSec - timeElapsed <= 10 && totalSec - timeElapsed > 0) {
+    chronoDisplay.classList.add("red");
+  } else {
+    chronoDisplay.classList.remove("red");
   }
+  if (timeElapsed >= totalSec) stopCourse();
 }
 
-function stopChrono() {
-  clearInterval(intervalId);
-  intervalId = null;
-}
-
-function resetChrono() {
-  stopChrono();
-  chrono = 0;
-  chronoDisplay.textContent = "00:00";
-}
-
-// -------- États de forme --------
-etatBtns1.forEach(btn => {
-  btn.addEventListener("click", () => {
-    etat1 = btn.getAttribute("data-etat");
-    etatBtns1.forEach(b => b.classList.remove("selected"));
-    btn.classList.add("selected");
-  });
-});
-
-etatBtns2.forEach(btn => {
-  btn.addEventListener("click", () => {
-    etat2 = btn.getAttribute("data-etat");
-    etatBtns2.forEach(b => b.classList.remove("selected"));
-    btn.classList.add("selected");
-  });
-});
-
-// -------- Création QR Code --------
-function enregistrerGroupe() {
-  const nom1 = document.getElementById("nom1").value;
-  const prenom1 = document.getElementById("prenom1").value;
-  const vma1 = parseFloat(document.getElementById("vma1").value);
-  
-  const nom2 = document.getElementById("nom2").value;
-  const prenom2 = document.getElementById("prenom2").value;
-  const vma2 = parseFloat(document.getElementById("vma2").value);
-
-  if (!nom1 || !prenom1 || isNaN(vma1) || !etat1 ||
-      !nom2 || !prenom2 || isNaN(vma2) || !etat2) {
-    alert("Veuillez remplir tous les champs et sensations des deux élèves.");
+function startCourse() {
+  if (!nom1.value || !prenom1.value || !classe1.value || !nom2.value || !prenom2.value || !classe2.value) {
+    alert("Merci de remplir les informations des deux élèves.");
     return;
   }
 
-  const groupe = {
-    chrono: formatTime(chrono),
-    eleves: [
-      { nom: nom1, prenom: prenom1, vma: vma1, etat: etat1 },
-      { nom: nom2, prenom: prenom2, vma: vma2, etat: etat2 }
-    ]
-  };
+  if (isRunning) return;
 
-  groupeData.push(groupe);
-  genererQRCode(groupe);
-  alert("Groupe enregistré !");
+  isRunning = true;
+  startBtn.disabled = true;
+  lapBtn.disabled = false;
+  timeElapsed = 0;
+  laps = 0;
+  chronoDisplay.textContent = "00:00";
+  lapsCount.textContent = 0;
+  etatFormeDiv.style.display = "none";
+  timerInterval = setInterval(updateChrono, 1000);
 }
 
-function genererQRCode(data) {
-  qrContainer.innerHTML = "";
-  const qr = new QRCode(qrContainer, {
-    text: JSON.stringify(data),
+function stopCourse() {
+  clearInterval(timerInterval);
+  isRunning = false;
+  lapBtn.disabled = true;
+  startBtn.disabled = false;
+  etatFormeDiv.style.display = "block";
+}
+
+function resetCourse() {
+  clearInterval(timerInterval);
+  isRunning = false;
+  laps = 0;
+  timeElapsed = 0;
+  chronoDisplay.textContent = "00:00";
+  lapsCount.textContent = 0;
+  etatFormeDiv.style.display = "none";
+  chronoDisplay.classList.remove("red");
+  distanceTotalEl.textContent = 0;
+  distanceKmEl.textContent = "0.00";
+  vitesseMoyEl.textContent = "0.00";
+  vmaRealEl.textContent = "0.00";
+  qrCodeBox.innerHTML = "";
+}
+
+function addLap() {
+  if (!isRunning) return;
+  laps++;
+  lapsCount.textContent = laps;
+  updateStats();
+}
+
+function updateStats() {
+  let distanceTot = laps * Number(distanceTourInput.value);
+  let dureeH = timeElapsed / 3600;
+  let vitesse = dureeH > 0 ? distanceTot / 1000 / dureeH : 0;
+  let vmaReal = vitesse * 1.05;
+
+  distanceTotalEl.textContent = distanceTot;
+  distanceKmEl.textContent = (distanceTot / 1000).toFixed(2);
+  vitesseMoyEl.textContent = vitesse.toFixed(2);
+  vmaRealEl.textContent = vmaReal.toFixed(2);
+}
+
+etatButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    etatSelectionne = btn.getAttribute("data-etat");
+    alert("État sélectionné : " + etatSelectionne);
+    generateQrCode();
+  });
+});
+
+function generateQrCode() {
+  const data = {
+    eleve1: {
+      nom: nom1.value,
+      prenom: prenom1.value,
+      classe: classe1.value
+    },
+    eleve2: {
+      nom: nom2.value,
+      prenom: prenom2.value,
+      classe: classe2.value
+    },
+    duree: dureeInput.value,
+    distance: distanceTotalEl.textContent,
+    vitesse: vitesseMoyEl.textContent,
+    vma: vmaRealEl.textContent,
+    etat: etatSelectionne
+  };
+
+  const qrData = JSON.stringify(data);
+  qrCodeBox.innerHTML = "";
+  new QRCode(qrCodeBox, {
+    text: qrData,
     width: 200,
     height: 200
   });
 }
 
-// -------- Export CSV --------
-exportBtn.addEventListener("click", () => {
-  if (groupeData.length === 0) {
-    alert("Aucun groupe enregistré.");
-    return;
+// Mode Prof
+profPinSubmit.addEventListener("click", () => {
+  if (profPinInput.value === profPin) {
+    profDashboard.style.display = "block";
+    startQrScanner();
+  } else {
+    alert("Code PIN incorrect");
   }
-
-  let csv = "Nom;Prénom;VMA;État;Chrono\n";
-  groupeData.forEach(g => {
-    g.eleves.forEach(e => {
-      csv += `${e.nom};${e.prenom};${e.vma};${e.etat};${g.chrono}\n`;
-    });
-  });
-
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "resultats_groupes.csv";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
 });
 
-// -------- Boutons chrono --------
-startBtn.addEventListener("click", startChrono);
-stopBtn.addEventListener("click", stopChrono);
-resetBtn.addEventListener("click", resetChrono);
-
-// Bouton valider le groupe
-document.getElementById("validerGroupe").addEventListener("click", enregistrerGroupe);
-// QR Scan avec Html5Qrcode
-let html5QrCode;
-const profData = [];
-
-function startScanner() {
+function startQrScanner() {
   if (html5QrCode) return;
+
   html5QrCode = new Html5Qrcode("qr-reader");
+  const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
   html5QrCode.start(
     { facingMode: "environment" },
-    { fps: 10, qrbox: 250 },
-    onScanSuccess
-  ).catch(err => alert("Erreur caméra : " + err));
+    config,
+    (decodedText) => {
+      try {
+        const data = JSON.parse(decodedText);
+        resultsData.push(data);
+        renderResults();
+        alert("QR Code scanné avec succès !");
+      } catch {
+        alert("QR code invalide.");
+      }
+    },
+    () => {}
+  ).catch(err => {
+    alert("Erreur lancement scanner : " + err);
+  });
 }
 
-function onScanSuccess(decodedText) {
-  try {
-    const groupe = JSON.parse(decodedText);
-    if (Array.isArray(groupe.eleves)) {
-      groupe.eleves.forEach(e => profData.push({ ...e, chrono: groupe.chrono }));
-      updateProfTable();
-    }
-  } catch (e) {
-    alert("QR Code invalide.");
-  }
-}
-
-function stopScanner() {
+stopScanBtn.addEventListener("click", () => {
   if (html5QrCode) {
     html5QrCode.stop().then(() => {
       html5QrCode.clear();
       html5QrCode = null;
     });
   }
-}
+});
 
-document.getElementById("stopScanBtn").addEventListener("click", stopScanner);
-
-// Mise à jour du tableau prof
-function updateProfTable() {
-  const tbody = document.getElementById("profTableBody");
-  tbody.innerHTML = "";
-  profData.forEach(e => {
+function renderResults() {
+  resultsBody.innerHTML = "";
+  resultsData.forEach((groupe, i) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${e.nom}</td>
-      <td>${e.prenom}</td>
-      <td>${e.vma}</td>
-      <td>${e.etat}</td>
-      <td>${e.chrono}</td>
+      <td>Groupe ${i + 1}</td>
+      <td>${groupe.eleve1.nom} ${groupe.eleve1.prenom}</td>
+      <td>${groupe.eleve2.nom} ${groupe.eleve2.prenom}</td>
+      <td>${groupe.classe}</td>
+      <td>${groupe.duree}</td>
+      <td>${groupe.distance}</td>
+      <td>${groupe.vitesse}</td>
+      <td>${groupe.vma}</td>
+      <td>${groupe.etat}</td>
     `;
-    tbody.appendChild(tr);
+    resultsBody.appendChild(tr);
   });
 }
 
-// Bouton caché 3 clics
-let clickCount = 0;
-document.getElementById("footer").addEventListener("click", () => {
-  clickCount++;
-  if (clickCount >= 3) {
-    clickCount = 0;
-    document.getElementById("profSection").style.display = "block";
-    startScanner();
-  }
-  setTimeout(() => (clickCount = 0), 1500);
-});
-
-// Générer groupes hétérogènes
-document.getElementById("genererGroupesBtn").addEventListener("click", () => {
-  const eleves = [...profData];
-  eleves.sort((a, b) => b.vma - a.vma); // tri VMA décroissant
-
-  const groupes = [];
-  while (eleves.length >= 4) {
-    const groupe = [
-      eleves.shift(),          // VMA haute
-      eleves.pop(),            // VMA basse
-      eleves.splice(Math.floor(eleves.length/2), 1)[0], // intermédiaire
-      eleves.splice(Math.floor(eleves.length/2), 1)[0]  // intermédiaire
-    ];
-    groupes.push(groupe);
+exportCsvBtn.addEventListener("click", () => {
+  if (resultsData.length === 0) {
+    alert("Aucune donnée à exporter.");
+    return;
   }
 
-  const conteneur = document.getElementById("groupesFinal");
-  conteneur.innerHTML = "<h3>Groupes hétérogènes :</h3>";
-  groupes.forEach((g, i) => {
-    conteneur.innerHTML += `<strong>Groupe ${i+1}</strong><ul>` +
-      g.map(e => `<li>${e.prenom} ${e.nom} (VMA: ${e.vma})</li>`).join("") +
-      `</ul>`;
-  });
-});
+  const headers = ["Groupe", "Élève 1", "Élève 2", "Classe", "Durée", "Distance", "Vitesse", "VMA", "État"];
+  const rows = resultsData.map((g, i) => [
+    `Groupe ${i + 1}`,
+    `${g.eleve1.nom} ${g.eleve1.prenom}`,
+    `${g.eleve2.nom} ${g.eleve2.prenom}`,
+    g.eleve1.classe || g.eleve2.classe,
+    g.duree,
+    g.distance,
+    g.vitesse,
+    g.vma,
+    g.etat
+  ].join(";"));
 
-// Export CSV groupes
-document.getElementById("exportGroupesBtn").addEventListener("click", () => {
-  let csv = "Groupe;Nom;Prénom;VMA;État;Chrono\n";
-  const lignes = [];
-
-  const eleves = [...profData];
-  eleves.sort((a, b) => b.vma - a.vma);
-
-  let groupNum = 1;
-  while (eleves.length >= 4) {
-    const g = [
-      eleves.shift(),
-      eleves.pop(),
-      eleves.splice(Math.floor(eleves.length/2), 1)[0],
-      eleves.splice(Math.floor(eleves.length/2), 1)[0]
-    ];
-    g.forEach(e => {
-      lignes.push(`${groupNum};${e.nom};${e.prenom};${e.vma};${e.etat};${e.chrono}`);
-    });
-    groupNum++;
-  }
-
-  const blob = new Blob(["Groupe;Nom;Prénom;VMA;État;Chrono\n" + lignes.join("\n")], { type: "text/csv" });
+  const csv = [headers.join(";"), ...rows].join("\n");
+  const blob = new Blob([csv], { type: "text/csv" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "groupes_heterogenes.csv";
-  document.body.appendChild(a);
+  a.download = "resultats_groupes.csv";
   a.click();
-  document.body.removeChild(a);
+});
+
+startBtn.addEventListener("click", startCourse);
+lapBtn.addEventListener("click", addLap);
+resetBtn.addEventListener("click", resetCourse);
+
+// Footer accès prof
+let clickCount = 0;
+footer.addEventListener("click", () => {
+  clickCount++;
+  if (clickCount >= 3) {
+    document.getElementById("profAccess").style.display = "block";
+    clickCount = 0;
+  }
+  setTimeout(() => clickCount = 0, 1500);
 });
