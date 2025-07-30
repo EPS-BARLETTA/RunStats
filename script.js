@@ -70,7 +70,7 @@ startBtn.addEventListener("click", () => {
       clearInterval(timer);
       chronoDisplay.classList.add("red");
       lapBtn.disabled = true;
-      etatForme.style.display = "block";
+      etatForme.style.display = "block"; //   affiche les boutons
     }
   }, 1000);
 });
@@ -98,8 +98,9 @@ resetBtn.addEventListener("click", () => {
 etatBtns.forEach(btn => {
   btn.addEventListener("click", () => {
     etat = btn.dataset.etat;
-    etatForme.style.display = "none"; // ← masque les boutons après choix
-    generateQRCode(); // ← génère le QR code
+    etatForme.style.display = "none"; / masque les boutons
+    generateQRCode(); //  génère le QR code
+    qrContainer.style.display ="block"; // assure que le QR est visible
   });
 });
 
@@ -130,13 +131,13 @@ function generateQRCode() {
   };
 
   const text = JSON.stringify(data);
-  qrCodeBox.innerHTML = "";
+  qrCodeBox.innerHTML = ""; // vide l'ancien QR code
   new QRCode(qrCodeBox, {
     text,
     width: 200,
     height: 200
   });
-  qrContainer.style.display = "block";
+  qrContainer.style.display = "block"; // s'assurer que le container est vide
 }
 
 function updateTable() {
