@@ -75,5 +75,36 @@
 
   <script src="https://unpkg.com/html5-qrcode"></script>
   <script src="script.js"></script>
+  <!-- Mode Prof -->
+<div id="profSection" style="display: none;">
+  <h2>👨‍🏫 Mode Prof</h2>
+
+  <div id="qr-reader" style="width: 250px;"></div>
+  <button id="stopScanBtn">Arrêter le scan</button>
+
+  <h3>Groupes scannés</h3>
+  <table id="profTable" border="1">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>VMA</th>
+        <th>État</th>
+        <th>Chrono</th>
+      </tr>
+    </thead>
+    <tbody id="profTableBody"></tbody>
+  </table>
+
+  <button id="genererGroupesBtn">Générer groupes hétérogènes</button>
+  <button id="exportGroupesBtn">Exporter CSV</button>
+
+  <div id="groupesFinal"></div>
+</div>
+
+<!-- Bouton secret d’accès prof -->
+<footer id="footer" style="text-align: center; margin-top: 2rem;">
+  <small>Application équipe EPS Lycée Vauban - JB</small>
+</footer>
 </body>
 </html>
