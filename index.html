@@ -11,21 +11,29 @@
 
   <header>
     <h1>RunStats</h1>
-    <h2>Équipe EPS Lycée Vauban - JB</h2>
+    <h2>Équipe EPS Lycée Vauban</h2>
   </header>
 
   <main id="studentInput">
     <div class="input-group">
-      <input type="text" id="nom" placeholder="Nom" />
-      <input type="text" id="prenom" placeholder="Prénom" />
-      <input type="text" id="classe" placeholder="Classe" />
-    </div>
-    <div class="input-group">
-      <input type="number" id="duree" placeholder="Durée de la course (min)" />
-      <input type="number" id="distanceTour" placeholder="Distance 1 tour (m)" />
-      <input type="number" id="vmaRef" placeholder="VMA de référence (km/h)" />
-    </div>
+  <h3>Élève 1</h3>
+  <input type="text" id="nom1" placeholder="Nom">
+  <input type="text" id="prenom1" placeholder="Prénom">
+  <input type="text" id="classe1" placeholder="Classe">
+</div>
 
+<div class="input-group">
+  <h3>Élève 2</h3>
+  <input type="text" id="nom2" placeholder="Nom">
+  <input type="text" id="prenom2" placeholder="Prénom">
+  <input type="text" id="classe2" placeholder="Classe">
+</div>
+
+<div class="input-group">
+  <input type="number" id="duree" placeholder="Durée de la course (min)">
+  <input type="number" id="distanceTour" placeholder="Distance d’un tour (m)">
+  <input type="number" id="vmaRef" placeholder="VMA de référence (km/h)">
+</div>
     <div id="chrono">
       <p id="chronoDisplay">00:00</p>
       <button id="startBtn">Démarrer</button>
