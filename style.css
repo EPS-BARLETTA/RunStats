@@ -1,74 +1,49 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #f4f6f8;
+  margin: 2rem;
+  background-color: #f7f9fc;
   color: #333;
-  margin: 0;
-  padding: 20px;
 }
 
-.container {
-  max-width: 500px;
-  margin: auto;
-  background: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+h1 {
+  text-align: center;
+  color: #0077cc;
 }
 
-input, button {
-  display: block;
-  width: 100%;
-  margin: 10px 0;
-  padding: 12px;
-  border-radius: 6px;
+.ligne-formulaire {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+input {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 1rem;
   border: 1px solid #ccc;
-  font-size: 16px;
+  border-radius: 4px;
 }
 
 button {
-  background-color: #4CAF50;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  background-color: #0077cc;
   color: white;
-  cursor: pointer;
   border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0.5rem 0;
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #005fa3;
 }
 
-#chrono {
-  font-size: 2.5em;
-  margin: 10px 0;
-}
-
-.resume {
-  margin-top: 20px;
-  background-color: #e9f5ff;
-  padding: 15px;
-  border-radius: 8px;
-}
-
-#boutonsFinaux {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.btn-tour {
-  background-color: #2196F3;
-  font-size: 1.2em;
-}
-
-.signature {
+#signature {
   position: fixed;
   bottom: 10px;
-  right: 15px;
-  font-size: 0.9em;
-  color: #ccc;
-  font-style: italic;
-}
-
-#chrono.urgent {
-  color: red;
+  right: 10px;
+  color: #999;
+  font-size: 0.9rem;
 }
