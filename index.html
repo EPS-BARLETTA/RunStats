@@ -3,16 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RunStats</title>
+  <title>RunSats</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="overlay"></div>
-
   <div class="container">
     <h1>RunStats</h1>
 
     <div class="formulaire">
+      <label>Nom de l’élève observé :</label>
+      <input type="text" id="nomEleve" placeholder="ex : Martin" />
+
       <div class="double-input">
         <label>Temps de course :</label>
         <input type="number" id="tempsMinutes" placeholder="Min" min="0" />
@@ -42,10 +44,12 @@
     </div>
 
     <div class="final" id="resumeFinal"></div>
+
+    <div class="bouton-csv" id="boutonCSV"></div>
   </div>
 
   <footer>
-    <small>Équipe EPS lycée Vauban / JB</small>
+    <small>ChronoTracker – Équipe EPS lycée Vauban / JB</small>
   </footer>
 
   <script src="script.js"></script>
