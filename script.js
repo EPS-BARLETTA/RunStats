@@ -131,3 +131,125 @@ resetBtn.addEventListener("click", resetChrono);
 
 // Bouton valider le groupe
 document.getElementById("validerGroupe").addEventListener("click", enregistrerGroupe);
+// QR Scan avec Html5Qrcode
+let html5QrCode;
+const profData = [];
+
+function startScanner() {
+  if (html5QrCode) return;
+  html5QrCode = new Html5Qrcode("qr-reader");
+  html5QrCode.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: 250 },
+    onScanSuccess
+  ).catch(err => alert("Erreur caméra : " + err));
+}
+
+function onScanSuccess(decodedText) {
+  try {
+    const groupe = JSON.parse(decodedText);
+    if (Array.isArray(groupe.eleves)) {
+      groupe.eleves.forEach(e => profData.push({ ...e, chrono: groupe.chrono }));
+      updateProfTable();
+    }
+  } catch (e) {
+    alert("QR Code invalide.");
+  }
+}
+
+function stopScanner() {
+  if (html5QrCode) {
+    html5QrCode.stop().then(() => {
+      html5QrCode.clear();
+      html5QrCode = null;
+    });
+  }
+}
+
+document.getElementById("stopScanBtn").addEventListener("click", stopScanner);
+
+// Mise à jour du tableau prof
+function updateProfTable() {
+  const tbody = document.getElementById("profTableBody");
+  tbody.innerHTML = "";
+  profData.forEach(e => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${e.nom}</td>
+      <td>${e.prenom}</td>
+      <td>${e.vma}</td>
+      <td>${e.etat}</td>
+      <td>${e.chrono}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// Bouton caché 3 clics
+let clickCount = 0;
+document.getElementById("footer").addEventListener("click", () => {
+  clickCount++;
+  if (clickCount >= 3) {
+    clickCount = 0;
+    document.getElementById("profSection").style.display = "block";
+    startScanner();
+  }
+  setTimeout(() => (clickCount = 0), 1500);
+});
+
+// Générer groupes hétérogènes
+document.getElementById("genererGroupesBtn").addEventListener("click", () => {
+  const eleves = [...profData];
+  eleves.sort((a, b) => b.vma - a.vma); // tri VMA décroissant
+
+  const groupes = [];
+  while (eleves.length >= 4) {
+    const groupe = [
+      eleves.shift(),          // VMA haute
+      eleves.pop(),            // VMA basse
+      eleves.splice(Math.floor(eleves.length/2), 1)[0], // intermédiaire
+      eleves.splice(Math.floor(eleves.length/2), 1)[0]  // intermédiaire
+    ];
+    groupes.push(groupe);
+  }
+
+  const conteneur = document.getElementById("groupesFinal");
+  conteneur.innerHTML = "<h3>Groupes hétérogènes :</h3>";
+  groupes.forEach((g, i) => {
+    conteneur.innerHTML += `<strong>Groupe ${i+1}</strong><ul>` +
+      g.map(e => `<li>${e.prenom} ${e.nom} (VMA: ${e.vma})</li>`).join("") +
+      `</ul>`;
+  });
+});
+
+// Export CSV groupes
+document.getElementById("exportGroupesBtn").addEventListener("click", () => {
+  let csv = "Groupe;Nom;Prénom;VMA;État;Chrono\n";
+  const lignes = [];
+
+  const eleves = [...profData];
+  eleves.sort((a, b) => b.vma - a.vma);
+
+  let groupNum = 1;
+  while (eleves.length >= 4) {
+    const g = [
+      eleves.shift(),
+      eleves.pop(),
+      eleves.splice(Math.floor(eleves.length/2), 1)[0],
+      eleves.splice(Math.floor(eleves.length/2), 1)[0]
+    ];
+    g.forEach(e => {
+      lignes.push(`${groupNum};${e.nom};${e.prenom};${e.vma};${e.etat};${e.chrono}`);
+    });
+    groupNum++;
+  }
+
+  const blob = new Blob(["Groupe;Nom;Prénom;VMA;État;Chrono\n" + lignes.join("\n")], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "groupes_heterogenes.csv";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
