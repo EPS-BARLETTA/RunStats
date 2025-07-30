@@ -1,63 +1,116 @@
 body {
   font-family: 'Segoe UI', sans-serif;
-  background-color: #f4f6f8;
   margin: 0;
   padding: 0;
+  background: #f3f6fa;
+}
+
+.overlay {
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Running_track.svg/1024px-Running_track.svg.png');
+  background-size: cover;
+  background-position: center;
+  position: fixed;
+  inset: 0;
+  opacity: 0.08;
+  z-index: -1;
 }
 
 .container {
-  max-width: 500px;
-  margin: 60px auto;
+  max-width: 600px;
+  margin: 40px auto;
   background-color: white;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
 
 h1 {
   text-align: center;
-  color: #2d89ef;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  color: #1d4ed8;
+  margin-bottom: 30px;
 }
 
 label {
   font-weight: bold;
+  display: block;
+  margin-top: 15px;
 }
 
 input {
+  width: 100%;
   padding: 10px;
+  font-size: 16px;
+  margin-top: 5px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  font-size: 16px;
+}
+
+.double-input {
+  display: flex;
+  gap: 10px;
+}
+
+.double-input input {
+  flex: 1;
+}
+
+.boutons {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
 }
 
 button {
-  padding: 12px;
-  background-color: #2d89ef;
-  color: white;
+  flex: 1;
+  padding: 14px;
   font-size: 16px;
   border: none;
+  background-color: #1d4ed8;
+  color: white;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background 0.3s;
 }
 
 button:hover {
-  background-color: #1a64c4;
+  background-color: #153cc1;
+}
+
+.chrono {
+  margin-top: 30px;
+  font-size: 24px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.chrono.red {
+  color: #dc2626;
+}
+
+.actions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.actions button {
+  width: 100%;
+  font-size: 20px;
+  background-color: #10b981;
 }
 
 .resultats {
-  margin-top: 20px;
-  background-color: #e9f1ff;
-  padding: 15px;
-  border-radius: 6px;
+  margin-top: 30px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.final {
+  margin-top: 30px;
+  background-color: #e9f5e9;
+  padding: 20px;
+  border-radius: 8px;
   font-size: 16px;
-  color: #333;
+  color: #2c662d;
 }
 
 footer {
