@@ -1,60 +1,119 @@
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   margin: 0;
-  padding: 0;
   background: #f2f2f2;
   color: #333;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .container {
-  max-width: 500px;
-  width: 90%;
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
   background: white;
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-input {
-  display: block;
+h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #005089;
+}
+
+h2 {
+  color: #333;
+  margin-top: 1rem;
+}
+
+input[type="text"],
+input[type="number"] {
   width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  box-sizing: border-box;
+  padding: 0.6rem;
+  margin-bottom: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-button {
-  padding: 10px 15px;
-  margin: 10px 5px 0;
-  font-size: 16px;
+.btns button,
+#groupe-actions button,
+.etatBtn {
+  padding: 0.6rem 1.2rem;
+  margin: 0.5rem 0.3rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #005089;
+  color: white;
+  font-size: 1rem;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-#chronoDisplay {
-  font-size: 48px;
-  margin: 20px 0;
+.btns button:hover,
+#groupe-actions button:hover,
+.etatBtn:hover {
+  background-color: #003c66;
 }
 
-.red {
-  color: red;
+.etatBtn {
+  font-size: 1.5rem;
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.etatBtn.selected {
+  background-color: #00aa88;
+  color: white;
+}
+
+.eleve-block {
+  background-color: #f9f9f9;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.chrono-block {
+  display: flex;
+  justify-content: space-between;
   font-weight: bold;
+  margin-top: 0.5rem;
 }
 
-.stats {
-  margin-top: 20px;
+#groupe-actions {
+  text-align: center;
+  margin-top: 2rem;
 }
 
-.etat-options button {
-  margin: 5px;
-  font-size: 18px;
+#qrResult {
+  margin-top: 1rem;
+  text-align: center;
 }
 
 footer {
-  margin-top: 30px;
-  font-size: 14px;
-  color: #777;
+  text-align: center;
+  padding: 1rem;
+  background-color: #005089;
+  color: white;
+  font-size: 0.9rem;
+  margin-top: 2rem;
+  border-top: 4px solid #003c66;
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    margin: 1rem;
+    padding: 1rem;
+  }
+
+  .btns button,
+  #groupe-actions button {
+    width: 100%;
+    margin: 0.4rem 0;
+  }
+
+  .chrono-block {
+    flex-direction: column;
+    align-items: center;
+  }
 }
