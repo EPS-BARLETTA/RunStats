@@ -98,7 +98,8 @@ resetBtn.addEventListener("click", () => {
 etatBtns.forEach(btn => {
   btn.addEventListener("click", () => {
     etat = btn.dataset.etat;
-    generateQRCode();
+    etatForme.style.display = "none"; // ← masque les boutons après choix
+    generateQRCode(); // ← génère le QR code
   });
 });
 
