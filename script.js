@@ -1,276 +1,261 @@
-// Variables course
-let timeElapsed = 0;
-let isRunning = false;
+let timer;
+let time = 0;
 let laps = 0;
-let timerInterval = null;
-let etatSelectionne = "";
+let etat = "";
+let currentPin = "7890";
+let scanInProgress = false;
+let results = [];
 
-let dataGroupe = {
-  eleve1: null,
-  eleve2: null
-};
-
-const resultsData = [];
-let html5QrCode = null;
-let profPin = "7890";
-
-// DOM elements
-const chronoDisplay = document.getElementById("chronoDisplay");
 const startBtn = document.getElementById("startBtn");
 const lapBtn = document.getElementById("lapBtn");
 const resetBtn = document.getElementById("resetBtn");
+const chronoDisplay = document.getElementById("chronoDisplay");
 const lapsCount = document.getElementById("lapsCount");
-
-const nom1 = document.getElementById("nom1");
-const prenom1 = document.getElementById("prenom1");
-const classe1 = document.getElementById("classe1");
-
-const nom2 = document.getElementById("nom2");
-const prenom2 = document.getElementById("prenom2");
-const classe2 = document.getElementById("classe2");
-
-const dureeInput = document.getElementById("duree");
-const distanceTourInput = document.getElementById("distanceTour");
-const vmaRefInput = document.getElementById("vmaRef");
-
-const etatFormeDiv = document.getElementById("etatForme");
-const etatButtons = document.querySelectorAll(".etatBtn");
-
-const distanceTotalEl = document.getElementById("distanceTotal");
-const distanceKmEl = document.getElementById("distanceKm");
-const vitesseMoyEl = document.getElementById("vitesseMoy");
-const vmaRealEl = document.getElementById("vmaReal");
-
+const distanceTotal = document.getElementById("distanceTotal");
+const distanceKm = document.getElementById("distanceKm");
+const vitesseMoy = document.getElementById("vitesseMoy");
+const vmaReal = document.getElementById("vmaReal");
+const etatBtns = document.querySelectorAll(".etatBtn");
+const qrContainer = document.getElementById("qrContainer");
 const qrCodeBox = document.getElementById("qrCodeBox");
+const etatForme = document.getElementById("etatForme");
 
-const profDashboard = document.getElementById("profDashboard");
-const profPinInput = document.getElementById("profPinInput");
-const profPinSubmit = document.getElementById("profPinSubmit");
-const qrReaderDiv = document.getElementById("qr-reader");
-const resultsBody = document.getElementById("resultsBody");
-const exportCsvBtn = document.getElementById("exportCsvBtn");
-const stopScanBtn = document.getElementById("stopScanBtn");
-const footer = document.getElementById("footer");
-
-// Helpers
-function formatTime(seconds) {
-  const min = Math.floor(seconds / 60);
-  const sec = seconds % 60;
-  return `${min.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`;
+function formatTime(t) {
+  const minutes = Math.floor(t / 60);
+  const seconds = t % 60;
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 }
 
-function updateChrono() {
-  timeElapsed++;
-  chronoDisplay.textContent = formatTime(timeElapsed);
-  let totalSec = parseInt(dureeInput.value) * 60;
-  if (totalSec - timeElapsed <= 10 && totalSec - timeElapsed > 0) {
-    chronoDisplay.classList.add("red");
-  } else {
-    chronoDisplay.classList.remove("red");
-  }
-  if (timeElapsed >= totalSec) stopCourse();
+function updateDisplay() {
+  chronoDisplay.textContent = formatTime(time);
+  lapsCount.textContent = laps;
+  const distanceTour = parseFloat(document.getElementById("distanceTour").value) || 0;
+  const vmaRef = parseFloat(document.getElementById("vmaRef").value) || 0;
+  const dureeMin = parseFloat(document.getElementById("duree").value) || 0;
+
+  const distance = laps * distanceTour;
+  const distanceInKm = distance / 1000;
+  const dureeEnHeure = time / 3600;
+
+  distanceTotal.textContent = distance.toFixed(0);
+  distanceKm.textContent = distanceInKm.toFixed(2);
+  vitesseMoy.textContent = (dureeEnHeure > 0 ? distanceInKm / dureeEnHeure : 0).toFixed(2);
+  vmaReal.textContent = ((distanceInKm / dureeEnHeure) * 1.2).toFixed(2);
 }
 
-function startCourse() {
-  if (!nom1.value || !prenom1.value || !classe1.value || !nom2.value || !prenom2.value || !classe2.value) {
-    alert("Merci de remplir les informations des deux élèves.");
+startBtn.addEventListener("click", () => {
+  const dureeMin = parseFloat(document.getElementById("duree").value);
+  if (!dureeMin || dureeMin <= 0) {
+    alert("Veuillez saisir une durée valide.");
     return;
   }
 
-  if (isRunning) return;
-
-  isRunning = true;
   startBtn.disabled = true;
   lapBtn.disabled = false;
-  timeElapsed = 0;
-  laps = 0;
-  chronoDisplay.textContent = "00:00";
-  lapsCount.textContent = 0;
-  etatFormeDiv.style.display = "none";
-  timerInterval = setInterval(updateChrono, 1000);
-}
-
-function stopCourse() {
-  clearInterval(timerInterval);
-  isRunning = false;
-  lapBtn.disabled = true;
-  startBtn.disabled = false;
-  etatFormeDiv.style.display = "block";
-}
-
-function resetCourse() {
-  clearInterval(timerInterval);
-  isRunning = false;
-  laps = 0;
-  timeElapsed = 0;
-  chronoDisplay.textContent = "00:00";
-  lapsCount.textContent = 0;
-  etatFormeDiv.style.display = "none";
+  resetBtn.disabled = false;
   chronoDisplay.classList.remove("red");
-  distanceTotalEl.textContent = 0;
-  distanceKmEl.textContent = "0.00";
-  vitesseMoyEl.textContent = "0.00";
-  vmaRealEl.textContent = "0.00";
-  qrCodeBox.innerHTML = "";
-}
 
-function addLap() {
-  if (!isRunning) return;
+  timer = setInterval(() => {
+    time++;
+    updateDisplay();
+
+    if (time >= dureeMin * 60) {
+      clearInterval(timer);
+      chronoDisplay.classList.add("red");
+      lapBtn.disabled = true;
+      etatForme.style.display = "block";
+    }
+  }, 1000);
+});
+
+lapBtn.addEventListener("click", () => {
   laps++;
-  lapsCount.textContent = laps;
-  updateStats();
-}
+  updateDisplay();
+});
 
-function updateStats() {
-  let distanceTot = laps * Number(distanceTourInput.value);
-  let dureeH = timeElapsed / 3600;
-  let vitesse = dureeH > 0 ? distanceTot / 1000 / dureeH : 0;
-  let vmaReal = vitesse * 1.05;
+resetBtn.addEventListener("click", () => {
+  clearInterval(timer);
+  time = 0;
+  laps = 0;
+  startBtn.disabled = false;
+  lapBtn.disabled = true;
+  resetBtn.disabled = true;
+  updateDisplay();
+  etatForme.style.display = "none";
+  chronoDisplay.classList.remove("red");
+});
 
-  distanceTotalEl.textContent = distanceTot;
-  distanceKmEl.textContent = (distanceTot / 1000).toFixed(2);
-  vitesseMoyEl.textContent = vitesse.toFixed(2);
-  vmaRealEl.textContent = vmaReal.toFixed(2);
-}
-
-etatButtons.forEach(btn => {
+etatBtns.forEach(btn => {
   btn.addEventListener("click", () => {
-    etatSelectionne = btn.getAttribute("data-etat");
-    alert("État sélectionné : " + etatSelectionne);
-    generateQrCode();
+    etat = btn.dataset.etat;
+    generateQRCode();
   });
 });
 
-function generateQrCode() {
+function generateQRCode() {
+  const nom1 = document.getElementById("nom1").value.trim();
+  const prenom1 = document.getElementById("prenom1").value.trim();
+  const classe1 = document.getElementById("classe1").value.trim();
+
+  const nom2 = document.getElementById("nom2").value.trim();
+  const prenom2 = document.getElementById("prenom2").value.trim();
+  const classe2 = document.getElementById("classe2").value.trim();
+
+  const duree = document.getElementById("duree").value;
+  const dist = distanceTotal.textContent;
+  const vit = vitesseMoy.textContent;
+  const vma = vmaReal.textContent;
+
   const data = {
-    eleve1: {
-      nom: nom1.value,
-      prenom: prenom1.value,
-      classe: classe1.value
-    },
-    eleve2: {
-      nom: nom2.value,
-      prenom: prenom2.value,
-      classe: classe2.value
-    },
-    duree: dureeInput.value,
-    distance: distanceTotalEl.textContent,
-    vitesse: vitesseMoyEl.textContent,
-    vma: vmaRealEl.textContent,
-    etat: etatSelectionne
+    groupe: new Date().toISOString(),
+    eleve1: `${prenom1} ${nom1}`,
+    eleve2: `${prenom2} ${nom2}`,
+    classe: classe1 || classe2,
+    duree: `${duree} min`,
+    distance: `${dist} m`,
+    vitesse: `${vit} km/h`,
+    vma: `${vma} km/h`,
+    etat
   };
 
-  const qrData = JSON.stringify(data);
+  const text = JSON.stringify(data);
   qrCodeBox.innerHTML = "";
   new QRCode(qrCodeBox, {
-    text: qrData,
+    text,
     width: 200,
     height: 200
   });
+  qrContainer.style.display = "block";
 }
 
-// Mode Prof
-profPinSubmit.addEventListener("click", () => {
-  if (profPinInput.value === profPin) {
-    profDashboard.style.display = "block";
+        const data = JSON.parse(decodedText);
+        if (!results.some(r => r.eleve1 === data.eleve1 && r.eleve2 === data.eleve2)) {
+          results.push(data);
+          updateTable();
+        }
+      } catch (e) {
+        alert("QR Code invalide ou mal formé.");
+      }
+    },
+    (errorMessage) => {
+      // Ignorer les erreurs de scan
+    }
+  ).catch((err) => {
+    console.error("Erreur de démarrage QR code :", err);
+  });
+}
+
+function updateTable() {
+  const table = document.getElementById("resultsTable");
+  const tbody = document.createElement("tbody");
+
+  results.sort((a, b) =>
+    (a.classe + a.eleve1).localeCompare(b.classe + b.eleve1)
+  );
+
+  results.forEach((r, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${i + 1}</td>
+      <td>${r.classe}</td>
+      <td>${r.eleve1}</td>
+      <td>${r.eleve2}</td>
+      <td>${r.duree}</td>
+      <td>${r.distance}</td>
+      <td>${r.vitesse}</td>
+      <td>${r.vma}</td>
+      <td>${r.etat || "-"}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const oldBody = table.querySelector("tbody");
+  if (oldBody) table.removeChild(oldBody);
+  table.appendChild(tbody);
+}
+
+document.getElementById("exportCsvBtn").addEventListener("click", () => {
+  if (results.length === 0) return alert("Aucun résultat à exporter.");
+
+  const header = [
+    "Classe",
+    "Élève 1",
+    "Élève 2",
+    "Durée",
+    "Distance",
+    "Vitesse",
+    "VMA",
+    "État"
+  ];
+
+  const rows = results.map(r => [
+    r.classe,
+    r.eleve1,
+    r.eleve2,
+    r.duree,
+    r.distance,
+    r.vitesse,
+    r.vma,
+    r.etat || ""
+  ]);
+
+  const csvContent = [header, ...rows]
+    .map(e => e.join(";"))
+    .join("\n");
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+
+  a.href = url;
+  a.download = "resultats_course.csv";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+
+document.getElementById("pinSubmit").addEventListener("click", () => {
+  const pinInput = document.getElementById("pinInput").value;
+  if (pinInput === currentPin) {
+    document.getElementById("profDashboard").style.display = "block";
+    document.getElementById("profAccess").style.display = "none";
     startQrScanner();
   } else {
-    alert("Code PIN incorrect");
+    alert("Code incorrect");
   }
 });
 
 function startQrScanner() {
-  if (html5QrCode) return;
+  if (scanInProgress) return;
 
-  html5QrCode = new Html5Qrcode("qr-reader");
-  const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+  const qrReader = new Html5Qrcode("qr-reader");
+  scanInProgress = true;
 
-  html5QrCode.start(
+  qrReader.start(
     { facingMode: "environment" },
-    config,
+    {
+      fps: 10,
+      qrbox: { width: 250, height: 250 }
+    },
     (decodedText) => {
       try {
         const data = JSON.parse(decodedText);
-        resultsData.push(data);
-        renderResults();
-        alert("QR Code scanné avec succès !");
-      } catch {
-        alert("QR code invalide.");
+        if (!results.some(r =>
+          r.eleve1 === data.eleve1 &&
+          r.eleve2 === data.eleve2 &&
+          r.classe === data.classe
+        )) {
+          results.push(data);
+          updateTable();
+        }
+      } catch (e) {
+        alert("QR Code invalide ou mal formé.");
       }
     },
-    () => {}
+    (error) => {
+      // Ne rien faire sur erreurs mineures
+    }
   ).catch(err => {
-    alert("Erreur lancement scanner : " + err);
+    console.error("Erreur scanner QR :", err);
   });
 }
-
-stopScanBtn.addEventListener("click", () => {
-  if (html5QrCode) {
-    html5QrCode.stop().then(() => {
-      html5QrCode.clear();
-      html5QrCode = null;
-    });
-  }
-});
-
-function renderResults() {
-  resultsBody.innerHTML = "";
-  resultsData.forEach((groupe, i) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>Groupe ${i + 1}</td>
-      <td>${groupe.eleve1.nom} ${groupe.eleve1.prenom}</td>
-      <td>${groupe.eleve2.nom} ${groupe.eleve2.prenom}</td>
-      <td>${groupe.classe}</td>
-      <td>${groupe.duree}</td>
-      <td>${groupe.distance}</td>
-      <td>${groupe.vitesse}</td>
-      <td>${groupe.vma}</td>
-      <td>${groupe.etat}</td>
-    `;
-    resultsBody.appendChild(tr);
-  });
-}
-
-exportCsvBtn.addEventListener("click", () => {
-  if (resultsData.length === 0) {
-    alert("Aucune donnée à exporter.");
-    return;
-  }
-
-  const headers = ["Groupe", "Élève 1", "Élève 2", "Classe", "Durée", "Distance", "Vitesse", "VMA", "État"];
-  const rows = resultsData.map((g, i) => [
-    `Groupe ${i + 1}`,
-    `${g.eleve1.nom} ${g.eleve1.prenom}`,
-    `${g.eleve2.nom} ${g.eleve2.prenom}`,
-    g.eleve1.classe || g.eleve2.classe,
-    g.duree,
-    g.distance,
-    g.vitesse,
-    g.vma,
-    g.etat
-  ].join(";"));
-
-  const csv = [headers.join(";"), ...rows].join("\n");
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "resultats_groupes.csv";
-  a.click();
-});
-
-startBtn.addEventListener("click", startCourse);
-lapBtn.addEventListener("click", addLap);
-resetBtn.addEventListener("click", resetCourse);
-
-// Footer accès prof
-let clickCount = 0;
-footer.addEventListener("click", () => {
-  clickCount++;
-  if (clickCount >= 3) {
-    document.getElementById("profAccess").style.display = "block";
-    clickCount = 0;
-  }
-  setTimeout(() => clickCount = 0, 1500);
-});
