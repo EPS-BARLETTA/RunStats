@@ -1,69 +1,81 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RunStats</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>RunStats 🏃</h1>
+  <div class="app-container">
+    <h1>RunStats 🏃‍♂️🏃‍♀️</h1>
 
     <div id="studentInput">
-      <div class="ligne">
-        <input type="text" id="nom" placeholder="Nom">
-        <input type="text" id="prenom" placeholder="Prénom">
-        <input type="text" id="classe" placeholder="Classe">
+      <div class="input-row">
+        <input type="text" id="nom1" placeholder="Nom élève 1" />
+        <input type="text" id="prenom1" placeholder="Prénom élève 1" />
       </div>
-      <div class="ligne">
-        <input type="number" id="duree" placeholder="Durée (min)">
-        <input type="number" id="distanceTour" placeholder="Distance d’un tour (m)">
-        <input type="number" id="vmaRef" placeholder="VMA de référence (km/h)">
+      <div class="input-row">
+        <input type="text" id="nom2" placeholder="Nom élève 2" />
+        <input type="text" id="prenom2" placeholder="Prénom élève 2" />
+      </div>
+      <div class="input-row">
+        <input type="text" id="classe" placeholder="Classe" />
+      </div>
+      <div class="input-row">
+        <input type="number" id="duree" placeholder="Durée course (min)" />
+        <input type="number" id="distanceTour" placeholder="Distance 1 tour (m)" />
+        <input type="number" id="vmaRef" placeholder="VMA de référence" />
       </div>
 
-      <div class="chrono" id="chronoDisplay">00:00</div>
-      <div class="stats">
-        <button id="startBtn">Démarrer</button>
-        <button id="lapBtn" disabled>Tour</button>
-        <button id="resetBtn">Reset</button>
+      <div class="controls">
+        <button id="startBtn">Démarrer la course</button>
+        <button id="lapBtn" disabled>Ajouter un tour</button>
+        <button id="resetBtn" disabled>Reset</button>
       </div>
 
-      <div class="resultats">
+      <div class="chrono">
+        <h2 id="chronoDisplay">00:00</h2>
         <p>Tours : <span id="lapsCount">0</span></p>
-        <p>Distance : <span id="distanceTotal">0</span> m</p>
-        <p>Distance : <span id="distanceKm">0.00</span> km</p>
+        <p>Distance : <span id="distanceTotal">0</span> m (<span id="distanceKm">0.00</span> km)</p>
         <p>Vitesse moyenne : <span id="vitesseMoy">0.00</span> km/h</p>
-        <p>VMA réalisée : <span id="vmaReal">0.00</span> km/h</p>
+        <p>VMA estimée : <span id="vmaReal">0.00</span> km/h</p>
       </div>
 
       <div id="etatForme" style="display:none;">
-        <p>Comment tu te sens ?</p>
-        <button class="etatBtn" data-etat="Bien">😊</button>
-        <button class="etatBtn" data-etat="Bof">😐</button>
-        <button class="etatBtn" data-etat="Mal">🤢</button>
+        <p>Comment te sens-tu ?</p>
+        <button class="etatBtn" data-etat="😃">😃 Bien</button>
+        <button class="etatBtn" data-etat="😐">😐 Bof</button>
+        <button class="etatBtn" data-etat="🤢">🤢 Mal</button>
+      </div>
+
+      <div id="qrCodeContainer" style="display:none;">
+        <p>Scannez ce QR code avec l’app prof :</p>
+        <div id="qrCode"></div>
       </div>
     </div>
 
+    <div id="profAccess">
+      <button id="openProfBtn">🔒 Mode Prof</button>
+    </div>
+
     <div id="profDashboard" style="display:none;">
-      <h2>Mode Prof 👨‍🏫</h2>
-      <input type="password" id="profPinInput" placeholder="Code PIN">
-      <button id="profPinSubmit">Accéder</button>
-      <button id="changePinBtn" style="display:none;">Changer PIN</button>
+      <input type="password" id="profPinInput" placeholder="Code PIN prof" />
+      <button id="profPinSubmit">Valider</button>
+
+      <button id="changePinBtn" style="display:none;">Changer code PIN</button>
+      <button id="stopScanBtn" style="display:none;">Stopper Scan</button>
 
       <div id="qr-scan-container" style="display:none;">
-        <h3>Scanner les QR codes des élèves</h3>
-        <div id="qr-reader" style="width: 300px;"></div>
-        <button id="stopScanBtn">Arrêter Scan</button>
+        <div id="qr-reader" style="width:300px;"></div>
       </div>
 
       <table>
         <thead>
           <tr>
-            <th>Nom</th>
-            <th>Prénom</th>
+            <th>Élève 1</th>
+            <th>Élève 2</th>
             <th>Classe</th>
-            <th>Durée</th>
             <th>Distance</th>
             <th>Vitesse</th>
             <th>VMA</th>
@@ -73,11 +85,13 @@
         <tbody id="resultsBody"></tbody>
       </table>
 
-      <button id="exportCsvBtn">Exporter CSV</button>
+      <button id="exportCsvBtn">📤 Exporter CSV</button>
     </div>
+
+    <footer id="footer">RunStats – Équipe EPS Lycée Vauban – JB</footer>
   </div>
 
-  <footer id="footer">RunStats – Équipe EPS Lycée Vauban – JB</footer>
+  <script src="https://unpkg.com/html5-qrcode"></script>
   <script src="script.js"></script>
 </body>
 </html>
