@@ -1,129 +1,63 @@
-/* Reset de base */
-* {
-  box-sizing: border-box;
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
   margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px;
 }
 
-/* Conteneur principal centré */
-main {
+.container {
   max-width: 600px;
-  margin: 20px auto;
-  padding: 10px;
+  margin: auto;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
   text-align: center;
 }
 
-/* Titre principal */
-header h1 {
-  text-align: center;
-  margin-top: 20px;
+h1, h2 {
   color: #333;
 }
 
-/* Formulaire en flex pour aligner les inputs sur une ligne */
-form#formCourse {
+input, button {
+  padding: 10px;
+  margin: 5px;
+  font-size: 16px;
+}
+
+.form-line {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
 }
 
-/* Chaque input prend une taille adaptée et est centré */
-form#formCourse input {
-  flex: 1 1 150px;
-  padding: 8px;
-  font-size: 1em;
-  text-align: center;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-/* Boutons centrés */
 button {
-  padding: 10px 20px;
-  font-size: 1.1em;
-  margin: 10px auto;
-  cursor: pointer;
-  display: inline-block;
-  border-radius: 5px;
-  background-color: #0077cc;
-  color: white;
+  background-color: #4CAF50;
   border: none;
-  transition: background-color 0.3s ease;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
 button:hover {
-  background-color: #005fa3;
+  background-color: #45a049;
 }
 
-/* Bouton reset style particulier */
-#resetBtn {
-  background-color: #d9534f;
+#chrono {
+  font-size: 48px;
+  margin: 20px 0;
 }
 
-#resetBtn:hover {
-  background-color: #c9302c;
+#boutonTour {
+  font-size: 24px;
+  background-color: #2196F3;
 }
 
-/* Table centrée */
-table#tableEleves {
-  margin: 0 auto 20px auto;
-  border-collapse: collapse;
-  width: 100%;
-  max-width: 600px;
-}
-
-/* Centrer contenu des cellules */
-table#tableEleves th, table#tableEleves td {
-  padding: 8px;
-  text-align: center;
-  border: 1px solid #ddd;
-}
-
-/* Section titre mode prof */
-section#interfaceProf h2 {
-  text-align: center;
-  margin-bottom: 15px;
-  color: #444;
-}
-
-/* Footer discret */
-footer p {
-  color: #bbb;
-  font-size: 0.9em;
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
-  user-select: none;
-}
-
-/* Styles pour le scanner QR */
-#qr-reader {
-  margin: 20px auto;
-}
-
-/* Input et label dans mode prof */
-section#interfaceProf div {
-  margin-bottom: 15px;
-}
-
-section#interfaceProf input[type="password"] {
-  width: 120px;
-  padding: 6px;
-  font-size: 1em;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  text-align: center;
-}
-
-/* Responsive pour petits écrans */
-@media (max-width: 480px) {
-  form#formCourse {
-    flex-direction: column;
-  }
-  form#formCourse input {
-    flex: 1 1 100%;
-  }
+footer {
+  margin-top: 50px;
+  font-size: 14px;
+  color: #aaa;
+  text-align: right;
 }
