@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>RunStats</title>
   <link rel="stylesheet" href="style.css" />
+  <!-- Librairie QR Code scanner -->
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 <body>
   <div class="container">
     <h1>🏃‍♂️ RunStats</h1>
 
-    <!-- Saisie données élève -->
+    <!-- Saisie élève -->
     <div class="form-line">
       <input type="text" id="nom" placeholder="Nom">
       <input type="text" id="prenom" placeholder="Prénom">
@@ -25,7 +27,7 @@
     </div>
     <button onclick="demarrerCourse()">🎬 Démarrer</button>
 
-    <!-- Section course -->
+    <!-- Pendant la course -->
     <div id="courseSection" style="display:none;">
       <h2 id="chrono">00:00</h2>
       <button id="boutonTour" onclick="compterTour()">➕ Tour</button>
@@ -33,7 +35,7 @@
       <div id="infosCourse"></div>
     </div>
 
-    <!-- Résultat final -->
+    <!-- Résultats -->
     <div id="resultats" style="display:none;">
       <h2>📋 Résultats</h2>
       <div id="resumeCourse"></div>
@@ -46,7 +48,7 @@
       <div id="qrContainer"></div>
     </div>
 
-    <!-- SECTION PROF -->
+    <!-- MODE PROF -->
     <div id="profLogin" style="margin-top: 50px;">
       <h2>🔐 Accès Professeur</h2>
       <input type="password" id="inputProfPIN" maxlength="4" placeholder="Code PIN (4 chiffres)">
@@ -56,10 +58,17 @@
     <div id="profDashboard" style="display:none;">
       <h2>📊 Résultats des élèves</h2>
       <button onclick="startQRScanner()">📷 Scanner un QR Code</button>
+      <button onclick="stopQRScanner()">🛑 Stopper le scan</button>
       <button onclick="exportCSV()">💾 Exporter les données (CSV)</button>
       <button onclick="resetProfData()">🗑️ Réinitialiser</button>
-      <table id="profResultsTable"></table>
 
+      <!-- Caméra QR code -->
+      <div id="qr-reader" style="width: 100%; margin-top: 20px;"></div>
+
+      <!-- Tableau des résultats -->
+      <table id="profResultsTable" style="margin-top:20px;"></table>
+
+      <!-- Changer code PIN -->
       <h3>🔁 Changer le code PIN</h3>
       <input type="password" id="inputNewPIN" maxlength="4" placeholder="Nouveau code PIN">
       <button onclick="changeProfPIN()">Modifier le code PIN</button>
