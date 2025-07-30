@@ -101,3 +101,11 @@ footer {
   font-size: 12px;
   color: #888;
 }
+.signature {
+  position: fixed;
+  bottom: 10px;
+  right: 15px;
+  font-size: 0.9em;
+  color: #ccc;
+  font-style: italic;
+}
