@@ -1,260 +1,60 @@
-/* Reset basique */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
 body {
-  background: #f5f7fa;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 20px;
+  background-color: #f5f5f5;
+}
+
+h1 {
   color: #333;
-  padding: 20px;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
-header {
-  text-align: center;
-  margin-bottom: 30px;
+label {
+  font-size: 1.1em;
 }
 
-header h1 {
-  font-size: 2.5rem;
-  color: #007acc;
+input[type="number"] {
+  padding: 5px;
+  font-size: 1em;
+  margin: 10px;
+  width: 120px;
 }
 
-header h2 {
-  font-size: 1.2rem;
-  font-weight: normal;
-  color: #555;
-  margin-top: 5px;
-}
-
-/* Conteneurs principaux */
-main {
-  background: #fff;
-  border-radius: 8px;
-  padding: 20px 30px;
-  box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
-  width: 100%;
-  max-width: 600px;
-  margin-bottom: 30px;
-}
-
-/* Groupes d’input */
-.input-group {
-  margin-bottom: 20px;
-}
-
-.input-group h3 {
-  margin-bottom: 10px;
-  color: #007acc;
-  font-weight: 600;
-}
-
-.input-group input[type="text"],
-.input-group input[type="number"] {
-  width: calc(33.333% - 12px);
-  padding: 8px 10px;
-  margin-right: 12px;
-  border: 1px solid #bbb;
-  border-radius: 5px;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-}
-
-.input-group input[type="text"]:focus,
-.input-group input[type="number"]:focus {
-  border-color: #007acc;
-  outline: none;
-}
-
-.input-group input[type="text"]:last-child,
-.input-group input[type="number"]:last-child {
-  margin-right: 0;
-}
-
-/* Chrono */
-#chrono {
-  text-align: center;
-  margin-bottom: 20px;
+button {
+  padding: 10px 20px;
+  font-size: 1em;
+  margin: 5px;
+  cursor: pointer;
 }
 
 #chronoDisplay {
-  font-size: 3rem;
-  font-weight: bold;
-  margin-bottom: 15px;
-  color: #222;
-  transition: color 0.3s ease;
+  font-size: 2.5em;
+  margin: 20px 0;
 }
 
-#chronoDisplay.red {
-  color: #e63946;
-}
-
-#chrono button {
-  background-color: #007acc;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  margin: 0 8px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-}
-
-#chrono button:disabled {
-  background-color: #bbb;
-  cursor: not-allowed;
-}
-
-#chrono button:hover:not(:disabled) {
-  background-color: #005fa3;
-}
-
-/* Statistiques */
-#stats p {
-  font-size: 1.1rem;
-  margin-bottom: 8px;
-}
-
-#stats span {
-  font-weight: 700;
-  color: #007acc;
-}
-
-/* État de forme */
-#etatForme {
-  text-align: center;
-  margin-top: 20px;
-}
-
-#etatForme p {
-  margin-bottom: 12px;
-  font-size: 1.2rem;
-  color: #444;
-}
-
-.etatBtn {
-  background: #eee;
-  border: 1.5px solid #bbb;
-  border-radius: 8px;
+#etatForme button {
+  margin: 0 10px;
+  font-size: 1.3em;
   padding: 10px 15px;
-  margin: 0 8px;
-  cursor: pointer;
-  font-size: 1.1rem;
-  transition: background-color 0.25s ease, border-color 0.25s ease;
-  user-select: none;
 }
 
-.etatBtn:hover {
-  background-color: #007acc;
-  color: white;
-  border-color: #005fa3;
-}
-
-/* QR code container */
 #qrContainer {
-  margin-top: 20px;
-  text-align: center;
-}
-
-#qrCodeBox {
-  margin-top: 10px;
+  margin-top: 30px;
+  background-color: white;
   display: inline-block;
+  padding: 20px;
+  border: 1px solid #ccc;
 }
 
-/* Tableau espace prof */
-#profDashboard table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
+#qrCodeBox canvas {
+  display: block;
+  margin: auto;
 }
 
-#profDashboard th,
-#profDashboard td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
-  font-size: 0.95rem;
+.red {
+  color: red;
 }
 
-#profDashboard th {
-  background-color: #007acc;
-  color: white;
-  font-weight: 600;
-}
-
-#profDashboard tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-#profDashboard tr:hover {
-  background-color: #dbe9fb;
-}
-
-/* Prof access */
-#profAccess {
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-#profAccess input[type="password"] {
-  padding: 8px 12px;
-  font-size: 1rem;
-  width: 150px;
-  border: 1px solid #bbb;
-  border-radius: 5px;
-  margin-right: 8px;
-  transition: border-color 0.3s ease;
-}
-
-#profAccess input[type="password"]:focus {
-  border-color: #007acc;
-  outline: none;
-}
-
-#profAccess button {
-  background-color: #007acc;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-}
-
-#profAccess button:hover {
-  background-color: #005fa3;
-}
-
-/* Footer */
-footer#footer {
-  text-align: center;
-  font-size: 0.9rem;
-  color: #666;
-  margin-top: auto;
-}
-
-/* Responsive */
-@media (max-width: 640px) {
-  .input-group input[type="text"],
-  .input-group input[type="number"] {
-    width: 100%;
-    margin: 6px 0;
-  }
-
-  #chrono button {
-    margin: 8px 4px;
-    width: 100px;
-  }
-
-  main {
-    padding: 15px 20px;
-  }
+#lapsCount {
+  font-weight: bold;
 }
