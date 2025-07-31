@@ -108,10 +108,11 @@ function resetStats() {
 }
 
 function finishCourse() {
+  clearInterval(chronoInterval);
   startBtn.disabled = true;
   lapBtn.disabled = true;
   resetBtn.disabled = false;
-  etatFormeDiv.style.display = "block";
+  etatFormeDiv.style.display = "flex"; // afficher le choix emoji
 }
 
 function saveResult(etat) {
@@ -193,6 +194,13 @@ resetBtn.addEventListener("click", () => {
 
 // Partie Professeur
 
+function showProfLogin() {
+  profPinInput.style.display = "inline-block";
+  profPinSubmit.style.display = "inline-block";
+  logoutBtn.style.display = "none";
+  profDashboard.style.display = "none";
+}
+
 profPinSubmit.addEventListener("click", () => {
   const pin = profPinInput.value.trim();
   if (pin === CODE_PROF) {
@@ -200,6 +208,7 @@ profPinSubmit.addEventListener("click", () => {
     profPinInput.style.display = "none";
     profPinSubmit.style.display = "none";
     logoutBtn.style.display = "inline-block";
+    startScanning();
   } else {
     alert("Code professeur incorrect");
   }
@@ -207,9 +216,7 @@ profPinSubmit.addEventListener("click", () => {
 
 logoutBtn.addEventListener("click", () => {
   profDashboard.style.display = "none";
-  profPinInput.style.display = "inline-block";
-  profPinSubmit.style.display = "inline-block";
-  logoutBtn.style.display = "none";
+  showProfLogin();
   stopScanning();
 });
 
@@ -277,56 +284,50 @@ function startScanning() {
     { facingMode: "environment" },
     {
       fps: 10,
-      qrbox: 250,
+      qrbox: 250
     },
     onScanSuccess
-  ).catch(err => alert("Erreur démarrage scanner : " + err));
+  ).catch(err => {
+    console.error("Erreur scan QR:", err);
+  });
 }
 
 function stopScanning() {
-  if (!html5QrcodeScanner) return;
-  html5QrcodeScanner.stop()
-    .then(() => {
+  if (html5QrcodeScanner) {
+    html5QrcodeScanner.stop().then(() => {
       html5QrcodeScanner.clear();
       html5QrcodeScanner = null;
-    })
-    .catch(err => console.error(err));
+    }).catch(err => console.error(err));
+  }
 }
 
 stopScanBtn.addEventListener("click", () => {
   stopScanning();
 });
 
-profPinSubmit.addEventListener("click", () => {
-  if (profPinInput.value.trim() === CODE_PROF) {
-    startScanning();
-  }
-});
-
-logoutBtn.addEventListener("click", () => {
-  stopScanning();
-});
-
 // Export CSV
-function exportCSV() {
+exportCsvBtn.addEventListener("click", () => {
   if (results.length === 0) {
     alert("Aucun résultat à exporter.");
     return;
   }
-  let csv = "Course;Nom;Prénom;Sexe;Classe;Durée (min);Distance totale (m);Vitesse moyenne (km/h);VMA estimée (km/h);État\n";
-  results.forEach(r => {
-    csv += `${r.courseNum};${r.eleve1.nom};${r.eleve1.prenom};${r.eleve1.sexe};${r.eleve1.classe};${r.duree};${Math.round(r.distanceTotal)};${r.vitesseMoy.toFixed(2)};${r.vmaEstimee.toFixed(2)};${r.etat}\n`;
-    csv += `${r.courseNum};${r.eleve2.nom};${r.eleve2.prenom};${r.eleve2.sexe};${r.eleve2.classe};${r.duree};${Math.round(r.distanceTotal)};${r.vitesseMoy.toFixed(2)};${r.vmaEstimee.toFixed(2)};${r.etat}\n`;
+  let csv = "Num;Nom;Prénom;Sexe;Classe;Durée(min);Distance totale(m);Vitesse moy(km/h);VMA estimée;État forme\n";
+  results.forEach((r, i) => {
+    csv += `${i*2+1};${r.eleve1.nom};${r.eleve1.prenom};${r.eleve1.sexe};${r.eleve1.classe};${r.duree};${Math.round(r.distanceTotal)};${r.vitesseMoy.toFixed(2)};${r.vmaEstimee.toFixed(2)};${r.etat}\n`;
+    csv += `${i*2+2};${r.eleve2.nom};${r.eleve2.prenom};${r.eleve2.sexe};${r.eleve2.classe};${r.duree};${Math.round(r.distanceTotal)};${r.vitesseMoy.toFixed(2)};${r.vmaEstimee.toFixed(2)};${r.etat}\n`;
   });
 
-  const blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "RunStats_results.csv";
-  link.click();
-}
+  const blob = new Blob([csv], {type: "text/csv"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "RunStats_Results.csv";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
 
-exportCsvBtn.addEventListener("click", exportCSV);
-
-// Init état
+// Initialisation
 resetChrono();
+showProfLogin();
