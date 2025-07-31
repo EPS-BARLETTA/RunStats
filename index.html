@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats – Lycée Vauban</title>
+  <title>RunStats - Équipe EPS Vauban - JB</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -15,15 +15,26 @@
     <h2>Équipe EPS Lycée Vauban - JB</h2>
   </header>
 
-  <main id="studentZone">
+  <main id="studentInput">
+    <!-- Zone de saisie élèves -->
     <div class="input-group">
-      <h3>Élève</h3>
-      <input type="text" id="nom" placeholder="Nom">
-      <input type="text" id="prenom" placeholder="Prénom">
-      <input type="text" id="classe" placeholder="Classe">
-      <input type="number" id="duree" placeholder="Durée (min)">
+      <h3>Élève 1</h3>
+      <input type="text" id="nom1" placeholder="Nom">
+      <input type="text" id="prenom1" placeholder="Prénom">
+      <input type="text" id="classe1" placeholder="Classe">
+    </div>
+
+    <div class="input-group">
+      <h3>Élève 2</h3>
+      <input type="text" id="nom2" placeholder="Nom">
+      <input type="text" id="prenom2" placeholder="Prénom">
+      <input type="text" id="classe2" placeholder="Classe">
+    </div>
+
+    <div class="input-group">
+      <input type="number" id="duree" placeholder="Durée de la course (min)">
       <input type="number" id="distanceTour" placeholder="Distance d’un tour (m)">
-      <input type="number" id="vmaRef" placeholder="VMA (optionnelle)">
+      <input type="number" id="vmaRef" placeholder="VMA de référence (km/h)">
     </div>
 
     <div id="chrono">
@@ -43,28 +54,37 @@
 
     <div id="etatForme" style="display: none;">
       <p>Comment te sens-tu ?</p>
-      <button class="etatBtn" data-etat="Très bien">💪</button>
-      <button class="etatBtn" data-etat="Moyen">😐</button>
-      <button class="etatBtn" data-etat="Fatigué">😫</button>
+      <button class="etatBtn" data-etat="Très bien">💪 Très bien</button>
+      <button class="etatBtn" data-etat="Moyen">😐 Moyen</button>
+      <button class="etatBtn" data-etat="Fatigué">😫 Fatigué</button>
     </div>
 
     <div id="qrContainer" style="display: none;">
-      <h3>QR Code à présenter au professeur</h3>
+      <h3>QR Code à scanner par le professeur</h3>
       <div id="qrCodeBox"></div>
     </div>
   </main>
 
+  <!-- ===================== PROF ===================== -->
   <main id="profDashboard" style="display: none;">
     <h2>Espace Professeur</h2>
-    <div id="qr-reader" style="width: 300px; margin: auto;"></div>
-    <button id="stopScanBtn">Arrêter le scan</button>
+    <div id="qr-scan-container">
+      <div id="qr-reader" style="width: 300px; margin: auto;"></div>
+      <button id="stopScanBtn">Arrêter le scan</button>
+    </div>
+
+    <!-- ✅ Ajout ici -->
+    <button id="generateGroupsBtn">Créer les groupes</button>
+    <div id="groupsDisplay"></div>
+
     <button id="exportCsvBtn">Exporter en CSV</button>
 
     <table>
       <thead>
         <tr>
-          <th>Nom</th>
-          <th>Prénom</th>
+          <th>Groupe</th>
+          <th>Élève 1</th>
+          <th>Élève 2</th>
           <th>Classe</th>
           <th>Durée</th>
           <th>Distance</th>
@@ -80,10 +100,11 @@
   <div id="profAccess">
     <input type="password" id="profPinInput" placeholder="Code Prof" />
     <button id="profPinSubmit">Entrer</button>
+    <button id="changePinBtn" style="display:none;">Changer le code PIN</button>
   </div>
 
-  <footer>
-    RunStats – Équipe EPS Lycée Vauban - JB
+  <footer id="footer">
+    <p style="color: #aaa; font-size: 0.8em;">RunStats – Équipe EPS Lycée Vauban - JB</p>
   </footer>
 
   <script src="script.js"></script>
