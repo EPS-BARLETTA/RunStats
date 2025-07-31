@@ -1,86 +1,86 @@
+// =========================
 // Variables globales
-let chronoInterval;
-let chronoStartTime;
-let chronoRunning = false;
+// =========================
 let tours = [];
-let currentRunner = 1;
-let runnersData = { 1: {}, 2: {} };
+let tempsTotal = 0;
+let chronoActif = false;
+let interval;
+let currentRunner = 1; // 1 = élève 1, 2 = élève 2
+let runnersData = {};
+let qrDataArray = []; // Pour stocker les données scannées (mode prof)
 
-// Récupérer les éléments du DOM
-const chronoDisplay = document.getElementById('chronoDisplay');
-const btnStart = document.getElementById('btnStart');
-const btnLap = document.getElementById('btnLap');
-const btnReset = document.getElementById('btnReset');
-const etatFormeDiv = document.getElementById('etatForme');
-const qrContainer = document.getElementById('qrContainer');
-const tableBody = document.querySelector('#resultTable tbody');
+// =========================
+// Chronomètre
+// =========================
+const chronoDisplay = document.getElementById("chronoDisplay");
+const btnStart = document.getElementById("startBtn");
+const btnLap = document.getElementById("lapBtn");
+const btnReset = document.getElementById("resetBtn");
 
-// Fonction pour formater le temps
-function formatTime(ms) {
-  let totalSeconds = Math.floor(ms / 1000);
-  let minutes = Math.floor(totalSeconds / 60);
-  let seconds = totalSeconds % 60;
-  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+btnStart.addEventListener("click", startChrono);
+btnLap.addEventListener("click", addLap);
+btnReset.addEventListener("click", resetChrono);
+
+function startChrono() {
+  if (chronoActif) return;
+  chronoActif = true;
+  interval = setInterval(() => {
+    tempsTotal++;
+    afficherTemps();
+  }, 1000);
 }
 
-// Démarrer / Arrêter le chrono
-btnStart.addEventListener('click', () => {
-  if (!chronoRunning) {
-    chronoRunning = true;
-    chronoStartTime = Date.now();
-    chronoInterval = setInterval(updateChrono, 100);
-    btnStart.textContent = "Stop";
-    btnLap.disabled = false;
-  } else {
-    chronoRunning = false;
-    clearInterval(chronoInterval);
-    btnStart.textContent = "Start";
-    btnLap.disabled = true;
+function addLap() {
+  const distanceTour = parseFloat(document.getElementById("distanceTour").value);
+  if (!distanceTour) {
+    alert("Indiquez la distance d'un tour !");
+    return;
   }
-});
-
-// Mettre à jour l'affichage du chrono
-function updateChrono() {
-  let elapsed = Date.now() - chronoStartTime;
-  chronoDisplay.textContent = formatTime(elapsed);
+  tours.push(distanceTour);
+  updateStats();
 }
 
-// Lap = enregistrer la distance d’un tour
-btnLap.addEventListener('click', () => {
-  let distance = parseInt(document.getElementById(`distance${currentRunner}`).value);
-  if (distance && distance > 0) {
-    tours.push(distance);
-    alert(`Tour ajouté: ${distance}m`);
-  } else {
-    alert("Entrez une distance valide.");
-  }
-});
-
-// Reset chrono
-btnReset.addEventListener('click', () => {
-  chronoRunning = false;
-  clearInterval(chronoInterval);
-  chronoDisplay.textContent = "0:00";
+function resetChrono() {
+  clearInterval(interval);
+  chronoActif = false;
+  tempsTotal = 0;
   tours = [];
-  btnStart.textContent = "Start";
-  btnLap.disabled = true;
-});
+  afficherTemps();
+  updateStats();
+}
 
-// Calculer les stats
+function afficherTemps() {
+  let min = String(Math.floor(tempsTotal / 60)).padStart(2, "0");
+  let sec = String(tempsTotal % 60).padStart(2, "0");
+  chronoDisplay.textContent = `${min}:${sec}`;
+}
+
+// =========================
+// Calcul des stats
+// =========================
 function calculStats() {
   let totalDistance = tours.reduce((a, b) => a + b, 0);
-  let timeSeconds = (Date.now() - chronoStartTime) / 1000;
-  let vitesseMoyenne = (totalDistance / timeSeconds) * 3.6; // km/h
-  let vmaEstime = vitesseMoyenne * 1.05;
+  let dureeMinutes = tempsTotal / 60;
+  let vitesseMoyenne = dureeMinutes > 0 ? (totalDistance / 1000) / dureeMinutes : 0;
+  let vmaEstime = vitesseMoyenne / 0.92;
 
   return {
-    totalDistance,
+    totalDistance: totalDistance.toFixed(0),
     vitesseMoyenne: vitesseMoyenne.toFixed(2),
     vmaEstime: vmaEstime.toFixed(2)
   };
 }
 
-// Gestion état de forme (emoji)
+function updateStats() {
+  let stats = calculStats();
+  document.getElementById("distanceTotal").textContent = stats.totalDistance;
+  document.getElementById("vitesseMoy").textContent = stats.vitesseMoyenne;
+  document.getElementById("vmaEstime").textContent = stats.vmaEstime;
+}
+
+// =========================
+// Boutons Emoji (fin course)
+// =========================
 document.querySelectorAll('.etatBtn').forEach(btn => {
   btn.addEventListener('click', () => {
     let stats = calculStats();
@@ -93,67 +93,128 @@ document.querySelectorAll('.etatBtn').forEach(btn => {
       emoji: btn.textContent
     };
 
+    if (!runnersData[currentRunner].nom || !stats.totalDistance) {
+      alert("Remplis le nom et la distance avant de valider !");
+      return;
+    }
+
     if (currentRunner === 1) {
+      // Passage au deuxième coureur
       currentRunner = 2;
       tours = [];
       btnReset.click();
       alert("Deuxième coureur, préparez-vous !");
     } else {
+      // Les deux coureurs ont terminé
       afficherQRCode();
-      remplirTableau();
+      alert("QR Code généré !");
     }
   });
 });
 
-// Générer QR Code avec données des 2 coureurs
+// =========================
+// Génération QR Code
+// =========================
 function afficherQRCode() {
-  let data = JSON.stringify(runnersData);
-  qrContainer.innerHTML = "";
-  new QRCode(qrContainer, {
-    text: data,
+  const container = document.getElementById("qrCodeBox");
+  container.innerHTML = "";
+  document.getElementById('qrContainer').style.display = "block";
+  new QRCode(container, {
+    text: JSON.stringify(runnersData),
     width: 200,
     height: 200
   });
 }
 
-// Remplir tableau des résultats
-function remplirTableau() {
-  tableBody.innerHTML = `
-    <tr>
-      <td>${runnersData[1].nom}</td>
-      <td>${runnersData[1].vmaEstime}</td>
-      <td>${runnersData[1].sexe}</td>
-    </tr>
-    <tr>
-      <td>${runnersData[2].nom}</td>
-      <td>${runnersData[2].vmaEstime}</td>
-      <td>${runnersData[2].sexe}</td>
-    </tr>
-  `;
+// =========================
+// Mode Prof : Accès sécurisé
+// =========================
+document.getElementById("profPinSubmit").addEventListener("click", () => {
+  const code = document.getElementById("profPinInput").value;
+  if (code === "1976") {
+    document.getElementById("profDashboard").style.display = "block";
+    document.getElementById("studentInput").style.display = "none";
+    document.getElementById("logoutBtn").style.display = "inline-block";
+    startQrScanner();
+  } else {
+    alert("Code incorrect.");
+  }
+});
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  location.reload();
+});
+
+// =========================
+// Scanner QR Code (mode prof)
+// =========================
+function startQrScanner() {
+  const qrReader = new Html5Qrcode("qr-reader");
+
+  qrReader.start({ facingMode: "environment" }, {
+    fps: 10,
+    qrbox: 250
+  }, (decoded) => {
+    try {
+      const data = JSON.parse(decoded);
+      // data = { 1: {...}, 2: {...} }
+      qrDataArray.push(data[1]);
+      qrDataArray.push(data[2]);
+      updateTable();
+    } catch (e) {
+      console.error("QR non lisible");
+    }
+  });
+
+  document.getElementById("stopScanBtn").addEventListener("click", () => {
+    qrReader.stop().then(() => {
+      document.getElementById("qr-reader").innerHTML = "";
+    });
+  });
 }
 
-// Tri en groupes de 4 équilibrés
-function creerGroupesEquilibres() {
-  let eleves = [
-    runnersData[1],
-    runnersData[2],
-    // Si tu as plus d'élèves, tu peux les ajouter ici
-  ];
+// =========================
+// Mise à jour tableau résultats
+// =========================
+function updateTable() {
+  const body = document.getElementById("resultsBody");
+  body.innerHTML = "";
+  qrDataArray.forEach((data) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${data.nom}</td>
+      <td>${data.sexe}</td>
+      <td>${data.totalDistance}</td>
+      <td>${data.vitesseMoyenne}</td>
+      <td>${data.vmaEstime}</td>
+      <td>${data.emoji}</td>
+    `;
+    body.appendChild(row);
+  });
+}
 
-  // Tri par VMA décroissante
-  eleves.sort((a, b) => b.vmaEstime - a.vmaEstime);
+// =========================
+// Tri par VMA + Groupes mixtes
+// =========================
+document.getElementById("triBtn").addEventListener("click", () => {
+  // 1. Trier par VMA (descendant)
+  let sorted = [...qrDataArray].sort((a, b) => b.vmaEstime - a.vmaEstime);
 
+  // 2. Former groupes de 4 : 1 haut, 2 moyens, 1 bas
   let groupes = [];
-  while (eleves.length >= 4) {
-    let groupe = [
-      eleves.shift(),        // meilleur
-      eleves.pop(),          // moins bon
-      eleves.shift(),        // 2e meilleur
-      eleves.pop()           // 2e moins bon
-    ];
-    groupes.push(groupe);
+  while (sorted.length >= 4) {
+    let haut = sorted.shift();
+    let moyens = sorted.splice(0, 2);
+    let bas = sorted.pop();
+    groupes.push([haut, ...moyens, bas]);
   }
 
-  console.log("Groupes équilibrés :", groupes);
-  return groupes;
-}
+  // 3. Affichage groupes
+  const body = document.getElementById("resultsBody");
+  body.innerHTML = "";
+  groupes.forEach((grp, idx) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `<td colspan="6">Groupe ${idx + 1} : ${grp.map(e => e.nom + " (" + e.sexe + ")").join(", ")}</td>`;
+    body.appendChild(row);
+  });
+});
