@@ -21,6 +21,12 @@
         <input type="text" id="nom1" placeholder="Nom" required />
         <input type="text" id="prenom1" placeholder="Prénom" required />
         <input type="text" id="classe1" placeholder="Classe" required />
+        <label>Sexe :</label>
+        <select id="sexe1" required>
+          <option value="" disabled selected>Choisir</option>
+          <option value="Garçon">Garçon</option>
+          <option value="Fille">Fille</option>
+        </select>
       </div>
 
       <div class="eleve">
@@ -28,6 +34,12 @@
         <input type="text" id="nom2" placeholder="Nom" required />
         <input type="text" id="prenom2" placeholder="Prénom" required />
         <input type="text" id="classe2" placeholder="Classe" required />
+        <label>Sexe :</label>
+        <select id="sexe2" required>
+          <option value="" disabled selected>Choisir</option>
+          <option value="Garçon">Garçon</option>
+          <option value="Fille">Fille</option>
+        </select>
       </div>
     </section>
 
@@ -48,10 +60,18 @@
     </section>
 
     <section id="statsBox">
-      <div class="stat ligne-bleue">Distance totale : <span id="distanceTotal">0</span> m</div>
-      <div class="stat ligne-verte">Distance (km) : <span id="distanceKm">0.00</span> km</div>
-      <div class="stat ligne-jaune">Vitesse moyenne : <span id="vitesseMoy">0.00</span> km/h</div>
-      <div class="stat ligne-violette">VMA estimée : <span id="vmaReal">0.00</span> km/h</div>
+      <div class="stat ligne-bleue">
+        Distance totale (m) :<br />
+        <span id="distanceTotal" class="stat-value">0</span>
+      </div>
+      <div class="stat ligne-jaune">
+        Vitesse moyenne (km/h) :<br />
+        <span id="vitesseMoy" class="stat-value">0.00</span>
+      </div>
+      <div class="stat ligne-violette">
+        VMA estimée (km/h) :<br />
+        <span id="vmaReal" class="stat-value">0.00</span>
+      </div>
     </section>
 
     <section id="etatForme" style="display: none;">
@@ -86,6 +106,7 @@
           <th>Élève</th>
           <th>Prénom</th>
           <th>Classe</th>
+          <th>Sexe</th>
           <th>Durée</th>
           <th>Distance (m)</th>
           <th>Vitesse (km/h)</th>
@@ -104,7 +125,7 @@
   </section>
 
   <footer id="footer">
-    <p>RunStats - EPS Lycée Vauban</p>
+    <p>RunStats - Équipe EPS Lycée Vauban - Luxembourg - JB</p>
   </footer>
 
   <script src="script.js"></script>
