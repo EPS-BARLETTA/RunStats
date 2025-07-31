@@ -1,90 +1,75 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RunStats - EPS Vauban</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- Librairie QRCode -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RunStats - Equipe EPS Lycée Vauban - Luxembourg</title>
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
+
 <header>
-  <h1>RunStats - Équipe EPS</h1>
-  <h2>Lycée Vauban - Luxembourg</h2>
+  <h1>RunStats - Equipe EPS Lycée Vauban - Luxembourg</h1>
 </header>
 
 <main>
-  <!-- Infos élèves -->
-  <div class="input-duo">
-    <div class="eleve">
+
+  <section id="elevesSection">
+
+    <div class="eleve" id="eleve1">
       <h2>Élève 1</h2>
-      <label>Nom :
-        <input type="text" id="nom1">
-      </label>
+      <label>Nom : <input type="text" id="nom1" /></label>
+      <label>Prénom : <input type="text" id="prenom1" /></label>
       <label>Sexe :
         <select id="sexe1">
-          <option value="Garçon">Garçon</option>
-          <option value="Fille">Fille</option>
+          <option value="M">Garçon</option>
+          <option value="F">Fille</option>
         </select>
       </label>
-      <label>Distance (m) :
-        <input type="number" id="distance1">
-      </label>
+      <label>Durée (minutes) : <input type="number" id="duree1" min="1" /></label>
+
+      <div class="etatButtons">
+        <p>État / Ressenti :</p>
+        <button class="etatBtn" data-etat="😃">😃</button>
+        <button class="etatBtn" data-etat="🙂">🙂</button>
+        <button class="etatBtn" data-etat="😐">😐</button>
+        <button class="etatBtn" data-etat="😣">😣</button>
+      </div>
+
+      <div id="resultatsEleve1" class="resultats"></div>
     </div>
 
-    <div class="eleve">
+    <div class="eleve" id="eleve2" style="opacity: 0.5; pointer-events:none;">
       <h2>Élève 2</h2>
-      <label>Nom :
-        <input type="text" id="nom2">
-      </label>
+      <label>Nom : <input type="text" id="nom2" disabled /></label>
+      <label>Prénom : <input type="text" id="prenom2" disabled /></label>
       <label>Sexe :
-        <select id="sexe2">
-          <option value="Garçon">Garçon</option>
-          <option value="Fille">Fille</option>
+        <select id="sexe2" disabled>
+          <option value="M">Garçon</option>
+          <option value="F">Fille</option>
         </select>
       </label>
-      <label>Distance (m) :
-        <input type="number" id="distance2">
-      </label>
+      <label>Durée (minutes) : <input type="number" id="duree2" min="1" disabled /></label>
+
+      <div class="etatButtons">
+        <p>État / Ressenti :</p>
+        <button class="etatBtn" data-etat="😃" disabled>😃</button>
+        <button class="etatBtn" data-etat="🙂" disabled>🙂</button>
+        <button class="etatBtn" data-etat="😐" disabled>😐</button>
+        <button class="etatBtn" data-etat="😣" disabled>😣</button>
+      </div>
+
+      <div id="resultatsEleve2" class="resultats"></div>
     </div>
-  </div>
 
-  <!-- Chronomètre -->
-  <div id="chrono">
-    <div id="chronoDisplay">0:00</div>
-    <div class="chrono-btns">
-      <button id="btnStart" class="btn-start">Start</button>
-      <button id="btnLap" class="btn-lap" disabled>Lap</button>
-      <button id="btnReset" class="btn-reset">Reset</button>
-    </div>
-  </div>
+  </section>
 
-  <!-- État de forme -->
-  <div id="etatForme">
-    <h2>État de forme (choisir un emoji)</h2>
-    <button class="etatBtn">😀</button>
-    <button class="etatBtn">😐</button>
-    <button class="etatBtn">😓</button>
-    <button class="etatBtn">😵</button>
-  </div>
+  <section id="qrContainer" style="display:none; text-align:center; margin-top: 2em;">
+    <h2>QR Code des deux élèves</h2>
+    <div id="qrCodeBox"></div>
+  </section>
 
-  <!-- QR Code -->
-  <div id="qrCodeBox">
-    <div id="qrContainer"></div>
-  </div>
-
-  <!-- Tableau résultats -->
-  <table id="resultTable">
-    <thead>
-      <tr>
-        <th>Nom</th>
-        <th>VMA estimée</th>
-        <th>Sexe</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
 </main>
 
 <footer>
