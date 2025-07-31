@@ -1,91 +1,138 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>RunStats - Equipe EPS Lycée Vauban</title>
-<link rel="stylesheet" href="style.css" />
-<script defer src="script.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RunStats - Equipe EPS Lycée Vauban</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.7/minified/html5-qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
 <body>
-
-<header>
-  <h1>RunStats - Equipe EPS Lycée Vauban - Luxembourg</h1>
-</header>
-
-<main>
-  <section id="eleves">
-    <div class="input-duo">
-      <div class="eleve">
-        <h2>Élève 1</h2>
-        <input type="text" id="prenom1" placeholder="Prénom" />
-        <input type="text" id="nom1" placeholder="Nom" />
-        <select id="sexe1">
-          <option value="" disabled selected>Sexe</option>
-          <option value="M">Garçon</option>
-          <option value="F">Fille</option>
-        </select>
+  <header>
+    <h1>RunStats - Equipe EPS Lycée Vauban - Luxembourg</h1>
+  </header>
+  <main>
+    <!-- Élèves section -->
+    <section id="elevesSection">
+      <div class="input-duo">
+        <div class="eleve">
+          <h2>Élève 1</h2>
+          <label>Nom<br /><input type="text" id="nom1" /></label>
+          <label>Prénom<br /><input type="text" id="prenom1" /></label>
+          <label>Sexe<br />
+            <select id="sexe1">
+              <option value="">--</option>
+              <option value="M">Garçon</option>
+              <option value="F">Fille</option>
+            </select>
+          </label>
+          <label>Classe<br /><input type="text" id="classe1" /></label>
+        </div>
+        <div class="eleve">
+          <h2>Élève 2</h2>
+          <label>Nom<br /><input type="text" id="nom2" /></label>
+          <label>Prénom<br /><input type="text" id="prenom2" /></label>
+          <label>Sexe<br />
+            <select id="sexe2">
+              <option value="">--</option>
+              <option value="M">Garçon</option>
+              <option value="F">Fille</option>
+            </select>
+          </label>
+          <label>Classe<br /><input type="text" id="classe2" /></label>
+        </div>
       </div>
-      <div class="eleve">
-        <h2>Élève 2</h2>
-        <input type="text" id="prenom2" placeholder="Prénom" />
-        <input type="text" id="nom2" placeholder="Nom" />
-        <select id="sexe2">
-          <option value="" disabled selected>Sexe</option>
-          <option value="M">Garçon</option>
-          <option value="F">Fille</option>
-        </select>
+
+      <div class="input-groupe">
+        <label>
+          Durée (minutes)<br />
+          <input type="number" id="duree" min="1" />
+        </label>
+        <label>
+          Distance d’un tour (mètres)<br />
+          <input type="number" id="distanceTour" min="1" />
+        </label>
+        <label>
+          VMA de référence (optionnel)<br />
+          <input type="number" id="vmaRef" step="0.01" />
+        </label>
       </div>
-    </div>
-  </section>
 
-  <section id="courseData">
-    <input type="number" id="duree" placeholder="Durée (minutes)" min="1" />
-    <input type="number" id="distanceTour" placeholder="Distance tour (m)" min="1" />
-    <input type="number" id="vmaRef" placeholder="VMA optionnelle (km/h)" min="0" step="0.01" />
-  </section>
+      <div id="chrono">
+        <div id="chronoDisplay">00:00</div>
+        <div class="chrono-btns">
+          <button class="btn-start" id="startBtn">Démarrer</button>
+          <button class="btn-lap" id="lapBtn" disabled>➕ Tour</button>
+          <button class="btn-reset" id="resetBtn" disabled>Reset</button>
+        </div>
+      </div>
 
-  <section id="chrono">
-    <div id="chronoDisplay">00:00</div>
-    <div class="chrono-btns">
-      <button id="startBtn" class="btn-start">Démarrer</button>
-      <button id="lapBtn" class="btn-lap" disabled>Ajouter 1 tour</button>
-      <button id="resetBtn" class="btn-reset" disabled>Reset</button>
-    </div>
-  </section>
+      <div id="statsBox">
+        <div class="stat ligne-bleue">
+          Distance totale (m)<br />
+          <span id="distanceTotal">0</span>
+        </div>
+        <div class="stat ligne-verte">
+          Vitesse moyenne (km/h)<br />
+          <span id="vitesseMoy">0.00</span>
+        </div>
+        <div class="stat ligne-jaune">
+          VMA estimée (km/h)<br />
+          <span id="vmaReal">0.00</span>
+        </div>
+      </div>
 
-  <section id="statsBox">
-    <div class="stat ligne-bleue">
-      <div>Distance totale (m)</div>
-      <div id="distanceTotal">0</div>
-    </div>
-    <div class="stat ligne-verte">
-      <div>Vitesse moyenne (km/h)</div>
-      <div id="vitesseMoy">0.00</div>
-    </div>
-    <div class="stat ligne-jaune">
-      <div>VMA estimée (km/h)</div>
-      <div id="vmaReal">0.00</div>
-    </div>
-  </section>
+      <div id="etatForme" style="display:none;">
+        <h2>État de forme</h2>
+        <button class="etatBtn" data-etat="😀">Très bien 😀</button>
+        <button class="etatBtn" data-etat="😖">Grimace 😖</button>
+        <button class="etatBtn" data-etat="🤮">Vomis 🤮</button>
+      </div>
 
-  <section id="etatForme" style="display:none; text-align:center;">
-    <p>Choisissez votre état (emoji):</p>
-    <button class="etatBtn" data-etat="😀">😀</button>
-    <button class="etatBtn" data-etat="😐">😐</button>
-    <button class="etatBtn" data-etat="😓">😓</button>
-  </section>
+      <div id="qrContainer" style="display:none; text-align:center; margin-top:1em;">
+        <h2>QR Code des deux courses</h2>
+        <div id="qrCodeBox"></div>
+      </div>
+    </section>
 
-  <section id="qrContainer" style="display:none; text-align:center; margin-top:20px;">
-    <div id="qrCodeBox"></div>
-  </section>
+    <!-- Espace Prof -->
+    <section id="profSection" style="display:none; margin-top:2em;">
+      <h2>Espace Professeur</h2>
+      <label>Code d'accès : <input type="password" id="profPinInput" /></label>
+      <button id="profPinSubmit">Valider</button>
+      <button id="logoutBtn" style="display:none;">Déconnexion</button>
 
-  <footer>
-    RunStats - Equipe EPS Lycée Vauban - Luxembourg - JB
-  </footer>
-</main>
+      <div id="qr-scan-container" style="margin-top:1em; display:none;">
+        <div id="qr-reader" style="width: 300px; margin: auto;"></div>
+        <button id="stopScanBtn">Arrêter le scan</button>
+      </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+      <table>
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Sexe</th>
+            <th>Classe</th>
+            <th>Durée (min)</th>
+            <th>Distance (m)</th>
+            <th>Vitesse (km/h)</th>
+            <th>VMA (km/h)</th>
+            <th>État</th>
+          </tr>
+        </thead>
+        <tbody id="resultsBody"></tbody>
+      </table>
 
+      <button id="exportCsvBtn" style="margin-top:1em;">Exporter CSV</button>
+    </section>
+
+    <footer>
+      RunStats - Equipe EPS Lycée Vauban - Luxembourg - JB
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
