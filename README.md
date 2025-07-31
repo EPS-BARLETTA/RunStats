@@ -1,57 +1,39 @@
-# RunStats - Equipe EPS Lycée Vauban - Luxembourg
-
-Application web pour la gestion et le suivi des courses VMA en EPS.
-
----
+# RunStats - Application de gestion de courses
 
 ## Description
 
-RunStats permet à deux élèves de saisir leurs données de course (nom, prénom, sexe, classe, durée, distance de piste, VMA optionnelle) et d’enregistrer leurs tours en temps réel via un chronomètre.
-
-Après chaque course, les élèves renseignent leur état de forme via des boutons emoji.
-
-L’enseignant peut scanner le QR code généré contenant toutes les données des deux courses pour importer les résultats dans un tableau.
-
-Il est aussi possible d’exporter ces données en CSV.
-
----
+RunStats est une application web permettant de chronométrer des courses, gérer les tours, calculer les statistiques comme la vitesse moyenne et la VMA estimée, et enregistrer les résultats. L'application génère également un QR Code avec les données des courses et permet à un professeur d'importer ces résultats via un scanner QR intégré.
 
 ## Fonctionnalités
 
-- Chronomètre avec gestion des tours
-- Calculs de vitesse moyenne et VMA estimée
-- Enregistrement des données élèves
-- Sélection d’état de forme avec emoji
-- Génération et lecture QR code
-- Interface Professeur avec scan QR code
-- Export CSV
-
----
+- Chronomètre avec gestion de la durée et des tours
+- Calcul de la distance totale, vitesse moyenne et VMA estimée
+- Enregistrement des résultats pour deux courses
+- Génération et affichage d'un QR Code des résultats
+- Interface professeur avec authentification par code PIN
+- Scanner QR Code pour importer les résultats des élèves
+- Export des résultats en fichier CSV
 
 ## Installation
 
-1. Cloner le dépôt
-2. Ouvrir `index.html` dans un navigateur moderne
-3. Utiliser directement, aucune configuration serveur nécessaire
+1. Cloner le dépôt ou télécharger les fichiers.
+2. Ouvrir `index.html` dans un navigateur moderne.
+3. Utiliser l'interface pour chronométrer et gérer les courses.
 
----
+## Utilisation
 
-## Usage
-
-- L’élève saisit ses informations et démarre le chronomètre.
-- Après la course, sélection de l’état de forme.
-- Pour la deuxième course, les élèves inversent leur rôle.
-- L’enseignant se connecte avec le code PIN pour scanner le QR code.
-- Résultats affichés dans un tableau, export CSV possible.
-
----
+- Remplir la durée et la distance d'un tour avant de démarrer.
+- Cliquer sur "Démarrer" pour lancer le chrono.
+- Cliquer sur "Tour suivant" à chaque tour réalisé.
+- Cliquer sur "Réinitialiser" pour tout remettre à zéro.
+- À la fin, sélectionner l'état de forme pour enregistrer le résultat.
+- Pour le professeur, entrer le code PIN et scanner les QR Codes pour importer les résultats.
+- Exporter les résultats en CSV via l'interface professeur.
 
 ## Dépendances
 
-- [QRCode.js](https://davidshimjs.github.io/qrcodejs/)
+- [QRCode.js](https://github.com/davidshimjs/qrcodejs)
 - [html5-qrcode](https://github.com/mebjas/html5-qrcode)
-
----
 
 ## Licence
 
