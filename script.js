@@ -1,310 +1,441 @@
-let timer;
-let time = 0;
-let duree = 0;
-let laps = 0;
-let courseTerminee = false;
+// script.js
+
+// --- Variables DOM ---
+const nom1 = document.getElementById("nom1");
+const prenom1 = document.getElementById("prenom1");
+const classe1 = document.getElementById("classe1");
+const vmaRef1 = document.getElementById("vmaRef1");
+
+const nom2 = document.getElementById("nom2");
+const prenom2 = document.getElementById("prenom2");
+const classe2 = document.getElementById("classe2");
+const vmaRef2 = document.getElementById("vmaRef2");
+
+const dureeInput = document.getElementById("duree");
+const distanceTourInput = document.getElementById("distanceTour");
 
 const startBtn = document.getElementById("startBtn");
 const lapBtn = document.getElementById("lapBtn");
 const resetBtn = document.getElementById("resetBtn");
+
 const chronoDisplay = document.getElementById("chronoDisplay");
 const lapsCount = document.getElementById("lapsCount");
-const distanceTotal = document.getElementById("distanceTotal");
-const distanceKm = document.getElementById("distanceKm");
-const vitesseMoy = document.getElementById("vitesseMoy");
-const vmaReal = document.getElementById("vmaReal");
+
 const etatForme = document.getElementById("etatForme");
+const etatBtns = document.querySelectorAll(".etatBtn");
+
 const qrContainer = document.getElementById("qrContainer");
 const qrCodeBox = document.getElementById("qrCodeBox");
 
+const profAccess = document.getElementById("profAccess");
+const profPinInput = document.getElementById("profPinInput");
+const profPinSubmit = document.getElementById("profPinSubmit");
+const changePinBtn = document.getElementById("changePinBtn");
+
+const profDashboard = document.getElementById("profDashboard");
+const qrReaderContainer = document.getElementById("qr-scan-container");
+const qrReaderDiv = document.getElementById("qr-reader");
+const stopScanBtn = document.getElementById("stopScanBtn");
+const exportCsvBtn = document.getElementById("exportCsvBtn");
+const resultsBody = document.getElementById("resultsBody");
+
+const generateGroupsBtn = document.getElementById("generateGroupsBtn");
+const groupsDisplay = document.getElementById("groupsDisplay");
+
+// --- Variables de fonctionnement ---
+let timer;
+let time = 0;
+let laps = 0;
+let etat = "";
+
+let dureeSec = 0;
+let distanceTour = 0;
+
+let scanActive = false;
+let scannedData = [];
+
+const profPin = "7890";
+
+// --- Fonctions utilitaires ---
 function formatTime(t) {
-  const min = Math.floor(t / 60);
-  const sec = t % 60;
-  return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+  const m = Math.floor(t / 60);
+  const s = t % 60;
+  return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
 }
 
-function updateChrono() {
+function calculateVitesseKmH(distanceM, timeS) {
+  if (timeS === 0) return 0;
+  return (distanceM / 1000) / (timeS / 3600);
+}
+
+function updateDisplay() {
   chronoDisplay.textContent = formatTime(time);
-
-  if (duree * 60 - time <= 10 && !chronoDisplay.classList.contains("red")) {
-    chronoDisplay.classList.add("warning");
-  }
-
-  if (time >= duree * 60) {
-    clearInterval(timer);
-    chronoDisplay.classList.remove("warning");
+  lapsCount.textContent = laps;
+  // Couleur chrono
+  if (dureeSec - time <= 10 && time < dureeSec) {
+    chronoDisplay.classList.remove("red");
+    chronoDisplay.classList.add("orange");
+  } else if (time >= dureeSec) {
+    chronoDisplay.classList.remove("orange");
     chronoDisplay.classList.add("red");
-    lapBtn.disabled = true;
-    courseTerminee = true;
-    etatForme.style.display = "block";
+  } else {
+    chronoDisplay.classList.remove("orange", "red");
   }
 }
 
-function updateStats() {
-  const tour = parseFloat(document.getElementById("distanceTour").value);
-  const distance = laps * tour;
-  const km = distance / 1000;
-  const dureeHeures = time / 3600;
-  const vitesse = dureeHeures > 0 ? km / dureeHeures : 0;
-
-  distanceTotal.textContent = distance.toFixed(0);
-  distanceKm.textContent = km.toFixed(2);
-  vitesseMoy.textContent = vitesse.toFixed(2);
-  vmaReal.textContent = vitesse.toFixed(2);
-}
-
+// --- Chrono et gestion course ---
 startBtn.addEventListener("click", () => {
-  duree = parseFloat(document.getElementById("duree").value);
-  const tour = parseFloat(document.getElementById("distanceTour").value);
-  if (!duree || !tour) {
-    alert("Merci de saisir une durée et une distance de tour.");
+  // Validation saisie
+  if (
+    !nom1.value.trim() || !prenom1.value.trim() || !classe1.value.trim() ||
+    !nom2.value.trim() || !prenom2.value.trim() || !classe2.value.trim()
+  ) {
+    alert("Veuillez remplir toutes les informations des deux élèves.");
     return;
   }
+  if (!dureeInput.value || dureeInput.value <= 0) {
+    alert("Veuillez saisir une durée valide.");
+    return;
+  }
+  if (!distanceTourInput.value || distanceTourInput.value <= 0) {
+    alert("Veuillez saisir une distance de tour valide.");
+    return;
+  }
+  dureeSec = Math.round(parseFloat(dureeInput.value) * 60);
+  distanceTour = parseFloat(distanceTourInput.value);
 
   startBtn.disabled = true;
   lapBtn.disabled = false;
   resetBtn.disabled = false;
+  etatForme.style.display = "none";
+  qrContainer.style.display = "none";
+  qrCodeBox.innerHTML = "";
+
   time = 0;
   laps = 0;
-  courseTerminee = false;
-  updateChrono();
-  updateStats();
-  chronoDisplay.classList.remove("red", "warning");
+  etat = "";
+  updateDisplay();
 
   timer = setInterval(() => {
     time++;
-    updateChrono();
-    updateStats();
+    updateDisplay();
+
+    if (time >= dureeSec) {
+      clearInterval(timer);
+      lapBtn.disabled = true;
+      etatForme.style.display = "block";
+    }
   }, 1000);
 });
 
 lapBtn.addEventListener("click", () => {
-  if (!courseTerminee) {
-    laps++;
-    updateStats();
-    lapsCount.textContent = laps;
-  }
+  laps++;
+  updateDisplay();
 });
 
 resetBtn.addEventListener("click", () => {
   clearInterval(timer);
   time = 0;
   laps = 0;
+  etat = "";
+
   startBtn.disabled = false;
   lapBtn.disabled = true;
   resetBtn.disabled = true;
-  chronoDisplay.classList.remove("red", "warning");
+
   etatForme.style.display = "none";
   qrContainer.style.display = "none";
   qrCodeBox.innerHTML = "";
-  lapsCount.textContent = 0;
-  updateStats();
+  chronoDisplay.classList.remove("orange", "red");
+
+  updateDisplay();
+
+  // Clear inputs? Non, on conserve pour la saisie continue
 });
 
-document.querySelectorAll(".etatBtn").forEach(btn => {
+// --- État de forme ---
+etatBtns.forEach(btn => {
   btn.addEventListener("click", () => {
-    const etat = btn.dataset.etat;
+    etat = btn.dataset.etat;
+    etatForme.style.display = "none";
 
-    const nom1 = document.getElementById("nom1").value.trim();
-    const prenom1 = document.getElementById("prenom1").value.trim();
-    const classe1 = document.getElementById("classe1").value.trim();
+    // Calcul distance totale (tours x distanceTour)
+    const distTotalM = laps * distanceTour;
+    const vitesseMoy = calculateVitesseKmH(distTotalM, time);
+    const vma1 = parseFloat(vmaRef1.value) || 0;
+    const vma2 = parseFloat(vmaRef2.value) || 0;
+    // Moyenne VMA des deux (0 si absent)
+    let vmaMoy = 0;
+    if (vma1 && vma2) vmaMoy = (vma1 + vma2) / 2;
+    else if (vma1) vmaMoy = vma1;
+    else if (vma2) vmaMoy = vma2;
 
-    if (!nom1 || !prenom1 || !classe1) {
-      alert("Merci de remplir les informations de l'élève.");
-      return;
-    }
-
+    // Données pour QR
     const data = {
-      nom: nom1,
-      prenom: prenom1,
-      classe: classe1,
+      eleve1: { nom: nom1.value.trim(), prenom: prenom1.value.trim(), classe: classe1.value.trim(), vma: vma1 },
+      eleve2: { nom: nom2.value.trim(), prenom: prenom2.value.trim(), classe: classe2.value.trim(), vma: vma2 },
       duree: formatTime(time),
       tours: laps,
-      distance: parseFloat(document.getElementById("distanceTotal").textContent),
-      vitesse: parseFloat(vitesseMoy.textContent),
-      vma: parseFloat(vmaReal.textContent),
+      distanceTotale_m: distTotalM,
+      vitesseMoy_kmh: vitesseMoy.toFixed(2),
+      vmaMoy: vmaMoy.toFixed(2),
       etat: etat,
       timestamp: new Date().toISOString()
     };
 
-    const text = JSON.stringify(data);
     qrCodeBox.innerHTML = "";
     new QRCode(qrCodeBox, {
-      text: text,
-      width: 200,
-      height: 200
+      text: JSON.stringify(data),
+      width: 220,
+      height: 220,
+      colorDark: "#2980b9",
+      colorLight: "#ffffff"
     });
 
-    etatForme.style.display = "none";
     qrContainer.style.display = "block";
   });
 });
 
-// === PARTIE PROF ===
-
-const profPinInput = document.getElementById("profPinInput");
-const profPinSubmit = document.getElementById("profPinSubmit");
-const profDashboard = document.getElementById("profDashboard");
-const qrReader = document.getElementById("qr-reader");
-const stopScanBtn = document.getElementById("stopScanBtn");
-const resultsBody = document.getElementById("resultsBody");
-const exportCsvBtn = document.getElementById("exportCsvBtn");
-
-let profPin = "7890"; // code d’accès
-let qrScanner;
-let scannedData = []; // mémoire locale des élèves
-
+// --- Mode Professeur ---
 profPinSubmit.addEventListener("click", () => {
   if (profPinInput.value === profPin) {
+    profAccess.style.display = "none";
     profDashboard.style.display = "block";
-    profPinInput.disabled = true;
-    profPinSubmit.disabled = true;
-    startScanner();
+    startQRScan();
   } else {
-    alert("Code incorrect !");
+    alert("Code PIN incorrect.");
   }
 });
-
-function startScanner() {
-  qrScanner = new Html5Qrcode("qr-reader");
-  qrScanner.start(
-    { facingMode: "environment" },
-    {
-      fps: 10,
-      qrbox: 250
-    },
-    (decodedText) => {
-      try {
-        const data = JSON.parse(decodedText);
-
-        // Empêcher doublons
-        if (scannedData.some(d => d.timestamp === data.timestamp)) return;
-
-        scannedData.push(data);
-        displayInTable(data);
-
-      } catch (e) {
-        console.error("Erreur parsing QR", e);
-      }
-    },
-    (errorMsg) => {
-      // silence les erreurs de scan
-    }
-  );
-}
 
 stopScanBtn.addEventListener("click", () => {
-  if (qrScanner) {
-    qrScanner.stop().then(() => {
-      qrReader.innerHTML = "";
-    });
-  }
+  stopQRScan();
 });
-
-function displayInTable(data) {
-  const row = document.createElement("tr");
-
-  const distance = data.tours * (data.distanceTour || 200); // valeur par défaut
-  const vitesse = (distance / (parseFloat(data.duree.split(":")[0]) * 60 + parseFloat(data.duree.split(":")[1]))) * 3.6;
-
-  row.innerHTML = `
-    <td>${data.nom || data.eleve1 || "?"}</td>
-    <td>${data.classe || "?"}</td>
-    <td>${data.duree}</td>
-    <td>${data.tours}</td>
-    <td>${distance}</td>
-    <td>${vitesse.toFixed(2)}</td>
-    <td>${data.vma || "—"}</td>
-    <td>${data.etat}</td>
-  `;
-  resultsBody.appendChild(row);
-}
 
 exportCsvBtn.addEventListener("click", () => {
-  let csv = "Élève,Classe,Durée,Tours,Distance,Vitesse,VMA,État\n";
-
-  scannedData.forEach(data => {
-    const distance = data.tours * (data.distanceTour || 200);
-    const vitesse = (distance / (parseFloat(data.duree.split(":")[0]) * 60 + parseFloat(data.duree.split(":")[1]))) * 3.6;
-
-    csv += [
-      data.nom || data.eleve1 || "?",
-      data.classe || "?",
-      data.duree,
-      data.tours,
-      distance,
-      vitesse.toFixed(2),
-      data.vma || "—",
-      data.etat
-    ].join(",") + "\n";
-  });
-
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "resultats_runstats.csv";
-  a.click();
-  URL.revokeObjectURL(url);
+  exportCSV();
 });
 
-const generateGroupsBtn = document.getElementById("generateGroupsBtn");
-const groupsDisplay = document.getElementById("groupsDisplay");
-
 generateGroupsBtn.addEventListener("click", () => {
-  // 1. On filtre ceux qui ont une VMA valide
-  const validVMA = scannedData
-    .filter(d => parseFloat(d.vma))
-    .map(d => ({
-      nom: d.nom || d.eleve1 || "?",
-      classe: d.classe || "?",
-      vma: parseFloat(d.vma),
-      data: d
-    }));
+  generateGroups();
+});
 
-  if (validVMA.length < 4) {
-    alert("Pas assez de données valides avec VMA pour former un groupe.");
+// --- QR Scanner (html5-qrcode) ---
+let html5QrCode;
+
+function startQRScan() {
+  if (scanActive) return;
+  scanActive = true;
+  qrReaderContainer.style.display = "block";
+  resultsBody.innerHTML = "";
+  scannedData = [];
+
+  html5QrCode = new Html5Qrcode("qr-reader");
+  Html5Qrcode.getCameras().then(cameras => {
+    if (cameras && cameras.length) {
+      html5QrCode.start(
+        { facingMode: "environment" },
+        {
+          fps: 10,
+          qrbox: 250
+        },
+        onScanSuccess,
+        onScanFailure
+      );
+    } else {
+      alert("Aucune caméra détectée.");
+    }
+  }).catch(err => {
+    alert("Erreur caméra : " + err);
+  });
+}
+
+function stopQRScan() {
+  if (!scanActive) return;
+  scanActive = false;
+  qrReaderContainer.style.display = "none";
+  if (html5QrCode) {
+    html5QrCode.stop().then(() => {
+      html5QrCode.clear();
+    }).catch(err => {
+      console.error("Erreur arrêt scanner:", err);
+    });
+  }
+}
+
+// Callback quand un QR est scanné avec succès
+function onScanSuccess(decodedText, decodedResult) {
+  try {
+    const data = JSON.parse(decodedText);
+    // Vérifier si déjà scanné (par nom+prenom eleve1 et eleve2)
+    const exists = scannedData.some(item => 
+      (item.eleve1.nom === data.eleve1.nom && item.eleve2.nom === data.eleve2.nom)
+    );
+    if (!exists) {
+      scannedData.push(data);
+      addResultToTable(data);
+    }
+  } catch (e) {
+    console.warn("QR Code non reconnu:", e);
+  }
+}
+
+// On scan failure (par exemple lecture ratée)
+function onScanFailure(error) {
+  // On peut ignorer les erreurs pour ne pas spammer la console
+  // console.warn(`Scan error: ${error}`);
+}
+
+// Ajouter une ligne dans le tableau des résultats
+function addResultToTable(data) {
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td>${data.eleve1.nom} ${data.eleve1.prenom}</td>
+    <td>${data.eleve1.classe}</td>
+    <td>${data.eleve1.vma || "-"}</td>
+    <td>${data.eleve2.nom} ${data.eleve2.prenom}</td>
+    <td>${data.eleve2.classe}</td>
+    <td>${data.eleve2.vma || "-"}</td>
+    <td>${data.duree}</td>
+    <td>${data.tours}</td>
+    <td>${data.distanceTotale_m}</td>
+    <td>${data.vitesseMoy_kmh}</td>
+    <td>${data.vmaMoy}</td>
+    <td>${data.etat}</td>
+    <td>${new Date(data.timestamp).toLocaleString()}</td>
+  `;
+  resultsBody.appendChild(tr);
+}
+
+// Exporter toutes les données scannées au format CSV
+function exportCSV() {
+  if (scannedData.length === 0) {
+    alert("Aucune donnée à exporter.");
+    return;
+  }
+  const headers = ["Élève 1", "Classe 1", "VMA 1", "Élève 2", "Classe 2", "VMA 2", "Durée", "Tours", "Distance (m)", "Vitesse (km/h)", "VMA Moyenne", "État de forme", "Timestamp"];
+  const csvRows = [headers.join(",")];
+
+  scannedData.forEach(data => {
+    const row = [
+      `"${data.eleve1.nom} ${data.eleve1.prenom}"`,
+      `"${data.eleve1.classe}"`,
+      data.eleve1.vma || "",
+      `"${data.eleve2.nom} ${data.eleve2.prenom}"`,
+      `"${data.eleve2.classe}"`,
+      data.eleve2.vma || "",
+      data.duree,
+      data.tours,
+      data.distanceTotale_m,
+      data.vitesseMoy_kmh,
+      data.vmaMoy,
+      `"${data.etat}"`,
+      `"${data.timestamp}"`
+    ];
+    csvRows.push(row.join(","));
+  });
+
+  const csvString = csvRows.join("\n");
+  const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "RunStats_donnees.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Génération des groupes de 4 (2 binômes) selon règles VMA
+function generateGroups() {
+  if (scannedData.length === 0) {
+    alert("Aucune donnée scannée pour créer les groupes.");
     return;
   }
 
-  // 2. On trie par VMA décroissante
-  validVMA.sort((a, b) => b.vma - a.vma);
+  // Préparer tableau des binômes avec moyenne VMA
+  const binomes = scannedData.map(item => {
+    let vma1 = parseFloat(item.eleve1.vma) || 0;
+    let vma2 = parseFloat(item.eleve2.vma) || 0;
+    let vmaMoy = 0;
+    if (vma1 && vma2) vmaMoy = (vma1 + vma2) / 2;
+    else if (vma1) vmaMoy = vma1;
+    else if (vma2) vmaMoy = vma2;
 
-  const groups = [];
-
-  while (validVMA.length >= 4) {
-    const high = validVMA.shift(); // 1er plus rapide
-    const low = validVMA.pop(); // dernier plus lent
-    const mid1 = validVMA.shift(); // 2e plus rapide restant
-    const mid2 = validVMA.pop(); // 2e plus lent restant
-
-    groups.push([high, mid1, mid2, low]);
-  }
-
-  // 3. Affichage
-  groupsDisplay.innerHTML = "<h3>Groupes créés</h3>";
-  groups.forEach((group, i) => {
-    const groupHTML = `
-      <div style="margin-bottom:15px;">
-        <strong>Groupe ${i + 1} :</strong><br/>
-        ${group.map(el => `• ${el.nom} (${el.vma} km/h) - ${el.classe}`).join("<br/>")}
-      </div>
-    `;
-    groupsDisplay.innerHTML += groupHTML;
+    return {
+      eleve1: item.eleve1,
+      eleve2: item.eleve2,
+      vmaMoy: vmaMoy,
+      data: item
+    };
   });
 
-  // 4. Export CSV groupes
-  const csv = groups.map((group, i) => {
-    return group.map(el => `Groupe ${i + 1},${el.nom},${el.classe},${el.vma}`).join("\n");
-  }).join("\n");
+  // Trier binômes par VMA moyenne décroissante
+  binomes.sort((a, b) => b.vmaMoy - a.vmaMoy);
 
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  const downloadLink = document.createElement("a");
-  downloadLink.href = url;
-  downloadLink.download = "groupes_VMA.csv";
-  downloadLink.textContent = "Télécharger les groupes en CSV";
-  downloadLink.style.display = "block";
-  downloadLink.style.marginTop = "20px";
-  groupsDisplay.appendChild(downloadLink);
-});
+  // Regrouper par catégories VMA (exemple seuils)
+  const seuils = {
+    elevee: 15, // ex seuil haute VMA
+    faible: 10  // ex seuil basse VMA
+  };
+
+  const binomesElevee = binomes.filter(b => b.vmaMoy >= seuils.elevee);
+  const binomesFaible = binomes.filter(b => b.vmaMoy <= seuils.faible);
+  const binomesInter = binomes.filter(b => b.vmaMoy > seuils.faible && b.vmaMoy < seuils.elevee);
+
+  const groupes = [];
+  const used = new Set();
+
+  // Fonction pour extraire binôme d’une catégorie non utilisé
+  function getUnusedBinome(cat) {
+    for (let i = 0; i < cat.length; i++) {
+      if (!used.has(cat[i])) {
+        used.add(cat[i]);
+        return cat[i];
+      }
+    }
+    return null;
+  }
+
+  // Créer groupes de 4 (2 binômes)
+  while (true) {
+    const groupe = [];
+
+    // 1 binome elevee
+    const elevee = getUnusedBinome(binomesElevee);
+    if (!elevee) break;
+    groupe.push(elevee);
+
+    // 1 binome faible
+    const faible = getUnusedBinome(binomesFaible);
+    if (!faible) break;
+    groupe.push(faible);
+
+    // 2 binomes intermédiaires
+    const inter1 = getUnusedBinome(binomesInter);
+    const inter2 = getUnusedBinome(binomesInter);
+    if (!inter1 || !inter2) break;
+    groupe.push(inter1, inter2);
+
+    groupes.push(groupe);
+  }
+
+  // Affichage
+  groupsDisplay.innerHTML = "";
+  groupes.forEach((grp, idx) => {
+    const div = document.createElement("div");
+    div.classList.add("group-card");
+    div.innerHTML = `<h3>Groupe ${idx + 1}</h3>`;
+    grp.forEach((binome, bIdx) => {
+      div.innerHTML += `
+        <div class="binome">
+          <strong>Binôme ${bIdx + 1}</strong><br>
+          ${binome.eleve1.prenom} ${binome.eleve1.nom} (VMA: ${binome.eleve1.vma || "N/A"}) &amp; 
+          ${binome.eleve2.prenom} ${binome.eleve2.nom} (VMA: ${binome.eleve2.vma || "N/A"})<br>
+          Classe: ${binome.eleve1.classe} &amp; ${binome.eleve2.classe}<br>
+          VMA Moyenne: ${binome.vmaMoy.toFixed(2)}
+        </div>
+      `;
+    });
+    groupsDisplay.appendChild(div);
+  });
+}
