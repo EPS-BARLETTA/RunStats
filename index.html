@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RunStats - EPS Lycée Vauban - JB</title>
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Librairies QR -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
@@ -15,47 +17,39 @@
   </header>
 
   <main id="studentInput">
-    <form id="formData">
-      <section class="input-group">
-        <h2>Élève 1</h2>
-        <div class="row">
-          <input type="text" id="nom1" placeholder="Nom" required />
-          <input type="text" id="prenom1" placeholder="Prénom" required />
-          <input type="text" id="classe1" placeholder="Classe" required />
-        </div>
-      </section>
+    <section class="input-group">
+      <h2>Élève 1</h2>
+      <input type="text" id="nom1" placeholder="Nom" required />
+      <input type="text" id="prenom1" placeholder="Prénom" required />
+      <input type="text" id="classe1" placeholder="Classe" required />
+    </section>
 
-      <section class="input-group">
-        <h2>Élève 2</h2>
-        <div class="row">
-          <input type="text" id="nom2" placeholder="Nom" required />
-          <input type="text" id="prenom2" placeholder="Prénom" required />
-          <input type="text" id="classe2" placeholder="Classe" required />
-        </div>
-      </section>
+    <section class="input-group">
+      <h2>Élève 2</h2>
+      <input type="text" id="nom2" placeholder="Nom" required />
+      <input type="text" id="prenom2" placeholder="Prénom" required />
+      <input type="text" id="classe2" placeholder="Classe" required />
+    </section>
 
-      <section class="input-group">
-        <div class="row">
-          <input type="number" id="duree" placeholder="Durée (min)" min="0.1" step="0.1" required />
-          <input type="number" id="distanceTour" placeholder="Distance tour (m)" min="1" required />
-          <input type="number" id="vmaRef" placeholder="VMA (optionnel)" min="0" step="0.1" />
-        </div>
-      </section>
-    </form>
+    <section class="input-group">
+      <input type="number" id="duree" placeholder="Durée de la course (min)" min="0.1" step="0.1" required />
+      <input type="number" id="distanceTour" placeholder="Distance d’un tour (m)" min="1" required />
+      <input type="number" id="vmaRef" placeholder="VMA de référence (optionnel)" min="0" step="0.1" />
+    </section>
 
     <section id="chrono">
       <p id="chronoDisplay">00:00</p>
       <button id="startBtn">Démarrer</button>
-      <button id="lapBtn" disabled>+1 Tour</button>
+      <button id="lapBtn" disabled>Ajouter 1 tour</button>
       <button id="resetBtn" disabled>Reset</button>
       <p>Tours : <span id="lapsCount">0</span></p>
     </section>
 
     <section id="stats">
-      <p>Distance totale : <span id="distanceTotal" class="highlight">0 m</span></p>
-      <p>Distance (km) : <span id="distanceKm" class="highlight">0.00 km</span></p>
-      <p>Vitesse moyenne : <span id="vitesseMoy" class="highlight">0.00 km/h</span></p>
-      <p>VMA estimée : <span id="vmaReal" class="highlight">0.00 km/h</span></p>
+      <p>Distance totale (m) : <span id="distanceTotal">0</span> m</p>
+      <p>Distance (km) : <span id="distanceKm">0.00</span> km</p>
+      <p>Vitesse moyenne : <span id="vitesseMoy">0.00</span> km/h</p>
+      <p>VMA estimée : <span id="vmaReal">0.00</span> km/h</p>
     </section>
 
     <section id="etatForme" style="display: none;">
@@ -74,12 +68,13 @@
   <main id="profDashboard" style="display: none;">
     <h2>Espace Professeur</h2>
 
-    <div id="qr-scan-container">
+    <div id="qr-scan-container" style="display: none;">
       <div id="qr-reader" style="width: 320px; margin: 0 auto;"></div>
       <button id="stopScanBtn">Arrêter le scan</button>
     </div>
 
-    <button id="exportCsvBtn">Exporter CSV</button>
+    <button id="startScanBtn">Scanner un QR Code</button>
+    <button id="exportCsvBtn">Exporter en CSV</button>
     <button id="generateGroupsBtn">Créer les groupes</button>
     <div id="groupsDisplay"></div>
 
@@ -93,7 +88,7 @@
           <th>Durée</th>
           <th>Distance (m)</th>
           <th>Vitesse (km/h)</th>
-          <th>VMA</th>
+          <th>VMA (km/h)</th>
           <th>État</th>
         </tr>
       </thead>
