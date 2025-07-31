@@ -1,60 +1,185 @@
+/* Base Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
 body {
-  font-family: Arial, sans-serif;
+  background: #f0f4f8;
+  color: #333;
+  padding: 20px;
+}
+
+/* Header */
+header {
   text-align: center;
-  margin: 20px;
-  background-color: #f5f5f5;
+  margin-bottom: 30px;
 }
 
 h1 {
-  color: #333;
+  font-size: 2.5rem;
+  color: #0077cc;
 }
 
-label {
-  font-size: 1.1em;
+h2 {
+  font-size: 1.2rem;
+  color: #555;
+  margin-top: 10px;
 }
 
-input[type="number"] {
-  padding: 5px;
+/* Input group */
+.input-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.input-group input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  min-width: 150px;
   font-size: 1em;
-  margin: 10px;
-  width: 120px;
 }
 
-button {
-  padding: 10px 20px;
-  font-size: 1em;
-  margin: 5px;
-  cursor: pointer;
+/* Chrono */
+#chrono {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 #chronoDisplay {
-  font-size: 2.5em;
-  margin: 20px 0;
+  font-size: 3rem;
+  margin: 15px 0;
+  color: #222;
+  font-weight: bold;
+  transition: color 0.5s ease;
 }
 
-#etatForme button {
-  margin: 0 10px;
-  font-size: 1.3em;
-  padding: 10px 15px;
-}
-
-#qrContainer {
-  margin-top: 30px;
-  background-color: white;
-  display: inline-block;
-  padding: 20px;
-  border: 1px solid #ccc;
-}
-
-#qrCodeBox canvas {
-  display: block;
-  margin: auto;
-}
-
-.red {
+#chronoDisplay.red {
   color: red;
 }
 
-#lapsCount {
+#chronoDisplay.warning {
+  color: orange;
+}
+
+/* Buttons */
+button {
+  padding: 10px 20px;
+  margin: 5px;
+  border: none;
+  background: #0077cc;
+  color: white;
   font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: #005fa3;
+}
+
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Stats */
+#stats {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#etatForme {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.etatBtn {
+  font-size: 1.5rem;
+  margin: 5px;
+  border: none;
+  background: #eee;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.etatBtn:hover {
+  background: #ddd;
+}
+
+/* QR Code */
+#qrContainer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#qrCodeBox {
+  margin: auto;
+  padding: 20px;
+  background: white;
+  width: fit-content;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+/* Prof Zone */
+#profDashboard {
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  margin-top: 30px;
+}
+
+#qr-reader {
+  margin: 20px auto;
+}
+
+#profAccess {
+  margin: 30px 0;
+  text-align: center;
+}
+
+#profAccess input {
+  padding: 10px;
+  border-radius: 30px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 0.9rem;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+table th {
+  background: #0077cc;
+  color: white;
+}
+
+/* Footer */
+footer {
+  margin-top: 40px;
+  text-align: right;
+  font-size: 0.9rem;
+  color: #aaa;
 }
