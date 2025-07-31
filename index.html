@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RunStats - Equipe EPS Lycée Vauban - Luxembourg</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <!-- QR Code library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- QR Scanner library -->
+  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
 </head>
 <body>
   <header>
@@ -14,65 +16,59 @@
   </header>
 
   <main>
-    <!-- Zone saisie élèves -->
+    <!-- Formulaire des deux élèves -->
     <section class="input-duo">
-      <!-- Élève 1 -->
-      <div class="eleve" id="eleve1">
+      <div class="eleve">
         <h2>Élève 1</h2>
-        <label>Nom :</label>
-        <input type="text" id="nom1" placeholder="Nom">
-        <label>Prénom :</label>
-        <input type="text" id="prenom1" placeholder="Prénom">
-        <label>Classe :</label>
-        <input type="text" id="classe1" placeholder="Classe">
-        <label>Sexe :</label>
-        <select id="sexe1">
-          <option value="">Choix</option>
-          <option value="Fille">Fille</option>
-          <option value="Garçon">Garçon</option>
-        </select>
+        <div class="input-groupe">
+          <label>Nom</label>
+          <input type="text" id="nom1" placeholder="Nom">
+          <label>Prénom</label>
+          <input type="text" id="prenom1" placeholder="Prénom">
+          <label>Sexe</label>
+          <select id="sexe1">
+            <option value="">Choix</option>
+            <option value="Fille">Fille</option>
+            <option value="Garçon">Garçon</option>
+          </select>
+        </div>
       </div>
 
-      <!-- Élève 2 -->
-      <div class="eleve" id="eleve2">
+      <div class="eleve">
         <h2>Élève 2</h2>
-        <label>Nom :</label>
-        <input type="text" id="nom2" placeholder="Nom">
-        <label>Prénom :</label>
-        <input type="text" id="prenom2" placeholder="Prénom">
-        <label>Classe :</label>
-        <input type="text" id="classe2" placeholder="Classe">
-        <label>Sexe :</label>
-        <select id="sexe2">
-          <option value="">Choix</option>
-          <option value="Fille">Fille</option>
-          <option value="Garçon">Garçon</option>
-        </select>
+        <div class="input-groupe">
+          <label>Nom</label>
+          <input type="text" id="nom2" placeholder="Nom">
+          <label>Prénom</label>
+          <input type="text" id="prenom2" placeholder="Prénom">
+          <label>Sexe</label>
+          <select id="sexe2">
+            <option value="">Choix</option>
+            <option value="Fille">Fille</option>
+            <option value="Garçon">Garçon</option>
+          </select>
+        </div>
       </div>
     </section>
 
     <!-- Paramètres course -->
-    <section class="input-groupe">
-      <div>
-        <label>Durée (minutes) :</label>
-        <input type="number" id="duree" placeholder="Ex: 6">
-      </div>
-      <div>
-        <label>Distance piste (m) :</label>
+    <section>
+      <div class="input-groupe">
+        <label>Durée de la course (minutes)</label>
+        <input type="number" id="tempsCourse" min="1" placeholder="Ex: 6">
+        <label>Distance de la piste (m)</label>
         <input type="number" id="distancePiste" placeholder="Ex: 200">
-      </div>
-      <div>
-        <label>VMA (optionnel) :</label>
-        <input type="number" id="vmaOption" placeholder="Ex: 15">
+        <label>VMA (optionnel)</label>
+        <input type="number" id="vmaInput" placeholder="Ex: 15">
       </div>
     </section>
 
-    <!-- Chrono -->
+    <!-- Chronomètre -->
     <section id="chrono">
       <div id="chronoDisplay">00:00</div>
       <div class="chrono-btns">
         <button id="startBtn" class="btn-start">Démarrer</button>
-        <button id="lapBtn" class="btn-lap">+ TOUR</button>
+        <button id="lapBtn" class="btn-lap">+<br>Tour</button>
         <button id="resetBtn" class="btn-reset">Reset</button>
       </div>
     </section>
@@ -93,40 +89,37 @@
       </div>
     </section>
 
-    <!-- Emoji sélection (état forme) -->
+    <!-- État de forme (émoticônes) -->
     <section id="etatForme" style="display:none;">
-      <h2>Comment te sens-tu ?</h2>
-      <button class="etatBtn" data-etat="Très bien">😊</button>
-      <button class="etatBtn" data-etat="Fatigué">😖</button>
-      <button class="etatBtn" data-etat="Épuisé">🤮</button>
+      <button class="etatBtn" data-forme="bien">😊</button>
+      <button class="etatBtn" data-forme="moyen">😬</button>
+      <button class="etatBtn" data-forme="mauvais">🤢</button>
     </section>
 
-    <!-- QR Code -->
-    <section id="qrCodeBox" style="display:none;">
-      <h2>QR Code Résultats</h2>
-      <canvas id="qrCode"></canvas>
-    </section>
+    <!-- QR Code généré -->
+    <section id="qrCodeBox"></section>
 
     <!-- Espace Prof -->
     <section id="profAccess">
-      <h2>Espace Prof</h2>
-      <input type="password" id="profCode" placeholder="Entrer code PIN">
-      <button onclick="accederProf()">Accéder</button>
-      <div id="profZone" style="display:none;">
-        <h3>Scanner QR Code</h3>
-        <div id="qr-scan-container"></div>
-        <table id="profTable">
+      <h2>Accès Prof</h2>
+      <input type="password" id="profCode" placeholder="Entrer le code PIN">
+      <button id="accessProfBtn">Valider</button>
+
+      <div id="profPanel" style="display:none;">
+        <div id="qr-scan-container">
+          <div id="reader" style="width:300px;margin:auto;"></div>
+        </div>
+        <table>
           <thead>
             <tr>
               <th>Nom</th>
               <th>Prénom</th>
-              <th>Classe</th>
               <th>Sexe</th>
-              <th>Distance</th>
-              <th>VMA</th>
+              <th>Distance (m)</th>
+              <th>VMA (km/h)</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody id="profTableBody"></tbody>
         </table>
       </div>
     </section>
