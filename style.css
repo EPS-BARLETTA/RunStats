@@ -1,4 +1,4 @@
-/* Reset de base */
+/* ===== Reset et style global ===== */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -6,7 +6,6 @@ body {
   color: #333;
 }
 
-/* Header */
 header {
   background-color: #004080;
   color: white;
@@ -18,14 +17,13 @@ h1, h2 {
   margin: 0.5em 0;
 }
 
-/* Contenu principal */
 main {
   padding: 1em;
   max-width: 1000px;
   margin: 0 auto;
 }
 
-/* Duo élèves sur une seule ligne */
+/* ===== Formulaire Élèves ===== */
 .input-duo {
   display: flex;
   gap: 1em;
@@ -39,10 +37,8 @@ main {
   border-radius: 8px;
 }
 
-/* Groupe d’inputs */
 .input-groupe {
   display: flex;
-  flex-direction: column;
   gap: 1em;
   margin-bottom: 1.5em;
 }
@@ -57,7 +53,7 @@ select {
   border: 1px solid #ccc;
 }
 
-/* Chrono */
+/* ===== Chronomètre et Boutons ===== */
 #chrono {
   text-align: center;
   margin-bottom: 1.5em;
@@ -69,7 +65,6 @@ select {
   margin-bottom: 0.5em;
 }
 
-/* Boutons chrono */
 .chrono-btns {
   display: flex;
   justify-content: center;
@@ -77,44 +72,43 @@ select {
   margin-bottom: 1em;
 }
 
-button {
-  padding: 0.7em 1.2em;
+/* Boutons Start et Reset carrés */
+.btn-start, .btn-reset {
+  width: 80px;
+  height: 80px;
   font-size: 1em;
-  border-radius: 8px;
+  border-radius: 12px;
   border: none;
   cursor: pointer;
 }
 
-/* Boutons spécifiques */
 .btn-start {
   background-color: #28a745;
   color: white;
-  border-radius: 8px; /* carré arrondi */
-}
-
-.btn-lap {
-  background-color: #007bff;
-  color: white;
-  border-radius: 50%; /* rond */
-  width: 70px;
-  height: 70px;
-  font-size: 1.2em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .btn-reset {
   background-color: #dc3545;
   color: white;
-  border-radius: 8px;
+}
+
+/* Bouton + TOUR rond et plus gros */
+.btn-lap {
+  width: 100px;
+  height: 100px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+  font-size: 1.2em;
+  border: none;
+  cursor: pointer;
 }
 
 button:hover {
   opacity: 0.9;
 }
 
-/* Stats */
+/* ===== Stats affichées ===== */
 #statsBox {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -130,7 +124,6 @@ button:hover {
   text-align: center;
 }
 
-/* Couleurs lignes */
 .ligne-bleue {
   background-color: #d0e7ff;
   color: #004080;
@@ -151,7 +144,7 @@ button:hover {
   color: #4b0082;
 }
 
-/* État forme (émoticônes) */
+/* ===== État Forme (emoji) ===== */
 #etatForme {
   text-align: center;
   margin-bottom: 2em;
@@ -160,7 +153,7 @@ button:hover {
 .etatBtn {
   margin: 0.5em;
   padding: 0.7em 1.2em;
-  font-size: 1.5em;
+  font-size: 2em;
   border-radius: 10px;
   border: none;
   cursor: pointer;
@@ -171,25 +164,23 @@ button:hover {
   background-color: #d0d0d0;
 }
 
-/* QR Code */
+/* ===== QR Code et Prof ===== */
 #qrCodeBox {
   margin: 1em auto;
   width: fit-content;
-  text-align: center;
 }
 
-#qrCodeBox canvas {
-  display: block;
-  margin: 0 auto;
-}
-
-/* Scanner QR code */
 #qr-scan-container {
   margin-bottom: 1em;
   text-align: center;
 }
 
-/* Tableau résultats */
+#profAccess {
+  text-align: center;
+  margin: 2em 0;
+}
+
+/* ===== Tableau Résultats ===== */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -203,13 +194,20 @@ th, td {
   text-align: center;
 }
 
-/* Pied de page */
+/* ===== Footer ===== */
 footer {
-  text-align: center;
+  text-align: right;
   padding: 0.5em 1em;
   font-size: 0.85em;
   color: #aaa;
   background-color: #fff;
   border-top: 1px solid #ddd;
-  margin-top: 2em;
+}
+
+/* Texte centré en gris sous les noms */
+.nom-eleve {
+  text-align: center;
+  color: #888;
+  font-size: 0.9em;
+  margin-top: 0.5em;
 }
