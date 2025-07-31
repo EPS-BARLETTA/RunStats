@@ -1,238 +1,215 @@
-/* RESET DE BASE */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
+/* Reset de base */
 body {
-  background: #f8f9fa;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background-color: #f4f4f4;
   color: #333;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
 }
 
-/* HEADER */
+/* Header */
 header {
-  background: #004080;
+  background-color: #004080;
   color: white;
-  padding: 15px;
+  padding: 1em;
   text-align: center;
-  font-size: 1.3rem;
 }
 
-/* CONTENEUR PRINCIPAL */
+h1, h2 {
+  margin: 0.5em 0;
+}
+
+/* Contenu principal */
 main {
-  flex: 1;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  padding: 1em;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
-/* ZONE ELEVE CÔTE À CÔTE */
+/* Duo élèves sur une seule ligne */
 .input-duo {
   display: flex;
-  justify-content: space-around;
-  gap: 20px;
+  gap: 1em;
+  margin-bottom: 1em;
 }
 
 .eleve {
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   flex: 1;
+  background-color: #e6f0ff;
+  padding: 1em;
+  border-radius: 8px;
 }
 
-.eleve h2 {
-  text-align: center;
-  color: #666;
-  margin-bottom: 10px;
-}
-
-.eleve label {
-  font-size: 0.9rem;
-  margin-top: 10px;
-  display: block;
-  color: #444;
-}
-
-.eleve input,
-.eleve select {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-/* PARAMÈTRES COURSE */
+/* Groupe d’inputs */
 .input-groupe {
   display: flex;
-  justify-content: space-around;
-  gap: 20px;
-}
-
-.input-groupe div {
-  display: flex;
   flex-direction: column;
-  width: 30%;
+  gap: 1em;
+  margin-bottom: 1.5em;
 }
 
-.input-groupe label {
-  font-size: 0.9rem;
-  color: #444;
-  margin-bottom: 5px;
-}
-
-.input-groupe input {
-  padding: 8px;
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 0.5em;
+  margin-top: 0.5em;
+  border-radius: 5px;
   border: 1px solid #ccc;
-  border-radius: 6px;
 }
 
-/* CHRONO */
+/* Chrono */
 #chrono {
   text-align: center;
+  margin-bottom: 1.5em;
 }
 
 #chronoDisplay {
-  font-size: 2.5rem;
-  margin-bottom: 15px;
+  font-size: 2.5em;
+  font-weight: bold;
+  margin-bottom: 0.5em;
 }
 
-/* BOUTONS CHRONO */
+/* Boutons chrono */
 .chrono-btns {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 1em;
+  margin-bottom: 1em;
 }
 
-.btn-start, .btn-reset {
-  width: 90px;
-  height: 50px;
-  border: none;
+button {
+  padding: 0.7em 1.2em;
+  font-size: 1em;
   border-radius: 8px;
-  font-size: 1rem;
+  border: none;
   cursor: pointer;
-  background: #28a745;
-  color: white;
 }
 
-.btn-reset {
-  background: #dc3545;
+/* Boutons spécifiques */
+.btn-start {
+  background-color: #28a745;
+  color: white;
+  border-radius: 8px; /* carré arrondi */
 }
 
 .btn-lap {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  font-size: 1rem;
-  border: none;
-  cursor: pointer;
-  background: #007bff;
+  background-color: #007bff;
   color: white;
-}
-
-/* STATS */
-#statsBox {
+  border-radius: 50%; /* rond */
+  width: 70px;
+  height: 70px;
+  font-size: 1.2em;
   display: flex;
-  justify-content: space-around;
-  text-align: center;
+  align-items: center;
+  justify-content: center;
 }
 
-.stat {
-  flex: 1;
-  padding: 10px;
-  margin: 0 5px;
+.btn-reset {
+  background-color: #dc3545;
+  color: white;
   border-radius: 8px;
 }
 
+button:hover {
+  opacity: 0.9;
+}
+
+/* Stats */
+#statsBox {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1em;
+  margin-bottom: 2em;
+}
+
+.stat {
+  padding: 1em;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1.1em;
+  text-align: center;
+}
+
+/* Couleurs lignes */
 .ligne-bleue {
-  background: #e6f0ff;
+  background-color: #d0e7ff;
+  color: #004080;
 }
 
 .ligne-verte {
-  background: #e6ffe6;
+  background-color: #d4f8d4;
+  color: #1e5621;
 }
 
 .ligne-jaune {
-  background: #fffbe6;
+  background-color: #fff6cc;
+  color: #7a6000;
 }
 
-/* EMOJI */
+.ligne-violette {
+  background-color: #f0e0ff;
+  color: #4b0082;
+}
+
+/* État forme (émoticônes) */
 #etatForme {
   text-align: center;
-}
-
-#etatForme h2 {
-  margin-bottom: 10px;
+  margin-bottom: 2em;
 }
 
 .etatBtn {
-  font-size: 2rem;
-  margin: 0 10px;
-  cursor: pointer;
-  background: none;
+  margin: 0.5em;
+  padding: 0.7em 1.2em;
+  font-size: 1.5em;
+  border-radius: 10px;
   border: none;
+  cursor: pointer;
+  background-color: #eaeaea;
 }
 
-/* QR CODE */
+.etatBtn:hover {
+  background-color: #d0d0d0;
+}
+
+/* QR Code */
 #qrCodeBox {
+  margin: 1em auto;
+  width: fit-content;
   text-align: center;
 }
 
-/* ESPACE PROF */
-#profAccess {
-  margin-top: 30px;
+#qrCodeBox canvas {
+  display: block;
+  margin: 0 auto;
 }
 
-#profAccess input {
-  padding: 8px;
-  width: 200px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+/* Scanner QR code */
+#qr-scan-container {
+  margin-bottom: 1em;
+  text-align: center;
 }
 
-#profAccess button {
-  padding: 8px 12px;
-  margin-left: 5px;
-  cursor: pointer;
-  border: none;
-  border-radius: 6px;
-  background: #004080;
-  color: white;
-}
-
-#profZone {
-  margin-top: 20px;
-}
-
-/* TABLE PROF */
-#profTable {
+/* Tableau résultats */
+table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  margin-top: 1em;
+  font-size: 0.9em;
 }
 
-#profTable th, #profTable td {
-  border: 1px solid #ddd;
-  padding: 8px;
+th, td {
+  padding: 0.5em;
+  border: 1px solid #ccc;
   text-align: center;
 }
 
-#profTable th {
-  background: #004080;
-  color: white;
-}
-
-/* FOOTER */
+/* Pied de page */
 footer {
   text-align: center;
-  font-size: 0.8rem;
-  color: #888;
-  padding: 10px;
+  padding: 0.5em 1em;
+  font-size: 0.85em;
+  color: #aaa;
+  background-color: #fff;
+  border-top: 1px solid #ddd;
+  margin-top: 2em;
 }
