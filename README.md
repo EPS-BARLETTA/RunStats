@@ -1,27 +1,36 @@
-# RunStats - Equipe EPS Lycée Vauban - LUXEMBOURG - JB
+# RunStats - Equipe EPS Lycée Vauban - Luxembourg
 
-Application web simple pour enregistrer les performances de 2 élèves en course et générer un QR Code contenant leurs données.
+---
+
+## Description
+
+RunStats est une application web développée pour l'équipe EPS du Lycée Vauban à Luxembourg.
+
+Cette application permet à deux élèves de saisir leurs informations de course (nom, prénom, sexe, durée) et de renseigner leur ressenti via un emoji. Après saisie des deux élèves, un QR code est généré contenant les données des deux courses. Ce QR code peut être scanné par le professeur pour accéder aux résultats.
+
+---
 
 ## Fonctionnalités
 
-- Chronomètre avec tours (Lap)
-- Saisie de la distance parcourue
-- Sélection du sexe et du nom
-- Choix de l’état de forme via emoji
-- Calcul automatique :
-  - Distance totale (m)
-  - Vitesse moyenne (km/h)
-  - VMA estimée
-- QR Code avec données complètes des 2 élèves
-- Tableau des résultats
-- Fonction de tri en groupes équilibrés (4 élèves, mixité et VMA)
+- Saisie des informations (nom, prénom, sexe, durée en minutes) pour deux élèves.
+- Choix d’un emoji représentant l’état ou ressenti pendant la course.
+- Affichage instantané des résultats saisis pour chaque élève.
+- Génération automatique d’un QR code contenant les données des deux élèves.
+- Interface claire et simple, adaptée à l’utilisation sur tablette ou mobile.
 
-## Installation
+---
 
-1. Cloner le projet
-2. Ouvrir `index.html` dans un navigateur
-3. Pas besoin de serveur, tout est en **HTML/CSS/JS pur**
+## Installation et utilisation
 
-## Librairies
+1. Cloner ou télécharger ce dépôt GitHub.
+2. Ouvrir le fichier `index.html` dans un navigateur web récent.
+3. Saisir les informations pour l'élève 1, choisir un emoji.
+4. Saisir les informations pour l'élève 2, choisir un emoji.
+5. Scanner le QR code généré pour accéder aux résultats.
 
-- [QRCode.js](https://github.com/davidshimjs/qrcodejs) (inclus via CDN)
+---
+
+## Crédits
+
+RunStats - Equipe EPS Lycée Vauban - Luxembourg  
+Développé par Jérome BARLETTA
