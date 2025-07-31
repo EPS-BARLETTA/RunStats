@@ -1,99 +1,85 @@
-/* Reset & Base */
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
 }
 
 body {
-  background: #f4f7fa;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f0f2f5;
   color: #333;
-  min-height: 100vh;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-header {
-  text-align: center;
-  margin-bottom: 20px;
+  padding: 1rem;
+  max-width: 800px;
+  margin: auto;
 }
 
 header h1 {
-  font-size: 2.4rem;
-  color: #1e90ff;
-}
-
-/* Formulaire compact */
-main#studentInput, main#profDashboard {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-  padding: 20px;
-  max-width: 700px;
-  margin: 0 auto 30px;
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
 }
 
 .input-group {
-  margin-bottom: 20px;
+  background-color: #ffffff;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .input-group h2 {
-  font-size: 1.2rem;
-  color: #1e90ff;
-  margin-bottom: 10px;
+  margin-bottom: 0.5rem;
+  color: #2980b9;
 }
 
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+.input-group input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-input[type="text"],
-input[type="number"],
-input[type="password"] {
-  flex: 1 1 30%;
-  padding: 10px;
-  border: 1.5px solid #ccc;
-  border-radius: 8px;
-  font-size: 1rem;
-}
-
-input:focus {
-  border-color: #1e90ff;
-  outline: none;
-}
-
-/* Chrono section */
 #chrono {
   text-align: center;
-  margin: 20px 0;
+  margin-bottom: 1rem;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 #chronoDisplay {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #1e90ff;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #34495e;
 }
 
-button {
-  background-color: #1e90ff;
+#chronoDisplay.red {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+#startBtn,
+#lapBtn,
+#resetBtn,
+.etatBtn,
+#profPinSubmit,
+#logoutBtn,
+#stopScanBtn,
+#startScanBtn,
+#exportCsvBtn,
+#generateGroupsBtn {
+  background-color: #3498db;
   color: white;
   border: none;
-  padding: 10px 20px;
-  margin: 6px;
-  border-radius: 30px;
-  font-size: 1rem;
+  padding: 0.6rem 1rem;
+  margin: 0.3rem;
+  border-radius: 50px;
   cursor: pointer;
-  font-weight: 600;
-  transition: background 0.3s;
-}
-
-button:hover:not(:disabled) {
-  background-color: #0f6ecb;
+  font-weight: bold;
+  transition: background 0.3s ease;
 }
 
 button:disabled {
@@ -101,168 +87,91 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Données dynamiques */
+button:hover:not(:disabled) {
+  background-color: #2980b9;
+}
+
 #stats {
-  margin-top: 20px;
-  padding: 15px;
-  background: #f0f8ff;
-  border-left: 4px solid #1e90ff;
-  border-radius: 6px;
-}
-
-#stats p {
-  font-size: 1rem;
-  margin: 6px 0;
-}
-
-.highlight {
+  background-color: #ecf0f1;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 10px;
   font-weight: bold;
-  color: #007bff;
+  color: #2c3e50;
+  text-align: center;
 }
 
-/* Boutons ressentis */
 #etatForme {
   text-align: center;
-  margin-top: 25px;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-#etatForme p {
-  font-weight: 600;
-  font-size: 1.2rem;
-  margin-bottom: 15px;
-}
-
-.etatBtn {
-  font-size: 1.5rem;
-  padding: 10px 20px;
-  border-radius: 50px;
-  border: 2px solid #1e90ff;
-  background: white;
-  color: #1e90ff;
-  margin: 0 10px;
-  transition: all 0.3s ease;
-}
-
-.etatBtn:hover {
-  background-color: #1e90ff;
-  color: white;
-}
-
-/* QR Code */
 #qrContainer {
   text-align: center;
-  margin-top: 30px;
+  margin-top: 1rem;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 10px;
 }
 
-#qrCodeBox {
-  margin-top: 15px;
+footer {
+  margin-top: 2rem;
+  text-align: right;
+  color: #aaa;
+  font-size: 0.8rem;
 }
 
-/* Professeur */
-main#profDashboard h2 {
+#profAccess {
   text-align: center;
-  margin-bottom: 15px;
-  color: #1e90ff;
+  margin-top: 2rem;
 }
 
-#qr-scan-container {
-  text-align: center;
-  margin-bottom: 20px;
+#profAccess input {
+  padding: 0.5rem;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
 }
 
-#stopScanBtn {
-  background-color: #dc3545;
+#profDashboard {
+  margin-top: 2rem;
 }
 
-#stopScanBtn:hover {
-  background-color: #c82333;
-}
-
-#exportCsvBtn,
-#generateGroupsBtn {
-  background-color: #28a745;
-}
-
-#exportCsvBtn:hover,
-#generateGroupsBtn:hover {
-  background-color: #1e7e34;
-}
-
-/* Tableau */
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 15px;
-  font-size: 0.95rem;
-}
-
-thead {
-  background-color: #1e90ff;
-  color: white;
+  margin-top: 1rem;
 }
 
 th, td {
-  padding: 8px;
-  border: 1px solid #ddd;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
   text-align: center;
 }
 
-tbody tr:nth-child(even) {
-  background-color: #f2f7ff;
-}
-
-/* Prof Access */
-#profAccess {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-#profPinInput {
-  padding: 10px 15px;
-  width: 160px;
-  border-radius: 25px;
-  border: 1.5px solid #ccc;
-}
-
-#profPinInput:focus {
-  border-color: #1e90ff;
-}
-
-#profPinSubmit,
-#logoutBtn {
-  margin-left: 10px;
-  background-color: #1e90ff;
+th {
+  background-color: #3498db;
   color: white;
-  padding: 10px 20px;
-  border-radius: 25px;
 }
 
-#logoutBtn {
-  display: none;
+#groupsDisplay {
+  margin-top: 1rem;
 }
 
-/* Footer */
-footer#footer {
-  text-align: right;
-  font-size: 0.8rem;
-  color: #999;
-  margin-top: auto;
-  padding-top: 20px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .row {
-    flex-direction: column;
+@media (max-width: 600px) {
+  input, button {
+    width: 100%;
+    margin: 0.2rem 0;
   }
 
-  input[type="text"],
-  input[type="number"] {
-    width: 100%;
+  #chronoDisplay {
+    font-size: 1.5rem;
   }
 
-  button {
-    width: 100%;
-    margin: 8px 0;
+  th, td {
+    font-size: 0.8rem;
   }
 }
