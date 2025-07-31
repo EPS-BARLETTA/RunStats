@@ -5,120 +5,130 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RunStats - Equipe EPS Lycée Vauban - Luxembourg</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="https://unpkg.com/html5-qrcode" defer></script>
-  <script src="script.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.7/minified/html5-qrcode.min.js"></script>
 </head>
 <body>
+  <header>
+    <h1>RunStats - Equipe EPS Lycée Vauban - Luxembourg</h1>
+  </header>
 
-<header>
-  <h1>RunStats - Equipe EPS Lycée Vauban - Luxembourg</h1>
-</header>
+  <main>
+    <section id="studentInput">
+      <div class="input-duo">
+        <div class="eleve">
+          <h2>Élève 1</h2>
+          <label>Nom <input type="text" id="nom1" /></label>
+          <label>Prénom <input type="text" id="prenom1" /></label>
+          <label>Sexe
+            <select id="sexe1">
+              <option value="M">Garçon</option>
+              <option value="F">Fille</option>
+            </select>
+          </label>
+          <label>Classe <input type="text" id="classe1" /></label>
+        </div>
+        <div class="eleve">
+          <h2>Élève 2</h2>
+          <label>Nom <input type="text" id="nom2" /></label>
+          <label>Prénom <input type="text" id="prenom2" /></label>
+          <label>Sexe
+            <select id="sexe2">
+              <option value="M">Garçon</option>
+              <option value="F">Fille</option>
+            </select>
+          </label>
+          <label>Classe <input type="text" id="classe2" /></label>
+        </div>
+      </div>
 
-<main>
-  <section id="studentSection">
-    <div class="input-duo">
-      <div class="eleve">
-        <h2>Élève 1</h2>
-        <label>Nom <input type="text" id="nom1" /></label>
-        <label>Prénom <input type="text" id="prenom1" /></label>
-        <label>Sexe
-          <select id="sexe1">
-            <option value="M">Garçon</option>
-            <option value="F">Fille</option>
-          </select>
+      <div class="input-groupe">
+        <label>Durée (min)
+          <input type="number" id="duree" min="1" />
+        </label>
+        <label>Distance d'un tour (m)
+          <input type="number" id="distanceTour" min="1" />
+        </label>
+        <label>VMA Référence (optionnel)
+          <input type="number" id="vmaRef" step="0.01" />
         </label>
       </div>
-      <div class="eleve">
-        <h2>Élève 2</h2>
-        <label>Nom <input type="text" id="nom2" /></label>
-        <label>Prénom <input type="text" id="prenom2" /></label>
-        <label>Sexe
-          <select id="sexe2">
-            <option value="M">Garçon</option>
-            <option value="F">Fille</option>
-          </select>
-        </label>
+
+      <div id="chrono">
+        <div id="chronoDisplay">00:00</div>
+        <div class="chrono-btns">
+          <button id="startBtn" class="btn-start">Démarrer</button>
+          <button id="lapBtn" class="btn-lap" disabled>+ Tour</button>
+          <button id="resetBtn" class="btn-reset" disabled>Reset</button>
+        </div>
+        <div id="lapsCount" style="text-align:center; font-weight:bold;">0 tours</div>
       </div>
-    </div>
 
-    <div class="input-groupe">
-      <label>Durée (minutes) <input type="number" id="duree" min="1" /></label>
-      <label>Distance tour (m) <input type="number" id="distanceTour" min="1" /></label>
-      <label>VMA optionnelle (km/h) <input type="number" id="vmaRef" step="0.1" /></label>
-    </div>
-
-    <div id="chrono">
-      <div id="chronoDisplay">00:00</div>
-      <div class="chrono-btns">
-        <button id="startBtn" class="btn-start">Démarrer</button>
-        <button id="lapBtn" class="btn-lap" disabled>+ Tour</button>
-        <button id="resetBtn" class="btn-reset" disabled>Reset</button>
+      <div id="statsBox">
+        <div class="stat ligne-bleue">
+          Distance totale (m)
+          <div id="distanceTotal">0</div>
+        </div>
+        <div class="stat ligne-verte">
+          Vitesse moyenne (km/h)
+          <div id="vitesseMoy">0.00</div>
+        </div>
+        <div class="stat ligne-jaune">
+          VMA estimée (km/h)
+          <div id="vmaReal">0.00</div>
+        </div>
       </div>
-    </div>
 
-    <div id="statsBox">
-      <div class="stat ligne-bleue">
-        <div>Distance totale (m)</div>
-        <div id="distanceTotal">0</div>
+      <div id="etatForme" style="display:none;">
+        <h3>État de forme</h3>
+        <button class="etatBtn" data-etat="😊 Très bien">😊 Très bien</button>
+        <button class="etatBtn" data-etat="😣 Difficile">😣 Difficile</button>
+        <button class="etatBtn" data-etat="🤮 Très mal">🤮 Très mal</button>
       </div>
-      <div class="stat ligne-verte">
-        <div>Vitesse moyenne (km/h)</div>
-        <div id="vitesseMoy">0.00</div>
+    </section>
+
+    <section id="qrContainer" style="display:none; text-align:center;">
+      <h2>QR Code des résultats</h2>
+      <div id="qrCodeBox"></div>
+    </section>
+
+    <section id="profAccess" style="margin-top:3em;">
+      <h2>Accès Professeur</h2>
+      <input type="password" id="profPinInput" placeholder="Code Prof" />
+      <button id="profPinSubmit">Connexion</button>
+      <button id="logoutBtn" style="display:none;">Déconnexion</button>
+
+      <div id="profDashboard" style="display:none; margin-top:1em;">
+        <div id="qr-scan-container">
+          <div id="qr-reader" style="width: 300px; margin: auto;"></div>
+          <button id="stopScanBtn">Arrêter le scan</button>
+        </div>
+        <button id="exportCsvBtn">Exporter CSV</button>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nom</th>
+              <th>Prénom</th>
+              <th>Sexe</th>
+              <th>Classe</th>
+              <th>Durée (min)</th>
+              <th>Distance (m)</th>
+              <th>Vitesse (km/h)</th>
+              <th>VMA (km/h)</th>
+              <th>État</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody"></tbody>
+        </table>
       </div>
-      <div class="stat ligne-jaune">
-        <div>VMA estimée (km/h)</div>
-        <div id="vmaReal">0.00</div>
-      </div>
-    </div>
+    </section>
+  </main>
 
-    <div id="etatForme" style="display:none;">
-      <p>Choisissez votre état de forme :</p>
-      <button class="etatBtn" data-etat="Très bien 😊">😊 Très bien</button>
-      <button class="etatBtn" data-etat="Grimace 😖">😖 Grimace</button>
-      <button class="etatBtn" data-etat="Nausée 🤢">🤢 Nausée</button>
-    </div>
+  <footer>
+    RunStats - Equipe EPS Lycée Vauban - Luxembourg - JB
+  </footer>
 
-    <div id="qrCodeBox" style="margin-top:20px; text-align:center;"></div>
-  </section>
-
-  <section id="profAccess">
-    <h2>Accès Professeur</h2>
-    <input type="password" id="profPinInput" placeholder="Code prof" />
-    <button id="profPinSubmit">Valider</button>
-    <button id="logoutBtn" style="display:none;">Déconnexion</button>
-
-    <div id="profDashboard" style="display:none;">
-      <h3>Scanner QR Code</h3>
-      <div id="qr-reader" style="width:300px; margin: 1em auto;"></div>
-      <button id="stopScanBtn">Arrêter le scan</button>
-
-      <h3>Résultats</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Sexe</th>
-            <th>Durée</th>
-            <th>Distance</th>
-            <th>Vitesse</th>
-            <th>VMA</th>
-            <th>État</th>
-          </tr>
-        </thead>
-        <tbody id="resultsBody"></tbody>
-      </table>
-
-      <button id="exportCsvBtn">Exporter CSV</button>
-    </div>
-  </section>
-</main>
-
-<footer>
-  RunStats - Equipe EPS Lycée Vauban - Luxembourg - JB
-</footer>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
