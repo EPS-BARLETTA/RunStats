@@ -1,189 +1,223 @@
+// === Variables générales ===
+let laps = 0;
+let chronoInterval, countdownTime, countdownTimer;
+let qrDataArray = [];
+let course1Done = false;
+let eleve1 = {}, eleve2 = {};
+let distanceTotal = 0;
 
-// ========== Variables Globales ==========
-let chronoInterval, time = 0, laps = 0;
-let currentStudent = 1;
-let dataStudent1 = {}, dataStudent2 = {};
-let scannedResults = [];
+// === Chronomètre ===
+const startBtn = document.getElementById('startBtn');
+const lapBtn = document.getElementById('lapBtn');
+const resetBtn = document.getElementById('resetBtn');
+const chronoDisplay = document.getElementById('chronoDisplay');
+const lapsCount = document.getElementById('lapsCount');
 
-// ========== Fonctions Utilitaires ==========
-function formatTime(sec) {
-  const m = String(Math.floor(sec / 60)).padStart(2, '0');
-  const s = String(sec % 60).padStart(2, '0');
-  return `${m}:${s}`;
-}
+startBtn.addEventListener('click', () => {
+  const duree = parseFloat(document.getElementById('duree').value);
+  const distanceTour = parseFloat(document.getElementById('distanceTour').value);
 
-function updateStats() {
-  const distanceTour = Number(document.getElementById('distanceTour').value);
-  const duree = Number(document.getElementById('duree').value) * 60;
-  const distance = laps * distanceTour;
-  const vitesse = (distance / duree) * 3.6;
-  const vma = vitesse * 1.15;
-
-  document.getElementById('distanceTotal').textContent = distance.toFixed(0);
-  document.getElementById('distanceKm').textContent = (distance / 1000).toFixed(2);
-  document.getElementById('vitesseMoy').textContent = vitesse.toFixed(2);
-  document.getElementById('vmaReal').textContent = vma.toFixed(2);
-}
-
-function resetChrono() {
-  clearInterval(chronoInterval);
-  time = 0; laps = 0;
-  document.getElementById('chronoDisplay').textContent = "00:00";
-  document.getElementById('lapsCount').textContent = laps;
-  document.getElementById('startBtn').disabled = false;
-  document.getElementById('lapBtn').disabled = true;
-  document.getElementById('resetBtn').disabled = true;
-  document.getElementById('etatForme').style.display = "none";
-  document.getElementById('chronoDisplay').classList.remove("red");
-}
-
-// ========== Chronomètre ==========
-document.getElementById('startBtn').addEventListener('click', () => {
-  const dureeMin = Number(document.getElementById('duree').value);
-  if (!dureeMin || !document.getElementById('distanceTour').value) {
-    alert("Remplissez la durée et la distance du tour.");
+  if (!duree || !distanceTour) {
+    alert("Veuillez remplir la durée et la distance d’un tour.");
     return;
   }
 
-  chronoInterval = setInterval(() => {
-    time++;
-    document.getElementById('chronoDisplay').textContent = formatTime(time);
-    if (Number(dureeMin) * 60 - time <= 10) {
-      document.getElementById('chronoDisplay').classList.add('red');
-    }
-    if (time >= dureeMin * 60) {
-      clearInterval(chronoInterval);
-      document.getElementById('lapBtn').disabled = true;
-      document.getElementById('etatForme').style.display = "block";
-    }
-    updateStats();
-  }, 1000);
+  countdownTime = duree * 60;
+  distanceTotal = 0;
+  laps = 0;
+  lapsCount.textContent = '0';
+  updateStats();
 
-  document.getElementById('startBtn').disabled = true;
-  document.getElementById('lapBtn').disabled = false;
-  document.getElementById('resetBtn').disabled = false;
+  startCountdown();
+  lapBtn.disabled = false;
+  resetBtn.disabled = false;
+  startBtn.disabled = true;
 });
 
-document.getElementById('lapBtn').addEventListener('click', () => {
+lapBtn.addEventListener('click', () => {
+  const distanceTour = parseFloat(document.getElementById('distanceTour').value);
   laps++;
-  document.getElementById('lapsCount').textContent = laps;
+  distanceTotal = laps * distanceTour;
+  lapsCount.textContent = laps;
   updateStats();
 });
 
-document.getElementById('resetBtn').addEventListener('click', resetChrono);
+resetBtn.addEventListener('click', () => {
+  clearInterval(countdownTimer);
+  chronoDisplay.textContent = "00:00";
+  startBtn.disabled = false;
+  lapBtn.disabled = true;
+  resetBtn.disabled = true;
+  distanceTotal = 0;
+  laps = 0;
+  lapsCount.textContent = '0';
+  updateStats();
+});
 
-// ========== État Forme ==========
-document.querySelectorAll('.etatBtn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const distance = Number(document.getElementById('distanceTotal').textContent);
-    const vitesse = Number(document.getElementById('vitesseMoy').textContent);
-    const vma = Number(document.getElementById('vmaReal').textContent);
-    const etat = btn.dataset.etat;
-
-    const nom = document.getElementById(`nom${currentStudent}`).value;
-    const prenom = document.getElementById(`prenom${currentStudent}`).value;
-    const classe = document.getElementById(`classe${currentStudent}`).value;
-    const duree = Number(document.getElementById('duree').value);
-
-    const record = { nom, prenom, classe, duree, distance, vitesse, vma, etat };
-
-    if (currentStudent === 1) {
-      dataStudent1 = record;
-      currentStudent = 2;
-      resetChrono();
-      alert("À l'élève 2 !");
-    } else {
-      dataStudent2 = record;
-      const allData = [dataStudent1, dataStudent2];
-      const qrData = JSON.stringify(allData);
-      document.getElementById("qrCodeBox").innerHTML = "";
-      new QRCode(document.getElementById("qrCodeBox"), {
-        text: qrData,
-        width: 200,
-        height: 200
-      });
-      document.getElementById("qrContainer").style.display = "block";
-      resetChrono();
+function startCountdown() {
+  countdownTimer = setInterval(() => {
+    if (countdownTime <= 0) {
+      clearInterval(countdownTimer);
+      showEtatForme();
+      return;
     }
 
-    document.getElementById('etatForme').style.display = "none";
+    countdownTime--;
+
+    let min = String(Math.floor(countdownTime / 60)).padStart(2, '0');
+    let sec = String(countdownTime % 60).padStart(2, '0');
+    chronoDisplay.textContent = `${min}:${sec}`;
+
+    if (countdownTime <= 10) {
+      chronoDisplay.style.color = 'red';
+    } else {
+      chronoDisplay.style.color = 'black';
+    }
+
+    updateStats();
+  }, 1000);
+}
+
+// === Mise à jour des stats ===
+function updateStats() {
+  const duree = parseFloat(document.getElementById('duree').value);
+  const tempsHeure = duree / 60;
+  const distanceKm = distanceTotal / 1000;
+  const vitesseMoy = (distanceKm / tempsHeure).toFixed(2);
+  const vma = (distanceKm / (tempsHeure * 0.92)).toFixed(2);
+
+  document.getElementById('distanceTotal').textContent = distanceTotal;
+  document.getElementById('distanceKm').textContent = distanceKm.toFixed(2);
+  document.getElementById('vitesseMoy').textContent = vitesseMoy;
+  document.getElementById('vmaReal').textContent = vma;
+}
+
+// === Ressenti ===
+const etatButtons = document.querySelectorAll('.etatBtn');
+etatButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const etat = btn.dataset.etat;
+
+    const distanceKm = (distanceTotal / 1000).toFixed(2);
+    const duree = parseFloat(document.getElementById('duree').value);
+    const vitesse = (distanceKm / (duree / 60)).toFixed(2);
+    const vma = (distanceKm / ((duree / 60) * 0.92)).toFixed(2);
+
+    const vmaRef = parseFloat(document.getElementById('vmaRef').value);
+    const infos = {
+      nom: course1Done ? document.getElementById('nom2').value : document.getElementById('nom1').value,
+      prenom: course1Done ? document.getElementById('prenom2').value : document.getElementById('prenom1').value,
+      classe: course1Done ? document.getElementById('classe2').value : document.getElementById('classe1').value,
+      duree,
+      distance: distanceTotal,
+      vitesse,
+      vma,
+      etat,
+      vmaRef: isNaN(vmaRef) ? '' : vmaRef
+    };
+
+    if (!course1Done) {
+      eleve1 = infos;
+      resetBtn.click();
+      course1Done = true;
+    } else {
+      eleve2 = infos;
+      generateQRCode([eleve1, eleve2]);
+      document.getElementById('etatForme').style.display = "none";
+    }
   });
 });
 
-// ========== Accès Professeur ==========
+function showEtatForme() {
+  document.getElementById('etatForme').style.display = "block";
+}
+
+// === QR Code ===
+function generateQRCode(data) {
+  const container = document.getElementById("qrCodeBox");
+  container.innerHTML = "";
+  document.getElementById('qrContainer').style.display = "block";
+  new QRCode(container, {
+    text: JSON.stringify(data),
+    width: 200,
+    height: 200
+  });
+}
+
+// === Espace Prof ===
 document.getElementById("profPinSubmit").addEventListener("click", () => {
   const code = document.getElementById("profPinInput").value;
   if (code === "1976") {
-    document.getElementById("studentInput").style.display = "none";
     document.getElementById("profDashboard").style.display = "block";
+    document.getElementById("studentInput").style.display = "none";
     document.getElementById("logoutBtn").style.display = "inline-block";
-    startScanner();
+    startQrScanner();
   } else {
     alert("Code incorrect.");
   }
 });
 
 document.getElementById("logoutBtn").addEventListener("click", () => {
-  document.getElementById("studentInput").style.display = "block";
-  document.getElementById("profDashboard").style.display = "none";
-  document.getElementById("logoutBtn").style.display = "none";
-  stopScanner();
+  location.reload();
 });
 
-// ========== Scanner QR ==========
-let html5QrCode;
+// === QR Scan Prof ===
+function startQrScanner() {
+  const qrReader = new Html5Qrcode("qr-reader");
 
-function startScanner() {
-  html5QrCode = new Html5Qrcode("qr-reader");
-  html5QrCode.start({ facingMode: "environment" }, {
+  qrReader.start({ facingMode: "environment" }, {
     fps: 10,
     qrbox: 250
-  }, (decodedText) => {
+  }, (decoded) => {
     try {
-      const data = JSON.parse(decodedText);
-      data.forEach(entry => {
-        scannedResults.push(entry);
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td></td>
-          <td>${entry.nom}</td>
-          <td>${entry.prenom}</td>
-          <td>${entry.classe}</td>
-          <td>${entry.duree}</td>
-          <td>${entry.distance}</td>
-          <td>${entry.vitesse.toFixed(2)}</td>
-          <td>${entry.vma.toFixed(2)}</td>
-          <td>${entry.etat}</td>
-        `;
-        document.getElementById("resultsBody").appendChild(row);
-      });
+      const data = JSON.parse(decoded);
+      data.forEach(entry => qrDataArray.push(entry));
+      updateTable();
     } catch (e) {
-      console.error("QR invalide");
+      console.error("QR non lisible");
     }
   });
+
+  document.getElementById("stopScanBtn").addEventListener("click", () => {
+    qrReader.stop().then(() => {
+      document.getElementById("qr-reader").innerHTML = "";
+    });
+  });
 }
 
-function stopScanner() {
-  if (html5QrCode) {
-    html5QrCode.stop();
-    html5QrCode.clear();
-  }
+// === Mise à jour du tableau ===
+function updateTable() {
+  const body = document.getElementById("resultsBody");
+  body.innerHTML = "";
+  qrDataArray.forEach((data, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>-</td>
+      <td>${data.nom}</td>
+      <td>${data.prenom}</td>
+      <td>${data.classe}</td>
+      <td>${data.duree}</td>
+      <td>${data.distance}</td>
+      <td>${data.vitesse}</td>
+      <td>${data.vma}</td>
+      <td>${data.etat}</td>
+    `;
+    body.appendChild(row);
+  });
 }
 
-// ========== Export CSV ==========
+// === Export CSV ===
 document.getElementById("exportCsvBtn").addEventListener("click", () => {
-  const header = ["Groupe", "Nom", "Prénom", "Classe", "Durée", "Distance", "Vitesse", "VMA", "État"];
-  const rows = [header];
-
-  scannedResults.forEach((d, i) => {
-    rows.push(["", d.nom, d.prenom, d.classe, d.duree, d.distance, d.vitesse.toFixed(2), d.vma.toFixed(2), d.etat]);
+  let csv = "Nom,Prénom,Classe,Durée,Distance,Vitesse,VMA,État\n";
+  qrDataArray.forEach(d => {
+    csv += `${d.nom},${d.prenom},${d.classe},${d.duree},${d.distance},${d.vitesse},${d.vma},${d.etat}\n`;
   });
 
-  const csvContent = rows.map(e => e.join(",")).join("\n");
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const blob = new Blob([csv], { type: "text/csv" });
   const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.setAttribute("href", url);
-  link.setAttribute("download", "RunStats_Resultats.csv");
-  link.click();
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "resultats_runstats.csv";
+  a.click();
+  URL.revokeObjectURL(url);
 });
