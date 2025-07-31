@@ -1,185 +1,274 @@
-/* Base Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
-}
+/* style.css */
 
 body {
-  background: #f0f4f8;
-  color: #333;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f7f9fc;
+  margin: 0;
   padding: 20px;
+  color: #222;
 }
 
-/* Header */
 header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
-h1 {
-  font-size: 2.5rem;
-  color: #0077cc;
+header h1 {
+  font-size: 2.5em;
+  margin: 0;
+  color: #2c3e50;
 }
 
-h2 {
-  font-size: 1.2rem;
-  color: #555;
-  margin-top: 10px;
+header h2 {
+  font-weight: normal;
+  color: #34495e;
+  margin-top: 5px;
+  font-size: 1.1em;
 }
 
-/* Input group */
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 10px;
+  padding: 25px 30px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
 .input-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
+  gap: 15px;
   margin-bottom: 20px;
+  justify-content: space-between;
 }
 
-.input-group input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 30px;
-  min-width: 150px;
+.input-group h3 {
+  flex-basis: 100%;
+  margin-bottom: 8px;
+  color: #2980b9;
+}
+
+input[type="text"], input[type="number"], input[type="password"] {
+  flex: 1 1 28%;
+  padding: 10px 12px;
   font-size: 1em;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  transition: border-color 0.3s;
 }
 
-/* Chrono */
+input[type="text"]:focus, input[type="number"]:focus, input[type="password"]:focus {
+  border-color: #2980b9;
+  outline: none;
+}
+
 #chrono {
   text-align: center;
-  margin-bottom: 20px;
+  margin: 30px 0 20px;
 }
 
 #chronoDisplay {
-  font-size: 3rem;
-  margin: 15px 0;
-  color: #222;
-  font-weight: bold;
-  transition: color 0.5s ease;
+  font-size: 3.2em;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #2c3e50;
+  transition: color 0.3s;
 }
 
-#chronoDisplay.red {
-  color: red;
+.red {
+  color: #e74c3c !important;
 }
 
-#chronoDisplay.warning {
-  color: orange;
+.orange {
+  color: #e67e22 !important;
 }
 
-/* Buttons */
 button {
-  padding: 10px 20px;
-  margin: 5px;
-  border: none;
-  background: #0077cc;
+  background-color: #2980b9;
   color: white;
-  font-weight: bold;
-  border-radius: 30px;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1.1em;
+  border-radius: 50px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  margin: 0 8px 12px 8px;
+  box-shadow: 0 4px 8px rgba(41, 128, 185, 0.3);
+  transition: background-color 0.3s ease;
+  min-width: 140px;
+  user-select: none;
 }
 
-button:hover {
-  background: #005fa3;
+button:hover:not(:disabled) {
+  background-color: #1f6391;
 }
 
 button:disabled {
-  background: #ccc;
+  background-color: #95a5a6;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
-/* Stats */
 #stats {
-  text-align: center;
-  margin-bottom: 20px;
+  font-size: 1.2em;
+  line-height: 1.5;
+  margin-bottom: 25px;
+  color: #34495e;
 }
 
 #etatForme {
   text-align: center;
-  margin: 20px 0;
+  margin: 20px 0 25px;
+}
+
+#etatForme p {
+  font-weight: 600;
+  margin-bottom: 12px;
+  font-size: 1.3em;
+  color: #2c3e50;
 }
 
 .etatBtn {
-  font-size: 1.5rem;
-  margin: 5px;
-  border: none;
-  background: #eee;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  cursor: pointer;
-  transition: background 0.2s;
+  background-color: #27ae60;
+  margin: 0 10px;
+  border-radius: 50px;
+  padding: 12px 22px;
+  font-size: 1.2em;
+  box-shadow: 0 4px 7px rgba(39, 174, 96, 0.3);
+  transition: background-color 0.3s;
+  user-select: none;
 }
 
 .etatBtn:hover {
-  background: #ddd;
+  background-color: #1e8449;
 }
 
-/* QR Code */
+.etatBtn[data-etat="Moyen"] {
+  background-color: #f39c12;
+}
+
+.etatBtn[data-etat="Moyen"]:hover {
+  background-color: #d68910;
+}
+
+.etatBtn[data-etat="Fatigué"] {
+  background-color: #c0392b;
+}
+
+.etatBtn[data-etat="Fatigué"]:hover {
+  background-color: #922b21;
+}
+
 #qrContainer {
   text-align: center;
-  margin-top: 20px;
-}
-
-#qrCodeBox {
-  margin: auto;
-  padding: 20px;
-  background: white;
-  width: fit-content;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-}
-
-/* Prof Zone */
-#profDashboard {
-  padding: 20px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
   margin-top: 30px;
 }
 
-#qr-reader {
-  margin: 20px auto;
+#qrCodeBox {
+  margin: 0 auto;
+  width: 220px;
+  height: 220px;
 }
 
-#profAccess {
-  margin: 30px 0;
+#profDashboard {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #ecf0f1;
+  padding: 25px 30px;
+  border-radius: 10px;
+  box-shadow: inset 0 0 15px #bdc3c7;
+}
+
+#qr-scan-container {
   text-align: center;
+  margin-bottom: 20px;
 }
 
-#profAccess input {
-  padding: 10px;
-  border-radius: 30px;
-  border: 1px solid #ccc;
-  margin-right: 10px;
+#stopScanBtn {
+  background-color: #c0392b;
+  margin-top: 12px;
 }
 
-/* Table */
+#exportCsvBtn {
+  background-color: #27ae60;
+  margin-bottom: 25px;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-  font-size: 0.9rem;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
 }
 
-table th, table td {
-  border: 1px solid #ccc;
-  padding: 8px;
+th, td {
+  padding: 14px 18px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  font-size: 1em;
+  color: #34495e;
+}
+
+th {
+  background-color: #2980b9;
+  color: white;
+  user-select: none;
+}
+
+tbody tr:hover {
+  background-color: #d6eaf8;
+}
+
+#profAccess {
+  max-width: 300px;
+  margin: 40px auto 20px;
   text-align: center;
 }
 
-table th {
-  background: #0077cc;
-  color: white;
+#profAccess input[type="password"] {
+  width: 70%;
+  padding: 10px 12px;
+  font-size: 1em;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  margin-right: 10px;
 }
 
-/* Footer */
-footer {
-  margin-top: 40px;
-  text-align: right;
-  font-size: 0.9rem;
-  color: #aaa;
+#profAccess button {
+  min-width: 100px;
+  margin: 8px 5px;
+}
+
+footer#footer {
+  position: fixed;
+  bottom: 15px;
+  right: 20px;
+  color: #bdc3c7;
+  font-size: 0.9em;
+  user-select: none;
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media screen and (max-width: 650px) {
+  .input-group {
+    flex-direction: column;
+  }
+
+  input[type="text"], input[type="number"], input[type="password"] {
+    flex: 1 1 100%;
+  }
+
+  button {
+    min-width: 100%;
+    margin: 8px 0;
+  }
+
+  #profAccess input[type="password"] {
+    width: 100%;
+    margin-bottom: 10px;
+  }
 }
