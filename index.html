@@ -3,79 +3,98 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - Equipe EPS Lycée Vauban - Luxembourg</title>
+  <title>RunStats - Equipe EPS Lycée Vauban</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs2@0.0.2/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 <body>
+  <header>
+    <h1>RunStats - Equipe EPS Lycée Vauban - Luxembourg</h1>
+  </header>
 
-<header>
-  <h1>RunStats - Equipe EPS Lycée Vauban - Luxembourg</h1>
-</header>
-
-<main>
-
-  <section id="elevesSection">
-
-    <div class="eleve" id="eleve1">
-      <h2>Élève 1</h2>
-      <label>Nom : <input type="text" id="nom1" /></label>
-      <label>Prénom : <input type="text" id="prenom1" /></label>
-      <label>Sexe :
-        <select id="sexe1">
-          <option value="M">Garçon</option>
-          <option value="F">Fille</option>
-        </select>
-      </label>
-      <label>Durée (minutes) : <input type="number" id="duree1" min="1" /></label>
-
-      <div class="etatButtons">
-        <p>État / Ressenti :</p>
-        <button class="etatBtn" data-etat="😃">😃</button>
-        <button class="etatBtn" data-etat="🙂">🙂</button>
-        <button class="etatBtn" data-etat="😐">😐</button>
-        <button class="etatBtn" data-etat="😣">😣</button>
+  <main>
+    <section id="elevesSection">
+      <div class="eleve" id="eleve1">
+        <h2>Élève 1</h2>
+        <label>Nom <input type="text" id="nom1" /></label>
+        <label>Prénom <input type="text" id="prenom1" /></label>
+        <label>Sexe
+          <select id="sexe1">
+            <option value="M">Garçon</option>
+            <option value="F">Fille</option>
+          </select>
+        </label>
+        <label>Durée (min) <input type="number" id="duree1" min="1" /></label>
+        <div>
+          <span>État (emoji) :</span>
+          <button class="etatBtn" data-eleve="1" data-etat="😃">😃</button>
+          <button class="etatBtn" data-eleve="1" data-etat="😐">😐</button>
+          <button class="etatBtn" data-eleve="1" data-etat="😣">😣</button>
+        </div>
       </div>
 
-      <div id="resultatsEleve1" class="resultats"></div>
-    </div>
-
-    <div class="eleve" id="eleve2" style="opacity: 0.5; pointer-events:none;">
-      <h2>Élève 2</h2>
-      <label>Nom : <input type="text" id="nom2" disabled /></label>
-      <label>Prénom : <input type="text" id="prenom2" disabled /></label>
-      <label>Sexe :
-        <select id="sexe2" disabled>
-          <option value="M">Garçon</option>
-          <option value="F">Fille</option>
-        </select>
-      </label>
-      <label>Durée (minutes) : <input type="number" id="duree2" min="1" disabled /></label>
-
-      <div class="etatButtons">
-        <p>État / Ressenti :</p>
-        <button class="etatBtn" data-etat="😃" disabled>😃</button>
-        <button class="etatBtn" data-etat="🙂" disabled>🙂</button>
-        <button class="etatBtn" data-etat="😐" disabled>😐</button>
-        <button class="etatBtn" data-etat="😣" disabled>😣</button>
+      <div class="eleve" id="eleve2">
+        <h2>Élève 2</h2>
+        <label>Nom <input type="text" id="nom2" /></label>
+        <label>Prénom <input type="text" id="prenom2" /></label>
+        <label>Sexe
+          <select id="sexe2">
+            <option value="M">Garçon</option>
+            <option value="F">Fille</option>
+          </select>
+        </label>
+        <label>Durée (min) <input type="number" id="duree2" min="1" /></label>
+        <div>
+          <span>État (emoji) :</span>
+          <button class="etatBtn" data-eleve="2" data-etat="😃">😃</button>
+          <button class="etatBtn" data-eleve="2" data-etat="😐">😐</button>
+          <button class="etatBtn" data-eleve="2" data-etat="😣">😣</button>
+        </div>
       </div>
+    </section>
 
-      <div id="resultatsEleve2" class="resultats"></div>
-    </div>
+    <section id="qrSection" style="display:none;">
+      <h2>QR Code des deux élèves</h2>
+      <div id="qrCodeBox"></div>
+    </section>
 
-  </section>
+    <section id="profAccess">
+      <h2>Accès Professeur</h2>
+      <input type="password" id="profPinInput" placeholder="Code Professeur" />
+      <button id="profPinSubmit">Valider</button>
+      <button id="logoutBtn" style="display:none;">Déconnexion</button>
+      <div id="profDashboard" style="display:none;">
+        <div id="qr-scan-container">
+          <div id="qr-reader" style="width:300px;"></div>
+          <button id="stopScanBtn">Arrêter le scan</button>
+        </div>
+        <button id="exportCsvBtn">Exporter CSV</button>
 
-  <section id="qrContainer" style="display:none; text-align:center; margin-top: 2em;">
-    <h2>QR Code des deux élèves</h2>
-    <div id="qrCodeBox"></div>
-  </section>
+        <table>
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Prénom</th>
+              <th>Sexe</th>
+              <th>Durée (min)</th>
+              <th>État</th>
+              <th>VMA estimée</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody"></tbody>
+        </table>
 
-</main>
+        <button id="trierGroupesBtn">Créer Groupes Mixte VMA</button>
+        <div id="groupesContainer"></div>
+      </div>
+    </section>
+  </main>
 
-<footer>
-  RunStats - Equipe EPS Lycée Vauban - Luxembourg - JB
-</footer>
+  <footer>
+    RunStats - Equipe EPS Lycée Vauban - Luxembourg - JB
+  </footer>
 
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
