@@ -3,9 +3,6 @@ body {
   margin: 0;
   background-color: #f4f4f4;
   color: #333;
-  position: relative;
-  min-height: 100vh;
-  padding-bottom: 40px; /* espace pour footer */
 }
 
 header {
@@ -38,15 +35,8 @@ main {
   border-radius: 8px;
 }
 
-.input-groupe {
-  display: flex;
-  gap: 1em;
-  margin-bottom: 1.5em;
-}
-
 input[type="text"],
 input[type="number"],
-input[type="password"],
 select {
   width: 100%;
   padding: 0.5em;
@@ -61,7 +51,7 @@ select {
 }
 
 #chronoDisplay {
-  font-size: 3em;
+  font-size: 2.5em;
   font-weight: bold;
   margin-bottom: 0.5em;
 }
@@ -79,7 +69,6 @@ button {
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 .btn-start {
@@ -97,57 +86,8 @@ button {
   color: white;
 }
 
-button:hover:not(:disabled) {
+button:hover {
   opacity: 0.9;
-}
-
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-#statsBox {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 2em;
-  text-align: center;
-}
-
-.stat {
-  background-color: #eaeaea;
-  padding: 1em;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 1.2em;
-  width: 30%;
-  box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
-}
-
-.stat span {
-  display: block;
-  font-size: 2em;
-  margin-top: 0.3em;
-  color: #004080;
-}
-
-.ligne-bleue {
-  background-color: #d0e7ff;
-  color: #004080;
-}
-
-.ligne-verte {
-  background-color: #d4f8d4;
-  color: #1e5621;
-}
-
-.ligne-jaune {
-  background-color: #fff6cc;
-  color: #7a6000;
-}
-
-.ligne-violette {
-  background-color: #f0e0ff;
-  color: #4b0082;
 }
 
 #etatForme {
@@ -158,12 +98,11 @@ button:disabled {
 .etatBtn {
   margin: 0.5em;
   padding: 0.7em 1.2em;
-  font-size: 1.3em;
+  font-size: 1.1em;
   border-radius: 10px;
   border: none;
   cursor: pointer;
   background-color: #eaeaea;
-  transition: background-color 0.3s ease;
 }
 
 .etatBtn:hover {
@@ -173,17 +112,6 @@ button:disabled {
 #qrCodeBox {
   margin: 1em auto;
   width: fit-content;
-  text-align: center;
-}
-
-#qrContainer {
-  text-align: center;
-  margin-bottom: 2em;
-}
-
-#qr-scan-container {
-  margin-bottom: 1em;
-  text-align: center;
 }
 
 table {
@@ -199,11 +127,6 @@ th, td {
   text-align: center;
 }
 
-#profAccess {
-  text-align: center;
-  margin: 2em 0;
-}
-
 footer {
   text-align: right;
   padding: 0.5em 1em;
@@ -211,15 +134,4 @@ footer {
   color: #aaa;
   background-color: #fff;
   border-top: 1px solid #ddd;
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  width: 100%;
-  box-sizing: border-box;
-  z-index: 999;
-}
-
-footer p {
-  margin: 0;
-  padding-right: 1em;
 }
