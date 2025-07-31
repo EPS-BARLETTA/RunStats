@@ -1,205 +1,142 @@
+/* Styles généraux */
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background-color: #f4f4f4;
-  color: #333;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f9f9f9;
+    text-align: center;
 }
 
 header {
-  background-color: #004080;
-  color: white;
-  padding: 1em;
-  text-align: center;
+    background: #0055a4;
+    color: white;
+    padding: 1rem;
 }
 
-h1, h2, h3 {
-  margin: 0.5em 0;
+h1, h2 {
+    margin: 0.5rem 0;
 }
 
-main {
-  padding: 1em;
-  max-width: 1000px;
-  margin: 0 auto;
+/* Formulaire */
+.runner-form {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px;
+    flex-wrap: wrap;
 }
 
-.input-duo {
-  display: flex;
-  gap: 1em;
-  margin-bottom: 1em;
+.runner-form input,
+.runner-form select {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
-.eleve {
-  flex: 1;
-  background-color: #e6f0ff;
-  padding: 1em;
-  border-radius: 8px;
-}
-
-.input-groupe {
-  display: flex;
-  gap: 1em;
-  margin-bottom: 1.5em;
-}
-
-input[type="text"],
-input[type="number"],
-input[type="password"],
-select {
-  width: 100%;
-  padding: 0.5em;
-  margin-top: 0.5em;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-#chrono {
-  text-align: center;
-  margin-bottom: 1.5em;
+/* Boutons chrono */
+#controls {
+    margin: 20px;
 }
 
 #chronoDisplay {
-  font-size: 2.5em;
-  font-weight: bold;
-  margin-bottom: 0.5em;
+    font-size: 2rem;
+    margin-bottom: 10px;
 }
 
-.chrono-btns {
-  display: flex;
-  justify-content: center;
-  gap: 1em;
-  margin-bottom: 1em;
+/* Boutons spécifiques */
+#startBtn, #resetBtn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    margin: 5px;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
 }
 
-button {
-  padding: 0.7em 1.2em;
-  font-size: 1em;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  user-select: none;
-  transition: background-color 0.3s ease;
+#resetBtn {
+    background: #dc3545;
 }
 
-.btn-start, .btn-reset {
-  width: 120px;
-  border-radius: 12px;
-  font-weight: bold;
+#lapBtn {
+    background: #ffc107;
+    color: black;
+    border: none;
+    padding: 25px;
+    margin: 5px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
 }
 
-.btn-lap {
-  width: 80px;
-  border-radius: 50%;
-  font-weight: bold;
-  font-size: 1.3em;
-  background-color: #007bff;
-  color: white;
-}
-
-.btn-start {
-  background-color: #28a745;
-  color: white;
-}
-
-.btn-reset {
-  background-color: #dc3545;
-  color: white;
-}
-
-button:hover:not(:disabled) {
-  opacity: 0.9;
-}
-
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
+/* Stats */
 #statsBox {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1em;
-  margin-bottom: 2em;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
 }
 
 .stat {
-  padding: 1em;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 1.1em;
-  text-align: center;
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+    width: 120px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .ligne-bleue {
-  background-color: #d0e7ff;
-  color: #004080;
+    border-top: 3px solid #007bff;
 }
-
 .ligne-verte {
-  background-color: #d4f8d4;
-  color: #1e5621;
+    border-top: 3px solid #28a745;
 }
-
 .ligne-jaune {
-  background-color: #fff6cc;
-  color: #7a6000;
+    border-top: 3px solid #ffc107;
 }
 
-#etatForme {
-  text-align: center;
-  margin-bottom: 2em;
-}
-
+/* Émojis état */
 .etatBtn {
-  margin: 0.5em;
-  padding: 0.7em 1.5em;
-  font-size: 1.3em;
-  border-radius: 15px;
-  border: none;
-  cursor: pointer;
-  background-color: #eaeaea;
-  user-select: none;
-  transition: background-color 0.3s ease;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
 }
 
-.etatBtn:hover {
-  background-color: #d0d0d0;
-}
-
+/* QR code */
 #qrCodeBox {
-  margin: 1em auto;
-  width: fit-content;
+    margin-top: 20px;
 }
 
-#qr-scan-container {
-  margin-bottom: 1em;
-  text-align: center;
+/* Section prof */
+#profLogin {
+    margin-top: 30px;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1em;
-  font-size: 0.9em;
+#profSection {
+    margin-top: 20px;
 }
 
-th, td {
-  padding: 0.5em;
-  border: 1px solid #ccc;
-  text-align: center;
+#profResults {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
 }
 
-#profAccess {
-  text-align: center;
-  margin: 2em 0;
+#profResults th, #profResults td {
+    border: 1px solid #ccc;
+    padding: 8px;
 }
 
+/* Footer */
 footer {
-  text-align: right;
-  padding: 0.5em 1em;
-  font-size: 0.85em;
-  color: #aaa;
-  background-color: #fff;
-  border-top: 1px solid #ddd;
-  user-select: none;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    font-size: 0.8rem;
+    color: #999;
+    padding: 5px;
 }
