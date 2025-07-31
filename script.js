@@ -1,205 +1,186 @@
-// ===================== VARIABLES GLOBALES =====================
-let currentRunner = 1;
-let laps = { 1: [], 2: [] };
-let startTime = null;
-let timerInterval = null;
-let durationSelected = 0;
-let runnerData = {};
+// ------------------ Variables ------------------
+let tempsTotal = 0; // en secondes
+let chronoInterval;
+let distanceTotale = 0;
+let piste = 0;
+let courseActuelle = 1; // 1 ou 2
+let resultats = [];
+let dureeMinutes = 0;
 
-// ===================== UTILITAIRES =====================
-function formatTime(ms) {
-    const totalSeconds = Math.floor(ms / 1000);
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-}
+// ------------------ Initialisation ------------------
+document.getElementById("startBtn").addEventListener("click", demarrerChrono);
+document.getElementById("lapBtn").addEventListener("click", ajouterTour);
+document.getElementById("resetBtn").addEventListener("click", resetCourse);
 
-function calculateAverageSpeed(distance, duration) {
-    // Vitesse moyenne en km/h : distance (m) / durée (s) * 3.6
-    return ((distance / duration) * 3.6).toFixed(2);
-}
+document.querySelectorAll(".etatBtn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    sauvegarderEtat(btn.dataset.forme);
+  });
+});
 
-function calculateVMA(distance, duration) {
-    // VMA = vitesse moyenne globale
-    return calculateAverageSpeed(distance, duration);
-}
+document.getElementById("accessProfBtn").addEventListener("click", () => {
+  if (document.getElementById("profCode").value === "1234") {
+    document.getElementById("profPanel").style.display = "block";
+    lancerScannerQR();
+  } else {
+    alert("Code incorrect");
+  }
+});
 
-// ===================== GESTION COURSE =====================
-function startRace() {
-    const prenom = document.getElementById(`prenom${currentRunner}`).value;
-    const nom = document.getElementById(`nom${currentRunner}`).value;
-    const sexe = document.getElementById(`sexe${currentRunner}`).value;
-    const piste = parseFloat(document.getElementById(`piste${currentRunner}`).value) || 0;
-    const duree = parseFloat(document.getElementById(`duree${currentRunner}`).value) || 0;
+// ------------------ Fonctions Chrono ------------------
+function demarrerChrono() {
+  // Récupère paramètres
+  dureeMinutes = parseInt(document.getElementById("tempsCourse").value);
+  piste = parseFloat(document.getElementById("distancePiste").value);
 
-    if (!prenom || !nom || sexe === "choix" || piste <= 0 || duree <= 0) {
-        alert("Veuillez remplir tous les champs correctement pour démarrer la course.");
-        return;
+  if (!dureeMinutes || !piste) {
+    alert("Entrez la durée et la distance de piste !");
+    return;
+  }
+
+  tempsTotal = dureeMinutes * 60; // convertir en secondes
+  distanceTotale = 0;
+  afficherStats();
+
+  document.getElementById("etatForme").style.display = "none";
+  document.getElementById("chronoDisplay").textContent = formatTemps(tempsTotal);
+
+  // Lancer compte à rebours
+  chronoInterval = setInterval(() => {
+    tempsTotal--;
+    document.getElementById("chronoDisplay").textContent = formatTemps(tempsTotal);
+
+    if (tempsTotal <= 0) {
+      clearInterval(chronoInterval);
+      finCourse();
     }
-
-    runnerData[currentRunner] = {
-        prenom,
-        nom,
-        sexe,
-        piste,
-        duree,
-        distance: 0,
-        emoji: null
-    };
-
-    laps[currentRunner] = [];
-    startTime = Date.now();
-    durationSelected = duree * 1000; // durée en ms
-    document.getElementById("chronoDisplay").textContent = "0:00";
-
-    timerInterval = setInterval(updateChrono, 1000);
+  }, 1000);
 }
 
-function updateChrono() {
-    const elapsed = Date.now() - startTime;
-    document.getElementById("chronoDisplay").textContent = formatTime(elapsed);
-
-    // Arrêt auto quand durée atteinte
-    if (elapsed >= durationSelected) {
-        clearInterval(timerInterval);
-        showEmojiSelection();
-    }
+function ajouterTour() {
+  if (!piste) {
+    alert("Entrez la distance de la piste !");
+    return;
+  }
+  distanceTotale += piste;
+  afficherStats();
 }
 
-function addLap() {
-    const piste = runnerData[currentRunner].piste;
-    if (!piste) {
-        alert("Veuillez renseigner la distance de la piste avant d'ajouter un tour.");
-        return;
-    }
-    laps[currentRunner].push(piste);
-    runnerData[currentRunner].distance = laps[currentRunner].reduce((a, b) => a + b, 0);
-    updateStatsDisplay();
+function resetCourse() {
+  clearInterval(chronoInterval);
+  tempsTotal = 0;
+  distanceTotale = 0;
+  document.getElementById("chronoDisplay").textContent = "00:00";
+  document.getElementById("totalDistance").textContent = "0";
+  document.getElementById("vitesseMoyenne").textContent = "0";
+  document.getElementById("vmaEstimee").textContent = "0";
+  document.getElementById("etatForme").style.display = "none";
+  document.getElementById("qrCodeBox").innerHTML = "";
+  courseActuelle = 1;
+  resultats = [];
 }
 
-function resetRace() {
-    clearInterval(timerInterval);
-    document.getElementById("chronoDisplay").textContent = "0:00";
-    laps[currentRunner] = [];
-    startTime = null;
-    runnerData[currentRunner].distance = 0;
-    updateStatsDisplay();
+// ------------------ Fonctions Stats ------------------
+function afficherStats() {
+  // Calcul vitesse moyenne (km/h) = distance (m) / temps (s) * 3.6
+  let tempsEcoule = dureeMinutes * 60 - tempsTotal;
+  let vitesseMoy = tempsEcoule > 0 ? (distanceTotale / tempsEcoule) * 3.6 : 0;
+  let vmaEstimee = vitesseMoy * 1.05; // estimation
+
+  document.getElementById("totalDistance").textContent = distanceTotale.toFixed(0);
+  document.getElementById("vitesseMoyenne").textContent = vitesseMoy.toFixed(1);
+  document.getElementById("vmaEstimee").textContent = vmaEstimee.toFixed(1);
 }
 
-function showEmojiSelection() {
-    const emojis = ["😊", "😐", "🤢"];
-    const container = document.getElementById("etatForme");
-    container.innerHTML = "<h3>État de forme ?</h3>";
-    emojis.forEach(e => {
-        const btn = document.createElement("button");
-        btn.className = "etatBtn";
-        btn.textContent = e;
-        btn.onclick = () => {
-            runnerData[currentRunner].emoji = e;
-            if (currentRunner === 1) {
-                currentRunner = 2;
-                alert("Course 1 terminée. Saisissez les infos pour l'élève 2 et recommencez.");
-            } else {
-                generateQRCode();
-            }
-            container.innerHTML = "";
-        };
-        container.appendChild(btn);
-    });
+function finCourse() {
+  document.getElementById("etatForme").style.display = "block";
 }
 
-function updateStatsDisplay() {
-    const distance = runnerData[currentRunner].distance || 0;
-    const dureeSec = (durationSelected / 1000) || 1;
-    const vitesse = calculateAverageSpeed(distance, dureeSec);
-    const vma = calculateVMA(distance, dureeSec);
+// Sauvegarde l'état de forme + passe à l'élève suivant ou affiche QR
+function sauvegarderEtat(emoji) {
+  const nom = document.getElementById(`nom${courseActuelle}`).value;
+  const prenom = document.getElementById(`prenom${courseActuelle}`).value;
+  const sexe = document.getElementById(`sexe${courseActuelle}`).value;
 
-    document.getElementById("statsBox").innerHTML = `
-        <div class="stat ligne-bleue">Distance totale (m)<br>${distance}</div>
-        <div class="stat ligne-verte">Vitesse moyenne (km/h)<br>${vitesse}</div>
-        <div class="stat ligne-jaune">VMA estimée (km/h)<br>${vma}</div>
-    `;
+  const vma = parseFloat(document.getElementById("vmaEstimee").textContent);
+  resultats.push({
+    nom,
+    prenom,
+    sexe,
+    distance: distanceTotale,
+    vma: vma,
+    forme: emoji
+  });
+
+  if (courseActuelle === 1) {
+    // Passer à l'élève 2
+    courseActuelle = 2;
+    resetCourse();
+    alert("Course 1 terminée. Préparez l'élève 2 !");
+  } else {
+    // Générer QR après élève 2
+    genererQRCode();
+  }
 }
 
-// ===================== QR CODE =====================
-function generateQRCode() {
-    const allData = {
-        eleve1: runnerData[1],
-        eleve2: runnerData[2]
-    };
-    const qrText = JSON.stringify(allData);
-    document.getElementById("qrCodeBox").innerHTML = "";
-    new QRCode(document.getElementById("qrCodeBox"), {
-        text: qrText,
-        width: 200,
-        height: 200
-    });
+// ------------------ QR Code ------------------
+function genererQRCode() {
+  const data = JSON.stringify(resultats);
+  document.getElementById("qrCodeBox").innerHTML = "";
+  new QRCode(document.getElementById("qrCodeBox"), {
+    text: data,
+    width: 256,
+    height: 256
+  });
 }
 
-// ===================== MODE PROF =====================
-const PROF_CODE = "1234";
+// ------------------ Scanner QR (Espace Prof) ------------------
+function lancerScannerQR() {
+  const scanner = new Html5Qrcode("reader");
 
-function checkProfCode() {
-    const code = document.getElementById("profCode").value;
-    if (code === PROF_CODE) {
-        document.getElementById("profSection").style.display = "block";
-        startQRScanner();
-    } else {
-        alert("Code incorrect.");
-    }
-}
-
-// QR Code scanner avec html5-qrcode
-function startQRScanner() {
-    const html5QrCode = new Html5Qrcode("qr-scan-container");
-    Html5Qrcode.getCameras().then(devices => {
-        if (devices && devices.length) {
-            const cameraId = devices[0].id;
-            html5QrCode.start(
-                cameraId,
-                { fps: 10, qrbox: 250 },
-                decodedText => {
-                    processScannedData(decodedText);
-                    html5QrCode.stop();
-                },
-                errorMessage => {
-                    console.log("Scan en cours...");
-                }
-            ).catch(err => console.log(err));
+  Html5Qrcode.getCameras().then(cameras => {
+    if (cameras && cameras.length) {
+      // Priorité à la caméra arrière
+      const cam = cameras.find(c => c.label.toLowerCase().includes('back')) || cameras[0];
+      scanner.start(
+        cam.id,
+        {
+          fps: 10,
+          qrbox: 250
+        },
+        (decodedText) => {
+          try {
+            const data = JSON.parse(decodedText);
+            remplirTableProf(data);
+          } catch (e) {
+            alert("QR invalide");
+          }
         }
-    });
-}
-
-function processScannedData(data) {
-    try {
-        const parsed = JSON.parse(data);
-        displayProfTable(parsed);
-    } catch (e) {
-        alert("QR Code invalide.");
+      );
     }
+  }).catch(err => console.error(err));
 }
 
-function displayProfTable(data) {
-    const table = document.getElementById("profResults");
-    table.innerHTML = `
-        <tr>
-            <th>Prénom</th><th>Nom</th><th>Sexe</th><th>Distance</th><th>Vitesse (km/h)</th><th>VMA (km/h)</th><th>État</th>
-        </tr>
+// ------------------ Table Prof ------------------
+function remplirTableProf(data) {
+  const tbody = document.getElementById("profTableBody");
+  tbody.innerHTML = "";
+  data.forEach(el => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${el.nom}</td>
+      <td>${el.prenom}</td>
+      <td>${el.sexe}</td>
+      <td>${el.distance}</td>
+      <td>${el.vma}</td>
     `;
+    tbody.appendChild(tr);
+  });
+}
 
-    Object.values(data).forEach(el => {
-        const vitesse = calculateAverageSpeed(el.distance, el.duree);
-        const vma = calculateVMA(el.distance, el.duree);
-        table.innerHTML += `
-            <tr>
-                <td>${el.prenom}</td>
-                <td>${el.nom}</td>
-                <td>${el.sexe}</td>
-                <td>${el.distance}</td>
-                <td>${vitesse}</td>
-                <td>${vma}</td>
-                <td>${el.emoji}</td>
-            </tr>
-        `;
-    });
+// ------------------ Utilitaires ------------------
+function formatTemps(sec) {
+  let m = Math.floor(sec / 60);
+  let s = sec % 60;
+  return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
 }
