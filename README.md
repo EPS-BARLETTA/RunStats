@@ -1,57 +1,58 @@
-# RunStats - Equipe EPS Lycée Vauban - LUXEMBOURG
+# RunStats - Equipe EPS Lycée Vauban - Luxembourg
+
+Application web pour la gestion et le suivi des courses VMA en EPS.
+
+---
 
 ## Description
 
-Application Web de gestion des résultats de courses pour élèves du Lycée Vauban, développée par l'équipe EPS du Lycée Vauban, Luxembourg.
+RunStats permet à deux élèves de saisir leurs données de course (nom, prénom, sexe, classe, durée, distance de piste, VMA optionnelle) et d’enregistrer leurs tours en temps réel via un chronomètre.
 
-Les élèves saisissent leurs informations (nom, prénom, sexe, durée) ainsi que leur état via emoji. À la fin des deux courses, un QR code est généré avec les données des deux élèves.
+Après chaque course, les élèves renseignent leur état de forme via des boutons emoji.
 
-Les professeurs peuvent scanner ces QR codes, accéder à un tableau centralisé des résultats, trier les élèves et créer des groupes mixtes selon leur VMA (haute, moyenne, basse) et mixité garçons/filles.
+L’enseignant peut scanner le QR code généré contenant toutes les données des deux courses pour importer les résultats dans un tableau.
+
+Il est aussi possible d’exporter ces données en CSV.
 
 ---
 
 ## Fonctionnalités
 
-- Saisie des données des deux élèves par course
-- Calcul automatique de la VMA estimée
-- Choix de l'état via emoji
-- Génération et affichage d'un QR code contenant les données des deux élèves
-- Interface professeur protégée par code PIN (1976)
-- Scanner QR code côté professeur pour ajouter les données au tableau global
-- Tri et création automatique de groupes mixtes (4 élèves par groupe, mixité sexe et VMA)
-- Export des résultats au format CSV
+- Chronomètre avec gestion des tours
+- Calculs de vitesse moyenne et VMA estimée
+- Enregistrement des données élèves
+- Sélection d’état de forme avec emoji
+- Génération et lecture QR code
+- Interface Professeur avec scan QR code
+- Export CSV
 
 ---
 
-## Installation et utilisation
+## Installation
 
-1. Cloner ce dépôt GitHub.
-2. Ouvrir `index.html` dans un navigateur moderne (Chrome, Firefox, Edge).
-3. Les élèves saisissent leurs données et valident leur état en emoji.
-4. Un QR code s'affiche à la fin des deux saisies.
-5. Le professeur entre le code PIN **1976** pour accéder à l'interface de scan et de gestion.
-6. Scanner les QR codes générés pour alimenter le tableau.
-7. Utiliser le bouton "Créer Groupes Mixte VMA" pour générer les groupes.
-8. Exporter les résultats au format CSV si besoin.
+1. Cloner le dépôt
+2. Ouvrir `index.html` dans un navigateur moderne
+3. Utiliser directement, aucune configuration serveur nécessaire
 
 ---
 
-## Technologies utilisées
+## Usage
 
-- HTML5 / CSS3
-- JavaScript ES6
-- [QRCode.js](https://github.com/davidshimjs/qrcodejs) (via CDN)
-- [html5-qrcode](https://github.com/mebjas/html5-qrcode) (via CDN)
+- L’élève saisit ses informations et démarre le chronomètre.
+- Après la course, sélection de l’état de forme.
+- Pour la deuxième course, les élèves inversent leur rôle.
+- L’enseignant se connecte avec le code PIN pour scanner le QR code.
+- Résultats affichés dans un tableau, export CSV possible.
 
 ---
 
-## Auteur
+## Dépendances
 
-Jérome BARLETTA  
-Equipe EPS Lycée Vauban - Luxembourg
+- [QRCode.js](https://davidshimjs.github.io/qrcodejs/)
+- [html5-qrcode](https://github.com/mebjas/html5-qrcode)
 
 ---
 
 ## Licence
 
-Ce projet est libre d'utilisation pour usage pédagogique.
+MIT License
