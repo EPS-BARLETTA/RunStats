@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - EPS Lycée Vauban - JB</title>
+  <title>RunStats - EPS Vauban</title>
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Librairies QR -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
@@ -17,39 +15,43 @@
   </header>
 
   <main id="studentInput">
-    <section class="input-group">
-      <h2>Élève 1</h2>
-      <input type="text" id="nom1" placeholder="Nom" required />
-      <input type="text" id="prenom1" placeholder="Prénom" required />
-      <input type="text" id="classe1" placeholder="Classe" required />
+    <section class="input-duo">
+      <div class="eleve">
+        <h2>Élève 1</h2>
+        <input type="text" id="nom1" placeholder="Nom" required />
+        <input type="text" id="prenom1" placeholder="Prénom" required />
+        <input type="text" id="classe1" placeholder="Classe" required />
+      </div>
+
+      <div class="eleve">
+        <h2>Élève 2</h2>
+        <input type="text" id="nom2" placeholder="Nom" required />
+        <input type="text" id="prenom2" placeholder="Prénom" required />
+        <input type="text" id="classe2" placeholder="Classe" required />
+      </div>
     </section>
 
-    <section class="input-group">
-      <h2>Élève 2</h2>
-      <input type="text" id="nom2" placeholder="Nom" required />
-      <input type="text" id="prenom2" placeholder="Prénom" required />
-      <input type="text" id="classe2" placeholder="Classe" required />
-    </section>
-
-    <section class="input-group">
-      <input type="number" id="duree" placeholder="Durée de la course (min)" min="0.1" step="0.1" required />
+    <section class="input-groupe">
+      <input type="number" id="duree" placeholder="Durée (min)" min="0.1" step="0.1" required />
       <input type="number" id="distanceTour" placeholder="Distance d’un tour (m)" min="1" required />
-      <input type="number" id="vmaRef" placeholder="VMA de référence (optionnel)" min="0" step="0.1" />
+      <input type="number" id="vmaRef" placeholder="VMA de référence (km/h) (optionnel)" min="0" step="0.1" />
     </section>
 
     <section id="chrono">
       <p id="chronoDisplay">00:00</p>
-      <button id="startBtn">Démarrer</button>
-      <button id="lapBtn" disabled>Ajouter 1 tour</button>
-      <button id="resetBtn" disabled>Reset</button>
+      <div class="chrono-btns">
+        <button id="startBtn" class="btn-start">Démarrer</button>
+        <button id="lapBtn" class="btn-lap" disabled>Ajouter 1 tour</button>
+        <button id="resetBtn" class="btn-reset" disabled>Reset</button>
+      </div>
       <p>Tours : <span id="lapsCount">0</span></p>
     </section>
 
-    <section id="stats">
-      <p>Distance totale (m) : <span id="distanceTotal">0</span> m</p>
-      <p>Distance (km) : <span id="distanceKm">0.00</span> km</p>
-      <p>Vitesse moyenne : <span id="vitesseMoy">0.00</span> km/h</p>
-      <p>VMA estimée : <span id="vmaReal">0.00</span> km/h</p>
+    <section id="statsBox">
+      <div class="stat ligne-bleue">Distance totale : <span id="distanceTotal">0</span> m</div>
+      <div class="stat ligne-verte">Distance (km) : <span id="distanceKm">0.00</span> km</div>
+      <div class="stat ligne-jaune">Vitesse moyenne : <span id="vitesseMoy">0.00</span> km/h</div>
+      <div class="stat ligne-violette">VMA estimée : <span id="vmaReal">0.00</span> km/h</div>
     </section>
 
     <section id="etatForme" style="display: none;">
@@ -60,7 +62,7 @@
     </section>
 
     <section id="qrContainer" style="display: none;">
-      <h3>QR Code à scanner par le professeur</h3>
+      <h3>QR Code à scanner</h3>
       <div id="qrCodeBox"></div>
     </section>
   </main>
@@ -68,14 +70,13 @@
   <main id="profDashboard" style="display: none;">
     <h2>Espace Professeur</h2>
 
-    <div id="qr-scan-container" style="display: none;">
+    <div id="qr-scan-container">
       <div id="qr-reader" style="width: 320px; margin: 0 auto;"></div>
       <button id="stopScanBtn">Arrêter le scan</button>
     </div>
 
-    <button id="startScanBtn">Scanner un QR Code</button>
-    <button id="exportCsvBtn">Exporter en CSV</button>
-    <button id="generateGroupsBtn">Créer les groupes</button>
+    <button id="exportCsvBtn">Exporter CSV</button>
+    <button id="generateGroupsBtn">Créer Groupes</button>
     <div id="groupsDisplay"></div>
 
     <table>
@@ -103,7 +104,7 @@
   </section>
 
   <footer id="footer">
-    <p>RunStats - Équipe EPS Lycée Vauban - JB</p>
+    <p>RunStats - EPS Lycée Vauban</p>
   </footer>
 
   <script src="script.js"></script>
