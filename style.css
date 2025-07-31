@@ -1,142 +1,238 @@
-/* Styles généraux */
+/* RESET DE BASE */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #f9f9f9;
-    text-align: center;
+  background: #f8f9fa;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
+/* HEADER */
 header {
-    background: #0055a4;
-    color: white;
-    padding: 1rem;
+  background: #004080;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-size: 1.3rem;
 }
 
-h1, h2 {
-    margin: 0.5rem 0;
+/* CONTENEUR PRINCIPAL */
+main {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-/* Formulaire */
-.runner-form {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 10px;
-    flex-wrap: wrap;
+/* ZONE ELEVE CÔTE À CÔTE */
+.input-duo {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
 }
 
-.runner-form input,
-.runner-form select {
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.eleve {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  flex: 1;
 }
 
-/* Boutons chrono */
-#controls {
-    margin: 20px;
+.eleve h2 {
+  text-align: center;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.eleve label {
+  font-size: 0.9rem;
+  margin-top: 10px;
+  display: block;
+  color: #444;
+}
+
+.eleve input,
+.eleve select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* PARAMÈTRES COURSE */
+.input-groupe {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+.input-groupe div {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+}
+
+.input-groupe label {
+  font-size: 0.9rem;
+  color: #444;
+  margin-bottom: 5px;
+}
+
+.input-groupe input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* CHRONO */
+#chrono {
+  text-align: center;
 }
 
 #chronoDisplay {
-    font-size: 2rem;
-    margin-bottom: 10px;
+  font-size: 2.5rem;
+  margin-bottom: 15px;
 }
 
-/* Boutons spécifiques */
-#startBtn, #resetBtn {
-    background: #28a745;
-    color: white;
-    border: none;
-    padding: 15px 20px;
-    margin: 5px;
-    border-radius: 10px;
-    font-size: 1rem;
-    cursor: pointer;
+/* BOUTONS CHRONO */
+.chrono-btns {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
 }
 
-#resetBtn {
-    background: #dc3545;
+.btn-start, .btn-reset {
+  width: 90px;
+  height: 50px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  background: #28a745;
+  color: white;
 }
 
-#lapBtn {
-    background: #ffc107;
-    color: black;
-    border: none;
-    padding: 25px;
-    margin: 5px;
-    border-radius: 50%;
-    font-size: 1.2rem;
-    cursor: pointer;
+.btn-reset {
+  background: #dc3545;
 }
 
-/* Stats */
+.btn-lap {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  background: #007bff;
+  color: white;
+}
+
+/* STATS */
 #statsBox {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
 }
 
 .stat {
-    background: white;
-    padding: 10px;
-    border-radius: 10px;
-    width: 120px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  flex: 1;
+  padding: 10px;
+  margin: 0 5px;
+  border-radius: 8px;
 }
 
 .ligne-bleue {
-    border-top: 3px solid #007bff;
+  background: #e6f0ff;
 }
+
 .ligne-verte {
-    border-top: 3px solid #28a745;
+  background: #e6ffe6;
 }
+
 .ligne-jaune {
-    border-top: 3px solid #ffc107;
+  background: #fffbe6;
 }
 
-/* Émojis état */
+/* EMOJI */
+#etatForme {
+  text-align: center;
+}
+
+#etatForme h2 {
+  margin-bottom: 10px;
+}
+
 .etatBtn {
-    font-size: 2rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    margin: 10px;
+  font-size: 2rem;
+  margin: 0 10px;
+  cursor: pointer;
+  background: none;
+  border: none;
 }
 
-/* QR code */
+/* QR CODE */
 #qrCodeBox {
-    margin-top: 20px;
+  text-align: center;
 }
 
-/* Section prof */
-#profLogin {
-    margin-top: 30px;
+/* ESPACE PROF */
+#profAccess {
+  margin-top: 30px;
 }
 
-#profSection {
-    margin-top: 20px;
+#profAccess input {
+  padding: 8px;
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
-#profResults {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+#profAccess button {
+  padding: 8px 12px;
+  margin-left: 5px;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  background: #004080;
+  color: white;
 }
 
-#profResults th, #profResults td {
-    border: 1px solid #ccc;
-    padding: 8px;
+#profZone {
+  margin-top: 20px;
 }
 
-/* Footer */
+/* TABLE PROF */
+#profTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+#profTable th, #profTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+#profTable th {
+  background: #004080;
+  color: white;
+}
+
+/* FOOTER */
 footer {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    font-size: 0.8rem;
-    color: #999;
-    padding: 5px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #888;
+  padding: 10px;
 }
