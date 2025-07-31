@@ -1,216 +1,598 @@
+// --- Variables globales ---
 
-// Variables globales
-let timer, time = 0, laps = 0, dureeMin = 0, distanceTour = 0;
-let dataEleves = [];
-let scanner, scanActive = false;
+// État général
+let chronoInterval = null;
+let chronoTime = 0; // en secondes
+let running = false;
+let laps = 0;
+let totalDistance = 0;
+let vitesseInstantanee = 0;
+let vmaEstimee = 0;
 
-// Sélecteurs
+let currentRun = 1; // 1 ou 2
+let runData = []; // Stocke les données des 2 courses des 2 élèves
+
+// Élèves info
+const eleves = [
+  { nom: '', prenom: '', classe: '' },
+  { nom: '', prenom: '', classe: '' }
+];
+
+// État forme (ressenti) pour les 2 courses
+const etatsForme = ['', ''];
+
+// Elements DOM
+const chronoDisplay = document.getElementById('chronoDisplay');
 const startBtn = document.getElementById('startBtn');
 const lapBtn = document.getElementById('lapBtn');
 const resetBtn = document.getElementById('resetBtn');
-const chronoDisplay = document.getElementById('chronoDisplay');
 const lapsCount = document.getElementById('lapsCount');
-const distanceTotal = document.getElementById('distanceTotal');
-const distanceKm = document.getElementById('distanceKm');
-const vitesseMoy = document.getElementById('vitesseMoy');
-const vmaReal = document.getElementById('vmaReal');
+const distanceTotalEl = document.getElementById('distanceTotal');
+const distanceKmEl = document.getElementById('distanceKm');
+const vitesseMoyEl = document.getElementById('vitesseMoy');
+const vmaRealEl = document.getElementById('vmaReal');
+const etatFormeSection = document.getElementById('etatForme');
 const etatBtns = document.querySelectorAll('.etatBtn');
 const qrContainer = document.getElementById('qrContainer');
 const qrCodeBox = document.getElementById('qrCodeBox');
-const profPinInput = document.getElementById('profPinInput');
-const profPinSubmit = document.getElementById('profPinSubmit');
-const logoutBtn = document.getElementById('logoutBtn');
-const studentInput = document.getElementById('studentInput');
+
 const profDashboard = document.getElementById('profDashboard');
 const resultsBody = document.getElementById('resultsBody');
-const qrReader = document.getElementById('qr-reader');
-const stopScanBtn = document.getElementById('stopScanBtn');
 const exportCsvBtn = document.getElementById('exportCsvBtn');
 const generateGroupsBtn = document.getElementById('generateGroupsBtn');
 const groupsDisplay = document.getElementById('groupsDisplay');
+const qrReaderContainer = document.getElementById('qr-reader');
+const stopScanBtn = document.getElementById('stopScanBtn');
 
-// Chrono
-startBtn.addEventListener('click', () => {
-  dureeMin = parseFloat(document.getElementById('duree').value);
-  distanceTour = parseFloat(document.getElementById('distanceTour').value);
-  if (!dureeMin || !distanceTour) {
-    alert("Veuillez entrer une durée et une distance de tour valides.");
+const profAccessSection = document.getElementById('profAccess');
+const profPinInput = document.getElementById('profPinInput');
+const profPinSubmit = document.getElementById('profPinSubmit');
+const logoutBtn = document.getElementById('logoutBtn');
+
+// Input Élèves & course
+const inputs = [
+  {
+    nom: document.getElementById('nom1'),
+    prenom: document.getElementById('prenom1'),
+    classe: document.getElementById('classe1'),
+  },
+  {
+    nom: document.getElementById('nom2'),
+    prenom: document.getElementById('prenom2'),
+    classe: document.getElementById('classe2'),
+  }
+];
+const dureeInput = document.getElementById('duree');
+const distanceTourInput = document.getElementById('distanceTour');
+const vmaRefInput = document.getElementById('vmaRef');
+
+// QR & scan
+let qrCode = null;
+let html5QrScanner = null;
+
+// Constantes
+const PROF_CODE = '1234'; // Exemple, à changer selon besoin
+
+// --- Fonctions ---
+
+// Format temps mm:ss
+function formatTime(seconds) {
+  const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+  const s = (seconds % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+// Calcul vitesse moyenne km/h
+function calcVitesseMoy(distanceM, dureeMin) {
+  if (dureeMin === 0) return 0;
+  return (distanceM / 1000) / (dureeMin / 60);
+}
+
+// Calcul VMA estimée, simple estimation: vitesse max atteinte durant laps (exemple)
+function calcVMA(laps, distanceTour, chronoSeconds) {
+  if (laps === 0 || chronoSeconds === 0) return 0;
+  const distanceM = laps * distanceTour;
+  const dureeMin = chronoSeconds / 60;
+  return calcVitesseMoy(distanceM, dureeMin);
+}
+
+// Démarrer chrono
+function startChrono() {
+  if (running) return;
+  if (!validateInputs()) {
+    alert("Merci de remplir correctement tous les champs avant de démarrer.");
     return;
   }
-
-  time = 0;
-  laps = 0;
-  chronoDisplay.textContent = "00:00";
-  chronoDisplay.classList.remove("red", "orange");
-  lapsCount.textContent = "0";
-  distanceTotal.textContent = "0";
-  distanceKm.textContent = "0.00";
-  vitesseMoy.textContent = "0.00";
-  vmaReal.textContent = "0.00";
-
+  running = true;
   startBtn.disabled = true;
   lapBtn.disabled = false;
   resetBtn.disabled = false;
+  etatFormeSection.style.display = 'none';
+  qrContainer.style.display = 'none';
 
-  timer = setInterval(() => {
-    time++;
-    let min = Math.floor(time / 60);
-    let sec = time % 60;
-    chronoDisplay.textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+  const dureeSec = Math.floor(parseFloat(dureeInput.value) * 60);
+  chronoTime = 0;
+  laps = 0;
+  totalDistance = 0;
+  vitesseInstantanee = 0;
+  vmaEstimee = 0;
 
-    if (dureeMin * 60 - time === 10) chronoDisplay.classList.add("orange");
-    if (time >= dureeMin * 60) {
-      clearInterval(timer);
-      chronoDisplay.classList.remove("orange");
-      chronoDisplay.classList.add("red");
-      lapBtn.disabled = true;
-      document.getElementById("etatForme").style.display = "block";
+  lapsCount.textContent = laps;
+  distanceTotalEl.textContent = totalDistance;
+  distanceKmEl.textContent = '0.00';
+  vitesseMoyEl.textContent = '0.00';
+  vmaRealEl.textContent = '0.00';
+  chronoDisplay.textContent = formatTime(chronoTime);
+
+  chronoInterval = setInterval(() => {
+    chronoTime++;
+    chronoDisplay.textContent = formatTime(chronoTime);
+
+    // Si chrono atteint durée entrée, on stoppe
+    if (chronoTime >= dureeSec) {
+      stopChrono();
+      return;
     }
   }, 1000);
-});
+}
 
-lapBtn.addEventListener('click', () => {
+// Stop chrono
+function stopChrono() {
+  running = false;
+  clearInterval(chronoInterval);
+  startBtn.disabled = false;
+  lapBtn.disabled = true;
+  resetBtn.disabled = false;
+
+  // Calculs finaux
+  vmaEstimee = calcVMA(laps, parseFloat(distanceTourInput.value), chronoTime);
+
+  vitesseInstantanee = calcVitesseMoy(totalDistance, chronoTime / 60);
+
+  distanceKmEl.textContent = (totalDistance / 1000).toFixed(2);
+  vitesseMoyEl.textContent = vitesseInstantanee.toFixed(2);
+  vmaRealEl.textContent = vmaEstimee.toFixed(2);
+
+  etatFormeSection.style.display = 'block';
+}
+
+// Reset
+function resetAll() {
+  clearInterval(chronoInterval);
+  chronoTime = 0;
+  laps = 0;
+  totalDistance = 0;
+  vitesseInstantanee = 0;
+  vmaEstimee = 0;
+  running = false;
+  currentRun = 1;
+  runData.length = 0;
+  etatFormeSection.style.display = 'none';
+  qrContainer.style.display = 'none';
+
+  lapsCount.textContent = '0';
+  distanceTotalEl.textContent = '0';
+  distanceKmEl.textContent = '0.00';
+  vitesseMoyEl.textContent = '0.00';
+  vmaRealEl.textContent = '0.00';
+  chronoDisplay.textContent = '00:00';
+
+  startBtn.disabled = false;
+  lapBtn.disabled = true;
+  resetBtn.disabled = true;
+
+  qrCodeBox.innerHTML = '';
+
+  // Clear inputs for next run only if you want:
+  // (comment if you want to keep them)
+  // inputs.forEach(e => {
+  //   e.nom.value = '';
+  //   e.prenom.value = '';
+  //   e.classe.value = '';
+  // });
+  // dureeInput.value = '';
+  // distanceTourInput.value = '';
+  // vmaRefInput.value = '';
+}
+
+// Ajouter un tour
+function addLap() {
+  if (!running) return;
+
   laps++;
+  const distTour = parseFloat(distanceTourInput.value);
+  totalDistance = laps * distTour;
+
   lapsCount.textContent = laps;
-  const dist = laps * distanceTour;
-  distanceTotal.textContent = dist;
-  distanceKm.textContent = (dist / 1000).toFixed(2);
-  const vit = (dist / 1000) / (time / 3600);
-  vitesseMoy.textContent = isNaN(vit) ? "0.00" : vit.toFixed(2);
-  vmaReal.textContent = isNaN(vit) ? "0.00" : vit.toFixed(2);
-});
+  distanceTotalEl.textContent = totalDistance;
 
-resetBtn.addEventListener('click', () => location.reload());
+  // Optionnel: calcul vitesse instantanée = distance / temps
+  vitesseInstantanee = calcVitesseMoy(totalDistance, chronoTime / 60);
 
-etatBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const etat = btn.dataset.etat;
-    const nom = document.getElementById('nom1').value;
-    const prenom = document.getElementById('prenom1').value;
-    const classe = document.getElementById('classe1').value;
-    const nom2 = document.getElementById('nom2').value;
-    const prenom2 = document.getElementById('prenom2').value;
-    const classe2 = document.getElementById('classe2').value;
-    const vmaRef = parseFloat(document.getElementById('vmaRef').value) || "";
+  distanceKmEl.textContent = (totalDistance / 1000).toFixed(2);
+  vitesseMoyEl.textContent = vitesseInstantanee.toFixed(2);
+}
 
-    const eleves = [
-      { nom, prenom, classe, duree: dureeMin, distance: laps * distanceTour, vitesse: parseFloat(vitesseMoy.textContent), vma: parseFloat(vmaReal.textContent), etat },
-      { nom: nom2, prenom: prenom2, classe: classe2, duree: dureeMin, distance: laps * distanceTour, vitesse: parseFloat(vitesseMoy.textContent), vma: parseFloat(vmaReal.textContent), etat }
-    ];
+// Valide inputs de base
+function validateInputs() {
+  for (let i = 0; i < 2; i++) {
+    if (
+      !inputs[i].nom.value.trim() ||
+      !inputs[i].prenom.value.trim() ||
+      !inputs[i].classe.value.trim()
+    ) return false;
+  }
+  if (
+    !dureeInput.value ||
+    !distanceTourInput.value ||
+    parseFloat(dureeInput.value) <= 0 ||
+    parseFloat(distanceTourInput.value) <= 0
+  ) return false;
+  return true;
+}
 
-    dataEleves.push(...eleves);
-    const jsonData = JSON.stringify(eleves);
-    qrContainer.style.display = "block";
-    qrCodeBox.innerHTML = "";
-    new QRCode(qrCodeBox, {
-      text: jsonData,
-      width: 200,
-      height: 200
+// Enregistrer les élèves infos dans objet global
+function saveElevesInfo() {
+  for (let i = 0; i < 2; i++) {
+    eleves[i].nom = inputs[i].nom.value.trim();
+    eleves[i].prenom = inputs[i].prenom.value.trim();
+    eleves[i].classe = inputs[i].classe.value.trim();
+  }
+}
+
+// Gestion du ressenti et QR code
+function handleEtatClick(evt) {
+  const etat = evt.target.getAttribute('data-etat');
+  if (!etat) return;
+
+  etatsForme[currentRun - 1] = etat;
+
+  // Stocke les données de la course dans runData
+  saveElevesInfo();
+
+  // Données de la course
+  const duree = parseFloat(dureeInput.value);
+  const distanceKm = (totalDistance / 1000).toFixed(2);
+  const vitesse = vitesseInstantanee.toFixed(2);
+  const vmaEst = vmaEstimee.toFixed(2);
+
+  runData[currentRun - 1] = {
+    eleves: [...eleves], // copie tableau d'élèves
+    duree,
+    distance: totalDistance,
+    distanceKm,
+    vitesse,
+    vmaEst,
+    etat,
+  };
+
+  if (currentRun === 1) {
+    // Prépare la 2e course
+    currentRun = 2;
+
+    // Reset chrono, laps, distances etc
+    laps = 0;
+    totalDistance = 0;
+    vitesseInstantanee = 0;
+    vmaEstimee = 0;
+    chronoTime = 0;
+
+    lapsCount.textContent = '0';
+    distanceTotalEl.textContent = '0';
+    distanceKmEl.textContent = '0.00';
+        vitesseMoyEl.textContent = '0.00';
+    vmaRealEl.textContent = '0.00';
+    chronoDisplay.textContent = '00:00';
+
+    startBtn.disabled = false;
+    lapBtn.disabled = true;
+    resetBtn.disabled = false;
+
+    etatFormeSection.style.display = 'none';
+    qrContainer.style.display = 'none';
+
+    alert('Première course terminée. Maintenant, inversez les rôles et lancez la deuxième course.');
+  } else {
+    // Fin des deux courses => génération QR Code
+    generateFinalQRCode();
+  }
+}
+
+// Génération du QR code avec données des deux courses
+function generateFinalQRCode() {
+  qrContainer.style.display = 'block';
+  qrCodeBox.innerHTML = '';
+
+  // Format JSON simplifié avec toutes données utiles
+  const dataToEncode = {
+    run1: runData[0],
+    run2: runData[1]
+  };
+
+  qrCode = new QRCode(qrCodeBox, {
+    text: JSON.stringify(dataToEncode),
+    width: 256,
+    height: 256
+  });
+}
+
+// --- Partie Professeur ---
+
+// Variables pour stockage données reçues
+let scannedResults = [];
+
+// Fonction pour démarrer scanner QR
+function startQRScanner() {
+  if (html5QrScanner) {
+    html5QrScanner.clear();
+    html5QrScanner = null;
+  }
+  html5QrScanner = new Html5Qrcode("qr-reader");
+
+  html5QrScanner.start(
+    { facingMode: "environment" },
+    {
+      fps: 10,
+      qrbox: 250
+    },
+    (decodedText) => {
+      try {
+        const parsed = JSON.parse(decodedText);
+        if (!parsed.run1 || !parsed.run2) throw 'Format invalide';
+
+        scannedResults.push(parsed);
+        alert('Données scannées et enregistrées.');
+
+        // Met à jour tableau affichage
+        updateResultsTable();
+      } catch (e) {
+        console.error('Erreur données scannées:', e);
+        alert('QR Code invalide ou format incorrect.');
+      }
+    },
+    (error) => {
+      // console.log("Scan error", error);
+    }
+  ).catch((err) => {
+    alert('Impossible de démarrer le scan : ' + err);
+  });
+}
+
+// Arrêter scanner
+function stopQRScanner() {
+  if (html5QrScanner) {
+    html5QrScanner.stop().then(() => {
+      html5QrScanner.clear();
+      html5QrScanner = null;
+    }).catch(e => console.error(e));
+  }
+}
+
+// Mise à jour tableau résultats avec les données scannées
+function updateResultsTable() {
+  resultsBody.innerHTML = '';
+
+  scannedResults.forEach((result, idx) => {
+    [result.run1, result.run2].forEach((run, i) => {
+      run.eleves.forEach((eleve) => {
+        const tr = document.createElement('tr');
+
+        // Groupe à remplir plus tard, pour l'instant vide
+        const tdGroup = document.createElement('td');
+        tdGroup.textContent = '';
+        tr.appendChild(tdGroup);
+
+        const tdNom = document.createElement('td');
+        tdNom.textContent = eleve.nom;
+        tr.appendChild(tdNom);
+
+        const tdPrenom = document.createElement('td');
+        tdPrenom.textContent = eleve.prenom;
+        tr.appendChild(tdPrenom);
+
+        const tdClasse = document.createElement('td');
+        tdClasse.textContent = eleve.classe;
+        tr.appendChild(tdClasse);
+
+        const tdDuree = document.createElement('td');
+        tdDuree.textContent = run.duree;
+        tr.appendChild(tdDuree);
+
+        const tdDistance = document.createElement('td');
+        tdDistance.textContent = run.distance;
+        tr.appendChild(tdDistance);
+
+        const tdVitesse = document.createElement('td');
+        tdVitesse.textContent = run.vitesse;
+        tr.appendChild(tdVitesse);
+
+        const tdVma = document.createElement('td');
+        tdVma.textContent = run.vmaEst;
+        tr.appendChild(tdVma);
+
+        const tdEtat = document.createElement('td');
+        tdEtat.textContent = run.etat;
+        tr.appendChild(tdEtat);
+
+        resultsBody.appendChild(tr);
+      });
     });
   });
-});
-
-// Authentification prof
-profPinSubmit.addEventListener('click', () => {
-  if (profPinInput.value === "7890") {
-    studentInput.style.display = "none";
-    profDashboard.style.display = "block";
-    logoutBtn.style.display = "inline-block";
-    initScanner();
-  } else {
-    alert("Code incorrect.");
-  }
-});
-
-logoutBtn.addEventListener('click', () => location.reload());
-
-// Scanner QR
-function initScanner() {
-  scanner = new Html5Qrcode("qr-reader");
-  scanActive = true;
-
-  scanner.start({ facingMode: "environment" }, {
-    fps: 10,
-    qrbox: 250
-  }, onScanSuccess);
 }
 
-stopScanBtn.addEventListener('click', () => {
-  if (scanActive) {
-    scanner.stop().then(() => scanActive = false);
+// Export CSV fonction
+function exportCSV() {
+  if (scannedResults.length === 0) {
+    alert("Aucune donnée à exporter.");
+    return;
   }
-});
 
-function onScanSuccess(decodedText) {
-  try {
-    const eleves = JSON.parse(decodedText);
-    eleves.forEach(e => addToTable(e));
-  } catch (e) {
-    alert("QR invalide");
-  }
-}
+  let csv = 'Groupe,Nom,Prénom,Classe,Durée (min),Distance (m),Vitesse (km/h),VMA (km/h),État\n';
 
-function addToTable(eleve) {
-  const row = document.createElement("tr");
-  row.innerHTML = `
-    <td>-</td>
-    <td>${eleve.nom}</td>
-    <td>${eleve.prenom}</td>
-    <td>${eleve.classe}</td>
-    <td>${eleve.duree}</td>
-    <td>${eleve.distance}</td>
-    <td>${eleve.vitesse.toFixed(2)}</td>
-    <td>${eleve.vma.toFixed(2)}</td>
-    <td>${eleve.etat}</td>
-  `;
-  resultsBody.appendChild(row);
-}
-
-// CSV export
-exportCsvBtn.addEventListener('click', () => {
-  const rows = [["Groupe", "Nom", "Prénom", "Classe", "Durée", "Distance", "Vitesse", "VMA", "État"]];
-  resultsBody.querySelectorAll("tr").forEach(tr => {
-    const cols = Array.from(tr.children).map(td => td.textContent);
-    rows.push(cols);
+  scannedResults.forEach((result, idx) => {
+    [result.run1, result.run2].forEach((run, i) => {
+      run.eleves.forEach((eleve) => {
+        csv += `${''},${eleve.nom},${eleve.prenom},${eleve.classe},${run.duree},${run.distance},${run.vitesse},${run.vmaEst},${run.etat}\n`;
+      });
+    });
   });
 
-  const csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
-  const encodedUri = encodeURI(csvContent);
-  const link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
-  link.setAttribute("download", "runstats.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-});
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
 
-// Group generation
-generateGroupsBtn.addEventListener('click', () => {
-  const all = Array.from(resultsBody.querySelectorAll("tr")).map(tr => {
-    const tds = tr.children;
-    return {
-      nom: tds[1].textContent,
-      prenom: tds[2].textContent,
-      classe: tds[3].textContent,
-      vma: parseFloat(tds[7].textContent) || 0
-    };
-  });
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'runstats_export.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
-  all.sort((a, b) => b.vma - a.vma);
+// --- Création groupes équilibrés ---
 
-  const groups = [];
-  while (all.length >= 4) {
-    const high = all.shift();
-    const low = all.pop();
-    const mid1 = all.shift();
-    const mid2 = all.pop();
-    groups.push([high, mid1, mid2, low]);
+function generateGroups() {
+  if (scannedResults.length === 0) {
+    alert("Pas de données scannées pour créer les groupes.");
+    return;
   }
 
-  groupsDisplay.innerHTML = "";
+  // Rassembler tous les élèves avec VMA moyenne entre les 2 courses (ou VMA max)
+  let allEleves = [];
+
+  scannedResults.forEach((result) => {
+    [result.run1, result.run2].forEach((run) => {
+      run.eleves.forEach((eleve) => {
+        allEleves.push({
+          nom: eleve.nom,
+          prenom: eleve.prenom,
+          classe: eleve.classe,
+          vma: parseFloat(run.vmaEst),
+        });
+      });
+    });
+  });
+
+  // Trier élèves par VMA décroissante
+  allEleves.sort((a, b) => b.vma - a.vma);
+
+  // Définir nombre groupes de 4 (si pas multiple, certains groupes auront moins)
+  const groupSize = 4;
+  const nbGroups = Math.ceil(allEleves.length / groupSize);
+
+  // Création groupes vides
+  let groups = Array.from({ length: nbGroups }, () => []);
+
+  // Répartition pour équilibrer VMA
+  // Méthode : premier élève (plus fort) dans groupe 1, second dans groupe nbGroups, troisième groupe 2, quatrième groupe nbGroups -1 etc en zigzag
+
+  let ascending = true;
+  let idxGroup = 0;
+
+  allEleves.forEach((eleve) => {
+    groups[idxGroup].push(eleve);
+
+    if (ascending) {
+      idxGroup++;
+      if (idxGroup === nbGroups) {
+        idxGroup = nbGroups - 1;
+        ascending = false;
+      }
+    } else {
+      idxGroup--;
+      if (idxGroup < 0) {
+        idxGroup = 0;
+        ascending = true;
+      }
+    }
+  });
+
+  // Affichage groupes
+  groupsDisplay.innerHTML = '<h3>Groupes créés</h3>';
   groups.forEach((group, i) => {
-    const div = document.createElement("div");
-    div.innerHTML = `<h3>Groupe ${i + 1}</h3><ul>${group.map(e => `<li>${e.prenom} ${e.nom} (${e.vma} km/h)</li>`).join("")}</ul>`;
+    const div = document.createElement('div');
+    div.style.border = '1px solid #ccc';
+    div.style.padding = '10px';
+    div.style.margin = '10px 0';
+    div.style.background = '#f9f9f9';
+
+    const title = document.createElement('h4');
+    title.textContent = `Groupe ${i + 1}`;
+    div.appendChild(title);
+
+    group.forEach((eleve) => {
+      const p = document.createElement('p');
+      p.textContent = `${eleve.nom} ${eleve.prenom} - Classe: ${eleve.classe} - VMA: ${eleve.vma.toFixed(2)}`;
+      div.appendChild(p);
+    });
+
     groupsDisplay.appendChild(div);
   });
+
+  // Mettre à jour tableau avec numéro groupe
+  updateResultsTableWithGroups(groups);
+}
+
+// Met à jour le tableau résultat avec groupes attribués
+function updateResultsTableWithGroups(groups) {
+  const rows = resultsBody.querySelectorAll('tr');
+  rows.forEach((row) => {
+    const nom = row.children[1].textContent;
+    const prenom = row.children[2].textContent;
+
+    // Chercher le groupe contenant cet élève
+    let groupeNumber = '';
+    for (let i = 0; i < groups.length; i++) {
+      if (groups[i].some(e => e.nom === nom && e.prenom === prenom)) {
+        groupeNumber = i + 1;
+        break;
+      }
+    }
+
+    row.children[0].textContent = groupeNumber;
+  });
+}
+
+// --- Gestion accès Prof ---
+
+profPinSubmit.addEventListener('click', () => {
+  if (profPinInput.value === PROF_CODE) {
+    profAccessSection.style.display = 'none';
+    profDashboard.style.display = 'block';
+    logoutBtn.style.display = 'inline-block';
+  } else {
+    alert('Code Prof incorrect.');
+  }
 });
+
+logoutBtn.addEventListener('click', () => {
+  profAccessSection.style.display = 'block';
+  profDashboard.style.display = 'none';
+  logoutBtn.style.display = 'none';
+  profPinInput.value = '';
+});
+
+// --- Event listeners Élèves ---
+
+startBtn.addEventListener('click', startChrono);
+lapBtn.addEventListener('click', addLap);
+resetBtn.addEventListener('click', resetAll);
+
+etatBtns.forEach(btn => {
+  btn.addEventListener('click', handleEtatClick);
+});
+
+// --- Event listeners Prof ---
+
+exportCsvBtn.addEventListener('click', exportCSV);
+generateGroupsBtn.addEventListener('click', generateGroups);
+stopScanBtn.addEventListener('click', stopQRScanner);
+
+// Au clic sur "Entrer" dans la section prof, on lance scanner
+profPinSubmit.addEventListener('click', () => {
+  if (profPinInput.value === PROF_CODE) {
+    startQRScanner();
+  }
+});
+
+// --- Initialisation ---
+
+resetAll();
