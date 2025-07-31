@@ -3,14 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - Équipe EPS Vauban - JB</title>
-
-  <!-- Librairies QR code & scan -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
-  <script src="https://unpkg.com/html5-qrcode" defer></script>
-
+  <title>RunStats – Lycée Vauban</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="script.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body>
 
@@ -19,104 +15,61 @@
     <h2>Équipe EPS Lycée Vauban - JB</h2>
   </header>
 
-  <main id="eleveSection">
-    <section id="formEleve">
-      <h3>Saisie du binôme - Course d'un élève</h3>
-      <div class="input-group">
-        <label>Nom Élève 1
-          <input type="text" id="nom1" placeholder="Nom" required/>
-        </label>
-        <label>Prénom Élève 1
-          <input type="text" id="prenom1" placeholder="Prénom" required/>
-        </label>
-        <label>Classe Élève 1
-          <input type="text" id="classe1" placeholder="Classe" required/>
-        </label>
-      </div>
+  <main id="studentZone">
+    <div class="input-group">
+      <h3>Élève</h3>
+      <input type="text" id="nom" placeholder="Nom">
+      <input type="text" id="prenom" placeholder="Prénom">
+      <input type="text" id="classe" placeholder="Classe">
+      <input type="number" id="duree" placeholder="Durée (min)">
+      <input type="number" id="distanceTour" placeholder="Distance d’un tour (m)">
+      <input type="number" id="vmaRef" placeholder="VMA (optionnelle)">
+    </div>
 
-      <div class="input-group">
-        <label>Nom Élève 2
-          <input type="text" id="nom2" placeholder="Nom" required/>
-        </label>
-        <label>Prénom Élève 2
-          <input type="text" id="prenom2" placeholder="Prénom" required/>
-        </label>
-        <label>Classe Élève 2
-          <input type="text" id="classe2" placeholder="Classe" required/>
-        </label>
-      </div>
+    <div id="chrono">
+      <p id="chronoDisplay">00:00</p>
+      <button id="startBtn">Démarrer</button>
+      <button id="lapBtn" disabled>Ajouter 1 tour</button>
+      <button id="resetBtn" disabled>Reset</button>
+      <p>Tours : <span id="lapsCount">0</span></p>
+    </div>
 
-      <div class="input-group">
-        <label>Durée de la course (minutes)
-          <input type="number" id="duree" min="0.1" step="0.1" value="1" required />
-        </label>
-        <label>Distance d’un tour (m)
-          <input type="number" id="distanceTour" min="1" value="400" required />
-        </label>
-        <label>VMA de référence (km/h) (optionnel)
-          <input type="number" id="vmaRef" min="0" step="0.1" placeholder="Ex: 12.5" />
-        </label>
-      </div>
+    <div id="stats">
+      <p>Distance totale : <span id="distanceTotal">0</span> m</p>
+      <p>Distance (km) : <span id="distanceKm">0.00</span> km</p>
+      <p>Vitesse moyenne : <span id="vitesseMoy">0.00</span> km/h</p>
+      <p>VMA estimée : <span id="vmaReal">0.00</span> km/h</p>
+    </div>
 
-      <div id="chronoContainer">
-        <p id="chronoDisplay">00:00</p>
-        <div class="btn-group">
-          <button id="startBtn" class="btn round">Démarrer</button>
-          <button id="lapBtn" class="btn round" disabled>Ajouter un tour</button>
-          <button id="resetBtn" class="btn round" disabled>Réinitialiser</button>
-        </div>
-        <p>Tours : <span id="lapsCount">0</span></p>
-      </div>
+    <div id="etatForme" style="display: none;">
+      <p>Comment te sens-tu ?</p>
+      <button class="etatBtn" data-etat="Très bien">💪</button>
+      <button class="etatBtn" data-etat="Moyen">😐</button>
+      <button class="etatBtn" data-etat="Fatigué">😫</button>
+    </div>
 
-      <div id="stats">
-        <p>Distance totale : <span id="distanceTotal">0</span> m</p>
-        <p>Distance (km) : <span id="distanceKm">0.00</span> km</p>
-        <p>Vitesse moyenne : <span id="vitesseMoy">0.00</span> km/h</p>
-        <p>VMA estimée : <span id="vmaReal">0.00</span> km/h</p>
-      </div>
-
-      <div id="etatForme" style="display:none;">
-        <p>Comment te sens-tu ?</p>
-        <div class="etat-buttons">
-          <button class="etatBtn round" data-etat="Très bien" title="Très bien">💪</button>
-          <button class="etatBtn round" data-etat="Moyen" title="Moyen">😐</button>
-          <button class="etatBtn round" data-etat="Fatigué" title="Fatigué">😫</button>
-        </div>
-      </div>
-
-      <div id="qrContainer" style="display:none;">
-        <h3>QR Code à scanner par le professeur</h3>
-        <div id="qrCodeBox"></div>
-      </div>
-    </section>
+    <div id="qrContainer" style="display: none;">
+      <h3>QR Code à présenter au professeur</h3>
+      <div id="qrCodeBox"></div>
+    </div>
   </main>
 
-  <main id="profSection" style="display:none;">
+  <main id="profDashboard" style="display: none;">
     <h2>Espace Professeur</h2>
+    <div id="qr-reader" style="width: 300px; margin: auto;"></div>
+    <button id="stopScanBtn">Arrêter le scan</button>
+    <button id="exportCsvBtn">Exporter en CSV</button>
 
-    <div id="loginProf">
-      <input type="password" id="profPinInput" placeholder="Code PIN" />
-      <button id="profPinSubmit" class="btn round">Se connecter</button>
-    </div>
-
-    <div id="qrScanSection" style="display:none;">
-      <div id="qr-reader" style="width: 320px; margin: auto;"></div>
-      <button id="stopScanBtn" class="btn round">Arrêter le scan</button>
-    </div>
-
-    <button id="exportCsvBtn" class="btn round" style="display:none;">Exporter les résultats CSV</button>
-
-    <table id="resultsTable" style="display:none;">
+    <table>
       <thead>
         <tr>
-          <th>Groupe</th>
           <th>Nom</th>
           <th>Prénom</th>
           <th>Classe</th>
-          <th>Durée (min)</th>
-          <th>Distance (m)</th>
-          <th>Vitesse moyenne (km/h)</th>
-          <th>VMA Réelle (km/h)</th>
+          <th>Durée</th>
+          <th>Distance</th>
+          <th>Vitesse</th>
+          <th>VMA</th>
           <th>État</th>
         </tr>
       </thead>
@@ -124,9 +77,15 @@
     </table>
   </main>
 
+  <div id="profAccess">
+    <input type="password" id="profPinInput" placeholder="Code Prof" />
+    <button id="profPinSubmit">Entrer</button>
+  </div>
+
   <footer>
-    <p class="signature">RunStats - Équipe EPS Lycée Vauban - JB</p>
+    RunStats – Équipe EPS Lycée Vauban - JB
   </footer>
 
+  <script src="script.js"></script>
 </body>
 </html>
