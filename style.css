@@ -3,6 +3,9 @@ body {
   margin: 0;
   background-color: #f4f4f4;
   color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
@@ -20,6 +23,7 @@ main {
   padding: 1em;
   max-width: 1000px;
   margin: 0 auto;
+  flex-grow: 1;
 }
 
 .input-duo {
@@ -43,12 +47,14 @@ main {
 
 input[type="text"],
 input[type="number"],
-input[type="password"] {
+input[type="password"],
+select {
   width: 100%;
   padding: 0.5em;
   margin-top: 0.5em;
   border-radius: 5px;
   border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
 #chrono {
@@ -75,6 +81,7 @@ button {
   border-radius: 8px;
   border: none;
   cursor: pointer;
+  transition: opacity 0.3s ease;
 }
 
 .btn-start {
@@ -92,8 +99,13 @@ button {
   color: white;
 }
 
-button:hover {
+button:hover:not(:disabled) {
   opacity: 0.9;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 #statsBox {
@@ -101,6 +113,7 @@ button:hover {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1em;
   margin-bottom: 2em;
+  text-align: center;
 }
 
 .stat {
@@ -108,17 +121,20 @@ button:hover {
   border-radius: 8px;
   font-weight: bold;
   font-size: 1.1em;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.stat-value {
+  font-size: 2em;
+  margin-top: 0.3em;
+  color: #004080;
 }
 
 .ligne-bleue {
   background-color: #d0e7ff;
   color: #004080;
-}
-
-.ligne-verte {
-  background-color: #d4f8d4;
-  color: #1e5621;
 }
 
 .ligne-jaune {
@@ -144,6 +160,7 @@ button:hover {
   border: none;
   cursor: pointer;
   background-color: #eaeaea;
+  transition: background-color 0.3s ease;
 }
 
 .etatBtn:hover {
@@ -185,4 +202,11 @@ footer {
   color: #aaa;
   background-color: #fff;
   border-top: 1px solid #ddd;
+  user-select: none;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  max-width: 1000px;
+  box-sizing: border-box;
 }
