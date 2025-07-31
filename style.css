@@ -1,102 +1,99 @@
-/* Reset */
+/* Reset & Base */
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #f4f7fb;
+  background: #f4f7fa;
   color: #333;
-  line-height: 1.6;
+  min-height: 100vh;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Header */
 header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 header h1 {
-  font-size: 3rem;
-  color: #007bff;
+  font-size: 2.4rem;
+  color: #1e90ff;
 }
 
-/* Container */
-main {
+/* Formulaire compact */
+main#studentInput, main#profDashboard {
   background: #fff;
   border-radius: 12px;
-  padding: 25px;
-  max-width: 800px;
-  margin: 0 auto 40px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  padding: 20px;
+  max-width: 700px;
+  margin: 0 auto 30px;
 }
 
 .input-group {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .input-group h2 {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
+  color: #1e90ff;
   margin-bottom: 10px;
-  color: #007bff;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 input[type="text"],
 input[type="number"],
 input[type="password"] {
-  width: 100%;
-  padding: 10px 15px;
-  margin-bottom: 10px;
-  border-radius: 25px;
+  flex: 1 1 30%;
+  padding: 10px;
   border: 1.5px solid #ccc;
+  border-radius: 8px;
   font-size: 1rem;
-  transition: border-color 0.3s;
 }
 
 input:focus {
-  border-color: #007bff;
+  border-color: #1e90ff;
   outline: none;
 }
 
-/* Chrono */
+/* Chrono section */
 #chrono {
   text-align: center;
-  margin-top: 15px;
+  margin: 20px 0;
 }
 
 #chronoDisplay {
   font-size: 2.5rem;
-  margin-bottom: 15px;
   font-weight: bold;
+  margin-bottom: 10px;
+  color: #1e90ff;
 }
 
-#chronoDisplay.red {
-  color: #dc3545;
-}
-
-#chronoDisplay.orange {
-  color: #fd7e14;
-}
-
-/* Buttons */
 button {
-  background-color: #007bff;
+  background-color: #1e90ff;
   color: white;
   border: none;
-  padding: 12px 24px;
+  padding: 10px 20px;
+  margin: 6px;
   border-radius: 30px;
   font-size: 1rem;
   cursor: pointer;
-  font-weight: bold;
-  margin: 10px 5px;
-  transition: background 0.3s ease;
+  font-weight: 600;
+  transition: background 0.3s;
 }
 
 button:hover:not(:disabled) {
-  background-color: #0056b3;
+  background-color: #0f6ecb;
 }
 
 button:disabled {
@@ -104,78 +101,81 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Laps count */
-#lapsCount {
-  font-weight: bold;
-  font-size: 1.2rem;
-  color: #555;
+/* Données dynamiques */
+#stats {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f0f8ff;
+  border-left: 4px solid #1e90ff;
+  border-radius: 6px;
 }
 
-/* Stats */
 #stats p {
-  font-size: 1.1rem;
-  margin: 5px 0;
-  color: #444;
+  font-size: 1rem;
+  margin: 6px 0;
 }
 
-/* Forme */
+.highlight {
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* Boutons ressentis */
 #etatForme {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 25px;
 }
 
 #etatForme p {
+  font-weight: 600;
   font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .etatBtn {
-  border: 2px solid #007bff;
-  background: white;
-  color: #007bff;
+  font-size: 1.5rem;
   padding: 10px 20px;
-  border-radius: 30px;
-  margin: 5px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  cursor: pointer;
+  border-radius: 50px;
+  border: 2px solid #1e90ff;
+  background: white;
+  color: #1e90ff;
+  margin: 0 10px;
   transition: all 0.3s ease;
 }
 
 .etatBtn:hover {
-  background: #007bff;
+  background-color: #1e90ff;
   color: white;
 }
 
-/* QR Container */
+/* QR Code */
 #qrContainer {
   text-align: center;
   margin-top: 30px;
 }
 
 #qrCodeBox {
-  margin-top: 10px;
-  display: inline-block;
+  margin-top: 15px;
 }
 
 /* Professeur */
-#profDashboard h2 {
+main#profDashboard h2 {
   text-align: center;
-  margin-bottom: 25px;
-  color: #007bff;
+  margin-bottom: 15px;
+  color: #1e90ff;
 }
 
-#qr-reader {
-  margin-bottom: 15px;
+#qr-scan-container {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 #stopScanBtn {
-  background: #dc3545;
+  background-color: #dc3545;
 }
 
 #stopScanBtn:hover {
-  background: #b02a37;
+  background-color: #c82333;
 }
 
 #exportCsvBtn,
@@ -188,85 +188,81 @@ button:disabled {
   background-color: #1e7e34;
 }
 
-#groupsDisplay {
-  margin: 20px 0;
-  font-weight: bold;
-}
-
-/* Table */
+/* Tableau */
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-}
-
-th,
-td {
-  padding: 10px;
-  text-align: center;
-  border: 1px solid #ccc;
+  margin-top: 15px;
+  font-size: 0.95rem;
 }
 
 thead {
-  background-color: #007bff;
+  background-color: #1e90ff;
   color: white;
 }
 
-tbody tr:nth-child(even) {
-  background-color: #f2f2f2;
+th, td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: center;
 }
 
-/* Prof access */
+tbody tr:nth-child(even) {
+  background-color: #f2f7ff;
+}
+
+/* Prof Access */
 #profAccess {
   text-align: center;
-  margin-top: 20px;
+  margin-bottom: 30px;
 }
 
 #profPinInput {
   padding: 10px 15px;
+  width: 160px;
   border-radius: 25px;
   border: 1.5px solid #ccc;
-  font-size: 1rem;
-  margin-right: 8px;
+}
+
+#profPinInput:focus {
+  border-color: #1e90ff;
 }
 
 #profPinSubmit,
 #logoutBtn {
-  background: #007bff;
+  margin-left: 10px;
+  background-color: #1e90ff;
   color: white;
-  border: none;
   padding: 10px 20px;
   border-radius: 25px;
-  cursor: pointer;
-  font-weight: bold;
 }
 
-#profPinSubmit:hover,
-#logoutBtn:hover {
-  background-color: #0056b3;
+#logoutBtn {
+  display: none;
 }
 
 /* Footer */
-footer {
-  text-align: center;
+footer#footer {
+  text-align: right;
+  font-size: 0.8rem;
   color: #999;
-  font-size: 0.9rem;
-  margin-top: 40px;
-  font-style: italic;
+  margin-top: auto;
+  padding-top: 20px;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  main {
-    padding: 20px;
+  .row {
+    flex-direction: column;
+  }
+
+  input[type="text"],
+  input[type="number"] {
+    width: 100%;
   }
 
   button {
     width: 100%;
-    margin-top: 10px;
-  }
-
-  #qr-reader {
-    width: 100% !important;
+    margin: 8px 0;
   }
 }
