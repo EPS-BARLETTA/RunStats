@@ -5,89 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RunStats - Accueil</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Spécifique à la page d'accueil */
-        .home-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-        }
-
-        .home-title {
-            font-size: 3em;
-            margin-bottom: 10px;
-        }
-
-        .home-subtitle {
-            font-size: 1.2em;
-            color: #555;
-            margin-bottom: 40px;
-        }
-
-        .buttons-home {
-            display: flex;
-            justify-content: center;
-            gap: 50px;
-        }
-
-        .btn-home {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5em;
-            width: 180px;
-            height: 180px;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            transition: transform 0.2s ease;
-        }
-
-        .btn-home:hover {
-            transform: scale(1.05);
-        }
-
-        .btn-eleve {
-            background-color: #4CAF50;
-            border-radius: 50%;
-        }
-
-        .btn-prof {
-            background-color: #2196F3;
-            border-radius: 20px;
-        }
-
-        footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: #e0e0e0;
-            text-align: center;
-            padding: 10px;
-            font-size: 0.9em;
-        }
-    </style>
 </head>
 <body>
+    <header>
+        <h1 class="titre-principal">RunStats</h1>
+        <h2 class="sous-titre">Equipe EPS Lycée Vauban - LUXEMBOURG</h2>
+    </header>
 
-    <div class="home-container">
-        <h1 class="home-title">RunStats</h1>
-        <h2 class="home-subtitle">Equipe EPS Lycée Vauban - LUXEMBOURG</h2>
-
-        <div class="buttons-home">
-            <a href="eleve.html" class="btn-home btn-eleve">Élève</a>
-            <a href="profs.html" class="btn-home btn-prof">Prof</a>
-        </div>
-    </div>
+    <main class="accueil-container">
+        <a href="eleve.html" class="btn-accueil btn-eleve">Élève</a>
+        <a href="prof.html" class="btn-accueil btn-prof">Prof</a>
+    </main>
 
     <footer>
-        RunStats - Equipe EPS Lycée Vauban - LUXEMBOURG - JB
+        <p>RunStats - Equipe EPS Lycée Vauban - LUXEMBOURG - JB</p>
     </footer>
-
 </body>
 </html>
