@@ -1,24 +1,33 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - Accueil</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RunStats - Accueil</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container-center">
-    <h1 class="app-title">RunStats</h1>
-    <p class="subtitle">Équipe EPS Lycée Vauban - Luxembourg</p>
+  <div class="container accueil">
+    <h1>RunStats</h1>
+    <p class="subtitle">Equipe EPS Lycée Vauban - Luxembourg</p>
 
-    <div class="button-group">
-      <a href="eleve.html" class="btn btn-eleve">Élève</a>
-      <a href="profs.html" class="btn btn-prof">Professeurs</a>
+    <div class="btn-group">
+      <button id="btnEleve" class="btn rond btn-eleve">Élèves</button>
+      <button id="btnProf" class="btn rond btn-prof">Professeurs</button>
     </div>
+
+    <footer>
+      <p>Equipe EPS Lycée Vauban - LUXEMBOURG - JB</p>
+    </footer>
   </div>
 
-  <footer>
-    Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-  </footer>
+<script>
+  document.getElementById('btnEleve').addEventListener('click', () => {
+    window.location.href = "eleve.html";
+  });
+  document.getElementById('btnProf').addEventListener('click', () => {
+    window.location.href = "profs.html";
+  });
+</script>
 </body>
 </html>
