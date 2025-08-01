@@ -1,180 +1,144 @@
 /* style.css */
 
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
-/* Structure générale */
+/* --- Styles généraux --- */
 body {
-  background: #f5f5f5;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-header {
-  background: #333;
-  color: #fff;
-  text-align: center;
-  padding: 1rem;
-  font-size: 1.5rem;
-}
-
-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 20px;
-}
-
-/* Encadrés élèves */
-.eleves-container {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 900px;
-  margin-bottom: 20px;
-}
-
-.eleve-box {
-  flex: 1;
-  padding: 15px;
-  border-radius: 10px;
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+  margin: 0; padding: 0;
   color: #333;
 }
 
-.eleve-box h2 {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.eleve1 {
-  background: #add8e6; /* Bleu clair */
-  margin-right: 10px;
-}
-
-.eleve2 {
-  background: #90ee90; /* Vert clair */
-  margin-left: 10px;
-}
-
-.eleve-box label {
-  display: block;
-  margin: 5px 0 2px;
-}
-
-.eleve-box input,
-.eleve-box select {
-  width: 100%;
-  padding: 5px;
-  margin-bottom: 8px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-/* Bloc central pour paramètres course */
-.course-settings {
-  background: #fff;
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  text-align: center;
-}
-
-.course-settings label {
-  margin: 0 10px;
-}
-
-/* Boutons */
-.buttons-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-}
-
-button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  margin: 0 10px;
-  transition: background 0.3s ease;
-}
-
-#startBtn {
-  background: #28a745;
+header, footer {
+  background-color: #555;
   color: white;
-}
-
-#startBtn:hover {
-  background: #218838;
-}
-
-#resetBtn {
-  background: #dc3545;
-  color: white;
-}
-
-#resetBtn:hover {
-  background: #c82333;
-}
-
-#addTourBtn {
-  background: #007bff;
-  color: white;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  font-size: 22px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#addTourBtn:hover {
-  background: #0069d9;
-}
-
-/* Infos course */
-.infos-course {
-  background: #ffffff;
-  padding: 15px;
-  border-radius: 10px;
-  width: 100%;
-  max-width: 400px;
   text-align: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  margin-bottom: 20px;
-}
-
-.infos-course p {
-  margin: 5px 0;
+  padding: 10px 0;
   font-weight: bold;
 }
 
-/* QR code container */
-#qrContainer {
-  text-align: center;
-  margin-top: 20px;
-}
-
-#qrCode {
-  margin-top: 10px;
-}
-
-/* Pied de page */
 footer {
-  background: #e0e0e0;
+  background-color: #ccc;
+  color: #444;
+  font-size: 0.9em;
+}
+
+/* --- Bouton scan (page prof) --- */
+#startScanBtn {
+  display: block;
+  margin: 20px auto;
+  padding: 15px 30px;
+  font-size: 1.2em;
+  background-color: #4285F4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(66, 133, 244, 0.6);
+  transition: background-color 0.3s ease;
+}
+
+#startScanBtn:hover {
+  background-color: #3367d6;
+}
+
+/* --- Vidéo caméra --- */
+#video {
+  display: block;
+  margin: 10px auto 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+}
+
+/* --- Section tri et recherche --- */
+.actions {
+  margin-bottom: 15px;
   text-align: center;
-  padding: 10px;
-  font-size: 14px;
+}
+
+.actions label {
+  margin-right: 8px;
+  font-weight: 600;
+}
+
+.actions select, .actions input[type="text"] {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+  font-size: 1em;
+}
+
+.actions button {
+  background-color: #34A853;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 10px;
+  box-shadow: 0 3px 5px rgba(52, 168, 83, 0.5);
+  transition: background-color 0.3s ease;
+}
+
+.actions button:hover {
+  background-color: #2c8b45;
+}
+
+/* --- Tables élèves et groupes --- */
+table {
+  width: 90%;
+  margin: 0 auto 40px;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+thead {
+  background-color: #4285F4;
+  color: white;
+}
+
+thead th {
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 700;
+  user-select: none;
+}
+
+tbody td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+tbody tr:hover {
+  background-color: #f1f8ff;
+}
+
+/* --- Section groupes --- */
+#groupesSection {
+  margin-top: 30px;
+  padding-bottom: 30px;
+}
+
+/* --- Export boutons --- */
+#exportCSVBtn, #exportGroupesCSVBtn {
+  background-color: #FBBC05;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 3px 5px rgba(251, 188, 5, 0.6);
+  transition: background-color 0.3s ease;
+  margin-bottom: 15px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#exportCSVBtn:hover, #exportGroupesCSVBtn:hover {
+  background-color: #c99800;
 }
