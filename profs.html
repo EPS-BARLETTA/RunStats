@@ -1,44 +1,58 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - Accès Professeurs</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RunStats - Professeur</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>RunStats - Accès Professeurs</h1>
-  </header>
+  <div class="container">
+    <h1>RunStats - Mode Professeur</h1>
 
-  <section id="accessSection">
-    <p>Veuillez entrer le code PIN pour accéder aux données :</p>
-    <input type="password" id="pinInput" placeholder="Code PIN" />
-    <button id="pinSubmit">Valider</button>
-  </section>
-
-  <section id="dataSection" style="display:none;">
-    <div style="margin-bottom: 1em;">
-      <label for="sortSelect">Trier par :</label>
-      <select id="sortSelect">
-        <option value="">-- Sélectionner --</option>
-        <option value="distance">Distance réalisé</option>
-        <option value="vma">VMA estimée</option>
-        <option value="sexe">Sexe</option>
-      </select>
-
-      <button id="groupBtn" style="margin-left: 1em;">Créer groupes selon VMA</button>
-      <button id="exportBtn" style="margin-left: 1em;">Exporter CSV</button>
+    <!-- Accès sécurisé par code PIN -->
+    <div id="loginSection">
+      <p>Entrez le code PIN pour accéder aux données :</p>
+      <input type="password" id="pinInput" placeholder="Code PIN">
+      <button id="pinBtn">Valider</button>
+      <p id="pinError" class="error"></p>
     </div>
 
-    <div id="tableContainer">
-      <!-- Tableau affiché ici -->
-    </div>
-  </section>
+    <!-- Tableau des résultats -->
+    <div id="profSection" style="display:none;">
+      <h2>Résultats des élèves</h2>
+      <table id="resultsTable">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Classe</th>
+            <th>Sexe</th>
+            <th>Distance (m)</th>
+            <th>VMA estimée (km/h)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Données ajoutées dynamiquement -->
+        </tbody>
+      </table>
 
-  <footer style="margin-top:2em; text-align:center; font-size:0.8em;">
-    Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-  </footer>
+      <div style="margin-top:20px;">
+        <button id="sortDistance">Trier par Distance</button>
+        <button id="sortVMA">Trier par VMA</button>
+        <button id="sortSexe">Trier par Sexe</button>
+        <button id="exportBtn">Exporter en JSON</button>
+      </div>
+
+      <h3 style="margin-top:30px;">Créer des groupes mixtes (VMA haute / intermédiaire / faible)</h3>
+      <button id="createGroups">Générer Groupes</button>
+      <div id="groupsOutput" style="margin-top:20px;"></div>
+    </div>
+
+    <footer>
+      <p>Equipe EPS Lycée Vauban - LUXEMBOURG - JB</p>
+    </footer>
+  </div>
 
   <script src="profs.js"></script>
 </body>
