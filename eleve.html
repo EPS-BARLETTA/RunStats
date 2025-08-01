@@ -1,99 +1,85 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>RunStats - Élèves</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-    <header>
-        <h1>RunStats - Mode Élèves</h1>
-    </header>
+<header>
+    <h1>RunStats</h1>
+    <h2>Equipe EPS Lycée Vauban - LUXEMBOURG</h2>
+</header>
 
-    <main>
-        <!-- Bloc infos élèves -->
-        <div class="eleves-container">
-            <!-- Élève 1 -->
-            <div class="eleve-card eleve1">
-                <h2>Élève 1</h2>
-                <label>Nom : <input type="text" id="nom1"></label>
-                <label>Prénom : <input type="text" id="prenom1"></label>
-                <label>Classe : <input type="text" id="classe1"></label>
-                <label>Sexe :
-                    <select id="sexe1">
-                        <option value="">Choisir</option>
-                        <option value="Fille">Fille</option>
-                        <option value="Garçon">Garçon</option>
-                    </select>
-                </label>
-            </div>
+<main class="eleve-container">
 
-            <!-- Élève 2 -->
-            <div class="eleve-card eleve2">
-                <h2>Élève 2</h2>
-                <label>Nom : <input type="text" id="nom2"></label>
-                <label>Prénom : <input type="text" id="prenom2"></label>
-                <label>Classe : <input type="text" id="classe2"></label>
-                <label>Sexe :
-                    <select id="sexe2">
-                        <option value="">Choisir</option>
-                        <option value="Fille">Fille</option>
-                        <option value="Garçon">Garçon</option>
-                    </select>
-                </label>
-            </div>
+    <section class="eleve-forms">
+
+        <div class="eleve-card eleve1">
+            <h3>Élève 1</h3>
+            <label for="nom1">Nom</label>
+            <input type="text" id="nom1" />
+            <label for="prenom1">Prénom</label>
+            <input type="text" id="prenom1" />
+            <label for="classe1">Classe</label>
+            <input type="text" id="classe1" />
+            <label for="sexe1">Sexe</label>
+            <select id="sexe1">
+                <option value="">Choisir</option>
+                <option value="fille">Fille</option>
+                <option value="garcon">Garçon</option>
+            </select>
         </div>
 
-        <!-- Bloc paramètres course -->
-        <div class="parametres-course">
-            <h2>Paramètres de course</h2>
-            <label>Distance d’un tour (m) :
-                <input type="number" id="distanceTour" min="1">
-            </label>
-            <label>Durée de la course (minutes) :
-                <input type="number" id="dureeCourse" min="1">
-            </label>
+        <div class="eleve-card eleve2">
+            <h3>Élève 2</h3>
+            <label for="nom2">Nom</label>
+            <input type="text" id="nom2" />
+            <label for="prenom2">Prénom</label>
+            <input type="text" id="prenom2" />
+            <label for="classe2">Classe</label>
+            <input type="text" id="classe2" />
+            <label for="sexe2">Sexe</label>
+            <select id="sexe2">
+                <option value="">Choisir</option>
+                <option value="fille">Fille</option>
+                <option value="garcon">Garçon</option>
+            </select>
         </div>
 
-        <!-- Minuteur -->
-        <div id="timer" class="timer hidden">00:00</div>
+    </section>
 
-        <!-- Boutons -->
-        <div class="buttons-course">
-            <button id="startBtn" class="btn start">Démarrer</button>
-            <button id="lapBtn" class="btn lap">+ Tour</button>
-            <button id="resetBtn" class="btn reset">Reset</button>
-        </div>
+    <section class="course-info">
+        <label for="dureeCourse">Durée course (minutes) :</label>
+        <input type="number" id="dureeCourse" min="1" step="1" value="10" />
+        <label for="distanceTour">Distance tour (mètres) :</label>
+        <input type="number" id="distanceTour" min="10" step="1" value="400" />
+    </section>
 
-        <!-- Infos course -->
-        <div class="infos-course">
-            <h3>Informations de course</h3>
-            <div id="infosEleve1">
-                <strong>Élève 1 :</strong>
-                <p>Distance : <span id="dist1">0</span> m</p>
-                <p>Vitesse moy. : <span id="vitesse1">0</span> km/h</p>
-                <p>VMA estimée : <span id="vma1">0</span> km/h</p>
-            </div>
-            <div id="infosEleve2">
-                <strong>Élève 2 :</strong>
-                <p>Distance : <span id="dist2">0</span> m</p>
-                <p>Vitesse moy. : <span id="vitesse2">0</span> km/h</p>
-                <p>VMA estimée : <span id="vma2">0</span> km/h</p>
-            </div>
-        </div>
+    <section class="control-buttons">
+        <button class="btn btn-start" id="startBtn">Démarrer</button>
+        <button class="btn btn-lap" id="lapBtn">+ Tour</button>
+        <button class="btn btn-reset" id="resetBtn">Reset</button>
+    </section>
 
-        <!-- QR Code -->
-        <div id="qrcode" class="qrcode hidden"></div>
+    <section id="timerDisplay" class="timer" style="display:none;">00:00</section>
 
-    </main>
+    <section class="stats-container" id="statsContainer" style="display:none;">
+        <p><strong>Distance parcourue Élève 1 :</strong> <span id="distParcourue1">0</span> m</p>
+        <p><strong>Vitesse moyenne Élève 1 :</strong> <span id="vitesse1">0</span> m/s</p>
+        <hr />
+        <p><strong>Distance parcourue Élève 2 :</strong> <span id="distParcourue2">0</span> m</p>
+        <p><strong>Vitesse moyenne Élève 2 :</strong> <span id="vitesse2">0</span> m/s</p>
+    </section>
 
-    <footer>
-        RunStats - Equipe EPS Lycée Vauban - LUXEMBOURG - JB
-    </footer>
+</main>
 
-    <script src="eleve.js"></script>
+<footer>
+    RunStats - Equipe EPS Lycée Vauban - LUXEMBOURG - JB
+</footer>
+
+<script src="eleve.js"></script>
 </body>
 </html>
