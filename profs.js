@@ -1,212 +1,144 @@
 // profs.js
 
-// Initialisation variables
-const startScanBtn = document.getElementById('startScanBtn');
-const videoElem = document.getElementById('video');
-const elevesTableBody = document.querySelector('#elevesTable tbody');
-const triSelect = document.getElementById('triSelect');
-const rechercheInput = document.getElementById('rechercheInput');
-const creerGroupesBtn = document.getElementById('creerGroupesBtn');
-const exportCSVBtn = document.getElementById('exportCSVBtn');
+const pinInput = document.getElementById('pinInput');
+const pinSubmit = document.getElementById('pinSubmit');
+const accessSection = document.getElementById('accessSection');
+const dataSection = document.getElementById('dataSection');
+const tableContainer = document.getElementById('tableContainer');
+const sortSelect = document.getElementById('sortSelect');
+const groupBtn = document.getElementById('groupBtn');
+const exportBtn = document.getElementById('exportBtn');
+const messageDiv = document.getElementById('message');
 
-const groupesSection = document.getElementById('groupesSection');
-const groupesTableBody = document.querySelector('#groupesTable tbody');
-const exportGroupesCSVBtn = document.getElementById('exportGroupesCSVBtn');
+let allResults = []; // données collectées
+let currentResults = []; // affichées selon tri
 
-let html5QrCode;
-let elevesData = [];  // tableau des élèves scannés
-let groupesData = [];
-
-function afficheEleves(data) {
-  elevesTableBody.innerHTML = '';
-  data.forEach(eleve => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${eleve.nom}</td>
-      <td>${eleve.prenom}</td>
-      <td>${eleve.classe}</td>
-      <td>${eleve.sexe}</td>
-      <td>${eleve.vma?.toFixed(2) ?? '-'}</td>
-      <td>${eleve.distance?.toFixed(2) ?? '-'}</td>
-    `;
-    elevesTableBody.appendChild(tr);
-  });
+function loadResults() {
+  const saved = localStorage.getItem('runsData');
+  allResults = saved ? JSON.parse(saved) : [];
+  currentResults = [...allResults];
 }
 
-function triEleves(critere) {
-  let data = [...elevesData];
-  switch(critere) {
-    case 'alphabetique':
-      data.sort((a,b) => a.nom.localeCompare(b.nom));
-      break;
-    case 'vma':
-      data.sort((a,b) => (b.vma ?? 0) - (a.vma ?? 0));
-      break;
-    case 'sexe':
-      data.sort((a,b) => a.sexe.localeCompare(b.sexe));
-      break;
-    case 'distance':
-      data.sort((a,b) => (b.distance ?? 0) - (a.distance ?? 0));
-      break;
-    case 'classe':
-      data.sort((a,b) => a.classe.localeCompare(b.classe));
-      break;
+function saveResults() {
+  localStorage.setItem('runsData', JSON.stringify(allResults));
+}
+
+function checkPin() {
+  if (pinInput.value === "EPS76") {
+    accessSection.style.display = 'none';
+    dataSection.style.display = 'block';
+    loadResults();
+    renderTable(currentResults);
+  } else {
+    alert('Code PIN incorrect.');
   }
-  afficheEleves(data);
 }
 
-function filtreRecherche() {
-  const query = rechercheInput.value.toLowerCase();
-  const filtered = elevesData.filter(eleve =>
-    eleve.nom.toLowerCase().includes(query) ||
-    eleve.prenom.toLowerCase().includes(query) ||
-    eleve.classe.toLowerCase().includes(query) ||
-    eleve.sexe.toLowerCase().includes(query)
-  );
-  afficheEleves(filtered);
-}
-
-function creerGroupes() {
-  groupesData = [];
-  // Créer groupes de 2 élèves (par exemple ordre d'apparition)
-  for(let i = 0; i < elevesData.length; i += 2) {
-    const groupeNum = (i/2) + 1;
-    groupesData.push({
-      groupe: groupeNum,
-      nom: elevesData[i].nom,
-      prenom: elevesData[i].prenom,
-      classe: elevesData[i].classe,
-      sexe: elevesData[i].sexe,
-      vma: elevesData[i].vma,
-      distance: elevesData[i].distance
-    });
-    if(elevesData[i+1]) {
-      groupesData.push({
-        groupe: groupeNum,
-        nom: elevesData[i+1].nom,
-        prenom: elevesData[i+1].prenom,
-        classe: elevesData[i+1].classe,
-        sexe: elevesData[i+1].sexe,
-        vma: elevesData[i+1].vma,
-        distance: elevesData[i+1].distance
-      });
-    }
-  }
-  afficherGroupes();
-}
-
-function afficherGroupes() {
-  groupesSection.style.display = 'block';
-  groupesTableBody.innerHTML = '';
-  groupesData.forEach(item => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${item.groupe}</td>
-      <td>${item.nom}</td>
-      <td>${item.prenom}</td>
-      <td>${item.classe}</td>
-      <td>${item.sexe}</td>
-      <td>${item.vma?.toFixed(2) ?? '-'}</td>
-      <td>${item.distance?.toFixed(2) ?? '-'}</td>
-    `;
-    groupesTableBody.appendChild(tr);
-  });
-}
-
-function exportCSV(data, filename) {
-  const headers = Object.keys(data[0]);
-  const csvRows = [];
-  csvRows.push(headers.join(';'));
-  data.forEach(row => {
-    const values = headers.map(header => (row[header] ?? '').toString().replace(/;/g, ','));
-    csvRows.push(values.join(';'));
-  });
-  const csvContent = csvRows.join('\n');
-  const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = filename;
-  link.click();
-  URL.revokeObjectURL(link.href);
-}
-
-// Gestion du scan QR code
-
-startScanBtn.addEventListener('click', () => {
-  if (!html5QrCode) {
-    html5QrCode = new Html5Qrcode("video");
-  }
-  videoElem.style.display = "block";
-  startScanBtn.disabled = true;
-
-  html5QrCode.start(
-    { facingMode: "environment" },
-    {
-      fps: 10,
-      qrbox: 250
-    },
-    qrCodeMessage => {
-      try {
-        const data = JSON.parse(qrCodeMessage);
-        if(data.nom && data.prenom) {
-          // Eviter doublon sur nom+prenom+classe
-          const exists = elevesData.some(e => e.nom === data.nom && e.prenom === data.prenom && e.classe === data.classe);
-          if(!exists){
-            elevesData.push(data);
-            triEleves(triSelect.value);
-          }
-          alert(`Données ajoutées pour ${data.prenom} ${data.nom}`);
-        }
-      } catch(e) {
-        alert('QR Code invalide ou non reconnu');
-      }
-      // Arrêt du scan après lecture
-      html5QrCode.stop().then(() => {
-        videoElem.style.display = "none";
-        startScanBtn.disabled = false;
-      }).catch(err => {
-        console.error(err);
-      });
-    },
-    errorMessage => {
-      // ignore les erreurs silencieuses du scan
-    }
-  ).catch(err => {
-    alert('Erreur lors du démarrage du scan: ' + err);
-    startScanBtn.disabled = false;
-  });
-});
-
-triSelect.addEventListener('change', () => {
-  triEleves(triSelect.value);
-});
-
-rechercheInput.addEventListener('input', filtreRecherche);
-
-creerGroupesBtn.addEventListener('click', () => {
-  if(elevesData.length < 2) {
-    alert("Il faut au moins deux élèves pour créer des groupes.");
+function renderTable(data) {
+  if (data.length === 0) {
+    tableContainer.innerHTML = "<p>Aucune donnée disponible.</p>";
     return;
   }
-  creerGroupes();
-});
+  let html = `<table border="1" cellspacing="0" cellpadding="5" style="width:100%; text-align:center;">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Classe</th>
+        <th>Sexe</th>
+        <th>Distance (m)</th>
+        <th>VMA estimée (km/h)</th>
+      </tr>
+    </thead><tbody>`;
 
-exportCSVBtn.addEventListener('click', () => {
-  if(elevesData.length === 0) {
+  for (const r of data) {
+    html += `<tr>
+      <td>${r.nom}</td>
+      <td>${r.prenom}</td>
+      <td>${r.classe}</td>
+      <td>${r.sexe}</td>
+      <td>${r.distance}</td>
+      <td>${r.vmaEstimee}</td>
+    </tr>`;
+  }
+  html += '</tbody></table>';
+  tableContainer.innerHTML = html;
+}
+
+function sortData(criteria) {
+  currentResults.sort((a,b) => {
+    if (criteria === 'distance' || criteria === 'vma') {
+      return parseFloat(b[criteria === 'distance' ? 'distance' : 'vmaEstimee']) - parseFloat(a[criteria === 'distance' ? 'distance' : 'vmaEstimee']);
+    } else if (criteria === 'sexe') {
+      return a.sexe.localeCompare(b.sexe);
+    }
+    return 0;
+  });
+  renderTable(currentResults);
+}
+
+function createGroups() {
+  if(currentResults.length === 0) {
+    alert("Aucune donnée pour créer des groupes.");
+    return;
+  }
+
+  // Trier par VMA décroissante
+  const sorted = [...currentResults].sort((a,b) => parseFloat(b.vmaEstimee) - parseFloat(a.vmaEstimee));
+  
+  // Récupérer valeurs de VMA max, intermédiaire et faible (approximatif)
+  const maxVMA = parseFloat(sorted[0].vmaEstimee);
+  const minVMA = parseFloat(sorted[sorted.length-1].vmaEstimee);
+  const midVMA = (maxVMA + minVMA) / 2;
+
+  // Groupes: VMA élevée (>midVMA), intermédiaire (entre min et mid), faible (<min+quart)
+  const groups = {
+    elevees: [],
+    intermédiaires: [],
+    faibles: [],
+  };
+
+  sorted.forEach(r => {
+    const vma = parseFloat(r.vmaEstimee);
+    if (vma >= midVMA) groups.elevees.push(r);
+    else if (vma >= (minVMA + (midVMA - minVMA) / 2)) groups.intermédiaires.push(r);
+    else groups.faibles.push(r);
+  });
+
+  // Affichage simplifié
+  let html = `<h3>Groupes créés selon VMA estimée</h3>`;
+  html += `<h4>VMA Élevée (${groups.elevees.length}):</h4><ul>`;
+  groups.elevees.forEach(r => html += `<li>${r.nom} ${r.prenom} - ${r.vmaEstimee} km/h</li>`);
+  html += `</ul><h4>VMA Intermédiaire (${groups.intermédiaires.length}):</h4><ul>`;
+  groups.intermédiaires.forEach(r => html += `<li>${r.nom} ${r.prenom} - ${r.vmaEstimee} km/h</li>`);
+  html += `</ul><h4>VMA Faible (${groups.faibles.length}):</h4><ul>`;
+  groups.faibles.forEach(r => html += `<li>${r.nom} ${r.prenom} - ${r.vmaEstimee} km/h</li>`);
+  html += `</ul>`;
+
+  tableContainer.innerHTML = html;
+}
+
+function exportCSV() {
+  if(currentResults.length === 0) {
     alert("Aucune donnée à exporter.");
     return;
   }
-  exportCSV(elevesData, "eleves.csv");
-});
+  let csv = "Nom,Prénom,Classe,Sexe,Distance (m),VMA estimée (km/h)\n";
+  currentResults.forEach(r => {
+    csv += `"${r.nom}","${r.prenom}","${r.classe}","${r.sexe}","${r.distance}","${r.vmaEstimee}"\n`;
+  });
+  const blob = new Blob([csv], {type: 'text/csv'});
+  const url = URL.createObjectURL(blob);
 
-exportGroupesCSVBtn.addEventListener('click', () => {
-  if(groupesData.length === 0) {
-    alert("Aucun groupe à exporter.");
-    return;
-  }
-  exportCSV(groupesData, "groupes.csv");
-});
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'resultats_runs.csv';
+  a.click();
 
-// Affiche tableau vide au départ
-afficheEleves(elevesData);
+  URL.revokeObjectURL(url);
+}
 
+pinSubmit.addEventListener('click', checkPin);
+sortSelect.addEventListener('change', e => sortData(e.target.value));
+groupBtn.addEventListener('click', createGroups);
+exportBtn.addEventListener('click', exportCSV);
