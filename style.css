@@ -1,213 +1,195 @@
-/* ===== Reset et style global ===== */
+/* Reset de base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background-color: #f4f4f4;
-  color: #333;
+    background-color: #f4f4f4;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px;
 }
 
-header {
-  background-color: #004080;
-  color: white;
-  padding: 1em;
-  text-align: center;
+/* Containers des interfaces */
+.container {
+    display: none;
+    width: 100%;
+    max-width: 900px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
+.container.active {
+    display: block;
+}
+
+/* Titres */
 h1, h2 {
-  margin: 0.5em 0;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-main {
-  padding: 1em;
-  max-width: 1000px;
-  margin: 0 auto;
+/* Formulaire Élève */
+#eleve-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-/* ===== Formulaire Élèves ===== */
-.input-duo {
-  display: flex;
-  gap: 1em;
-  margin-bottom: 1em;
+#eleve-form input,
+#eleve-form select,
+#eleve-form button {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
 }
 
-.eleve {
-  flex: 1;
-  background-color: #e6f0ff;
-  padding: 1em;
-  border-radius: 8px;
+#eleve-form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
-.input-groupe {
-  display: flex;
-  gap: 1em;
-  margin-bottom: 1.5em;
+#eleve-form button:hover {
+    background-color: #0056b3;
 }
 
-input[type="text"],
-input[type="number"],
-select {
-  width: 100%;
-  padding: 0.5em;
-  margin-top: 0.5em;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+/* QR Code container */
+#qr-container {
+    margin: 20px 0;
+    text-align: center;
 }
 
-/* ===== Chronomètre et Boutons ===== */
-#chrono {
-  text-align: center;
-  margin-bottom: 1.5em;
+#switch-prof, #switch-eleve {
+    margin-top: 15px;
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
 }
 
-#chronoDisplay {
-  font-size: 2.5em;
-  font-weight: bold;
-  margin-bottom: 0.5em;
+#switch-prof:hover, #switch-eleve:hover {
+    background-color: #1e7e34;
 }
 
-.chrono-btns {
-  display: flex;
-  justify-content: center;
-  gap: 1em;
-  margin-bottom: 1em;
+/* Tableaux */
+.table-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+    justify-content: center;
 }
 
-/* Boutons Start et Reset carrés */
-.btn-start, .btn-reset {
-  width: 80px;
-  height: 80px;
-  font-size: 1em;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
+.table-actions button, .table-actions input {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 0.9rem;
 }
 
-.btn-start {
-  background-color: #28a745;
-  color: white;
+.table-actions button {
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
-.btn-reset {
-  background-color: #dc3545;
-  color: white;
+.table-actions button:hover {
+    background: #0056b3;
 }
 
-/* Bouton + TOUR rond et plus gros */
-.btn-lap {
-  width: 100px;
-  height: 100px;
-  background-color: #007bff;
-  color: white;
-  border-radius: 50%;
-  font-size: 1.2em;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  opacity: 0.9;
-}
-
-/* ===== Stats affichées ===== */
-#statsBox {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1em;
-  margin-bottom: 2em;
-}
-
-.stat {
-  padding: 1em;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 1.1em;
-  text-align: center;
-}
-
-.ligne-bleue {
-  background-color: #d0e7ff;
-  color: #004080;
-}
-
-.ligne-verte {
-  background-color: #d4f8d4;
-  color: #1e5621;
-}
-
-.ligne-jaune {
-  background-color: #fff6cc;
-  color: #7a6000;
-}
-
-.ligne-violette {
-  background-color: #f0e0ff;
-  color: #4b0082;
-}
-
-/* ===== État Forme (emoji) ===== */
-#etatForme {
-  text-align: center;
-  margin-bottom: 2em;
-}
-
-.etatBtn {
-  margin: 0.5em;
-  padding: 0.7em 1.2em;
-  font-size: 2em;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  background-color: #eaeaea;
-}
-
-.etatBtn:hover {
-  background-color: #d0d0d0;
-}
-
-/* ===== QR Code et Prof ===== */
-#qrCodeBox {
-  margin: 1em auto;
-  width: fit-content;
-}
-
-#qr-scan-container {
-  margin-bottom: 1em;
-  text-align: center;
-}
-
-#profAccess {
-  text-align: center;
-  margin: 2em 0;
-}
-
-/* ===== Tableau Résultats ===== */
 table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1em;
-  font-size: 0.9em;
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+thead {
+    background-color: #007bff;
+    color: white;
 }
 
 th, td {
-  padding: 0.5em;
-  border: 1px solid #ccc;
-  text-align: center;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
 }
 
-/* ===== Footer ===== */
-footer {
-  text-align: right;
-  padding: 0.5em 1em;
-  font-size: 0.85em;
-  color: #aaa;
-  background-color: #fff;
-  border-top: 1px solid #ddd;
+/* Bouton création groupes */
+#create-groups {
+    width: 100%;
+    padding: 12px;
+    background-color: #ff9800;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
-/* Texte centré en gris sous les noms */
-.nom-eleve {
-  text-align: center;
-  color: #888;
-  font-size: 0.9em;
-  margin-top: 0.5em;
+#create-groups:hover {
+    background-color: #e68900;
+}
+
+/* Tableau groupes */
+#groupes-container {
+    margin-top: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Responsive pour tablettes et téléphones */
+@media (max-width: 768px) {
+    .table-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    table {
+        font-size: 0.9rem;
+    }
+
+    #eleve-form {
+        gap: 8px;
+    }
+
+    #eleve-form input, #eleve-form select, #eleve-form button {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    h1, h2 {
+        font-size: 1.3rem;
+    }
+
+    table th, table td {
+        padding: 6px;
+        font-size: 0.8rem;
+    }
+
+    .table-actions button {
+        font-size: 0.8rem;
+        padding: 6px 8px;
+    }
 }
