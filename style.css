@@ -1,243 +1,250 @@
-/* ---- Styles généraux ---- */
+/* Reset basique */
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Body + fond */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f9;
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+  background: #f0f4f8;
+  color: #222;
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-/* Titre principal */
+/* Header */
 header {
-    text-align: center;
-    background-color: #007BFF;
-    color: white;
-    padding: 20px;
-    font-size: 2rem;
-    font-weight: bold;
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
-/* Signature en bas */
+/* Footer */
 footer {
-    text-align: center;
-    font-size: 0.8rem;
-    color: #aaa;
-    margin-top: auto;
-    padding: 10px;
+  font-size: 0.85rem;
+  text-align: center;
+  margin-top: 40px;
+  color: #666;
 }
 
-/* ---- Page d’accueil ---- */
-.home-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    gap: 30px;
-    padding: 50px 20px;
+/* --- Boutons page accueil (éléves / profs) --- */
+/* à appliquer dans index.html sur les boutons correspondants */
+.btn-eleve,
+.btn-profs {
+  display: inline-block;
+  padding: 20px 40px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  margin: 0 15px;
+  transition: background-color 0.3s ease;
+  color: white;
+  border: none;
+  user-select: none;
+  text-align: center;
+  min-width: 160px;
 }
 
-.home-container h2 {
-    font-size: 1.2rem;
-    color: #666;
-}
-
-.home-buttons {
-    display: flex;
-    gap: 20px;
-}
-
-.home-buttons button {
-    padding: 20px 40px;
-    font-size: 1.5rem;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-/* Bouton Élève */
+/* Couleur distinctive */
 .btn-eleve {
-    background-color: #28a745;
-    color: white;
+  background-color: #0078d7; /* bleu */
 }
+
 .btn-eleve:hover {
-    background-color: #218838;
+  background-color: #005ea2;
 }
 
-/* Bouton Prof */
-.btn-prof {
-    background-color: #ffc107;
-    color: #333;
-}
-.btn-prof:hover {
-    background-color: #e0a800;
+.btn-profs {
+  background-color: #d9534f; /* rouge */
 }
 
-/* ---- Formulaire Élèves ---- */
+.btn-profs:hover {
+  background-color: #b3342a;
+}
+
+/* --- Page élève --- */
+
 .eleve-form {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  padding: 25px 40px;
+  border-radius: 14px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .eleve-form h3 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 1.4rem;
-    color: #007BFF;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 600;
+  color: #004a99;
 }
 
 .eleve-group {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
+  display: flex;
+  gap: 40px;
+  justify-content: space-between;
+  margin-bottom: 30px;
 }
 
 .eleve {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .eleve label {
-    font-weight: bold;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #333;
 }
 
-.eleve input, .eleve select {
-    padding: 8px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+.eleve input,
+.eleve select {
+  padding: 10px 14px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1.5px solid #ccc;
+  transition: border-color 0.25s ease;
 }
 
-/* Ligne avec durée et distance */
+.eleve input:focus,
+.eleve select:focus {
+  outline: none;
+  border-color: #0078d7;
+}
+
+/* Détails course */
 .course-details {
-    display: flex;
-    gap: 20px;
-    margin-top: 20px;
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  margin-bottom: 30px;
 }
 
-.course-details div {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+.course-details > div {
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
 }
 
-/* ---- Boutons course ---- */
+.course-details label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.course-details input {
+  padding: 10px 14px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1.5px solid #ccc;
+  transition: border-color 0.25s ease;
+}
+
+.course-details input:focus {
+  border-color: #0078d7;
+  outline: none;
+}
+
+/* Boutons course */
 .course-buttons {
-    display: flex;
-    justify-content: center;
+  text-align: center;
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+}
+
+.course-buttons button {
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+/* Bouton Lancer et + Tour : rond et gros */
+.btn-big-round {
+  background-color: #0078d7;
+  color: white;
+  font-size: 1.6rem;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  box-shadow: 0 6px 15px rgba(0, 120, 215, 0.3);
+}
+
+.btn-big-round:hover {
+  background-color: #005ea2;
+}
+
+/* Bouton reset plus petit */
+.btn-reset {
+  background-color: #d9534f;
+  color: white;
+  font-size: 1.2rem;
+  padding: 14px 24px;
+  border-radius: 10px;
+  align-self: center;
+  box-shadow: 0 4px 12px rgba(217, 83, 79, 0.3);
+}
+
+.btn-reset:hover {
+  background-color: #b3342a;
+}
+
+/* Résultats distance & vitesse */
+.resultats {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #004a99;
+  line-height: 1.5;
+}
+
+/* QR code container */
+#qrCodeContainer {
+  margin-top: 20px;
+}
+
+#qrCode {
+  margin: 10px auto;
+  max-width: 220px;
+}
+
+/* Responsive mobile */
+@media (max-width: 700px) {
+  .eleve-group {
+    flex-direction: column;
+  }
+
+  .course-details {
+    flex-direction: column;
     gap: 20px;
-    margin: 30px 0;
-}
+  }
 
-/* Lancer */
-.btn-start {
-    background-color: #28a745;
-    color: white;
-    padding: 15px 30px;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-.btn-start:hover {
-    background-color: #218838;
-}
+  .course-buttons {
+    flex-direction: column;
+  }
 
-/* + Tour (rond et grand) */
-.btn-lap {
-    background-color: #007BFF;
-    color: white;
+  .btn-big-round {
     width: 80px;
     height: 80px;
-    font-size: 2rem;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: 0.3s;
-}
-.btn-lap:hover {
-    background-color: #0056b3;
-}
+    font-size: 1.3rem;
+  }
 
-/* Reset */
-.btn-reset {
-    background-color: #dc3545;
-    color: white;
-    padding: 15px 30px;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-.btn-reset:hover {
-    background-color: #b02a37;
-}
-
-/* ---- Affichage dynamique ---- */
-.resultats {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 1.2rem;
-}
-
-.resultats span {
-    display: block;
-    margin: 5px 0;
-}
-
-/* ---- Tableau Prof ---- */
-.table-container {
-    max-width: 1000px;
-    margin: 20px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.table-container table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.table-container th, .table-container td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-}
-
-.table-container th {
-    background-color: #007BFF;
-    color: white;
-}
-
-.table-container button {
-    margin: 10px 5px;
-    padding: 8px 15px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-.btn-download {
-    background-color: #28a745;
-    color: white;
-}
-
-.btn-sort {
-    background-color: #17a2b8;
-    color: white;
+  .btn-reset {
+    width: 120px;
+    margin: 0 auto;
+  }
 }
