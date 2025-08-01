@@ -1,196 +1,204 @@
-/* ===== RESET DE BASE ===== */
-* {
+/* Style général */
+body {
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
-body {
-  background: #f4f4f4;
+  background: #f9f9f9;
   color: #333;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
 }
 
-/* ===== HEADER ===== */
 header {
   text-align: center;
-  padding: 20px 10px;
+  padding: 20px 0 10px 0;
+  background-color: #004080;
+  color: white;
 }
 
 header h1 {
-  font-size: 3rem;
-  margin-bottom: 5px;
-}
-
-header h2 {
-  font-size: 1.2rem;
-  color: #555;
-}
-
-/* ===== CONTENEUR PRINCIPAL ===== */
-main {
-  flex: 1;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* ===== LAYOUT PAGE ÉLÈVE ===== */
-.eleve-container {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.eleve-card {
-  flex: 1;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-.eleve1 {
-  background: #add8e6; /* Bleu clair */
-}
-
-.eleve2 {
-  background: #90ee90; /* Vert clair */
-}
-
-.eleve-card h3 {
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-.eleve-card input,
-.eleve-card select {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-/* ===== PARAMÈTRES DE COURSE ===== */
-.parametres-course {
-  background: #e0e0e0;
-  padding: 15px;
-  border-radius: 10px;
-  text-align: center;
-  display: flex;
-  justify-content: space-around;
-  gap: 10px;
-}
-
-.parametres-course label {
+  margin: 0;
+  font-size: 2.8em;
   font-weight: bold;
 }
 
-/* ===== BOUTONS ===== */
-.boutons-course {
+header h2 {
+  margin: 5px 0 0 0;
+  font-size: 1.3em;
+  font-weight: normal;
+  font-style: italic;
+}
+
+/* Conteneur principal */
+main {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Conteneur élèves */
+.eleves-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+/* Encadré élève */
+.eleve-box {
+  width: 48%;
+  background-color: #d9e9ff; /* bleu clair */
+  border-radius: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.eleve-box.vert {
+  background-color: #d9f0d9; /* vert clair */
+}
+
+/* Titre élève */
+.eleve-box h3 {
+  margin: 0;
+  font-size: 1.4em;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Formulaire élève */
+.eleve-info label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.eleve-info input[type="text"], .eleve-info select {
+  width: 100%;
+  padding: 7px 8px;
+  font-size: 1em;
+  border-radius: 5px;
+  border: 1px solid #aaa;
+  box-sizing: border-box;
+}
+
+/* Encadré infos de course */
+.course-info-box {
+  width: 60%;
+  background-color: #fff6d9; /* couleur jaune clair */
+  border-radius: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+  font-size: 1.1em;
+}
+
+.course-info-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.course-info-item label {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+/* Boutons */
+.buttons-container {
+  width: 60%;
   display: flex;
   justify-content: center;
-  gap: 30px;
-  margin: 20px 0;
+  gap: 40px;
+  margin-bottom: 30px;
 }
 
 button {
-  padding: 12px 25px;
-  font-size: 1rem;
+  cursor: pointer;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transition: background 0.3s ease;
+  font-size: 1.2em;
+  padding: 12px 20px;
+  transition: background-color 0.3s ease;
 }
 
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Bouton démarrer */
 #startBtn {
-  background-color: #4caf50;
+  background-color: #0077cc;
   color: white;
+  width: 120px;
 }
 
-#startBtn:hover {
-  background-color: #45a049;
+#startBtn:hover:not(:disabled) {
+  background-color: #005fa3;
 }
 
-#tourBtn {
-  background-color: #2196f3;
+/* Bouton + Tour (plus gros) */
+#addTourBtn {
+  background-color: #34a853; /* vert */
   color: white;
-  font-size: 1.5rem;
-  width: 70px;
-  height: 70px;
+  width: 140px;
+  font-size: 1.5em;
+  font-weight: bold;
   border-radius: 50%;
+  height: 70px;
+  width: 70px;
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: center;
 }
 
-#tourBtn:hover {
-  background-color: #1e88e5;
+#addTourBtn:hover:not(:disabled) {
+  background-color: #2c8a42;
 }
 
+/* Bouton reset */
 #resetBtn {
-  background-color: #f44336;
+  background-color: #cc3300;
   color: white;
+  width: 120px;
 }
 
-#resetBtn:hover {
-  background-color: #e53935;
+#resetBtn:hover:not(:disabled) {
+  background-color: #992400;
 }
 
-/* ===== INFOS COURSE ===== */
-#infosCourse {
-  background: #ffffff;
-  padding: 15px;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-/* ===== QR CODE ===== */
-#qrCodeContainer {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-}
-
-/* ===== FOOTER ===== */
+/* Bannière en bas */
 footer {
-  background: #d3d3d3;
+  background-color: #dcdcdc;
   padding: 10px;
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.9em;
+  color: #555;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 
-/* ===== PAGE PRINCIPALE INDEX ===== */
-.index-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 50px;
-  margin-top: 50px;
-}
-
-.index-buttons a {
-  padding: 25px 50px;
-  font-size: 1.5rem;
-  border-radius: 15px;
-  text-decoration: none;
-  color: white;
-  transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-.index-buttons a:hover {
-  transform: scale(1.05);
-}
-
-.index-buttons .eleve-btn {
-  background-color: #4cafef;
-}
-
-.index-buttons .prof-btn {
-  background-color: #66bb6a;
+/* Responsiveness */
+@media screen and (max-width: 900px) {
+  .eleves-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .eleve-box {
+    width: 90%;
+    margin-bottom: 20px;
+  }
+  .course-info-box, .buttons-container {
+    width: 90%;
+  }
 }
