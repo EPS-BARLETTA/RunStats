@@ -4,20 +4,46 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RunStats - Accueil</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    header {
+      text-align: center;
+      margin: 50px 0 40px 0;
+    }
+    header h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+    header h2 {
+      font-weight: 400;
+      font-size: 1.3rem;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #444;
+      margin-top: 0;
+    }
+    .centered-buttons {
+      text-align: center;
+      margin-top: 60px;
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>RunStats - Equipe EPS Lycée Vauban - LUXEMBOURG</h1>
+    <h1>RunStats</h1>
+    <h2>Equipe EPS Lycée Vauban - Luxembourg</h2>
   </header>
   <main>
     <div class="centered-buttons">
-      <button onclick="window.location.href='eleve.html'">Élève</button>
-      <button onclick="window.location.href='prof.html'">Professeur</button>
+      <button class="btn-eleve" onclick="window.location.href='eleve.html'">Élève</button>
+      <button class="btn-profs" onclick="window.location.href='profs.html'">Professeur</button>
     </div>
   </main>
   <footer>
-    Equipe EPS-Lycée Vauban- LUXEMBOURG-JB
+    Equipe EPS - Lycée Vauban - LUXEMBOURG - JB
   </footer>
 </body>
 </html>
