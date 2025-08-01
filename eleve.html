@@ -3,91 +3,102 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - Formulaire Élève</title>
+  <title>RunStats - Élève</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    /* Style bouton rond tour */
+    #addTourBtn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease;
+      margin: 10px 0;
+    }
+    #addTourBtn:hover {
+      background-color: #45a049;
+    }
+    #generateQRBtn {
+      background-color: #2196F3;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+    #generateQRBtn:hover {
+      background-color: #1976d2;
+    }
+    #chronoDisplay {
+      font-size: 1.2em;
+      margin: 10px 0;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>RunStats - Formulaire Élève</h1>
+    <h1>RunStats - Élève</h1>
   </header>
-
   <main>
     <form id="eleve-form">
-      <div class="eleve-group">
-        <div class="eleve">
-          <h2>Élève 1</h2>
-          <label for="nom1">Nom</label>
-          <input type="text" id="nom1" placeholder="Nom" required />
-          
-          <label for="prenom1">Prénom</label>
-          <input type="text" id="prenom1" placeholder="Prénom" required />
-          
-          <label for="classe1">Classe</label>
-          <input type="text" id="classe1" placeholder="Classe" required />
-          
-          <label for="sexe1">Sexe</label>
-          <select id="sexe1" required>
-            <option value="">Choisir</option>
-            <option value="Fille">Fille</option>
-            <option value="Garçon">Garçon</option>
-          </select>
-          
-          <label for="duree1">Durée de la course (min)</label>
-          <input type="number" id="duree1" placeholder="Minutes" required />
-          
-          <label for="distance1">Distance du tour (m)</label>
-          <input type="number" id="distance1" placeholder="Ex: 200" required />
-          
-          <label for="vma1">VMA (optionnel)</label>
-          <input type="number" id="vma1" placeholder="km/h" step="0.1" />
-        </div>
+      <!-- Élève 1 -->
+      <fieldset>
+        <legend>Élève 1</legend>
+        <label for="nom1">Nom :</label>
+        <input type="text" id="nom1" required />
+        <label for="prenom1">Prénom :</label>
+        <input type="text" id="prenom1" required />
+        <label for="classe1">Classe :</label>
+        <input type="text" id="classe1" required />
+        <label for="sexe1">Sexe :</label>
+        <select id="sexe1" required>
+          <option value="M">M</option>
+          <option value="F">F</option>
+        </select>
+        <label for="distance1">Distance d'un tour (m) :</label>
+        <input type="number" id="distance1" required min="1" />
+      </fieldset>
 
-        <div class="eleve">
-          <h2>Élève 2</h2>
-          <label for="nom2">Nom</label>
-          <input type="text" id="nom2" placeholder="Nom" required />
-          
-          <label for="prenom2">Prénom</label>
-          <input type="text" id="prenom2" placeholder="Prénom" required />
-          
-          <label for="classe2">Classe</label>
-          <input type="text" id="classe2" placeholder="Classe" required />
-          
-          <label for="sexe2">Sexe</label>
-          <select id="sexe2" required>
-            <option value="">Choisir</option>
-            <option value="Fille">Fille</option>
-            <option value="Garçon">Garçon</option>
-          </select>
-          
-          <label for="duree2">Durée de la course (min)</label>
-          <input type="number" id="duree2" placeholder="Minutes" required />
-          
-          <label for="distance2">Distance du tour (m)</label>
-          <input type="number" id="distance2" placeholder="Ex: 200" required />
-          
-          <label for="vma2">VMA (optionnel)</label>
-          <input type="number" id="vma2" placeholder="km/h" step="0.1" />
-        </div>
+      <!-- Élève 2 -->
+      <fieldset>
+        <legend>Élève 2</legend>
+        <label for="nom2">Nom :</label>
+        <input type="text" id="nom2" required />
+        <label for="prenom2">Prénom :</label>
+        <input type="text" id="prenom2" required />
+        <label for="classe2">Classe :</label>
+        <input type="text" id="classe2" required />
+        <label for="sexe2">Sexe :</label>
+        <select id="sexe2" required>
+          <option value="M">M</option>
+          <option value="F">F</option>
+        </select>
+        <label for="distance2">Distance d'un tour (m) :</label>
+        <input type="number" id="distance2" required min="1" />
+      </fieldset>
+
+      <div>
+        <button type="button" id="addTourBtn" title="Ajouter un tour">+</button>
+        <div id="chronoDisplay">Durée : 00:00:00</div>
       </div>
 
-      <div class="course-buttons">
-        <button type="submit" class="btn-start" id="btnStart">Lancer la course</button>
-        <button type="button" class="btn-lap" id="btnLap">+ Tour</button>
-        <button type="button" class="btn-reset" id="btnReset">Reset</button>
-      </div>
+      <button type="button" id="generateQRBtn">Générer QR Code</button>
     </form>
 
-    <div id="qrcode" style="text-align:center; margin-top:20px; display:none;">
-      <h4>QR Code des résultats</h4>
-    </div>
+    <div id="qrcode" style="margin-top:20px;"></div>
   </main>
-
   <footer>
     Equipe EPS-Lycée Vauban- LUXEMBOURG-JB
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="eleve.js"></script>
 </body>
 </html>
