@@ -1,125 +1,236 @@
-/* Reset de base */
+/* style.css */
+
+/* Global */
 body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #f9f9f9;
+  font-family: Arial, sans-serif;
+  margin: 0; padding: 0;
+  background-color: #f9f9f9;
   color: #333;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
 }
 
-/* Titre en haut */
-header {
-  background: #0077b6;
-  color: white;
+header, footer {
+  background-color: #ddd;
+  padding: 15px;
   text-align: center;
-  padding: 1rem;
-  font-size: 1.5rem;
   font-weight: bold;
+  color: #222;
 }
 
-/* Conteneur des deux élèves */
+footer {
+  background-color: #eee;
+  margin-top: auto;
+}
+
+/* ======= Page élève ======= */
+
 .eleve-container {
   display: flex;
   justify-content: space-around;
-  flex: 1;
-  padding: 1rem;
-  gap: 1rem;
+  padding: 20px;
+  gap: 20px;
 }
 
-/* Bloc élève */
-.eleve-card {
-  flex: 1;
-  padding: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+.eleve-box {
+  width: 45%;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  background-color: #d0ebff; /* bleu clair par défaut */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.eleve-card:nth-child(1) {
-  background: #d0f0ff; /* Bleu clair */
+.eleve-box:nth-child(2) {
+  background-color: #d0ffd6; /* vert clair pour élève 2 */
 }
 
-.eleve-card:nth-child(2) {
-  background: #d2f9d2; /* Vert clair */
+.eleve-box label {
+  font-weight: 600;
+  margin-bottom: 4px;
 }
 
-/* Formulaire infos élèves */
-.eleve-card input, .eleve-card select {
+.eleve-box input[type="text"],
+.eleve-box select,
+.eleve-box input[type="number"] {
   width: 100%;
-  padding: 0.4rem;
-  margin-bottom: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  padding: 6px 8px;
+  border-radius: 5px;
+  border: 1px solid #aaa;
+  font-size: 1rem;
+  box-sizing: border-box;
 }
 
-/* Stats de course */
-.stats {
-  margin-top: 1rem;
-  font-size: 0.9rem;
+.course-info {
+  width: 90%;
+  margin: 0 auto 20px;
+  padding: 15px;
+  background-color: #fff3cd; /* jaune pâle */
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #856404;
 }
 
-.stats p {
-  margin: 0.3rem 0;
-}
-
-/* Boutons centrés */
 .buttons-container {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-/* Bouton Démarrer et Reset (rectangles) */
-button {
-  border: none;
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.2s ease, background 0.3s ease;
-}
-
-button:hover {
-  transform: scale(1.05);
-}
-
-#startBtn {
-  background: #28a745; /* Vert */
-  color: white;
-}
-
-#resetBtn {
-  background: #dc3545; /* Rouge */
-  color: white;
-}
-
-/* Bouton + Tour (rond et plus grand) */
-#lapBtn {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  background: #007bff; /* Bleu */
-  color: white;
-  font-size: 1.5rem;
-  font-weight: bold;
-  display: flex;
   align-items: center;
+  gap: 25px;
+  margin-bottom: 20px;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  padding: 12px 20px;
+  color: white;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Bouton démarrer - rectangle bleu */
+#startBtn {
+  background-color: #339af0;
+}
+
+#startBtn:hover {
+  background-color: #1c7ed6;
+}
+
+/* Bouton + Tour - rond plus gros et vert */
+#tourBtn {
+  background-color: #51cf66;
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
   justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Conteneur QR Code */
-#qrcode {
-  text-align: center;
-  margin: 1rem 0;
+#tourBtn:hover {
+  background-color: #40c057;
 }
 
-/* Bannière en bas */
-footer {
-  background: #e0e0e0;
-  text-align: center;
-  padding: 0.5rem;
-  font-size: 0.85rem;
-  color: #555;
+/* Bouton reset - rectangle rouge */
+#resetBtn {
+  background-color: #f03e3e;
 }
+
+#resetBtn:hover {
+  background-color: #c92a2a;
+}
+
+/* ======= Page Professeur ======= */
+
+main {
+  padding: 20px;
+}
+
+#startScanBtn {
+  display: block;
+  margin: 0 auto 25px auto;
+  background-color: #339af0;
+  color: white;
+  border-radius: 8px;
+  padding: 15px 30px;
+  font-size: 1.25rem;
+  box-shadow: 0 3px 7px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#startScanBtn:hover {
+  background-color: #1c7ed6;
+}
+
+#video {
+  display: block;
+  margin: 0 auto 30px auto;
+  border-radius: 8px;
+  box-shadow: 0 3px 7px rgba(0,0,0,0.15);
+}
+
+.actions {
+  margin-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.actions label {
+  font-weight: 600;
+}
+
+.actions select,
+.actions input[type="text"] {
+  padding: 6px 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+  min-width: 180px;
+}
+
+.actions button {
+  background-color: #51cf66;
+  color: white;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  transition: background-color 0.3s ease;
+}
+
+.actions button:hover {
+  background-color: #40c057;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(0,0,0,0.05);
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  font-size: 0.95rem;
+}
+
+thead {
+  background-color: #339af0;
+  color: white;
+  font-weight: 700;
+}
+
+tbody tr:hover {
+  background-color: #f1faff;
+}
+
+#groupesSection {
+  margin-top: 40px;
+}
+
