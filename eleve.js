@@ -1,114 +1,54 @@
-// eleve.js - Gestion de la course et QR code
+// eleve.js - Gestion du formulaire élève et génération du QR code
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Récupération éléments
-  const btnStart = document.getElementById('btnStart');
-  const btnLap = document.getElementById('btnLap');
-  const btnReset = document.getElementById('btnReset');
+  const form = document.getElementById('eleve-form');
+  const qrCodeContainer = document.getElementById('qrcode');
 
-  const distanceAffichee = document.getElementById('distanceAffichee');
-  const vitesseAffichee = document.getElementById('vitesseAffichee');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
 
-  const qrCodeContainer = document.getElementById('qrCodeContainer');
-
-  let distanceTour = 0;
-  let dureeCourse = 0;
-  let laps = 0;
-  let isRunning = false;
-  let startTime = null;
-  let intervalId = null;
-
-  // Fonction pour mettre à jour l'affichage distance et vitesse
-  function updateDisplay() {
-    const distanceParcourue = laps * distanceTour;
-    distanceAffichee.textContent = `Distance parcourue : ${distanceParcourue} m`;
-
-    const elapsedMin = (Date.now() - startTime) / 1000 / 60;
-    const vitesseMoyenne = elapsedMin > 0 ? (distanceParcourue / 1000) / elapsedMin : 0;
-    vitesseAffichee.textContent = `Vitesse moyenne : ${vitesseMoyenne.toFixed(2)} km/h`;
-  }
-
-  // Fonction pour démarrer la course
-  btnStart.addEventListener('click', () => {
-    if (isRunning) return;
-
-    distanceTour = Number(document.getElementById('distanceTour').value);
-    dureeCourse = Number(document.getElementById('duree').value);
-
-    if (!distanceTour || !dureeCourse || distanceTour <= 0 || dureeCourse <= 0) {
-      alert('Veuillez renseigner une durée et une distance du tour valides.');
-      return;
-    }
-
-    laps = 0;
-    startTime = Date.now();
-    isRunning = true;
-    qrCodeContainer.style.display = 'none';
-
-    updateDisplay();
-
-    // On pourrait lancer un timer ici si besoin (ex: pour durée max)
-  });
-
-  // Ajouter un tour
-  btnLap.addEventListener('click', () => {
-    if (!isRunning) return;
-
-    laps++;
-    updateDisplay();
-
-    // Si on atteint la durée (min) on stoppe et affiche QR code
-    const elapsedMin = (Date.now() - startTime) / 1000 / 60;
-    if (elapsedMin >= dureeCourse) {
-      isRunning = false;
-      generateQRCode();
-    }
-  });
-
-  // Reset tout
-  btnReset.addEventListener('click', () => {
-    isRunning = false;
-    laps = 0;
-    startTime = null;
-    distanceAffichee.textContent = 'Distance parcourue : 0 m';
-    vitesseAffichee.textContent = 'Vitesse moyenne : 0 km/h';
-    qrCodeContainer.style.display = 'none';
-  });
-
-  // Générer QR code des données de la course et élèves
-  function generateQRCode() {
+    // Récupération des données élève 1
     const eleve1 = {
       nom: document.getElementById('nom1').value.trim(),
       prenom: document.getElementById('prenom1').value.trim(),
       classe: document.getElementById('classe1').value.trim(),
-      sexe: document.getElementById('sexe1').value
+      sexe: document.getElementById('sexe1').value,
+      duree: parseFloat(document.getElementById('duree1').value.trim()),
+      distance: parseFloat(document.getElementById('distance1').value.trim()),
+      vma: parseFloat(document.getElementById('vma1').value.trim()) || null
     };
+
+    // Récupération des données élève 2
     const eleve2 = {
       nom: document.getElementById('nom2').value.trim(),
       prenom: document.getElementById('prenom2').value.trim(),
       classe: document.getElementById('classe2').value.trim(),
-      sexe: document.getElementById('sexe2').value
+      sexe: document.getElementById('sexe2').value,
+      duree: parseFloat(document.getElementById('duree2').value.trim()),
+      distance: parseFloat(document.getElementById('distance2').value.trim()),
+      vma: parseFloat(document.getElementById('vma2').value.trim()) || null
     };
 
+    // Préparation des données à encoder
     const data = {
       eleve1,
-      eleve2,
-      distanceParcourue: laps * distanceTour,
-      dureeCourse,
-      vitesseMoyenne:
-        (laps * distanceTour) / 1000 / dureeCourse // km/h approximatif en divisant distance par durée
+      eleve2
     };
 
+    // Conversion en JSON pour encoder dans le QR code
     const jsonData = JSON.stringify(data);
 
+    // Effacer un ancien QR code
+    qrCodeContainer.innerHTML = '';
     qrCodeContainer.style.display = 'block';
-    qrCodeContainer.innerHTML = ''; // Clear previous
 
-    // Créer QR code (attention, tu dois inclure la lib QRCode.js dans ton HTML)
+    // Générer QR code (utilise QRCode.js)
     new QRCode(qrCodeContainer, {
       text: jsonData,
       width: 200,
       height: 200
     });
-  }
+  });
+
+  // (Les boutons + Tour et Reset peuvent être gérés ici si besoin)
 });
