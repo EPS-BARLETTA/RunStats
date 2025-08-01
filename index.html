@@ -3,147 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG</title>
-  <link rel="stylesheet" href="../css/style.css" />
+  <title>RunStats - Accueil</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1>RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG</h1>
+    <h1>RunStats - Equipe EPS Lycée Vauban - LUXEMBOURG</h1>
   </header>
-
-  <main class="centered-main">
-    <button onclick="location.href='eleve.html'">Élève</button>
-    <button onclick="location.href='prof.html'">Professeur</button>
-  </main>
-
-  <footer>
-    <p class="signature">Équipe EPS - Lycée Vauban - LUXEMBOURG - JB</p>
-  </footer>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats Élève - Lycée Vauban</title>
-  <link rel="stylesheet" href="../css/style.css" />
-</head>
-<body>
-  <header>
-    <h1>RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG</h1>
-  </header>
-
   <main>
-    <form id="formEleve">
-      <fieldset>
-        <legend>Élève 1</legend>
-        <input type="text" name="nom1" placeholder="Nom" required />
-        <input type="text" name="prenom1" placeholder="Prénom" required />
-        <input type="text" name="classe1" placeholder="Classe" required />
-        <select name="sexe1" required>
-          <option value="">Sexe</option>
-          <option value="Fille">Fille</option>
-          <option value="Garçon">Garçon</option>
-        </select>
-      </fieldset>
-
-      <fieldset>
-        <legend>Élève 2</legend>
-        <input type="text" name="nom2" placeholder="Nom" required />
-        <input type="text" name="prenom2" placeholder="Prénom" required />
-        <input type="text" name="classe2" placeholder="Classe" required />
-        <select name="sexe2" required>
-          <option value="">Sexe</option>
-          <option value="Fille">Fille</option>
-          <option value="Garçon">Garçon</option>
-        </select>
-      </fieldset>
-
-      <fieldset>
-        <legend>Course</legend>
-        <label for="duree">Durée de la course (min)</label>
-        <input type="number" id="duree" name="duree" min="1" required />
-
-        <label for="distance">Distance du tour (m)</label>
-        <input type="number" id="distance" name="distance" min="1" required />
-
-        <label for="vma">VMA (optionnel)</label>
-        <input type="number" id="vma" name="vma" step="0.01" />
-      </fieldset>
-
-      <button type="submit">Générer QR Code</button>
-    </form>
-
-    <div id="qrCode"></div>
+    <div class="centered-buttons">
+      <button onclick="window.location.href='eleve.html'">Élève</button>
+      <button onclick="window.location.href='prof.html'">Professeur</button>
+    </div>
   </main>
-
   <footer>
-    <p class="signature">Équipe EPS - Lycée Vauban - LUXEMBOURG - JB</p>
+    Equipe EPS-Lycée Vauban- LUXEMBOURG-JB
   </footer>
-
-  <script src="../js/qrcode.min.js"></script>
-  <script src="../js/script.js"></script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats Professeur - Lycée Vauban</title>
-  <link rel="stylesheet" href="../css/style.css" />
-</head>
-<body>
-  <header>
-    <h1>RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG</h1>
-  </header>
-
-  <main>
-    <button id="scanQRBtn">Scanner QR Code</button>
-
-    <input type="file" id="qrInput" accept="image/*" style="display:none" />
-
-    <table id="tableauEleves" border="1">
-      <thead>
-        <tr>
-          <th>Nom</th>
-          <th>Prénom</th>
-          <th>Classe</th>
-          <th>Sexe</th>
-          <th>VMA</th>
-          <th>Distance</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-
-    <button id="triBtn">Trier</button>
-    <button id="creerGroupesBtn">Créer groupes</button>
-    <button id="downloadCSVBtn">Télécharger CSV</button>
-
-    <h2>Groupes créés :</h2>
-    <table id="tableauGroupes" border="1">
-      <thead>
-        <tr>
-          <th>Groupe</th>
-          <th>Nom</th>
-          <th>Prénom</th>
-          <th>Classe</th>
-          <th>Sexe</th>
-          <th>VMA</th>
-          <th>Distance</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </main>
-
-  <footer>
-    <p class="signature">Équipe EPS - Lycée Vauban - LUXEMBOURG - JB</p>
-  </footer>
-
-  <script src="../js/qrcode.min.js"></script>
-  <script src="../js/script.js"></script>
 </body>
 </html>
