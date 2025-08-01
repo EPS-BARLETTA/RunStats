@@ -5,75 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RunStats - Élèves</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 </head>
 <body>
     <header>
         <h1>RunStats</h1>
-        <h2>Interface Élèves</h2>
+        <h2>Equipe EPS Lycée Vauban - LUXEMBOURG</h2>
     </header>
 
-    <main>
-        <!-- Encadrés Élèves -->
-        <section class="eleves-container">
-            <!-- Élève 1 -->
-            <div class="eleve-card eleve-bleu">
-                <h3>Élève 1</h3>
-                <label>Nom : <input type="text" id="nom1"></label>
-                <label>Prénom : <input type="text" id="prenom1"></label>
-                <label>Classe : <input type="text" id="classe1"></label>
-                <label>Sexe :
-                    <select id="sexe1">
-                        <option value="">Choisir</option>
-                        <option value="Fille">Fille</option>
-                        <option value="Garçon">Garçon</option>
-                    </select>
-                </label>
-            </div>
-
-            <!-- Élève 2 -->
-            <div class="eleve-card eleve-vert">
-                <h3>Élève 2</h3>
-                <label>Nom : <input type="text" id="nom2"></label>
-                <label>Prénom : <input type="text" id="prenom2"></label>
-                <label>Classe : <input type="text" id="classe2"></label>
-                <label>Sexe :
-                    <select id="sexe2">
-                        <option value="">Choisir</option>
-                        <option value="Fille">Fille</option>
-                        <option value="Garçon">Garçon</option>
-                    </select>
-                </label>
-            </div>
-        </section>
-
-        <!-- Paramètres Course -->
-        <section class="parametres-course">
-            <label>Durée course (minutes) :
-                <input type="number" id="dureeCourse" min="1" value="5">
-            </label>
-            <label>Distance d’un tour (mètres) :
-                <input type="number" id="distanceTour" min="1" value="100">
+    <main class="eleve-container">
+        <!-- Élève 1 -->
+        <section class="eleve-card bleu">
+            <h3>Élève 1</h3>
+            <label>Nom : <input type="text" id="nom1"></label>
+            <label>Prénom : <input type="text" id="prenom1"></label>
+            <label>Classe : <input type="text" id="classe1"></label>
+            <label>Sexe :
+                <select id="sexe1">
+                    <option value="">Choisir</option>
+                    <option value="Fille">Fille</option>
+                    <option value="Garçon">Garçon</option>
+                </select>
             </label>
         </section>
 
-        <!-- Boutons -->
-        <section class="boutons-course">
-            <button id="btnStart" class="btn-rect-start">Démarrer</button>
-            <button id="btnTour" class="btn-round">+ Tour</button>
-            <button id="btnReset" class="btn-rect-reset">Reset</button>
-        </section>
-
-        <!-- Informations de course -->
-        <section class="infos-course">
-            <div id="chrono">00:00</div>
-            <div id="infosEleve1">Distance Élève 1 : 0 m</div>
-            <div id="infosEleve2">Distance Élève 2 : 0 m</div>
-            <div id="qrCodeContainer"></div>
+        <!-- Élève 2 -->
+        <section class="eleve-card vert">
+            <h3>Élève 2</h3>
+            <label>Nom : <input type="text" id="nom2"></label>
+            <label>Prénom : <input type="text" id="prenom2"></label>
+            <label>Classe : <input type="text" id="classe2"></label>
+            <label>Sexe :
+                <select id="sexe2">
+                    <option value="">Choisir</option>
+                    <option value="Fille">Fille</option>
+                    <option value="Garçon">Garçon</option>
+                </select>
+            </label>
         </section>
     </main>
 
+    <!-- Paramètres course -->
+    <section class="course-param">
+        <h3>Paramètres de course</h3>
+        <label>Durée de la course (minutes) :
+            <input type="number" id="dureeCourse" min="1" value="5">
+        </label>
+        <label>Distance d'un tour (mètres) :
+            <input type="number" id="distanceTour" min="1" value="400">
+        </label>
+    </section>
+
+    <!-- Boutons -->
+    <section class="course-controls">
+        <button id="startBtn" class="btn start">Démarrer</button>
+        <button id="tourBtn" class="btn tour">+ Tour</button>
+        <button id="resetBtn" class="btn reset">Reset</button>
+    </section>
+
+    <!-- Infos de course -->
+    <section class="course-infos">
+        <h3>Informations de course</h3>
+        <div id="infosEleve1" class="infos-eleve bleu">
+            <h4>Élève 1</h4>
+            <p>Distance parcourue : <span id="distance1">0</span> m</p>
+            <p>Vitesse moyenne : <span id="vitesse1">0</span> km/h</p>
+        </div>
+        <div id="infosEleve2" class="infos-eleve vert">
+            <h4>Élève 2</h4>
+            <p>Distance parcourue : <span id="distance2">0</span> m</p>
+            <p>Vitesse moyenne : <span id="vitesse2">0</span> km/h</p>
+        </div>
+    </section>
+
+    <!-- QR Code -->
+    <section class="qr-section">
+        <h3>QR Code Résultats</h3>
+        <canvas id="qrCode"></canvas>
+    </section>
+
     <footer>
-        <p>EPS Lycée Vauban - Luxembourg</p>
+        <p>&copy; 2025 RunStats</p>
     </footer>
 
     <script src="eleve.js"></script>
