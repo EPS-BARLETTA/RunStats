@@ -1,133 +1,125 @@
-/* style.css */
-
+/* Reset de base */
 body {
-  font-family: Arial, sans-serif;
   margin: 0;
-  padding: 0 20px;
-  background-color: #f7f7f7;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f9f9f9;
   color: #333;
-}
-
-header, footer {
-  background-color: #004080;
-  color: white;
-  padding: 10px 0;
-  text-align: center;
-  font-weight: bold;
-}
-
-h1, h2 {
-  margin: 10px 0;
-}
-
-main {
-  margin: 20px auto;
-  max-width: 900px;
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px #ccc;
-}
-
-.eleve-group {
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-.eleve {
-  flex: 1;
-  background: #eef4ff;
-  padding: 15px;
-  border-radius: 8px;
-}
-
-.eleve label {
-  display: block;
-  margin: 8px 0 4px;
+/* Titre en haut */
+header {
+  background: #0077b6;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  font-size: 1.5rem;
   font-weight: bold;
 }
 
-.eleve input[type="text"],
-.eleve input[type="number"],
-.eleve select {
-  width: 100%;
-  padding: 6px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
+/* Conteneur des deux élèves */
+.eleve-container {
+  display: flex;
+  justify-content: space-around;
+  flex: 1;
+  padding: 1rem;
+  gap: 1rem;
 }
 
-.course-buttons {
-  margin-top: 20px;
+/* Bloc élève */
+.eleve-card {
+  flex: 1;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.eleve-card:nth-child(1) {
+  background: #d0f0ff; /* Bleu clair */
+}
+
+.eleve-card:nth-child(2) {
+  background: #d2f9d2; /* Vert clair */
+}
+
+/* Formulaire infos élèves */
+.eleve-card input, .eleve-card select {
+  width: 100%;
+  padding: 0.4rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* Stats de course */
+.stats {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.stats p {
+  margin: 0.3rem 0;
+}
+
+/* Boutons centrés */
+.buttons-container {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
-.course-buttons button {
-  padding: 10px 15px;
-  font-weight: bold;
-  cursor: pointer;
+/* Bouton Démarrer et Reset (rectangles) */
+button {
   border: none;
-  border-radius: 6px;
-  color: white;
-  background-color: #004080;
-  transition: background-color 0.3s ease;
-}
-
-.course-buttons button:hover {
-  background-color: #0066cc;
-}
-
-.centered-buttons {
-  text-align: center;
-  margin-top: 100px;
-}
-
-.centered-buttons button {
-  font-size: 1.2rem;
-  margin: 0 10px;
-  padding: 15px 30px;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
   border-radius: 8px;
-  border: none;
-  background-color: #004080;
-  color: white;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: transform 0.2s ease, background 0.3s ease;
 }
 
-.centered-buttons button:hover {
-  background-color: #0066cc;
+button:hover {
+  transform: scale(1.05);
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
+#startBtn {
+  background: #28a745; /* Vert */
+  color: white;
 }
 
-table th, table td {
-  padding: 8px;
-  border: 1px solid #ccc;
-  text-align: center;
+#resetBtn {
+  background: #dc3545; /* Rouge */
+  color: white;
 }
 
-.actions {
-  margin-bottom: 15px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-}
-
-.actions label {
+/* Bouton + Tour (rond et plus grand) */
+#lapBtn {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #007bff; /* Bleu */
+  color: white;
+  font-size: 1.5rem;
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.actions select,
-.actions input[type="text"] {
-  padding: 5px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+/* Conteneur QR Code */
+#qrcode {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+/* Bannière en bas */
+footer {
+  background: #e0e0e0;
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+  color: #555;
 }
