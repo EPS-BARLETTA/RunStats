@@ -1,149 +1,212 @@
 // profs.js
 
-let scanner;
-let videoElem = document.getElementById('video');
-let startScanBtn = document.getElementById('startScanBtn');
-let elevesData = [];
+// Initialisation variables
+const startScanBtn = document.getElementById('startScanBtn');
+const videoElem = document.getElementById('video');
+const elevesTableBody = document.querySelector('#elevesTable tbody');
+const triSelect = document.getElementById('triSelect');
+const rechercheInput = document.getElementById('rechercheInput');
+const creerGroupesBtn = document.getElementById('creerGroupesBtn');
+const exportCSVBtn = document.getElementById('exportCSVBtn');
+
+const groupesSection = document.getElementById('groupesSection');
+const groupesTableBody = document.querySelector('#groupesTable tbody');
+const exportGroupesCSVBtn = document.getElementById('exportGroupesCSVBtn');
+
+let html5QrCode;
+let elevesData = [];  // tableau des élèves scannés
 let groupesData = [];
 
-startScanBtn.addEventListener('click', () => {
-  if (scanner) {
-    scanner.stop();
-    scanner = null;
-    startScanBtn.textContent = 'Démarrer le scan';
-    videoElem.style.display = 'none';
-  } else {
-    startScanBtn.textContent = 'Arrêter le scan';
-    videoElem.style.display = 'block';
-    startScanner();
-  }
-});
+function afficheEleves(data) {
+  elevesTableBody.innerHTML = '';
+  data.forEach(eleve => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${eleve.nom}</td>
+      <td>${eleve.prenom}</td>
+      <td>${eleve.classe}</td>
+      <td>${eleve.sexe}</td>
+      <td>${eleve.vma?.toFixed(2) ?? '-'}</td>
+      <td>${eleve.distance?.toFixed(2) ?? '-'}</td>
+    `;
+    elevesTableBody.appendChild(tr);
+  });
+}
 
-function startScanner() {
-  scanner = new Html5QrcodeScanner(
-    "video", 
-    { fps: 10, qrbox: 250 },
-    /* verbose= */ false
+function triEleves(critere) {
+  let data = [...elevesData];
+  switch(critere) {
+    case 'alphabetique':
+      data.sort((a,b) => a.nom.localeCompare(b.nom));
+      break;
+    case 'vma':
+      data.sort((a,b) => (b.vma ?? 0) - (a.vma ?? 0));
+      break;
+    case 'sexe':
+      data.sort((a,b) => a.sexe.localeCompare(b.sexe));
+      break;
+    case 'distance':
+      data.sort((a,b) => (b.distance ?? 0) - (a.distance ?? 0));
+      break;
+    case 'classe':
+      data.sort((a,b) => a.classe.localeCompare(b.classe));
+      break;
+  }
+  afficheEleves(data);
+}
+
+function filtreRecherche() {
+  const query = rechercheInput.value.toLowerCase();
+  const filtered = elevesData.filter(eleve =>
+    eleve.nom.toLowerCase().includes(query) ||
+    eleve.prenom.toLowerCase().includes(query) ||
+    eleve.classe.toLowerCase().includes(query) ||
+    eleve.sexe.toLowerCase().includes(query)
   );
-  scanner.render(onScanSuccess, onScanError);
+  afficheEleves(filtered);
 }
 
-function onScanSuccess(decodedText, decodedResult) {
-  try {
-    let data = JSON.parse(decodedText);
-    // Si c'est un groupe (2 élèves)
-    if (data.eleves && Array.isArray(data.eleves)) {
-      groupesData.push(data);
-      updateGroupesTable();
-    } else {
-      // Sinon données élèves simples
-      elevesData.push(data);
-      updateElevesTable();
-    }
-  } catch(e) {
-    console.warn('QR code non JSON ou non valide', e);
-  }
-}
-
-function onScanError(error) {
-  // Pas besoin d'afficher chaque erreur
-}
-
-function updateElevesTable() {
-  let tbody = document.querySelector('#elevesTable tbody');
-  tbody.innerHTML = '';
-  elevesData.forEach((eleve, i) => {
-    let tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${eleve.nom || ''}</td>
-      <td>${eleve.prenom || ''}</td>
-      <td>${eleve.classe || ''}</td>
-      <td>${eleve.sexe || ''}</td>
-      <td>${eleve.distanceTotale || ''} m</td>
-      <td>${eleve.vitesseMoyenne ? eleve.vitesseMoyenne.toFixed(2) : ''} km/h</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-function updateGroupesTable() {
-  let tbody = document.querySelector('#groupesTable tbody');
-  tbody.innerHTML = '';
-  groupesData.forEach((groupe, i) => {
-    let eleve1 = groupe.eleves[0] || {};
-    let eleve2 = groupe.eleves[1] || {};
-    let tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${eleve1.nom || ''} ${eleve1.prenom || ''}</td>
-      <td>${eleve2.nom || ''} ${eleve2.prenom || ''}</td>
-      <td>${groupe.distanceTotale || ''} m</td>
-      <td>${groupe.vitesseMoyenne ? groupe.vitesseMoyenne.toFixed(2) : ''} km/h</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-// Trier les tableaux par colonne (exemple simple)
-document.querySelectorAll('th.sortable').forEach(header => {
-  header.addEventListener('click', () => {
-    let tableId = header.closest('table').id;
-    let colIndex = Array.from(header.parentNode.children).indexOf(header);
-    let asc = header.dataset.asc === 'true';
-    header.dataset.asc = !asc;
-
-    if(tableId === 'elevesTable') {
-      elevesData.sort((a,b) => {
-        let valA = Object.values(a)[colIndex];
-        let valB = Object.values(b)[colIndex];
-        return asc ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);
-      });
-      updateElevesTable();
-    } else if(tableId === 'groupesTable') {
-      groupesData.sort((a,b) => {
-        let valA = colIndex === 0 ? (a.eleves[0].nom || '') : 
-                   colIndex === 1 ? (a.eleves[1].nom || '') : 
-                   Object.values(a)[colIndex - 2];
-        let valB = colIndex === 0 ? (b.eleves[0].nom || '') : 
-                   colIndex === 1 ? (b.eleves[1].nom || '') : 
-                   Object.values(b)[colIndex - 2];
-        return asc ? (valA > valB ? 1 : -1) : (valA < valB ? 1 : -1);
-      });
-      updateGroupesTable();
-    }
-  });
-});
-
-// Export CSV pour élève et groupes
-document.getElementById('exportCSVBtn').addEventListener('click', () => {
-  exportToCSV(elevesData, 'eleves.csv');
-});
-
-document.getElementById('exportGroupesCSVBtn').addEventListener('click', () => {
-  exportToCSV(groupesData, 'groupes.csv');
-});
-
-function exportToCSV(data, filename) {
-  if(!data.length) return alert('Aucune donnée à exporter');
-  let csv = '';
-  const keys = Object.keys(data[0]);
-  if(data[0].eleves) { // Groupe
-    csv += 'Eleve 1,Eleve 2,Distance Totale,Vitesse Moyenne\n';
-    data.forEach(g => {
-      let e1 = g.eleves[0] ? `${g.eleves[0].nom} ${g.eleves[0].prenom}` : '';
-      let e2 = g.eleves[1] ? `${g.eleves[1].nom} ${g.eleves[1].prenom}` : '';
-      csv += `"${e1}","${e2}",${g.distanceTotale || ''},${g.vitesseMoyenne || ''}\n`;
+function creerGroupes() {
+  groupesData = [];
+  // Créer groupes de 2 élèves (par exemple ordre d'apparition)
+  for(let i = 0; i < elevesData.length; i += 2) {
+    const groupeNum = (i/2) + 1;
+    groupesData.push({
+      groupe: groupeNum,
+      nom: elevesData[i].nom,
+      prenom: elevesData[i].prenom,
+      classe: elevesData[i].classe,
+      sexe: elevesData[i].sexe,
+      vma: elevesData[i].vma,
+      distance: elevesData[i].distance
     });
-  } else {
-    csv += keys.join(',') + '\n';
-    data.forEach(row => {
-      csv += keys.map(k => `"${row[k] || ''}"`).join(',') + '\n';
-    });
+    if(elevesData[i+1]) {
+      groupesData.push({
+        groupe: groupeNum,
+        nom: elevesData[i+1].nom,
+        prenom: elevesData[i+1].prenom,
+        classe: elevesData[i+1].classe,
+        sexe: elevesData[i+1].sexe,
+        vma: elevesData[i+1].vma,
+        distance: elevesData[i+1].distance
+      });
+    }
   }
-  let blob = new Blob([csv], {type: 'text/csv'});
-  let url = URL.createObjectURL(blob);
-  let a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
+  afficherGroupes();
 }
+
+function afficherGroupes() {
+  groupesSection.style.display = 'block';
+  groupesTableBody.innerHTML = '';
+  groupesData.forEach(item => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${item.groupe}</td>
+      <td>${item.nom}</td>
+      <td>${item.prenom}</td>
+      <td>${item.classe}</td>
+      <td>${item.sexe}</td>
+      <td>${item.vma?.toFixed(2) ?? '-'}</td>
+      <td>${item.distance?.toFixed(2) ?? '-'}</td>
+    `;
+    groupesTableBody.appendChild(tr);
+  });
+}
+
+function exportCSV(data, filename) {
+  const headers = Object.keys(data[0]);
+  const csvRows = [];
+  csvRows.push(headers.join(';'));
+  data.forEach(row => {
+    const values = headers.map(header => (row[header] ?? '').toString().replace(/;/g, ','));
+    csvRows.push(values.join(';'));
+  });
+  const csvContent = csvRows.join('\n');
+  const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+// Gestion du scan QR code
+
+startScanBtn.addEventListener('click', () => {
+  if (!html5QrCode) {
+    html5QrCode = new Html5Qrcode("video");
+  }
+  videoElem.style.display = "block";
+  startScanBtn.disabled = true;
+
+  html5QrCode.start(
+    { facingMode: "environment" },
+    {
+      fps: 10,
+      qrbox: 250
+    },
+    qrCodeMessage => {
+      try {
+        const data = JSON.parse(qrCodeMessage);
+        if(data.nom && data.prenom) {
+          // Eviter doublon sur nom+prenom+classe
+          const exists = elevesData.some(e => e.nom === data.nom && e.prenom === data.prenom && e.classe === data.classe);
+          if(!exists){
+            elevesData.push(data);
+            triEleves(triSelect.value);
+          }
+          alert(`Données ajoutées pour ${data.prenom} ${data.nom}`);
+        }
+      } catch(e) {
+        alert('QR Code invalide ou non reconnu');
+      }
+      // Arrêt du scan après lecture
+      html5QrCode.stop().then(() => {
+        videoElem.style.display = "none";
+        startScanBtn.disabled = false;
+      }).catch(err => {
+        console.error(err);
+      });
+    },
+    errorMessage => {
+      // ignore les erreurs silencieuses du scan
+    }
+  ).catch(err => {
+    alert('Erreur lors du démarrage du scan: ' + err);
+    startScanBtn.disabled = false;
+  });
+});
+
+triSelect.addEventListener('change', () => {
+  triEleves(triSelect.value);
+});
+
+rechercheInput.addEventListener('input', filtreRecherche);
+
+creerGroupesBtn.addEventListener('click', () => {
+  if(elevesData.length < 2) {
+    alert("Il faut au moins deux élèves pour créer des groupes.");
+    return;
+  }
+  creerGroupes();
+});
+
+exportCSVBtn.addEventListener('click', () => {
+  if(elevesData.length === 0) {
+    alert("Aucune donnée à exporter.");
+    return;
+  }
+  exportCSV(elevesData, "eleves.csv");
+});
+
+exportGroupesCSVBtn.addEventListener('click', () => {
+  if(groupesData.length === 0) {
+    alert("Aucun groupe à exporter.");
+    return;
+  }
+  exportCSV(groupesData, "groupes.csv");
+});
+
+// Affiche tableau vide au départ
+afficheEleves(elevesData);
+
