@@ -4,227 +4,84 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Course Élèves</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0; padding: 0;
-    background: #f9f9f9;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-  header {
-    background: #004080;
-    color: white;
-    text-align: center;
-    padding: 1rem 0;
-    font-size: 1.8rem;
-    font-weight: bold;
-  }
-  main {
-    flex: 1;
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem;
-    gap: 1rem;
-  }
-  .eleve {
-    flex: 1;
-    background-color: #d0e7ff; /* bleu clair */
-    border-radius: 10px;
-    padding: 1rem;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .eleve.right {
-    background-color: #d4ffd0; /* vert clair */
-  }
-  .eleve label {
-    font-weight: bold;
-    margin-top: 0.5rem;
-  }
-  .eleve input, .eleve select {
-    width: 100%;
-    padding: 6px;
-    border-radius: 4px;
-    border: 1px solid #999;
-    font-size: 1rem;
-  }
-  /* Encadré central */
-  .course-info {
-    flex: 0.8;
-    background: #fff8dc;
-    border-radius: 10px;
-    padding: 1rem;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .timer-display {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-  }
-  .inputs-course {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-  .inputs-course label {
-    font-weight: bold;
-    font-size: 1.1rem;
-  }
-  .inputs-course input {
-    width: 80px;
-    font-size: 1.1rem;
-    padding: 6px;
-    border-radius: 6px;
-    border: 1px solid #999;
-    text-align: center;
-  }
-  /* Boutons */
-  .buttons-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 1rem;
-  }
-  button {
-    cursor: pointer;
-    font-weight: bold;
-    border: none;
-    color: white;
-    transition: background-color 0.3s ease;
-  }
-  #startBtn {
-    background-color: #4a90e2;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 1.1rem;
-  }
-  #startBtn:hover {
-    background-color: #357abd;
-  }
-  #tourBtn {
-    background-color: #66bb6a;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    font-size: 2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  #tourBtn:hover {
-    background-color: #4caf50;
-  }
-  #resetBtn {
-    background-color: #e94e4e;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-size: 1.1rem;
-  }
-  #resetBtn:hover {
-    background-color: #c03939;
-  }
-  /* Infos course */
-  .infos-course {
-    background: #f0f0f0;
-    padding: 1rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    min-height: 140px;
-    width: 100%;
-    box-sizing: border-box;
-    overflow-wrap: break-word;
-  }
-  /* Info course for each élève inside infos-course */
-  .eleve-info {
-    margin-bottom: 1rem;
-  }
-  /* QR code */
-  #qrCodeContainer {
-    margin-top: 1rem;
-    display: flex;
-    justify-content: center;
-  }
-  footer {
-    background: #ccc;
-    padding: 0.5rem 0;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #444;
-  }
-</style>
+<link rel="stylesheet" href="style.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
-<header>Course des Élèves</header>
+
+<header>
+  <h1>Course des élèves</h1>
+</header>
+
 <main>
-  <section class="eleve left">
-    <h2>Élève 1</h2>
-    <label for="nom1">Nom</label>
-    <input id="nom1" type="text" placeholder="Nom" />
-    <label for="prenom1">Prénom</label>
-    <input id="prenom1" type="text" placeholder="Prénom" />
-    <label for="classe1">Classe</label>
-    <input id="classe1" type="text" placeholder="Classe" />
-    <label for="sexe1">Sexe</label>
-    <select id="sexe1">
-      <option value="" selected>Choisir</option>
-      <option value="fille">Fille</option>
-      <option value="garçon">Garçon</option>
-    </select>
+  <section id="elevesContainer" style="display:flex; justify-content:space-around; margin-bottom: 20px;">
+    <!-- Élève 1 -->
+    <div id="eleve1" style="background:#d0e7ff; padding:15px; border-radius:10px; width:45%; box-sizing: border-box;">
+      <h2>Élève 1</h2>
+      <label>Nom : <input type="text" id="nom1" /></label><br />
+      <label>Prénom : <input type="text" id="prenom1" /></label><br />
+      <label>Classe : <input type="text" id="classe1" /></label><br />
+      <label>Sexe : 
+        <select id="sexe1">
+          <option value="">Choisir</option>
+          <option value="Fille">Fille</option>
+          <option value="Garçon">Garçon</option>
+        </select>
+      </label><br />
+      <div style="margin-top:10px;">
+        <strong>Temps restant :</strong> <span class="tempsRestant">--:--</span>
+      </div>
+      <div id="info1" style="margin-top:15px; background:#a9caff; padding:10px; border-radius:6px;">
+        <!-- Infos course élève 1 -->
+      </div>
+    </div>
+
+    <!-- Élève 2 -->
+    <div id="eleve2" style="background:#c7f0d4; padding:15px; border-radius:10px; width:45%; box-sizing: border-box;">
+      <h2>Élève 2</h2>
+      <label>Nom : <input type="text" id="nom2" /></label><br />
+      <label>Prénom : <input type="text" id="prenom2" /></label><br />
+      <label>Classe : <input type="text" id="classe2" /></label><br />
+      <label>Sexe : 
+        <select id="sexe2">
+          <option value="">Choisir</option>
+          <option value="Fille">Fille</option>
+          <option value="Garçon">Garçon</option>
+        </select>
+      </label><br />
+      <div style="margin-top:10px;">
+        <strong>Temps restant :</strong> <span class="tempsRestant">--:--</span>
+      </div>
+      <div id="info2" style="margin-top:15px; background:#b8e6b7; padding:10px; border-radius:6px;">
+        <!-- Infos course élève 2 -->
+      </div>
+    </div>
   </section>
 
-  <section class="course-info">
-    <div class="timer-display" id="timerDisplay">00:00</div>
-    <div class="inputs-course">
-      <label for="duree1">Durée (min) Élève 1</label>
-      <input id="duree1" type="number" min="1" max="60" value="5" />
-      <label for="distanceTour1">Distance tour (m) Élève 1</label>
-      <input id="distanceTour1" type="number" min="1" max="1000" value="400" />
-    </div>
-    <div class="inputs-course">
-      <label for="duree2">Durée (min) Élève 2</label>
-      <input id="duree2" type="number" min="1" max="60" value="5" />
-      <label for="distanceTour2">Distance tour (m) Élève 2</label>
-      <input id="distanceTour2" type="number" min="1" max="1000" value="400" />
-    </div>
-    <div class="buttons-container">
-      <button id="startBtn">Démarrer le chrono</button>
-      <button id="tourBtn" disabled>+</button>
-      <button id="resetBtn" disabled>Reset</button>
-    </div>
-    <div class="infos-course" id="infosCourse">
-      <div class="eleve-info" id="infoEleve1"></div>
-      <div class="eleve-info" id="infoEleve2"></div>
-    </div>
-    <div id="qrCodeContainer"></div>
+  <!-- Réglages de course -->
+  <section id="courseSettings" style="max-width: 600px; margin: 0 auto 20px auto; padding: 15px; background:#f0f0f0; border-radius:10px; text-align:center;">
+    <label>Durée course (minutes) : <input type="number" id="dureeCourse" min="1" max="60" step="1" /></label> &nbsp;&nbsp;&nbsp;
+    <label>Distance tour (mètres) : <input type="number" id="distanceTour" min="10" max="2000" step="10" /></label>
   </section>
 
-  <section class="eleve right">
-    <h2>Élève 2</h2>
-    <label for="nom2">Nom</label>
-    <input id="nom2" type="text" placeholder="Nom" />
-    <label for="prenom2">Prénom</label>
-    <input id="prenom2" type="text" placeholder="Prénom" />
-    <label for="classe2">Classe</label>
-    <input id="classe2" type="text" placeholder="Classe" />
-    <label for="sexe2">Sexe</label>
-    <select id="sexe2">
-      <option value="" selected>Choisir</option>
-      <option value="fille">Fille</option>
-      <option value="garçon">Garçon</option>
-    </select>
+  <!-- Boutons -->
+  <section id="boutons" style="text-align:center; margin-bottom:30px;">
+    <button id="startBtn" style="background:#4a90e2; color:#fff; padding:12px 20px; font-size:1.2rem; border:none; border-radius:6px; margin-right:20px; cursor:pointer;">Démarrer le chrono</button>
+    <button id="addTourBtn" style="background:#50c878; color:#fff; padding:20px 24px; font-size:2rem; border:none; border-radius:50%; cursor:pointer;" title="Ajouter un tour">+</button>
+    <button id="resetBtn" style="background:#e94e4e; color:#fff; padding:12px 20px; font-size:1.2rem; border:none; border-radius:6px; margin-left:20px; cursor:pointer;">Reset</button>
+  </section>
+
+  <!-- QR Code -->
+  <section id="qrCodeContainer" style="text-align:center; margin-bottom:40px;">
+    <!-- QR code généré ici -->
   </section>
 </main>
-<footer>© 2025 - Course Élèves</footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<footer style="background:#ddd; text-align:center; padding:15px; font-size:0.9rem;">
+  Application de gestion de course — © 2025
+</footer>
+
 <script src="eleve.js"></script>
+
 </body>
 </html>
