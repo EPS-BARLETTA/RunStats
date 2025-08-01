@@ -1,144 +1,137 @@
 // profs.js
 
+// --- Accès sécurisé par code PIN ---
+const pinBtn = document.getElementById('pinBtn');
 const pinInput = document.getElementById('pinInput');
-const pinSubmit = document.getElementById('pinSubmit');
-const accessSection = document.getElementById('accessSection');
-const dataSection = document.getElementById('dataSection');
-const tableContainer = document.getElementById('tableContainer');
-const sortSelect = document.getElementById('sortSelect');
-const groupBtn = document.getElementById('groupBtn');
-const exportBtn = document.getElementById('exportBtn');
-const messageDiv = document.getElementById('message');
+const pinError = document.getElementById('pinError');
+const loginSection = document.getElementById('loginSection');
+const profSection = document.getElementById('profSection');
 
-let allResults = []; // données collectées
-let currentResults = []; // affichées selon tri
-
-function loadResults() {
-  const saved = localStorage.getItem('runsData');
-  allResults = saved ? JSON.parse(saved) : [];
-  currentResults = [...allResults];
-}
-
-function saveResults() {
-  localStorage.setItem('runsData', JSON.stringify(allResults));
-}
-
-function checkPin() {
+pinBtn.addEventListener('click', () => {
   if (pinInput.value === "EPS76") {
-    accessSection.style.display = 'none';
-    dataSection.style.display = 'block';
+    loginSection.style.display = "none";
+    profSection.style.display = "block";
     loadResults();
-    renderTable(currentResults);
   } else {
-    alert('Code PIN incorrect.');
+    pinError.textContent = "Code PIN incorrect.";
+  }
+});
+
+// --- Gestion des données ---
+let results = [];
+
+// Charger données existantes
+function loadResults() {
+  const saved = localStorage.getItem('runstats_results');
+  results = saved ? JSON.parse(saved) : [];
+  renderTable();
+}
+
+// Sauvegarder
+function saveResults() {
+  localStorage.setItem('runstats_results', JSON.stringify(results));
+}
+
+// Ajouter données via QR code (simulation)
+function addResultFromQR(qrData) {
+  try {
+    const data = JSON.parse(qrData);
+    results.push(data.eleve1);
+    results.push(data.eleve2);
+    saveResults();
+    renderTable();
+  } catch (e) {
+    alert("QR code invalide !");
   }
 }
 
-function renderTable(data) {
-  if (data.length === 0) {
-    tableContainer.innerHTML = "<p>Aucune donnée disponible.</p>";
-    return;
-  }
-  let html = `<table border="1" cellspacing="0" cellpadding="5" style="width:100%; text-align:center;">
-    <thead>
-      <tr>
-        <th>Nom</th>
-        <th>Prénom</th>
-        <th>Classe</th>
-        <th>Sexe</th>
-        <th>Distance (m)</th>
-        <th>VMA estimée (km/h)</th>
-      </tr>
-    </thead><tbody>`;
+// --- Afficher tableau ---
+const tableBody = document.querySelector('#resultsTable tbody');
 
-  for (const r of data) {
-    html += `<tr>
-      <td>${r.nom}</td>
-      <td>${r.prenom}</td>
-      <td>${r.classe}</td>
-      <td>${r.sexe}</td>
-      <td>${r.distance}</td>
-      <td>${r.vmaEstimee}</td>
-    </tr>`;
-  }
-  html += '</tbody></table>';
-  tableContainer.innerHTML = html;
-}
-
-function sortData(criteria) {
-  currentResults.sort((a,b) => {
-    if (criteria === 'distance' || criteria === 'vma') {
-      return parseFloat(b[criteria === 'distance' ? 'distance' : 'vmaEstimee']) - parseFloat(a[criteria === 'distance' ? 'distance' : 'vmaEstimee']);
-    } else if (criteria === 'sexe') {
-      return a.sexe.localeCompare(b.sexe);
-    }
-    return 0;
+function renderTable() {
+  tableBody.innerHTML = '';
+  results.forEach(el => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${el.nom}</td>
+      <td>${el.prenom}</td>
+      <td>${el.classe}</td>
+      <td>${el.sexe}</td>
+      <td>${el.distance}</td>
+      <td>${(el.distance/1000/(12/60)).toFixed(1)}</td>
+    `;
+    tableBody.appendChild(row);
   });
-  renderTable(currentResults);
 }
 
-function createGroups() {
-  if(currentResults.length === 0) {
-    alert("Aucune donnée pour créer des groupes.");
-    return;
-  }
+// --- Tri ---
+document.getElementById('sortDistance').addEventListener('click', () => {
+  results.sort((a, b) => b.distance - a.distance);
+  renderTable();
+});
 
-  // Trier par VMA décroissante
-  const sorted = [...currentResults].sort((a,b) => parseFloat(b.vmaEstimee) - parseFloat(a.vmaEstimee));
-  
-  // Récupérer valeurs de VMA max, intermédiaire et faible (approximatif)
-  const maxVMA = parseFloat(sorted[0].vmaEstimee);
-  const minVMA = parseFloat(sorted[sorted.length-1].vmaEstimee);
-  const midVMA = (maxVMA + minVMA) / 2;
-
-  // Groupes: VMA élevée (>midVMA), intermédiaire (entre min et mid), faible (<min+quart)
-  const groups = {
-    elevees: [],
-    intermédiaires: [],
-    faibles: [],
-  };
-
-  sorted.forEach(r => {
-    const vma = parseFloat(r.vmaEstimee);
-    if (vma >= midVMA) groups.elevees.push(r);
-    else if (vma >= (minVMA + (midVMA - minVMA) / 2)) groups.intermédiaires.push(r);
-    else groups.faibles.push(r);
+document.getElementById('sortVMA').addEventListener('click', () => {
+  results.sort((a, b) => {
+    const vmaA = a.distance/1000/(12/60);
+    const vmaB = b.distance/1000/(12/60);
+    return vmaB - vmaA;
   });
+  renderTable();
+});
 
-  // Affichage simplifié
-  let html = `<h3>Groupes créés selon VMA estimée</h3>`;
-  html += `<h4>VMA Élevée (${groups.elevees.length}):</h4><ul>`;
-  groups.elevees.forEach(r => html += `<li>${r.nom} ${r.prenom} - ${r.vmaEstimee} km/h</li>`);
-  html += `</ul><h4>VMA Intermédiaire (${groups.intermédiaires.length}):</h4><ul>`;
-  groups.intermédiaires.forEach(r => html += `<li>${r.nom} ${r.prenom} - ${r.vmaEstimee} km/h</li>`);
-  html += `</ul><h4>VMA Faible (${groups.faibles.length}):</h4><ul>`;
-  groups.faibles.forEach(r => html += `<li>${r.nom} ${r.prenom} - ${r.vmaEstimee} km/h</li>`);
-  html += `</ul>`;
+document.getElementById('sortSexe').addEventListener('click', () => {
+  results.sort((a, b) => a.sexe.localeCompare(b.sexe));
+  renderTable();
+});
 
-  tableContainer.innerHTML = html;
-}
-
-function exportCSV() {
-  if(currentResults.length === 0) {
-    alert("Aucune donnée à exporter.");
-    return;
-  }
-  let csv = "Nom,Prénom,Classe,Sexe,Distance (m),VMA estimée (km/h)\n";
-  currentResults.forEach(r => {
-    csv += `"${r.nom}","${r.prenom}","${r.classe}","${r.sexe}","${r.distance}","${r.vmaEstimee}"\n`;
-  });
-  const blob = new Blob([csv], {type: 'text/csv'});
+// --- Export JSON ---
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
-
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'resultats_runs.csv';
+  a.download = 'resultats_runstats.json';
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
+});
 
-  URL.revokeObjectURL(url);
-}
+// --- Création groupes mixtes (VMA haute/intermédiaire/faible) ---
+document.getElementById('createGroups').addEventListener('click', () => {
+  if (results.length < 4) {
+    alert("Pas assez de données pour créer des groupes.");
+    return;
+  }
 
-pinSubmit.addEventListener('click', checkPin);
-sortSelect.addEventListener('change', e => sortData(e.target.value));
-groupBtn.addEventListener('click', createGroups);
-exportBtn.addEventListener('click', exportCSV);
+  // Calcul VMA
+  const sorted = results.map(r => ({
+    ...r,
+    vma: r.distance/1000/(12/60) // estimation VMA
+  })).sort((a, b) => b.vma - a.vma);
+
+  const groupes = [];
+  while (sorted.length >= 4) {
+    const groupe = [
+      sorted.shift(),             // VMA haute
+      sorted.splice(1, 1)[0],     // intermédiaire
+      sorted.splice(1, 1)[0],     // intermédiaire
+      sorted.pop()                // VMA faible
+    ];
+    groupes.push(groupe);
+  }
+
+  // Affichage
+  const container = document.getElementById('groupsOutput');
+  container.innerHTML = '';
+  groupes.forEach((g, i) => {
+    const div = document.createElement('div');
+    div.classList.add('group-box');
+    div.innerHTML = `<h4>Groupe ${i+1}</h4>` +
+      g.map(e => `<p>${e.prenom} ${e.nom} (${e.classe}) - VMA: ${e.vma.toFixed(1)} km/h</p>`).join('');
+    container.appendChild(div);
+  });
+});
+
+// --- Simulation ajout QR code ---
+// Pour tester rapidement, ouvrir la console et taper :
+// addResultFromQR('{"eleve1":{"nom":"Dupont","prenom":"Jean","classe":"2A","sexe":"garçon","distance":1200},"eleve2":{"nom":"Durand","prenom":"Marie","classe":"2A","sexe":"fille","distance":1500}}');
