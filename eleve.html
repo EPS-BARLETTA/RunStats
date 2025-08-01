@@ -9,86 +9,91 @@
 </head>
 <body>
 
-<header>
-    <h1>RunStats</h1>
-    <h2>Équipe EPS Lycée Vauban - LUXEMBOURG</h2>
-</header>
+    <header>
+        <h1>RunStats - Mode Élèves</h1>
+    </header>
 
-<main>
-    <!-- Conteneur des infos d'entrée -->
-    <div id="inputs-container" class="inputs-container">
-        <div class="eleve-container">
+    <main>
+        <!-- Bloc infos élèves -->
+        <div class="eleves-container">
             <!-- Élève 1 -->
-            <div class="eleve-card bleu">
-                <h3>Élève 1</h3>
-                <label>Nom :</label>
-                <input type="text" id="nom1">
-                <label>Prénom :</label>
-                <input type="text" id="prenom1">
-                <label>Classe :</label>
-                <input type="text" id="classe1">
-                <label>Sexe :</label>
-                <select id="sexe1">
-                    <option value="">Choisir</option>
-                    <option value="fille">Fille</option>
-                    <option value="garçon">Garçon</option>
-                </select>
+            <div class="eleve-card eleve1">
+                <h2>Élève 1</h2>
+                <label>Nom : <input type="text" id="nom1"></label>
+                <label>Prénom : <input type="text" id="prenom1"></label>
+                <label>Classe : <input type="text" id="classe1"></label>
+                <label>Sexe :
+                    <select id="sexe1">
+                        <option value="">Choisir</option>
+                        <option value="Fille">Fille</option>
+                        <option value="Garçon">Garçon</option>
+                    </select>
+                </label>
             </div>
 
             <!-- Élève 2 -->
-            <div class="eleve-card vert">
-                <h3>Élève 2</h3>
-                <label>Nom :</label>
-                <input type="text" id="nom2">
-                <label>Prénom :</label>
-                <input type="text" id="prenom2">
-                <label>Classe :</label>
-                <input type="text" id="classe2">
-                <label>Sexe :</label>
-                <select id="sexe2">
-                    <option value="">Choisir</option>
-                    <option value="fille">Fille</option>
-                    <option value="garçon">Garçon</option>
-                </select>
+            <div class="eleve-card eleve2">
+                <h2>Élève 2</h2>
+                <label>Nom : <input type="text" id="nom2"></label>
+                <label>Prénom : <input type="text" id="prenom2"></label>
+                <label>Classe : <input type="text" id="classe2"></label>
+                <label>Sexe :
+                    <select id="sexe2">
+                        <option value="">Choisir</option>
+                        <option value="Fille">Fille</option>
+                        <option value="Garçon">Garçon</option>
+                    </select>
+                </label>
             </div>
         </div>
 
-        <!-- Paramètres course -->
-        <div class="course-settings">
-            <label>Distance d'un tour (mètres) :</label>
-            <input type="number" id="distance" min="1">
-            <label>Durée de la course (minutes) :</label>
-            <input type="number" id="duree" min="1">
+        <!-- Bloc paramètres course -->
+        <div class="parametres-course">
+            <h2>Paramètres de course</h2>
+            <label>Distance d’un tour (m) :
+                <input type="number" id="distanceTour" min="1">
+            </label>
+            <label>Durée de la course (minutes) :
+                <input type="number" id="dureeCourse" min="1">
+            </label>
         </div>
-    </div>
 
-    <!-- Affichage du minuteur -->
-    <div id="timer-display" class="timer-display" style="display:none;">
-        0:00
-    </div>
+        <!-- Minuteur -->
+        <div id="timer" class="timer hidden">00:00</div>
 
-    <!-- Infos course -->
-    <div id="race-info" class="race-info">
-        <div id="info1" class="info-box"></div>
-        <div id="info2" class="info-box"></div>
-    </div>
+        <!-- Boutons -->
+        <div class="buttons-course">
+            <button id="startBtn" class="btn start">Démarrer</button>
+            <button id="lapBtn" class="btn lap">+ Tour</button>
+            <button id="resetBtn" class="btn reset">Reset</button>
+        </div>
 
-    <!-- Boutons -->
-    <div class="buttons">
-        <button id="start-btn" class="btn start-btn">Démarrer</button>
-        <button id="lap-btn" class="btn lap-btn">+ Tour</button>
-        <button id="reset-btn" class="btn reset-btn">Reset</button>
-    </div>
+        <!-- Infos course -->
+        <div class="infos-course">
+            <h3>Informations de course</h3>
+            <div id="infosEleve1">
+                <strong>Élève 1 :</strong>
+                <p>Distance : <span id="dist1">0</span> m</p>
+                <p>Vitesse moy. : <span id="vitesse1">0</span> km/h</p>
+                <p>VMA estimée : <span id="vma1">0</span> km/h</p>
+            </div>
+            <div id="infosEleve2">
+                <strong>Élève 2 :</strong>
+                <p>Distance : <span id="dist2">0</span> m</p>
+                <p>Vitesse moy. : <span id="vitesse2">0</span> km/h</p>
+                <p>VMA estimée : <span id="vma2">0</span> km/h</p>
+            </div>
+        </div>
 
-    <!-- QR Code -->
-    <div id="qrcode" class="qrcode"></div>
+        <!-- QR Code -->
+        <div id="qrcode" class="qrcode hidden"></div>
 
-</main>
+    </main>
 
-<footer>
-    RunStats - Equipe EPS Lycée Vauban - LUXEMBOURG - JB
-</footer>
+    <footer>
+        RunStats - Equipe EPS Lycée Vauban - LUXEMBOURG - JB
+    </footer>
 
-<script src="eleve.js"></script>
+    <script src="eleve.js"></script>
 </body>
 </html>
