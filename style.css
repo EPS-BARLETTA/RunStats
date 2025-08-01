@@ -1,250 +1,89 @@
-/* Reset basique */
-* {
-  box-sizing: border-box;
+/* style.css - styles globaux */
+
+body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
-  padding: 0;
-}
-
-/* Body + fond */
-body {
-  background: #f0f4f8;
-  color: #222;
-  padding: 20px;
-  min-height: 100vh;
+  background: #f9f9f9;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  min-height: 100vh;
 }
 
-/* Header */
 header {
-  font-size: 2.5rem;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-/* Footer */
-footer {
-  font-size: 0.85rem;
-  text-align: center;
-  margin-top: 40px;
-  color: #666;
-}
-
-/* --- Boutons page accueil (éléves / profs) --- */
-/* à appliquer dans index.html sur les boutons correspondants */
-.btn-eleve,
-.btn-profs {
-  display: inline-block;
-  padding: 20px 40px;
-  font-size: 1.6rem;
-  font-weight: 700;
-  border-radius: 12px;
-  cursor: pointer;
-  margin: 0 15px;
-  transition: background-color 0.3s ease;
+  background-color: #004080;
   color: white;
-  border: none;
-  user-select: none;
+  padding: 30px 20px;
   text-align: center;
-  min-width: 160px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Couleur distinctive */
-.btn-eleve {
-  background-color: #0078d7; /* bleu */
+header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
 }
 
-.btn-eleve:hover {
-  background-color: #005ea2;
+header p {
+  margin: 8px 0 0 0;
+  font-size: 1.1rem;
+  font-weight: 400;
+  font-style: italic;
+  opacity: 0.85;
 }
 
-.btn-profs {
-  background-color: #d9534f; /* rouge */
+main {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
 }
 
-.btn-profs:hover {
-  background-color: #b3342a;
-}
-
-/* --- Page élève --- */
-
-.eleve-form {
-  max-width: 900px;
-  margin: 0 auto;
-  background: white;
-  padding: 25px 40px;
-  border-radius: 14px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.eleve-form h3 {
-  font-size: 1.8rem;
-  margin-bottom: 20px;
-  text-align: center;
-  font-weight: 600;
-  color: #004a99;
-}
-
-.eleve-group {
+.centered-buttons {
   display: flex;
   gap: 40px;
-  justify-content: space-between;
-  margin-bottom: 30px;
 }
 
-.eleve {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.eleve label {
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: #333;
-}
-
-.eleve input,
-.eleve select {
-  padding: 10px 14px;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1.5px solid #ccc;
-  transition: border-color 0.25s ease;
-}
-
-.eleve input:focus,
-.eleve select:focus {
-  outline: none;
-  border-color: #0078d7;
-}
-
-/* Détails course */
-.course-details {
-  display: flex;
-  gap: 30px;
-  justify-content: center;
-  margin-bottom: 30px;
-}
-
-.course-details > div {
-  display: flex;
-  flex-direction: column;
-  min-width: 150px;
-}
-
-.course-details label {
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #333;
-}
-
-.course-details input {
-  padding: 10px 14px;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1.5px solid #ccc;
-  transition: border-color 0.25s ease;
-}
-
-.course-details input:focus {
-  border-color: #0078d7;
-  outline: none;
-}
-
-/* Boutons course */
-.course-buttons {
-  text-align: center;
-  margin-bottom: 25px;
-  display: flex;
-  justify-content: center;
-  gap: 18px;
-}
-
-.course-buttons button {
+.centered-buttons button {
+  padding: 25px 60px;
+  font-size: 1.5rem;
   border: none;
-  font-weight: 700;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  color: white;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-weight: 600;
   user-select: none;
 }
 
-/* Bouton Lancer et + Tour : rond et gros */
-.btn-big-round {
-  background-color: #0078d7;
+.centered-buttons button:active {
+  transform: scale(0.95);
+}
+
+.centered-buttons button:nth-child(1) {
+  background-color: #28a745; /* vert */
+}
+
+.centered-buttons button:nth-child(1):hover {
+  background-color: #218838;
+}
+
+.centered-buttons button:nth-child(2) {
+  background-color: #007bff; /* bleu */
+}
+
+.centered-buttons button:nth-child(2):hover {
+  background-color: #0056b3;
+}
+
+footer {
+  background-color: #004080;
   color: white;
-  font-size: 1.6rem;
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  box-shadow: 0 6px 15px rgba(0, 120, 215, 0.3);
-}
-
-.btn-big-round:hover {
-  background-color: #005ea2;
-}
-
-/* Bouton reset plus petit */
-.btn-reset {
-  background-color: #d9534f;
-  color: white;
-  font-size: 1.2rem;
-  padding: 14px 24px;
-  border-radius: 10px;
-  align-self: center;
-  box-shadow: 0 4px 12px rgba(217, 83, 79, 0.3);
-}
-
-.btn-reset:hover {
-  background-color: #b3342a;
-}
-
-/* Résultats distance & vitesse */
-.resultats {
   text-align: center;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #004a99;
-  line-height: 1.5;
-}
-
-/* QR code container */
-#qrCodeContainer {
-  margin-top: 20px;
-}
-
-#qrCode {
-  margin: 10px auto;
-  max-width: 220px;
-}
-
-/* Responsive mobile */
-@media (max-width: 700px) {
-  .eleve-group {
-    flex-direction: column;
-  }
-
-  .course-details {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .course-buttons {
-    flex-direction: column;
-  }
-
-  .btn-big-round {
-    width: 80px;
-    height: 80px;
-    font-size: 1.3rem;
-  }
-
-  .btn-reset {
-    width: 120px;
-    margin: 0 auto;
-  }
+  padding: 12px 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
 }
