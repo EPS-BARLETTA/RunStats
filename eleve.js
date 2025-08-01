@@ -1,187 +1,209 @@
 // eleve.js
 
-// Variables globales
-let currentRunner = 1; // 1 = élève 1, 2 = élève 2
-let timers = {1: null, 2: null};
-let times = {1: 0, 2: 0}; // en secondes
-let laps = {1: 0, 2: 0};
-let totalDistances = {1: 0, 2: 0};
-let raceDuration = 0; // en minutes
-let lapDistance = 0; // en mètres
-let countdownInterval = null;
+// Éléments DOM
+const startBtn = document.getElementById('startBtn');
+const resetBtn = document.getElementById('resetBtn');
+const addLapBtn = document.getElementById('addLapBtn');
+const timerDisplay = document.getElementById('timer');
+const resultatsDiv = document.getElementById('resultats');
+const formSection = document.getElementById('form-section');
+const courseSection = document.getElementById('course-section');
+const qrSection = document.getElementById('qr-section');
+const qrcodeContainer = document.getElementById('qrcode');
 
-// Initialisation
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("startButton").addEventListener("click", startRace);
-    document.getElementById("lapButton").addEventListener("click", addLap);
-    document.getElementById("resetButton").addEventListener("click", resetRace);
-});
+let duree = 0; // durée en minutes
+let distanceTour = 0; // distance en mètres
+let vmaKnown = 0;
 
-// Vérifie si les infos obligatoires sont remplies
-function checkInputs() {
-    const name1 = document.getElementById("name1").value.trim();
-    const surname1 = document.getElementById("surname1").value.trim();
-    const class1 = document.getElementById("class1").value.trim();
-    const gender1 = document.getElementById("gender1").value;
+let timerInterval = null;
+let startTime = null;
 
-    const name2 = document.getElementById("name2").value.trim();
-    const surname2 = document.getElementById("surname2").value.trim();
-    const class2 = document.getElementById("class2").value.trim();
-    const gender2 = document.getElementById("gender2").value;
+let laps = 0;
+let totalDistance = 0;
 
-    raceDuration = parseInt(document.getElementById("raceDuration").value);
-    lapDistance = parseInt(document.getElementById("lapDistance").value);
+let currentRun = 1; // 1 ou 2 pour les deux courses
 
-    return (
-        name1 && surname1 && class1 && gender1 !== "choisir" &&
-        name2 && surname2 && class2 && gender2 !== "choisir" &&
-        raceDuration > 0 && lapDistance > 0
-    );
+let eleve1 = {};
+let eleve2 = {};
+
+let results = []; // stocke résultats des deux courses
+
+// Fonction format MM:SS
+function formatTime(ms) {
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
 }
 
-// Lancer la course
-function startRace() {
-    if (!checkInputs()) {
-        alert("Veuillez remplir toutes les informations avant de démarrer la course.");
-        return;
+// Validation formulaire
+function validateInputs() {
+    eleve1.nom = document.getElementById('nom1').value.trim();
+    eleve1.prenom = document.getElementById('prenom1').value.trim();
+    eleve1.classe = document.getElementById('classe1').value.trim();
+    eleve1.sexe = document.getElementById('sexe1').value;
+
+    eleve2.nom = document.getElementById('nom2').value.trim();
+    eleve2.prenom = document.getElementById('prenom2').value.trim();
+    eleve2.classe = document.getElementById('classe2').value.trim();
+    eleve2.sexe = document.getElementById('sexe2').value;
+
+    duree = Number(document.getElementById('duree').value);
+    distanceTour = Number(document.getElementById('distanceTour').value);
+    vmaKnown = Number(document.getElementById('vma').value);
+
+    if (!eleve1.nom || !eleve1.prenom || !eleve1.classe || !eleve1.sexe) {
+        alert("Veuillez remplir tous les champs pour Élève 1");
+        return false;
     }
-
-    // Masquer formulaire & afficher minuteur
-    document.querySelector(".eleve-container").style.display = "none";
-    document.querySelector(".course-info").style.display = "block";
-
-    currentRunner = 1;
-    startCountdown();
+    if (!eleve2.nom || !eleve2.prenom || !eleve2.classe || !eleve2.sexe) {
+        alert("Veuillez remplir tous les champs pour Élève 2");
+        return false;
+    }
+    if (!(duree > 0 && distanceTour > 0)) {
+        alert("Veuillez renseigner une durée et une distance valides (>0)");
+        return false;
+    }
+    return true;
 }
 
-// Compte à rebours
-function startCountdown() {
-    let totalSeconds = raceDuration * 60;
-    updateTimerDisplay(totalSeconds);
+// Démarrer la course
+function startCourse() {
+    if (!validateInputs()) return;
 
-    countdownInterval = setInterval(() => {
-        totalSeconds--;
-        times[currentRunner]++;
+    // Cacher form et afficher section course
+    formSection.style.display = 'none';
+    courseSection.style.display = 'block';
+    qrSection.style.display = 'none';
 
-        updateTimerDisplay(totalSeconds);
+    laps = 0;
+    totalDistance = 0;
+    timerDisplay.textContent = formatTime(duree * 60 * 1000);
+    resultatsDiv.textContent = `Course ${currentRun} : Élève ${currentRun === 1 ? "1 court" : "2 court"}`;
 
-        if (totalSeconds <= 0) {
-            clearInterval(countdownInterval);
-            endRunnerRace();
-        }
-    }, 1000);
+    startTime = Date.now();
+    timerInterval = setInterval(updateTimer, 200);
 }
 
-// Affiche le minuteur
-function updateTimerDisplay(secondsLeft) {
-    const timer = document.getElementById("timer");
-    const min = Math.floor(secondsLeft / 60);
-    const sec = secondsLeft % 60;
-    timer.textContent = `${min}:${sec < 10 ? "0" : ""}${sec}`;
+function updateTimer() {
+    const elapsed = Date.now() - startTime;
+    const remaining = duree * 60 * 1000 - elapsed;
 
-    if (secondsLeft <= 10) {
-        timer.classList.add("timer-warning");
+    if (remaining <= 0) {
+        timerDisplay.textContent = "00:00";
+        clearInterval(timerInterval);
+        finishRun();
     } else {
-        timer.classList.remove("timer-warning");
+        timerDisplay.textContent = formatTime(remaining);
     }
 }
 
-// Fin de la course pour un élève
-function endRunnerRace() {
-    alert(`Course de l'élève ${currentRunner} terminée.`);
-
-    if (currentRunner === 1) {
-        // Passer à l'élève 2 mais attendre clic manuel
-        document.getElementById("startButton").textContent = "Démarrer 2ème course";
-        document.getElementById("startButton").onclick = () => {
-            currentRunner = 2;
-            resetTimerDisplay();
-            startCountdown();
-        };
-    } else {
-        // Les deux courses sont terminées
-        generateQRCode();
-    }
-}
-
-// Ajout de tour
+// Ajouter un tour
 function addLap() {
-    if (lapDistance > 0) {
-        laps[currentRunner]++;
-        totalDistances[currentRunner] = laps[currentRunner] * lapDistance;
-        updateRaceInfo();
+    laps++;
+    totalDistance = laps * distanceTour;
+
+    // Vitesse instantanée approximée (m/min)
+    let elapsed = Date.now() - startTime;
+    let minutesElapsed = elapsed / 60000;
+    let vitesse = minutesElapsed > 0 ? (totalDistance / minutesElapsed).toFixed(2) : 0;
+
+    // Estimation VMA (simplifiée) = vitesse max = vitesse instantanée max observée
+    // On stocke la vitesse max pour la course en cours
+    if (!results[currentRun - 1]) results[currentRun - 1] = {};
+    if (!results[currentRun - 1].maxVitesse || vitesse > results[currentRun - 1].maxVitesse) {
+        results[currentRun - 1].maxVitesse = vitesse;
+    }
+
+    // Affichage résultats intermédiaires
+    resultatsDiv.textContent = `
+Course ${currentRun} : Élève ${currentRun === 1 ? "1 court" : "2 court"}
+
+Tours effectués: ${laps}
+Distance parcourue: ${totalDistance.toFixed(2)} m
+Vitesse moyenne: ${vitesse} m/min
+Estimation VMA: ${results[currentRun - 1].maxVitesse.toFixed(2)} m/min
+    `;
+}
+
+// Fin de la course actuelle
+function finishRun() {
+    clearInterval(timerInterval);
+
+    // Sauvegarde des données
+    if (!results[currentRun - 1]) results[currentRun - 1] = {};
+
+    let courantEleve = currentRun === 1 ? eleve1 : eleve2;
+
+    results[currentRun - 1].nom = courantEleve.nom;
+    results[currentRun - 1].prenom = courantEleve.prenom;
+    results[currentRun - 1].classe = courantEleve.classe;
+    results[currentRun - 1].sexe = courantEleve.sexe;
+    results[currentRun - 1].distance = totalDistance.toFixed(2);
+    // Estimation VMA en km/h (m/min * 60 / 1000)
+    results[currentRun - 1].vmaEstimee = (results[currentRun - 1].maxVitesse * 60 / 1000).toFixed(2);
+
+    if (currentRun === 1) {
+        // Passer à la 2e course
+        currentRun = 2;
+        // Reset pour la 2e course
+        laps = 0;
+        totalDistance = 0;
+        resultatsDiv.textContent = "";
+        timerDisplay.textContent = formatTime(duree * 60 * 1000);
+        startTime = Date.now();
+        timerInterval = setInterval(updateTimer, 200);
+        alert("Course 1 terminée. Maintenant Élève 2 court.");
+    } else {
+        // Fin des 2 courses : affichage QR code
+        showQRcode();
     }
 }
 
-// Mise à jour des infos de course
-function updateRaceInfo() {
-    const distElem1 = document.getElementById("distance1");
-    const speedElem1 = document.getElementById("speed1");
+// Génération QR code avec infos des deux élèves
+function showQRcode() {
+    courseSection.style.display = 'none';
+    qrSection.style.display = 'block';
 
-    const distElem2 = document.getElementById("distance2");
-    const speedElem2 = document.getElementById("speed2");
+    // Préparation texte QR code
+    const data = {
+        eleve1: results[0],
+        eleve2: results[1]
+    };
 
-    // Vitesse moyenne = distance (m) / temps (s) → km/h
-    const speed1 = times[1] > 0 ? (totalDistances[1] / 1000) / (times[1] / 3600) : 0;
-    const speed2 = times[2] > 0 ? (totalDistances[2] / 1000) / (times[2] / 3600) : 0;
+    const qrText = 
+`Élève 1: ${data.eleve1.nom} ${data.eleve1.prenom} - Classe: ${data.eleve1.classe} - Sexe: ${data.eleve1.sexe}
+Distance parcourue: ${data.eleve1.distance} m
+VMA estimée: ${data.eleve1.vmaEstimee} km/h
 
-    distElem1.textContent = `${totalDistances[1]} m`;
-    speedElem1.textContent = `${speed1.toFixed(2)} km/h`;
+Élève 2: ${data.eleve2.nom} ${data.eleve2.prenom} - Classe: ${data.eleve2.classe} - Sexe: ${data.eleve2.sexe}
+Distance parcourue: ${data.eleve2.distance} m
+VMA estimée: ${data.eleve2.vmaEstimee} km/h
+`;
 
-    distElem2.textContent = `${totalDistances[2]} m`;
-    speedElem2.textContent = `${speed2.toFixed(2)} km/h`;
+    qrcodeContainer.innerHTML = "";
+    new QRCode(qrcodeContainer, {
+        text: qrText,
+        width: 250,
+        height: 250,
+    });
 }
 
 // Réinitialisation
-function resetRace() {
-    clearInterval(countdownInterval);
-    times = {1: 0, 2: 0};
-    laps = {1: 0, 2: 0};
-    totalDistances = {1: 0, 2: 0};
-    document.getElementById("timer").textContent = "0:00";
-    document.querySelector(".eleve-container").style.display = "flex";
-    document.querySelector(".course-info").style.display = "none";
-    document.getElementById("qrCode").innerHTML = "";
+function reset() {
+    clearInterval(timerInterval);
+    laps = 0;
+    totalDistance = 0;
+    currentRun = 1;
+    results = [];
+    formSection.style.display = 'block';
+    courseSection.style.display = 'none';
+    qrSection.style.display = 'none';
+
+    timerDisplay.textContent = "00:00";
+    resultatsDiv.textContent = "";
 }
 
-// Reset affichage minuteur
-function resetTimerDisplay() {
-    document.getElementById("timer").textContent = `${raceDuration}:00`;
-}
-
-// Génération QR code avec infos des 2 élèves
-function generateQRCode() {
-    const name1 = document.getElementById("name1").value;
-    const surname1 = document.getElementById("surname1").value;
-    const class1 = document.getElementById("class1").value;
-
-    const name2 = document.getElementById("name2").value;
-    const surname2 = document.getElementById("surname2").value;
-    const class2 = document.getElementById("class2").value;
-
-    const data = {
-        eleve1: {
-            nom: name1,
-            prenom: surname1,
-            classe: class1,
-            distance: totalDistances[1],
-            vitesse: ((totalDistances[1]/1000)/(times[1]/3600)).toFixed(2)
-        },
-        eleve2: {
-            nom: name2,
-            prenom: surname2,
-            classe: class2,
-            distance: totalDistances[2],
-            vitesse: ((totalDistances[2]/1000)/(times[2]/3600)).toFixed(2)
-        }
-    };
-
-    const qrContainer = document.getElementById("qrCode");
-    qrContainer.innerHTML = "";
-
-    const qr = new QRCode(qrContainer, {
-        text: JSON.stringify(data),
-        width: 200,
-        height: 200
-    });
-}
+startBtn.addEventListener('click', startCourse);
+addLapBtn.addEventListener('click', addLap);
+resetBtn.addEventListener('click', reset);
