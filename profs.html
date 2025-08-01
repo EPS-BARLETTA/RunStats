@@ -3,24 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RunStats - Professeur</title>
+  <title>RunStats - Professeurs</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>RunStats - Mode Professeur</h1>
+  <header>
+    <h1>RunStats - Tableau Professeurs</h1>
+  </header>
 
-    <!-- Accès sécurisé par code PIN -->
-    <div id="loginSection">
-      <p>Entrez le code PIN pour accéder aux données :</p>
-      <input type="password" id="pinInput" placeholder="Code PIN">
+  <main>
+    <!-- Section de connexion PIN -->
+    <section id="loginSection">
+      <h2>Connexion Professeur</h2>
+      <input type="password" id="pinInput" placeholder="Entrez le code PIN">
       <button id="pinBtn">Valider</button>
       <p id="pinError" class="error"></p>
-    </div>
+    </section>
 
-    <!-- Tableau des résultats -->
-    <div id="profSection" style="display:none;">
+    <!-- Section résultats prof -->
+    <section id="profSection" style="display:none;">
       <h2>Résultats des élèves</h2>
+
+      <!-- Boutons de tri -->
+      <button id="sortDistance">Trier par distance</button>
+      <button id="sortVMA">Trier par VMA</button>
+      <button id="sortSexe">Trier par sexe</button>
+      <button id="exportBtn">Exporter</button>
+
+      <!-- Tableau résultats -->
       <table id="resultsTable">
         <thead>
           <tr>
@@ -32,27 +42,23 @@
             <th>VMA estimée (km/h)</th>
           </tr>
         </thead>
-        <tbody>
-          <!-- Données ajoutées dynamiquement -->
-        </tbody>
+        <tbody></tbody>
       </table>
 
-      <div style="margin-top:20px;">
-        <button id="sortDistance">Trier par Distance</button>
-        <button id="sortVMA">Trier par VMA</button>
-        <button id="sortSexe">Trier par Sexe</button>
-        <button id="exportBtn">Exporter en JSON</button>
-      </div>
+      <!-- Zone ajout via QR code -->
+      <h3>Ajouter résultats via QR code</h3>
+      <textarea id="qrInput" placeholder="Collez ici le contenu du QR code"></textarea><br>
+      <button id="addQRBtn">Ajouter</button>
 
-      <h3 style="margin-top:30px;">Créer des groupes mixtes (VMA haute / intermédiaire / faible)</h3>
-      <button id="createGroups">Générer Groupes</button>
-      <div id="groupsOutput" style="margin-top:20px;"></div>
-    </div>
+      <!-- Génération des groupes -->
+      <h3>Groupes générés</h3>
+      <div id="groupsContainer"></div>
+    </section>
+  </main>
 
-    <footer>
-      <p>Equipe EPS Lycée Vauban - LUXEMBOURG - JB</p>
-    </footer>
-  </div>
+  <footer>
+    <p>Equipe EPS Lycée Vauban - LUXEMBOURG - JB</p>
+  </footer>
 
   <script src="profs.js"></script>
 </body>
