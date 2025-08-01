@@ -13,7 +13,7 @@
   <main>
     <section>
       <button id="startScanBtn">Scanner un QR Code</button>
-      <video id="video" width="320" height="240" style="border:1px solid #ccc; display:none;"></video>
+      <div id="qr-reader" style="width:320px; display:none;"></div>
     </section>
 
     <section>
@@ -76,7 +76,7 @@
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <script>
     const startScanBtn = document.getElementById('startScanBtn');
-    const videoElem = document.getElementById('video');
+    const qrReaderElem = document.getElementById('qr-reader');
     const elevesTableBody = document.querySelector('#elevesTable tbody');
     const triSelect = document.getElementById('triSelect');
     const creerGroupesBtn = document.getElementById('creerGroupesBtn');
@@ -88,6 +88,8 @@
 
     let eleves = [];
     let groupes = [];
+    let html5QrCode = null;
+    let scanning = false;
 
     // Fonction pour ajouter les élèves récupérés dans le tableau principal (sans doublon)
     function ajouterEleves(nouveauxEleves) {
@@ -170,7 +172,6 @@
       const basse = elevesAvecVma.filter(e => e.vma < seuilBasse);
 
       let groupesTemp = [];
-      let i = 0;
 
       while (true) {
         if (haute.length === 0 || moyenne.length < 2 || basse.length === 0) break;
@@ -189,7 +190,6 @@
         groupe.push(basse.shift());
 
         groupesTemp.push(groupe);
-        i++;
       }
 
       // Répartir les élèves sans VMA dans les groupes restants
@@ -264,9 +264,6 @@
     rechercheInput.addEventListener('input', afficherEleves);
 
     // Scanner QR Code avec html5-qrcode
-    let html5QrCode;
-    let scanning = false;
-
     startScanBtn.addEventListener('click', () => {
       if (scanning) {
         stopScanning();
@@ -278,8 +275,8 @@
     });
 
     function startScanning() {
-      videoElem.style.display = 'block';
-      html5QrCode = new Html5Qrcode("video");
+      qrReaderElem.style.display = 'block';
+      html5QrCode = new Html5Qrcode("qr-reader");
 
       Html5Qrcode.getCameras().then(devices => {
         if (devices && devices.length) {
@@ -301,10 +298,12 @@
               }
             },
             errorMessage => {
-              // console.log('Scan error:', errorMessage);
+              // Erreurs de scan ignorées ici
             }
           );
           scanning = true;
+        } else {
+          alert('Aucune caméra détectée');
         }
       }).catch(err => {
         alert('Erreur accès caméra : ' + err);
@@ -314,15 +313,13 @@
     function stopScanning() {
       if (html5QrCode) {
         html5QrCode.stop().then(() => {
-          videoElem.style.display = 'none';
+          qrReaderElem.style.display = 'none';
           scanning = false;
         }).catch(err => {
           console.error('Erreur arrêt scan:', err);
         });
       }
     }
-
   </script>
 </body>
 </html>
-
