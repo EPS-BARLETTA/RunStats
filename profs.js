@@ -1,157 +1,178 @@
-// prof.js - Gestion de la lecture des QR codes et tri/groupement
+// profs.js - Gestion du scan QR, affichage, tri et export CSV
 
 document.addEventListener('DOMContentLoaded', () => {
-  const scanButton = document.getElementById('start-scan');
-  const tableBody = document.getElementById('data-table-body');
-  const groupsTableBody = document.getElementById('groups-table-body');
-  const exportBtn = document.getElementById('export-csv');
-  const createGroupsBtn = document.getElementById('create-groups');
+  const startScanBtn = document.getElementById('startScanBtn');
+  const videoElem = document.getElementById('video');
+  const elevesTableBody = document.querySelector('#elevesTable tbody');
+  const triSelect = document.getElementById('triSelect');
+  const creerGroupesBtn = document.getElementById('creerGroupesBtn');
+  const exportCSVBtn = document.getElementById('exportCSVBtn');
+  const rechercheInput = document.getElementById('rechercheInput');
+  const groupesSection = document.getElementById('groupesSection');
+  const groupesTableBody = document.querySelector('#groupesTable tbody');
+  const exportGroupesCSVBtn = document.getElementById('exportGroupesCSVBtn');
 
-  let allStudents = [];
+  let eleves = [];
 
-  // Fonction pour ajouter des élèves au tableau
-  function addStudentsToTable(students) {
-    students.forEach(s => {
-      allStudents.push(s);
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${s.nom}</td>
-        <td>${s.prenom}</td>
-        <td>${s.classe}</td>
-        <td>${s.sexe}</td>
-        <td>${s.vma || ''}</td>
-        <td>${s.distance || ''}</td>
+  // Fonction d'ajout d'un élève à la liste et à la table
+  function ajouterEleve(data) {
+    // On récupère les deux élèves dans les données QR
+    if (!data.eleve1 || !data.eleve2) return;
+
+    // Ajouter les élèves à la liste
+    eleves.push(data.eleve1);
+    eleves.push(data.eleve2);
+    afficherEleves();
+  }
+
+  // Affichage de la liste des élèves dans la table
+  function afficherEleves() {
+    elevesTableBody.innerHTML = '';
+    eleves.forEach((eleve, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${eleve.nom}</td>
+        <td>${eleve.prenom}</td>
+        <td>${eleve.classe}</td>
+        <td>${eleve.sexe}</td>
+        <td>${eleve.vma !== null ? eleve.vma : ''}</td>
+        <td>${eleve.distance}</td>
       `;
-      tableBody.appendChild(row);
+      elevesTableBody.appendChild(tr);
     });
   }
 
-  // Lecture QR code avec une librairie (ex: Html5Qrcode)
-  scanButton.addEventListener('click', () => {
-    // TODO: lancer la caméra et scanner les QR codes
-    // A chaque scan, récupérer les données JSON
-    // Exemple de données reçues :
-    /*
-      {
-        eleve1: {...},
-        eleve2: {...}
-      }
-    */
-    // Ici, simuler un scan (remplace par le vrai scan)
-    const sampleScan = {
-      eleve1: {
-        nom: "Dupont",
-        prenom: "Alice",
-        classe: "3A",
-        sexe: "Fille",
-        vma: "14",
-        distance: "1000"
-      },
-      eleve2: {
-        nom: "Martin",
-        prenom: "Bob",
-        classe: "3A",
-        sexe: "Garçon",
-        vma: "12",
-        distance: "950"
-      }
-    };
+  // Fonction pour trier selon le critère choisi
+  function trierEleves(critere) {
+    switch (critere) {
+      case 'alphabetique':
+        eleves.sort((a, b) => a.nom.localeCompare(b.nom));
+        break;
+      case 'vma':
+        eleves.sort((a, b) => (b.vma || 0) - (a.vma || 0));
+        break;
+      case 'sexe':
+        eleves.sort((a, b) => a.sexe.localeCompare(b.sexe));
+        break;
+      case 'distance':
+        eleves.sort((a, b) => b.distance - a.distance);
+        break;
+      case 'classe':
+        eleves.sort((a, b) => a.classe.localeCompare(b.classe));
+        break;
+    }
+    afficherEleves();
+  }
 
-    addStudentsToTable([sampleScan.eleve1, sampleScan.eleve2]);
+  // Recherche rapide
+  rechercheInput.addEventListener('input', () => {
+    const filter = rechercheInput.value.toLowerCase();
+    const rows = elevesTableBody.querySelectorAll('tr');
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(filter) ? '' : 'none';
+    });
   });
 
-  // Fonction tri simple par colonne (exemple VMA)
-  function sortStudents(by) {
-    allStudents.sort((a, b) => {
-      if (by === 'vma' || by === 'distance') {
-        return (parseFloat(b[by]) || 0) - (parseFloat(a[by]) || 0);
-      }
-      return (a[by] || '').localeCompare(b[by] || '');
-    });
-    refreshTable();
-  }
+  triSelect.addEventListener('change', () => {
+    trierEleves(triSelect.value);
+  });
 
-  function refreshTable() {
-    tableBody.innerHTML = '';
-    allStudents.forEach(s => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${s.nom}</td>
-        <td>${s.prenom}</td>
-        <td>${s.classe}</td>
-        <td>${s.sexe}</td>
-        <td>${s.vma || ''}</td>
-        <td>${s.distance || ''}</td>
-      `;
-      tableBody.appendChild(row);
-    });
-  }
+  // Création des groupes (exemple simple : groupes de 4 selon la VMA décroissante)
+  creerGroupesBtn.addEventListener('click', () => {
+    if (eleves.length === 0) {
+      alert("Aucun élève à grouper !");
+      return;
+    }
 
-  // Exemple de création de groupes mixtes de 4 selon ta règle
-  function createGroups() {
-    groupsTableBody.innerHTML = '';
+    // Trier par VMA décroissante
+    eleves.sort((a, b) => (b.vma || 0) - (a.vma || 0));
 
-    // Trier les élèves par VMA décroissante
-    const sorted = [...allStudents].sort((a, b) => (parseFloat(b.vma) || 0) - (parseFloat(a.vma) || 0));
+    const groupes = [];
+    let groupeNum = 1;
 
-    const groups = [];
-    while (sorted.length >= 4) {
-      // 1 VMA haute
-      const high = sorted.shift();
-      // 2 VMA moyennes
-      const mid1 = sorted.splice(Math.floor(sorted.length / 2), 1)[0];
-      const mid2 = sorted.splice(Math.floor(sorted.length / 2), 1)[0];
-      // 1 VMA basse
-      const low = sorted.pop();
-
-      const group = [high, mid1, mid2, low].filter(Boolean);
-      groups.push(group);
+    for (let i = 0; i < eleves.length; i += 4) {
+      groupes.push({
+        nomGroupe: 'Groupe ' + groupeNum,
+        membres: eleves.slice(i, i + 4)
+      });
+      groupeNum++;
     }
 
     // Afficher groupes
-    groups.forEach((g, i) => {
-      g.forEach(student => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>Groupe ${i+1}</td>
-          <td>${student.nom}</td>
-          <td>${student.prenom}</td>
-          <td>${student.classe}</td>
-          <td>${student.sexe}</td>
-          <td>${student.vma || ''}</td>
-          <td>${student.distance || ''}</td>
+    groupesSection.style.display = 'block';
+    groupesTableBody.innerHTML = '';
+    groupes.forEach(groupe => {
+      groupe.membres.forEach(eleve => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${groupe.nomGroupe}</td>
+          <td>${eleve.nom}</td>
+          <td>${eleve.prenom}</td>
+          <td>${eleve.classe}</td>
+          <td>${eleve.sexe}</td>
+          <td>${eleve.vma !== null ? eleve.vma : ''}</td>
+          <td>${eleve.distance}</td>
         `;
-        groupsTableBody.appendChild(row);
+        groupesTableBody.appendChild(tr);
       });
     });
-  }
+  });
 
-  // Export CSV basique
-  function exportCSV() {
-    let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Nom,Prénom,Classe,Sexe,VMA,Distance\n";
+  // Export CSV simple
+  function exportCSV(dataArray, filename) {
+    const headers = Object.keys(dataArray[0]).join(';');
+    const rows = dataArray.map(obj =>
+      Object.values(obj).map(val => `"${val}"`).join(';')
+    );
+    const csvContent = [headers, ...rows].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 
-    allStudents.forEach(s => {
-      const row = [s.nom, s.prenom, s.classe, s.sexe, s.vma || '', s.distance || ''].join(",");
-      csvContent += row + "\n";
-    });
-
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "eleves.csv");
-    document.body.appendChild(link);
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('download', filename);
     link.click();
-    document.body.removeChild(link);
   }
 
-  // Liens boutons
-  document.getElementById('sort-vma').addEventListener('click', () => sortStudents('vma'));
-  document.getElementById('sort-sexe').addEventListener('click', () => sortStudents('sexe'));
-  document.getElementById('sort-distance').addEventListener('click', () => sortStudents('distance'));
-  document.getElementById('sort-classe').addEventListener('click', () => sortStudents('classe'));
-  createGroupsBtn.addEventListener('click', createGroups);
-  exportBtn.addEventListener('click', exportCSV);
+  exportCSVBtn.addEventListener('click', () => {
+    if (eleves.length === 0) {
+      alert('Aucun élève à exporter.');
+      return;
+    }
+    exportCSV(eleves, 'eleves.csv');
+  });
+
+  exportGroupesCSVBtn.addEventListener('click', () => {
+    const rows = [];
+    const trs = groupesTableBody.querySelectorAll('tr');
+    if (trs.length === 0) {
+      alert('Aucun groupe à exporter.');
+      return;
+    }
+    trs.forEach(tr => {
+      const cells = tr.querySelectorAll('td');
+      const obj = {
+        Groupe: cells[0].textContent,
+        Nom: cells[1].textContent,
+        Prénom: cells[2].textContent,
+        Classe: cells[3].textContent,
+        Sexe: cells[4].textContent,
+        VMA: cells[5].textContent,
+        Distance: cells[6].textContent
+      };
+      rows.push(obj);
+    });
+    exportCSV(rows, 'groupes.csv');
+  });
+
+  // --- Gestion du scan QR code ---
+
+  // Pour scanner le QR code, on peut utiliser la librairie 'html5-qrcode' ou une autre,
+  // ici on met un placeholder. Implémenter avec une vraie librairie de scan vidéo si besoin.
+
+  startScanBtn.addEventListener('click', () => {
+    alert("Fonction de scan QR à implémenter (librairie requise)");
+    // Ex : utiliser html5-qrcode ou autre librairie QR code scan via webcam
+  });
 
 });
-
