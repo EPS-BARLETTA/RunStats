@@ -1,93 +1,96 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - Interface Élève</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RunStats - Élève</title>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-  <header>
-    <h1>RunStats - Equipe EPS Lycée Vauban - LUXEMBOURG</h1>
-  </header>
-  <main>
-    <form id="eleveForm">
-      <div class="groupe-eleves">
-        <fieldset>
-          <legend>Élève 1</legend>
-          <input type="text" name="nom1" placeholder="Nom" required />
-          <input type="text" name="prenom1" placeholder="Prénom" required />
-          <input type="text" name="classe1" placeholder="Classe" required />
-          <select name="sexe1" required>
-            <option value="" disabled selected>Sexe</option>
-            <option value="Fille">Fille</option>
-            <option value="Garçon">Garçon</option>
-          </select>
-          <br />
-          <input type="number" name="duree1" placeholder="Durée course (min)" min="0" step="0.01" required />
-          <input type="number" name="distance1" placeholder="Distance tour (m)" min="0" step="0.1" required />
-          <input type="number" name="vma1" placeholder="VMA (optionnel)" min="0" step="0.01" />
-        </fieldset>
-        <fieldset>
-          <legend>Élève 2</legend>
-          <input type="text" name="nom2" placeholder="Nom" required />
-          <input type="text" name="prenom2" placeholder="Prénom" required />
-          <input type="text" name="classe2" placeholder="Classe" required />
-          <select name="sexe2" required>
-            <option value="" disabled selected>Sexe</option>
-            <option value="Fille">Fille</option>
-            <option value="Garçon">Garçon</option>
-          </select>
-          <br />
-          <input type="number" name="duree2" placeholder="Durée course (min)" min="0" step="0.01" required />
-          <input type="number" name="distance2" placeholder="Distance tour (m)" min="0" step="0.1" required />
-          <input type="number" name="vma2" placeholder="VMA (optionnel)" min="0" step="0.01" />
-        </fieldset>
-      </div>
-      <button type="submit">Générer QR Code</button>
-    </form>
-    <div id="qrCodeContainer"></div>
-  </main>
-  <footer>
-    Equipe EPS-Lycée Vauban- LUXEMBOURG-JB
-  </footer>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
-  <script>
-    const form = document.getElementById('eleveForm');
-    const qrContainer = document.getElementById('qrCodeContainer');
+    <header>RunStats</header>
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
+    <div class="eleve-form">
+        <h3>Informations des deux élèves</h3>
 
-      const data = {
-        eleve1: {
-          nom: form.nom1.value.trim(),
-          prenom: form.prenom1.value.trim(),
-          classe: form.classe1.value.trim(),
-          sexe: form.sexe1.value,
-          duree: parseFloat(form.duree1.value),
-          distance: parseFloat(form.distance1.value),
-          vma: form.vma1.value ? parseFloat(form.vma1.value) : null,
-        },
-        eleve2: {
-          nom: form.nom2.value.trim(),
-          prenom: form.prenom2.value.trim(),
-          classe: form.classe2.value.trim(),
-          sexe: form.sexe2.value,
-          duree: parseFloat(form.duree2.value),
-          distance: parseFloat(form.distance2.value),
-          vma: form.vma2.value ? parseFloat(form.vma2.value) : null,
-        }
-      };
+        <!-- Ligne Élève 1 et Élève 2 -->
+        <div class="eleve-group">
+            <!-- Élève 1 -->
+            <div class="eleve">
+                <label>Nom Élève 1</label>
+                <input type="text" id="nom1" placeholder="Nom">
 
-      const jsonData = JSON.stringify(data);
+                <label>Prénom Élève 1</label>
+                <input type="text" id="prenom1" placeholder="Prénom">
 
-      qrContainer.innerHTML = '';
-      QRCode.toCanvas(qrContainer, jsonData, { width: 250 }, function (error) {
-        if (error) console.error(error);
-      });
-    });
-  </script>
+                <label>Classe</label>
+                <input type="text" id="classe1" placeholder="Classe">
+
+                <label>Sexe</label>
+                <select id="sexe1">
+                    <option value="">Choisir</option>
+                    <option value="Fille">Fille</option>
+                    <option value="Garçon">Garçon</option>
+                </select>
+            </div>
+
+            <!-- Élève 2 -->
+            <div class="eleve">
+                <label>Nom Élève 2</label>
+                <input type="text" id="nom2" placeholder="Nom">
+
+                <label>Prénom Élève 2</label>
+                <input type="text" id="prenom2" placeholder="Prénom">
+
+                <label>Classe</label>
+                <input type="text" id="classe2" placeholder="Classe">
+
+                <label>Sexe</label>
+                <select id="sexe2">
+                    <option value="">Choisir</option>
+                    <option value="Fille">Fille</option>
+                    <option value="Garçon">Garçon</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Détails de course -->
+        <div class="course-details">
+            <div>
+                <label>Durée de la course (min)</label>
+                <input type="number" id="duree" placeholder="Minutes">
+            </div>
+            <div>
+                <label>Distance du tour (m)</label>
+                <input type="number" id="distanceTour" placeholder="Ex: 200">
+            </div>
+            <div>
+                <label>VMA (optionnel)</label>
+                <input type="number" id="vma" placeholder="km/h">
+            </div>
+        </div>
+
+        <!-- Boutons -->
+        <div class="course-buttons">
+            <button class="btn-start" id="btnStart">Lancer la course</button>
+            <button class="btn-lap" id="btnLap">+ Tour</button>
+            <button class="btn-reset" id="btnReset">Reset</button>
+        </div>
+
+        <!-- Affichage dynamique -->
+        <div class="resultats">
+            <span id="distanceAffichee">Distance parcourue : 0 m</span>
+            <span id="vitesseAffichee">Vitesse moyenne : 0 km/h</span>
+        </div>
+
+        <!-- QR Code -->
+        <div id="qrCodeContainer" style="text-align:center; margin-top:20px; display:none;">
+            <h4>QR Code des résultats</h4>
+            <canvas id="qrCode"></canvas>
+        </div>
+    </div>
+
+    <footer>Equipe EPS - Lycée Vauban - LUXEMBOURG - JB</footer>
+
+    <script src="../js/eleve/script-eleve.js"></script>
 </body>
 </html>
-
