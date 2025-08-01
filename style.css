@@ -1,195 +1,226 @@
-/* Reset de base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
+/* style.css */
 
+/* Style global */
 body {
-    background-color: #f4f4f4;
-    color: #333;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-    padding: 20px;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* Containers des interfaces */
+/* Titre en haut */
+header {
+  background-color: #2a72d8;
+  color: white;
+  text-align: center;
+  padding: 15px 10px;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+/* Signature en bas */
+footer {
+  margin-top: auto;
+  background-color: transparent;
+  text-align: center;
+  color: #999999;
+  padding: 10px 5px;
+  font-size: 0.85em;
+  user-select: none;
+}
+
+/* Conteneur principal */
 .container {
-    display: none;
-    width: 100%;
-    max-width: 900px;
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  flex: 1;
+  padding: 15px;
+  max-width: 900px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
-.container.active {
-    display: block;
+/* Boutons de navigation (éleve/prof) */
+#home-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 50px;
 }
 
-/* Titres */
-h1, h2 {
-    text-align: center;
-    margin-bottom: 20px;
+#home-buttons button {
+  background-color: #2a72d8;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.1em;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-/* Formulaire Élève */
-#eleve-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+#home-buttons button:hover {
+  background-color: #1e52a4;
 }
 
-#eleve-form input,
-#eleve-form select,
-#eleve-form button {
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+/* Formulaire élève */
+form {
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-#eleve-form button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease;
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
 }
 
-#eleve-form button:hover {
-    background-color: #0056b3;
+.form-row label {
+  flex: 1 0 100px;
+  font-weight: bold;
+  align-self: center;
 }
 
-/* QR Code container */
-#qr-container {
-    margin: 20px 0;
-    text-align: center;
+.form-row input[type="text"],
+.form-row select,
+.form-row input[type="number"] {
+  flex: 2 0 200px;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
 }
 
-#switch-prof, #switch-eleve {
-    margin-top: 15px;
-    background-color: #28a745;
-    color: white;
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    font-size: 1rem;
+.form-row input[type="number"] {
+  max-width: 80px;
 }
 
-#switch-prof:hover, #switch-eleve:hover {
-    background-color: #1e7e34;
+.form-row select {
+  max-width: 120px;
 }
 
-/* Tableaux */
-.table-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 15px;
-    justify-content: center;
+/* Mettre Élève1 et Élève2 côte à côte */
+.eleve-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 25px;
 }
 
-.table-actions button, .table-actions input {
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 0.9rem;
+.eleve-group > div {
+  flex: 1;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 5px;
+  background: white;
+  box-shadow: 0 0 6px rgba(0,0,0,0.05);
 }
 
-.table-actions button {
-    background: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease;
+.eleve-group > div h3 {
+  margin-top: 0;
+  text-align: center;
+  color: #2a72d8;
 }
 
-.table-actions button:hover {
-    background: #0056b3;
+/* Bouton envoyer élève */
+#submitEleve {
+  display: block;
+  margin: 0 auto 20px auto;
+  background-color: #2a72d8;
+  color: white;
+  border: none;
+  padding: 12px 40px;
+  font-size: 1.1em;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
+#submitEleve:hover {
+  background-color: #1e52a4;
+}
+
+/* Interface Prof */
+
+/* Tableau principal */
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-thead {
-    background-color: #007bff;
-    color: white;
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
 }
 
 th, td {
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #ddd;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  text-align: left;
 }
 
-/* Bouton création groupes */
-#create-groups {
-    width: 100%;
-    padding: 12px;
-    background-color: #ff9800;
-    border: none;
-    color: white;
-    font-size: 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s ease;
+th {
+  background-color: #2a72d8;
+  color: white;
+  cursor: pointer;
+  user-select: none;
 }
 
-#create-groups:hover {
-    background-color: #e68900;
+/* Boutons d'action prof */
+#prof-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+  justify-content: center;
 }
 
-/* Tableau groupes */
-#groupes-container {
-    margin-top: 20px;
+#prof-actions button {
+  background-color: #2a72d8;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  font-size: 1em;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.hidden {
-    display: none;
+#prof-actions button:hover {
+  background-color: #1e52a4;
 }
 
-/* Responsive pour tablettes et téléphones */
+/* Barre de recherche */
+#searchBar {
+  padding: 8px 12px;
+  width: 250px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 15px;
+}
+
+/* Responsive pour tablette et téléphone */
 @media (max-width: 768px) {
-    .table-actions {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    table {
-        font-size: 0.9rem;
-    }
-
-    #eleve-form {
-        gap: 8px;
-    }
-
-    #eleve-form input, #eleve-form select, #eleve-form button {
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 480px) {
-    h1, h2 {
-        font-size: 1.3rem;
-    }
-
-    table th, table td {
-        padding: 6px;
-        font-size: 0.8rem;
-    }
-
-    .table-actions button {
-        font-size: 0.8rem;
-        padding: 6px 8px;
-    }
+  .eleve-group {
+    flex-direction: column;
+  }
+  #home-buttons {
+    flex-direction: column;
+    gap: 15px;
+  }
+  form .form-row {
+    flex-direction: column;
+  }
+  form .form-row label,
+  form .form-row input,
+  form .form-row select {
+    width: 100%;
+    max-width: none;
+    margin-bottom: 6px;
+  }
+  #searchBar {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  #prof-actions {
+    flex-direction: column;
+  }
 }
