@@ -1,351 +1,287 @@
-/* === Styles communs === */
+/* style.css */
+
+/* Reset & global */
+* {
+  box-sizing: border-box;
+  margin: 0; padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0; padding: 0;
-    background: #f9f9f9;
-    color: #333;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+  background: #f0f4f8;
+  color: #222;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-header, footer {
-    background-color: #004080;
-    color: white;
-    text-align: center;
-    padding: 1rem 0;
+/* Container centré pour index.html */
+.container-center {
+  text-align: center;
+  margin-top: 10vh;
 }
 
-footer {
-    margin-top: auto;
-    font-size: 0.9rem;
-    font-weight: 600;
+.app-title {
+  font-size: 4rem;
+  color: #0077cc;
+  margin-bottom: 0.2em;
 }
 
-/* === Accueil === */
-.page-accueil main {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 3rem;
-    padding: 2rem;
+.subtitle {
+  font-size: 1.3rem;
+  color: #555;
+  margin-bottom: 2em;
 }
 
-.btn-container {
-    display: flex;
-    gap: 2rem;
+/* Boutons page d'accueil */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 3em;
 }
 
-/* Boutons Accueil */
 .btn {
-    cursor: pointer;
-    text-decoration: none;
-    font-weight: 700;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    transition: background-color 0.3s ease;
-    user-select: none;
+  text-decoration: none;
+  color: white;
+  padding: 1.3em 2.8em;
+  font-weight: 700;
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  transition: background-color 0.3s ease;
 }
 
+/* Bouton élève : rond */
 .btn-eleve {
-    background-color: #1abc9c;
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    font-size: 1.2rem;
-    box-shadow: 0 4px 8px rgb(26 188 156 / 0.4);
+  background-color: #28a745; /* vert */
+  border-radius: 50%;
+  width: 110px;
+  height: 110px;
+  line-height: 110px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.5);
 }
+
 .btn-eleve:hover {
-    background-color: #16a085;
+  background-color: #218838;
 }
 
+/* Bouton prof : carré */
 .btn-prof {
-    background-color: #e67e22;
-    width: 120px;
-    height: 120px;
-    border-radius: 8px;
-    font-size: 1.2rem;
-    box-shadow: 0 4px 8px rgb(230 126 34 / 0.4);
+  background-color: #ffc107; /* jaune */
+  border-radius: 8px;
+  width: 140px;
+  height: 110px;
+  line-height: 110px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(255, 193, 7, 0.5);
 }
+
 .btn-prof:hover {
-    background-color: #d35400;
+  background-color: #e0a800;
 }
 
-/* === Élève Page === */
-.page-eleve main {
-    padding: 1rem 2rem;
+/* Pied de page commun */
+footer {
+  background-color: #0077cc;
+  color: white;
+  text-align: center;
+  padding: 1.2em 0;
+  font-size: 0.9rem;
+  user-select: none;
 }
 
+/* Styles communs aux pages avec formulaires */
+
+/* Section avec encadrés élèves */
 .eleve-container {
-    display: flex;
-    justify-content: space-around;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-around;
+  gap: 1.5em;
+  margin: 2em auto;
+  max-width: 900px;
 }
 
-.eleve-card {
-    background: #f0f8ff;
-    padding: 1rem;
-    border-radius: 10px;
-    width: 280px;
-    box-shadow: 0 0 8px rgba(0, 120, 255, 0.15);
+.encadre {
+  padding: 1em 1.5em;
+  border-radius: 10px;
+  width: 45%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  color: white;
+  font-weight: 600;
 }
 
-.eleve1 {
-    background-color: #d1f2eb;
+.encadre.eleve1 {
+  background-color: #17a2b8; /* bleu cyan */
 }
 
-.eleve2 {
-    background-color: #f9e79f;
+.encadre.eleve2 {
+  background-color: #6f42c1; /* violet */
 }
 
-.eleve-card h2 {
-    margin-top: 0;
-    text-align: center;
-    font-weight: 700;
-    margin-bottom: 0.8rem;
+.encadre input, .encadre select {
+  width: 100%;
+  margin-top: 0.5em;
+  padding: 0.5em;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
-.eleve-card input,
-.eleve-card select,
-.course-params input {
-    width: 100%;
-    padding: 0.4rem 0.6rem;
-    margin-bottom: 0.8rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
+/* Encadré paramètres course */
+.course-container {
+  max-width: 600px;
+  margin: 1em auto 2em;
+  padding: 1em 1.5em;
+  border-radius: 10px;
+  background-color: #fd7e14; /* orange vif */
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Paramètres course */
-.course-params {
-    max-width: 600px;
-    margin: 0 auto 1.5rem auto;
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
+.course-container label {
+  display: block;
+  margin-top: 1em;
+  font-size: 1.1rem;
 }
 
-.course-params input {
-    flex: 1;
+.course-container input {
+  width: 100%;
+  margin-top: 0.3em;
+  padding: 0.5em;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
-/* Boutons élève */
-.btn-course {
-    max-width: 400px;
-    margin: 0 auto 2rem auto;
-    display: flex;
-    justify-content: space-around;
+/* Boutons course */
+.btn-start {
+  display: block;
+  margin: 2em auto 1em;
+  background-color: #007bff;
+  color: white;
+  font-size: 1.4rem;
+  font-weight: 700;
+  padding: 0.9em 2.5em;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,123,255,0.5);
+  transition: background-color 0.3s ease;
 }
 
-.btn-rect {
-    padding: 0.8rem 1.8rem;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    font-weight: 700;
-    cursor: pointer;
-    user-select: none;
-    font-size: 1.1rem;
-    box-shadow: 0 4px 8px rgb(0 0 0 / 0.15);
-    transition: background-color 0.3s ease;
+.btn-start:hover {
+  background-color: #0056b3;
 }
 
-.btn-rect.bleu {
-    background-color: #2980b9;
+.btn-plus-tour {
+  display: inline-block;
+  background-color: #28a745;
+  color: white;
+  font-weight: 700;
+  padding: 0.6em 1.8em;
+  border-radius: 30px; /* ovale */
+  font-size: 1.3rem;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(40,167,69,0.5);
+  user-select: none;
+  transition: background-color 0.3s ease;
 }
 
-.btn-rect.bleu:hover {
-    background-color: #21618c;
+.btn-plus-tour:hover {
+  background-color: #1e7e34;
 }
 
-.btn-rect.rouge {
-    background-color: #c0392b;
+.btn-reset {
+  display: inline-block;
+  background-color: #dc3545;
+  color: white;
+  font-weight: 700;
+  padding: 0.6em 1.8em;
+  border-radius: 8px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(220,53,69,0.5);
+  user-select: none;
+  transition: background-color 0.3s ease;
+  margin-left: 1em;
 }
 
-.btn-rect.rouge:hover {
-    background-color: #922b21;
+.btn-reset:hover {
+  background-color: #a71d2a;
 }
 
-.btn-rect.vert {
-    background-color: #27ae60;
+/* Timer affichage */
+.timer-display {
+  font-size: 3rem;
+  text-align: center;
+  margin-top: 1.5em;
+  font-weight: 700;
+  color: #222;
 }
 
-.btn-rect.vert:hover {
-    background-color: #1e8449;
+/* Tableaux dans profs.html */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
+  margin-top: 1em;
 }
 
-/* Section course active */
-#course-section {
-    text-align: center;
-    margin-top: 1rem;
+th, td {
+  padding: 0.7em 1em;
+  border: 1px solid #ddd;
 }
 
-#timer {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    font-weight: 700;
+th {
+  background-color: #0077cc;
+  color: white;
+  cursor: pointer;
 }
 
-/* Bouton + Tour ovale */
-.btn-tour {
-    margin-bottom: 1rem;
+tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
 
-.btn-oval {
-    background-color: #27ae60;
-    color: white;
-    border: none;
-    padding: 1rem 2.5rem;
-    border-radius: 40px;
-    font-size: 1.5rem;
-    font-weight: 700;
-    cursor: pointer;
-    user-select: none;
-    box-shadow: 0 4px 8px rgba(39, 174, 96, 0.5);
-    transition: background-color 0.3s ease;
+tr:hover {
+  background-color: #dbe9f7;
 }
 
-.btn-oval:hover {
-    background-color: #1e8449;
+/* Formulaire du code PIN */
+#accessSection {
+  max-width: 400px;
+  margin: 5em auto 2em;
+  text-align: center;
 }
 
-/* Résultats course */
-#resultats {
-    font-size: 1.2rem;
-    max-width: 600px;
-    margin: 0 auto;
-    background-color: #ecf0f1;
-    border-radius: 8px;
-    padding: 1rem;
-    box-shadow: inset 0 0 8px rgba(0,0,0,0.1);
-    white-space: pre-line;
+#accessSection input {
+  padding: 0.6em 0.8em;
+  font-size: 1.1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-right: 0.8em;
+  width: 150px;
 }
 
-/* Section QR Code */
-#qr-section {
-    max-width: 400px;
-    margin: 2rem auto;
-    text-align: center;
+#accessSection button {
+  padding: 0.6em 1.2em;
+  font-size: 1.1rem;
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-/* === Professeur Page === */
-.page-prof main {
-    padding: 1rem 2rem;
-}
-
-#pin-section {
-    max-width: 400px;
-    margin: 2rem auto 3rem auto;
-    text-align: center;
-}
-
-#pin-section input {
-    width: 100%;
-    padding: 0.6rem 0.8rem;
-    font-size: 1.1rem;
-    margin-bottom: 0.8rem;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-#pin-section .btn-rect {
-    width: 100%;
-}
-
-.error {
-    color: #c0392b;
-    font-weight: 700;
-    margin-top: 0.4rem;
-}
-
-/* Tableau Prof */
-.table-actions {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-}
-
-.table-actions button {
-    padding: 0.5rem 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    border: none;
-    border-radius: 6px;
-    user-select: none;
-    transition: background-color 0.3s ease;
-}
-
-.table-actions .btn-rect {
-    background-color: #2980b9;
-    color: white;
-    box-shadow: 0 4px 8px rgb(0 0 0 / 0.15);
-}
-
-.table-actions .btn-rect:hover {
-    background-color: #21618c;
-}
-
-.table-actions .btn-vert {
-    background-color: #27ae60;
-}
-
-#resultsTable {
-    width: 100%;
-    border-collapse: collapse;
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-#resultsTable th, #resultsTable td {
-    border: 1px solid #ddd;
-    padding: 0.6rem 1rem;
-    text-align: center;
-}
-
-#resultsTable th {
-    background-color: #2980b9;
-    color: white;
-    user-select: none;
-}
-
-/* Responsive */
-@media (max-width: 700px) {
-    .eleve-container {
-        flex-direction: column;
-        align-items: center;
-    }
-    .eleve-card {
-        width: 90%;
-        margin-bottom: 1rem;
-    }
-    .course-params {
-        flex-direction: column;
-    }
-    .course-params input {
-        width: 100%;
-        margin-bottom: 0.8rem;
-    }
-    .btn-course {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    .btn-container {
-        flex-direction: column;
-    }
-    .btn {
-        width: 120px;
-        height: 120px;
-        margin: 0 auto 1rem auto;
-    }
-    .table-actions {
-        flex-direction: column;
-        gap: 0.8rem;
-    }
+#accessSection button:hover {
+  background-color: #005ea2;
 }
