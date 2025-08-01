@@ -1,87 +1,81 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Course Élèves</title>
-<link rel="stylesheet" href="style.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RunStats - Élèves</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <header>
+        <h1>RunStats</h1>
+        <h2>Interface Élèves</h2>
+    </header>
 
-<header>
-  <h1>Course des élèves</h1>
-</header>
+    <main>
+        <!-- Encadrés Élèves -->
+        <section class="eleves-container">
+            <!-- Élève 1 -->
+            <div class="eleve-card eleve-bleu">
+                <h3>Élève 1</h3>
+                <label>Nom : <input type="text" id="nom1"></label>
+                <label>Prénom : <input type="text" id="prenom1"></label>
+                <label>Classe : <input type="text" id="classe1"></label>
+                <label>Sexe :
+                    <select id="sexe1">
+                        <option value="">Choisir</option>
+                        <option value="Fille">Fille</option>
+                        <option value="Garçon">Garçon</option>
+                    </select>
+                </label>
+            </div>
 
-<main>
-  <section id="elevesContainer" style="display:flex; justify-content:space-around; margin-bottom: 20px;">
-    <!-- Élève 1 -->
-    <div id="eleve1" style="background:#d0e7ff; padding:15px; border-radius:10px; width:45%; box-sizing: border-box;">
-      <h2>Élève 1</h2>
-      <label>Nom : <input type="text" id="nom1" /></label><br />
-      <label>Prénom : <input type="text" id="prenom1" /></label><br />
-      <label>Classe : <input type="text" id="classe1" /></label><br />
-      <label>Sexe : 
-        <select id="sexe1">
-          <option value="">Choisir</option>
-          <option value="Fille">Fille</option>
-          <option value="Garçon">Garçon</option>
-        </select>
-      </label><br />
-      <div style="margin-top:10px;">
-        <strong>Temps restant :</strong> <span class="tempsRestant">--:--</span>
-      </div>
-      <div id="info1" style="margin-top:15px; background:#a9caff; padding:10px; border-radius:6px;">
-        <!-- Infos course élève 1 -->
-      </div>
-    </div>
+            <!-- Élève 2 -->
+            <div class="eleve-card eleve-vert">
+                <h3>Élève 2</h3>
+                <label>Nom : <input type="text" id="nom2"></label>
+                <label>Prénom : <input type="text" id="prenom2"></label>
+                <label>Classe : <input type="text" id="classe2"></label>
+                <label>Sexe :
+                    <select id="sexe2">
+                        <option value="">Choisir</option>
+                        <option value="Fille">Fille</option>
+                        <option value="Garçon">Garçon</option>
+                    </select>
+                </label>
+            </div>
+        </section>
 
-    <!-- Élève 2 -->
-    <div id="eleve2" style="background:#c7f0d4; padding:15px; border-radius:10px; width:45%; box-sizing: border-box;">
-      <h2>Élève 2</h2>
-      <label>Nom : <input type="text" id="nom2" /></label><br />
-      <label>Prénom : <input type="text" id="prenom2" /></label><br />
-      <label>Classe : <input type="text" id="classe2" /></label><br />
-      <label>Sexe : 
-        <select id="sexe2">
-          <option value="">Choisir</option>
-          <option value="Fille">Fille</option>
-          <option value="Garçon">Garçon</option>
-        </select>
-      </label><br />
-      <div style="margin-top:10px;">
-        <strong>Temps restant :</strong> <span class="tempsRestant">--:--</span>
-      </div>
-      <div id="info2" style="margin-top:15px; background:#b8e6b7; padding:10px; border-radius:6px;">
-        <!-- Infos course élève 2 -->
-      </div>
-    </div>
-  </section>
+        <!-- Paramètres Course -->
+        <section class="parametres-course">
+            <label>Durée course (minutes) :
+                <input type="number" id="dureeCourse" min="1" value="5">
+            </label>
+            <label>Distance d’un tour (mètres) :
+                <input type="number" id="distanceTour" min="1" value="100">
+            </label>
+        </section>
 
-  <!-- Réglages de course -->
-  <section id="courseSettings" style="max-width: 600px; margin: 0 auto 20px auto; padding: 15px; background:#f0f0f0; border-radius:10px; text-align:center;">
-    <label>Durée course (minutes) : <input type="number" id="dureeCourse" min="1" max="60" step="1" /></label> &nbsp;&nbsp;&nbsp;
-    <label>Distance tour (mètres) : <input type="number" id="distanceTour" min="10" max="2000" step="10" /></label>
-  </section>
+        <!-- Boutons -->
+        <section class="boutons-course">
+            <button id="btnStart" class="btn-rect-start">Démarrer</button>
+            <button id="btnTour" class="btn-round">+ Tour</button>
+            <button id="btnReset" class="btn-rect-reset">Reset</button>
+        </section>
 
-  <!-- Boutons -->
-  <section id="boutons" style="text-align:center; margin-bottom:30px;">
-    <button id="startBtn" style="background:#4a90e2; color:#fff; padding:12px 20px; font-size:1.2rem; border:none; border-radius:6px; margin-right:20px; cursor:pointer;">Démarrer le chrono</button>
-    <button id="addTourBtn" style="background:#50c878; color:#fff; padding:20px 24px; font-size:2rem; border:none; border-radius:50%; cursor:pointer;" title="Ajouter un tour">+</button>
-    <button id="resetBtn" style="background:#e94e4e; color:#fff; padding:12px 20px; font-size:1.2rem; border:none; border-radius:6px; margin-left:20px; cursor:pointer;">Reset</button>
-  </section>
+        <!-- Informations de course -->
+        <section class="infos-course">
+            <div id="chrono">00:00</div>
+            <div id="infosEleve1">Distance Élève 1 : 0 m</div>
+            <div id="infosEleve2">Distance Élève 2 : 0 m</div>
+            <div id="qrCodeContainer"></div>
+        </section>
+    </main>
 
-  <!-- QR Code -->
-  <section id="qrCodeContainer" style="text-align:center; margin-bottom:40px;">
-    <!-- QR code généré ici -->
-  </section>
-</main>
+    <footer>
+        <p>EPS Lycée Vauban - Luxembourg</p>
+    </footer>
 
-<footer style="background:#ddd; text-align:center; padding:15px; font-size:0.9rem;">
-  Application de gestion de course — © 2025
-</footer>
-
-<script src="eleve.js"></script>
-
+    <script src="eleve.js"></script>
 </body>
 </html>
