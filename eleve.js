@@ -1,161 +1,250 @@
 // eleve.js
 
+// Variables globales
+let currentEleve = 1;
+let duration = 0; // en secondes
+let distanceTour = 0; // en mètres
+let vmaConnue = 0; // en km/h ou 0 si non renseignée
+
+let timer = null;
+let timeLeft = 0; // en secondes
+let nbTours = 0;
+
+const timerEl = document.getElementById('timer');
+const nbToursEl = document.getElementById('nbTours');
+const distanceParcourueEl = document.getElementById('distanceParcourue');
+const vitesseMoyenneEl = document.getElementById('vitesseMoyenne');
+const vmaEstimeeEl = document.getElementById('vmaEstimee');
 const startBtn = document.getElementById('startBtn');
 const plusTourBtn = document.getElementById('plusTourBtn');
 const resetBtn = document.getElementById('resetBtn');
-
-const inputSection = document.getElementById('inputSection');
 const courseInputs = document.getElementById('courseInputs');
 const courseSection = document.getElementById('courseSection');
+const inputSection = document.getElementById('inputSection');
 
-const timerDisplay = document.getElementById('timer');
-const nbToursDisplay = document.getElementById('nbTours');
-const distanceParcourueDisplay = document.getElementById('distanceParcourue');
-const vitesseMoyenneDisplay = document.getElementById('vitesseMoyenne');
-const vmaEstimeeDisplay = document.getElementById('vmaEstimee');
+let eleveData = {
+  1: { nom: '', prenom: '', classe: '', sexe: '', distanceParcourue: 0, vmaEstimee: 0 },
+  2: { nom: '', prenom: '', classe: '', sexe: '', distanceParcourue: 0, vmaEstimee: 0 }
+};
 
-let duration = 0; // en minutes
-let distanceTour = 0; // en mètres
-let vmaConnue = 0; // km/h, optionnel
-
-let timerInterval = null;
-let timeElapsed = 0; // en secondes
-let nbTours = 0;
-
-// Convert seconds to mm:ss
-function formatTime(seconds) {
-  const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-  const s = (seconds % 60).toString().padStart(2, '0');
-  return `${m}:${s}`;
+function afficherTemps(secs) {
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
+  return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 }
 
-function validateInputs() {
-  const nom1 = document.getElementById('nom1').value.trim();
-  const prenom1 = document.getElementById('prenom1').value.trim();
-  const classe1 = document.getElementById('classe1').value.trim();
-  const sexe1 = document.getElementById('sexe1').value;
+function majAffichage() {
+  timerEl.textContent = afficherTemps(timeLeft);
+  nbToursEl.textContent = nbTours;
+  const dist = (nbTours * distanceTour).toFixed(1);
+  distanceParcourueEl.textContent = dist;
 
-  const nom2 = document.getElementById('nom2').value.trim();
-  const prenom2 = document.getElementById('prenom2').value.trim();
-  const classe2 = document.getElementById('classe2').value.trim();
-  const sexe2 = document.getElementById('sexe2').value;
+  // Vitesse moyenne km/h = (distance en km) / (temps en h)
+  const tempsHeures = (duration - timeLeft) / 3600;
+  let vitesse = tempsHeures > 0 ? dist/1000 / tempsHeures : 0;
+  vitesseMoyenneEl.textContent = vitesse.toFixed(2);
 
-  duration = parseInt(document.getElementById('dureeCourse').value, 10);
-  distanceTour = parseFloat(document.getElementById('distanceTour').value);
-  vmaConnue = parseFloat(document.getElementById('vmaConnue').value);
-
-  if (!nom1 || !prenom1 || !classe1 || !sexe1 ||
-      !nom2 || !prenom2 || !classe2 || !sexe2) {
-    alert('Veuillez remplir toutes les informations des deux élèves.');
-    return false;
+  // Estimation VMA : ici on fait simple, on prend la vitesse moyenne si > VMA connue, sinon on garde VMA connue
+  if (vmaConnue > 0) {
+    eleveData[currentEleve].vmaEstimee = Math.max(vitesse, vmaConnue);
+  } else {
+    eleveData[currentEleve].vmaEstimee = vitesse;
   }
-
-  if (isNaN(duration) || duration <= 0) {
-    alert('Veuillez entrer une durée de course valide (minutes).');
-    return false;
-  }
-  if (isNaN(distanceTour) || distanceTour <= 0) {
-    alert('Veuillez entrer une distance de tour valide (en mètres).');
-    return false;
-  }
-  // vmaConnue est optionnel, donc pas de contrôle strict
-
-  return true;
+  vmaEstimeeEl.textContent = eleveData[currentEleve].vmaEstimee.toFixed(2);
+  
+  eleveData[currentEleve].distanceParcourue = parseFloat(dist);
 }
 
+// Démarrage du timer
 function startTimer() {
-  timerInterval = setInterval(() => {
-    timeElapsed++;
-    timerDisplay.textContent = formatTime(timeElapsed);
+  if(timer) return; // timer déjà lancé
+  if(timeLeft <= 0) return;
 
-    if (timeElapsed >= duration * 60) {
-      stopTimer();
-      alert('Temps écoulé !');
-      // TODO: gérer fin de course / bascule à la suite
+  timer = setInterval(() => {
+    timeLeft--;
+    majAffichage();
+
+    if(timeLeft <= 0) {
+      clearInterval(timer);
+      timer = null;
+      alert(`Course de l'élève ${eleveData[currentEleve].prenom} terminée!`);
+      passerEleveSuivant();
     }
   }, 1000);
 }
 
-function stopTimer() {
-  clearInterval(timerInterval);
-  timerInterval = null;
-}
-
-function resetCourse() {
-  stopTimer();
-  timeElapsed = 0;
-  nbTours = 0;
-  timerDisplay.textContent = '00:00';
-  nbToursDisplay.textContent = '0';
-  distanceParcourueDisplay.textContent = '0';
-  vitesseMoyenneDisplay.textContent = '0';
-  vmaEstimeeDisplay.textContent = '0';
-
-  // Afficher à nouveau la saisie
-  inputSection.style.display = 'flex';
-  courseInputs.style.display = 'block';
-  courseSection.style.display = 'none';
-
-  startBtn.disabled = false;
-  plusTourBtn.disabled = true;
-  resetBtn.disabled = true;
-}
-
-// Calcul vitesse moyenne km/h : distance parcourue / temps (en h)
-function calculerVitesseMoyenne() {
-  if (timeElapsed === 0) return 0;
-  const distanceKm = (distanceTour * nbTours) / 1000;
-  const tempsHeures = timeElapsed / 3600;
-  return distanceKm / tempsHeures;
-}
-
-// Estimation VMA (simplifiée, ici égale à vitesse moyenne si vmaConnue non fournie)
-function estimerVMA() {
-  if (!vmaConnue || isNaN(vmaConnue) || vmaConnue <= 0) {
-    return calculerVitesseMoyenne();
+function passerEleveSuivant() {
+  if(currentEleve === 1) {
+    // Passer au deuxième élève
+    currentEleve = 2;
+    alert("Passage à l'élève 2, prêt à démarrer sa course.");
+    preparerCourse();
+  } else {
+    // Fin des deux courses, générer QR code
+    afficherResultatsFinaux();
   }
-  // Pour l’exemple, on peut pondérer ou juste retourner vmaConnue
-  return vmaConnue;
 }
 
-startBtn.addEventListener('click', () => {
-  if (!validateInputs()) return;
+// Préparer la course (afficher infos élève, reset données)
+function preparerCourse() {
+  // Afficher nom/prénom élève courant
+  afficherNomPrenom();
 
-  // Cacher les inputs et afficher le timer & boutons
-  inputSection.style.display = 'none';
-  courseInputs.style.display = 'none';
+  // Reset stats pour cet élève
+  nbTours = 0;
+  timeLeft = duration * 60;
+  majAffichage();
+
+  // Afficher section course
   courseSection.style.display = 'block';
+  courseInputs.style.display = 'none';
+  inputSection.style.display = 'none';
 
-  startBtn.disabled = true;
+  // Boutons
   plusTourBtn.disabled = false;
   resetBtn.disabled = false;
+  startBtn.style.display = 'none'; // masqué car on démarre via script ou bouton reset
+}
 
-  timeElapsed = 0;
+// Afficher nom prénom de l'élève courant au-dessus du timer
+function afficherNomPrenom() {
+  // Crée ou met à jour un encadré au-dessus du timer
+  let eleveInfo = document.getElementById('eleveInfo');
+  if(!eleveInfo) {
+    eleveInfo = document.createElement('div');
+    eleveInfo.id = 'eleveInfo';
+    eleveInfo.style.fontWeight = '700';
+    eleveInfo.style.fontSize = '1.3em';
+    eleveInfo.style.marginBottom = '0.5em';
+    eleveInfo.style.textAlign = 'center';
+    courseSection.insertBefore(eleveInfo, timerEl);
+  }
+  eleveInfo.textContent = `Course de : ${eleveData[currentEleve].prenom} ${eleveData[currentEleve].nom}`;
+}
+
+// Bouton + tour
+plusTourBtn.addEventListener('click', () => {
+  nbTours++;
+  majAffichage();
+});
+
+// Bouton reset (arrêt course en cours et relance, ou passage)
+resetBtn.addEventListener('click', () => {
+  if(timer) {
+    clearInterval(timer);
+    timer = null;
+  }
+  // Si on est sur élève 1 et reset, on peut aussi retourner à saisie ? Pour simplifier ici on reset la course en cours
   nbTours = 0;
-  timerDisplay.textContent = '00:00';
-  nbToursDisplay.textContent = '0';
-  distanceParcourueDisplay.textContent = '0';
-  vitesseMoyenneDisplay.textContent = '0';
-  vmaEstimeeDisplay.textContent = '0';
-
+  timeLeft = duration * 60;
+  majAffichage();
   startTimer();
 });
 
-plusTourBtn.addEventListener('click', () => {
-  nbTours++;
-  nbToursDisplay.textContent = nbTours;
-  const dist = distanceTour * nbTours;
-  distanceParcourueDisplay.textContent = dist.toFixed(1);
+// Bouton démarrer : récupère données, vérifie, et lance 1ère course
+startBtn.addEventListener('click', () => {
+  // Récupérer données élèves
+  eleveData[1].nom = document.getElementById('nom1').value.trim();
+  eleveData[1].prenom = document.getElementById('prenom1').value.trim();
+  eleveData[1].classe = document.getElementById('classe1').value.trim();
+  eleveData[1].sexe = document.getElementById('sexe1').value;
 
-  const vitesse = calculerVitesseMoyenne();
-  vitesseMoyenneDisplay.textContent = vitesse.toFixed(2);
+  eleveData[2].nom = document.getElementById('nom2').value.trim();
+  eleveData[2].prenom = document.getElementById('prenom2').value.trim();
+  eleveData[2].classe = document.getElementById('classe2').value.trim();
+  eleveData[2].sexe = document.getElementById('sexe2').value;
 
-  const vmaEst = estimerVMA();
-  vmaEstimeeDisplay.textContent = vmaEst.toFixed(2);
+  // Vérifications basiques
+  if(!eleveData[1].nom || !eleveData[1].prenom || !eleveData[1].sexe) {
+    alert("Merci de remplir nom, prénom et sexe de l'élève 1");
+    return;
+  }
+  if(!eleveData[2].nom || !eleveData[2].prenom || !eleveData[2].sexe) {
+    alert("Merci de remplir nom, prénom et sexe de l'élève 2");
+    return;
+  }
+
+  // Récupérer durée, distance et VMA
+  const dureeVal = parseInt(document.getElementById('dureeCourse').value, 10);
+  const distVal = parseFloat(document.getElementById('distanceTour').value);
+  const vmaVal = parseFloat(document.getElementById('vmaConnue').value);
+
+  if(isNaN(dureeVal) || dureeVal <= 0) {
+    alert("Merci de renseigner une durée de course valide (en minutes)");
+    return;
+  }
+  if(isNaN(distVal) || distVal <= 0) {
+    alert("Merci de renseigner une distance de tour valide (en mètres)");
+    return;
+  }
+
+  duration = dureeVal;
+  distanceTour = distVal;
+  vmaConnue = isNaN(vmaVal) ? 0 : vmaVal;
+
+  // On lance la 1ère course
+  currentEleve = 1;
+  preparerCourse();
+  startTimer();
+
+  // On cache le bouton démarrer
+  startBtn.style.display = 'none';
 });
 
-resetBtn.addEventListener('click', resetCourse);
+// Fonction qui crée un QR code avec les infos des 2 élèves (avec une bibliothèque QR)
+function afficherResultatsFinaux() {
+  courseSection.style.display = 'none';
 
-// Au départ, seuls start est actif, autres désactivés
-plusTourBtn.disabled = true;
-resetBtn.disabled = true;
+  // Générer texte QR code
+  const infoQRCode = {
+    eleves: [
+      {
+        nom: eleveData[1].nom,
+        prenom: eleveData[1].prenom,
+        distance: eleveData[1].distanceParcourue,
+        vmaEstimee: eleveData[1].vmaEstimee.toFixed(2)
+      },
+      {
+        nom: eleveData[2].nom,
+        prenom: eleveData[2].prenom,
+        distance: eleveData[2].distanceParcourue,
+        vmaEstimee: eleveData[2].vmaEstimee.toFixed(2)
+      }
+    ]
+  };
+
+  // Afficher résumé
+  let resultDiv = document.getElementById('resultatsFinal');
+  if(!resultDiv) {
+    resultDiv = document.createElement('div');
+    resultDiv.id = 'resultatsFinal';
+    resultDiv.style.textAlign = 'center';
+    resultDiv.style.marginTop = '2em';
+    document.querySelector('main').appendChild(resultDiv);
+  }
+  resultDiv.innerHTML = '<h2>Résultats finaux</h2>';
+
+  // Infos lisibles
+  infoQRCode.eleves.forEach((e, i) => {
+    resultDiv.innerHTML += `<p><strong>Élève ${i+1} :</strong> ${e.prenom} ${e.nom} - Distance: ${e.distance} m - VMA estimée: ${e.vmaEstimee} km/h</p>`;
+  });
+
+  // Générer QR code avec library qrcode.js (à inclure dans eleve.html)
+  if(!window.QRCode) {
+    resultDiv.innerHTML += '<p style="color:red;">Librairie QRCode non chargée, impossible de générer le QR code.</p>';
+    return;
+  }
+
+  const qrDiv = document.createElement('div');
+  qrDiv.id = 'qrcode';
+  qrDiv.style.margin = '1em auto';
+  resultDiv.appendChild(qrDiv);
+
+  // Convert info en JSON string
+  const qrText = JSON.stringify(infoQRCode);
+  new QRCode(qrDiv, {
+    text: qrText,
+    width: 200,
+    height: 200,
+  });
+}
