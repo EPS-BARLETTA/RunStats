@@ -1,1 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RunStats - Interface Élève</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>RunStats - Equipe EPS Lycée Vauban - LUXEMBOURG</h1>
+  </header>
+  <main>
+    <form id="eleveForm">
+      <div class="groupe-eleves">
+        <fieldset>
+          <legend>Élève 1</legend>
+          <input type="text" name="nom1" placeholder="Nom" required />
+          <input type="text" name="prenom1" placeholder="Prénom" required />
+          <input type="text" name="classe1" placeholder="Classe" required />
+          <select name="sexe1" required>
+            <option value="" disabled selected>Sexe</option>
+            <option value="Fille">Fille</option>
+            <option value="Garçon">Garçon</option>
+          </select>
+          <br />
+          <input type="number" name="duree1" placeholder="Durée course (min)" min="0" step="0.01" required />
+          <input type="number" name="distance1" placeholder="Distance tour (m)" min="0" step="0.1" required />
+          <input type="number" name="vma1" placeholder="VMA (optionnel)" min="0" step="0.01" />
+        </fieldset>
+        <fieldset>
+          <legend>Élève 2</legend>
+          <input type="text" name="nom2" placeholder="Nom" required />
+          <input type="text" name="prenom2" placeholder="Prénom" required />
+          <input type="text" name="classe2" placeholder="Classe" required />
+          <select name="sexe2" required>
+            <option value="" disabled selected>Sexe</option>
+            <option value="Fille">Fille</option>
+            <option value="Garçon">Garçon</option>
+          </select>
+          <br />
+          <input type="number" name="duree2" placeholder="Durée course (min)" min="0" step="0.01" required />
+          <input type="number" name="distance2" placeholder="Distance tour (m)" min="0" step="0.1" required />
+          <input type="number" name="vma2" placeholder="VMA (optionnel)" min="0" step="0.01" />
+        </fieldset>
+      </div>
+      <button type="submit">Générer QR Code</button>
+    </form>
+    <div id="qrCodeContainer"></div>
+  </main>
+  <footer>
+    Equipe EPS-Lycée Vauban- LUXEMBOURG-JB
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
+  <script>
+    const form = document.getElementById('eleveForm');
+    const qrContainer = document.getElementById('qrCodeContainer');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const data = {
+        eleve1: {
+          nom: form.nom1.value.trim(),
+          prenom: form.prenom1.value.trim(),
+          classe: form.classe1.value.trim(),
+          sexe: form.sexe1.value,
+          duree: parseFloat(form.duree1.value),
+          distance: parseFloat(form.distance1.value),
+          vma: form.vma1.value ? parseFloat(form.vma1.value) : null,
+        },
+        eleve2: {
+          nom: form.nom2.value.trim(),
+          prenom: form.prenom2.value.trim(),
+          classe: form.classe2.value.trim(),
+          sexe: form.sexe2.value,
+          duree: parseFloat(form.duree2.value),
+          distance: parseFloat(form.distance2.value),
+          vma: form.vma2.value ? parseFloat(form.vma2.value) : null,
+        }
+      };
+
+      const jsonData = JSON.stringify(data);
+
+      qrContainer.innerHTML = '';
+      QRCode.toCanvas(qrContainer, jsonData, { width: 250 }, function (error) {
+        if (error) console.error(error);
+      });
+    });
+  </script>
+</body>
+</html>
 
