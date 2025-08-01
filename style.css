@@ -1,10 +1,15 @@
 /* style.css */
 
-/* Global */
+/* Reset de base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  margin: 0; padding: 0;
-  background-color: #f9f9f9;
+  background-color: #f5f5f5;
   color: #333;
   min-height: 100vh;
   display: flex;
@@ -12,225 +17,213 @@ body {
 }
 
 header, footer {
-  background-color: #ddd;
-  padding: 15px;
+  background-color: #004080;
+  color: white;
   text-align: center;
+  padding: 1rem;
   font-weight: bold;
-  color: #222;
+  font-size: 1.2rem;
 }
 
-footer {
-  background-color: #eee;
-  margin-top: auto;
+main {
+  flex: 1;
+  padding: 2rem;
 }
 
-/* ======= Page élève ======= */
+.centered-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.centered-buttons button {
+  background-color: #007acc;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 1.3rem;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.centered-buttons button:hover {
+  background-color: #005f99;
+}
+
+/* Élève page */
 
 .eleve-container {
   display: flex;
-  justify-content: space-around;
-  padding: 20px;
-  gap: 20px;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  gap: 2rem;
 }
 
 .eleve-box {
-  width: 45%;
-  padding: 15px;
+  flex: 1;
+  padding: 1rem;
   border-radius: 10px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
-  background-color: #d0ebff; /* bleu clair par défaut */
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  background-color: #cce7ff; /* Bleu clair */
+  box-shadow: 0 0 8px rgba(0, 122, 204, 0.3);
 }
 
-.eleve-box:nth-child(2) {
-  background-color: #d0ffd6; /* vert clair pour élève 2 */
+.eleve-box.right {
+  background-color: #d9f2d9; /* Vert clair */
+  box-shadow: 0 0 8px rgba(50, 180, 50, 0.3);
+}
+
+.eleve-box h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  color: #004080;
 }
 
 .eleve-box label {
+  display: block;
+  margin: 0.5rem 0 0.2rem 0;
   font-weight: 600;
-  margin-bottom: 4px;
 }
 
 .eleve-box input[type="text"],
 .eleve-box select,
 .eleve-box input[type="number"] {
   width: 100%;
-  padding: 6px 8px;
+  padding: 0.4rem;
   border-radius: 5px;
-  border: 1px solid #aaa;
-  font-size: 1rem;
-  box-sizing: border-box;
+  border: 1px solid #ccc;
 }
 
 .course-info {
-  width: 90%;
-  margin: 0 auto 20px;
-  padding: 15px;
-  background-color: #fff3cd; /* jaune pâle */
+  background-color: #f0f8ff;
   border-radius: 10px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  padding: 1rem;
   text-align: center;
-  font-weight: 600;
-  font-size: 1.1rem;
-  color: #856404;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 8px rgba(0, 122, 204, 0.2);
 }
 
 .buttons-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  gap: 25px;
-  margin-bottom: 20px;
+  gap: 2rem;
+  margin-bottom: 2rem;
 }
 
 button {
-  cursor: pointer;
   border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  padding: 12px 20px;
-  color: white;
+  cursor: pointer;
+  font-weight: 600;
   transition: background-color 0.3s ease;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16);
 }
 
-button:active {
-  transform: scale(0.98);
+button.start-btn {
+  background-color: #007acc;
+  color: white;
+  padding: 0.8rem 2rem;
+  border-radius: 6px;
 }
 
-/* Bouton démarrer - rectangle bleu */
-#startBtn {
-  background-color: #339af0;
+button.start-btn:hover {
+  background-color: #005f99;
 }
 
-#startBtn:hover {
-  background-color: #1c7ed6;
+button.reset-btn {
+  background-color: #66bb6a;
+  color: white;
+  padding: 0.8rem 2rem;
+  border-radius: 6px;
 }
 
-/* Bouton + Tour - rond plus gros et vert */
-#tourBtn {
-  background-color: #51cf66;
-  width: 60px;
-  height: 60px;
-  font-size: 1.5rem;
+button.reset-btn:hover {
+  background-color: #4caf50;
+}
+
+button.add-tour-btn {
+  background-color: #ff9800;
+  color: white;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
+  font-size: 2rem;
+  line-height: 70px;
+  text-align: center;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 10px #ffa726;
 }
 
-#tourBtn:hover {
-  background-color: #40c057;
+button.add-tour-btn:hover {
+  background-color: #fb8c00;
 }
 
-/* Bouton reset - rectangle rouge */
-#resetBtn {
-  background-color: #f03e3e;
-}
-
-#resetBtn:hover {
-  background-color: #c92a2a;
-}
-
-/* ======= Page Professeur ======= */
-
-main {
-  padding: 20px;
-}
+/* Prof page */
 
 #startScanBtn {
   display: block;
-  margin: 0 auto 25px auto;
-  background-color: #339af0;
+  margin: 2rem auto;
+  background-color: #007acc;
   color: white;
-  border-radius: 8px;
-  padding: 15px 30px;
-  font-size: 1.25rem;
-  box-shadow: 0 3px 7px rgba(0,0,0,0.2);
+  font-size: 1.2rem;
+  padding: 1rem 2.5rem;
+  border-radius: 10px;
+  border: none;
   cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,122,204,0.3);
   transition: background-color 0.3s ease;
 }
 
 #startScanBtn:hover {
-  background-color: #1c7ed6;
+  background-color: #005f99;
 }
 
-#video {
-  display: block;
-  margin: 0 auto 30px auto;
-  border-radius: 8px;
-  box-shadow: 0 3px 7px rgba(0,0,0,0.15);
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+th, td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #007acc;
+  color: white;
 }
 
 .actions {
-  margin-bottom: 15px;
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .actions label {
   font-weight: 600;
 }
 
-.actions select,
-.actions input[type="text"] {
-  padding: 6px 10px;
-  font-size: 1rem;
+.actions select, .actions input[type="text"] {
+  padding: 0.4rem 0.8rem;
   border-radius: 6px;
-  border: 1px solid #aaa;
-  min-width: 180px;
+  border: 1px solid #ccc;
+  min-width: 150px;
 }
 
-.actions button {
-  background-color: #51cf66;
-  color: white;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-  transition: background-color 0.3s ease;
-}
-
-.actions button:hover {
-  background-color: #40c057;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 30px;
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 0 15px rgba(0,0,0,0.05);
-}
-
-th, td {
-  padding: 12px 15px;
+/* Footer styling for gray background on Eleve page */
+footer {
+  background-color: #e0e0e0;
+  color: #333;
   text-align: center;
-  border-bottom: 1px solid #ddd;
-  font-size: 0.95rem;
+  padding: 1rem;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-top: auto;
 }
-
-thead {
-  background-color: #339af0;
-  color: white;
-  font-weight: 700;
-}
-
-tbody tr:hover {
-  background-color: #f1faff;
-}
-
-#groupesSection {
-  margin-top: 40px;
-}
-
