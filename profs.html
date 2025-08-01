@@ -1,51 +1,397 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Espace Professeurs - Résultats</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RunStats - Interface Professeur</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Styles spécifiques pour la page prof */
+
+    main {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+
+    #startScanBtn {
+      display: block;
+      margin: 20px auto 40px auto;
+      background: #0099ff;
+      color: white;
+      border: none;
+      padding: 20px 50px;
+      font-size: 1.4rem;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: background 0.3s ease;
+    }
+    #startScanBtn:hover {
+      background: #007acc;
+    }
+
+    #video {
+      display: block;
+      margin: 0 auto 30px auto;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      max-width: 100%;
+      width: 320px;
+      height: 240px;
+      object-fit: cover;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      gap: 10px;
+    }
+    .actions label, .actions select, .actions input, .actions button {
+      font-size: 1rem;
+    }
+    #triSelect {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    #rechercheInput {
+      flex-grow: 1;
+      max-width: 200px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .actions button {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .actions button:hover {
+      background: #218838;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 40px;
+    }
+    th, td {
+      padding: 8px 10px;
+      border: 1px solid #ddd;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+
+    #groupesSection {
+      margin-top: 30px;
+    }
+  </style>
 </head>
 <body>
-<header>
-    <h1>Résultats des Courses - Professeurs</h1>
-</header>
+  <header>
+    <h1>RunStats - Equipe EPS Lycée Vauban - LUXEMBOURG</h1>
+  </header>
+  <main>
+    <button id="startScanBtn">Scanner un QR Code</button>
+    <video id="video" style="display:none;"></video>
 
-<main class="container">
-    <section class="scanner-section">
-        <h2>Scanner un QR Code</h2>
-        <video id="preview" class="scanner-video"></video>
-        <button id="scanBtn" class="btn-scan">📷 Lancer le Scan</button>
+    <div class="actions">
+      <label for="triSelect">Trier par :</label>
+      <select id="triSelect">
+        <option value="alphabetique">Ordre alphabétique (Nom)</option>
+        <option value="vma">VMA</option>
+        <option value="sexe">Sexe</option>
+        <option value="distance">Distance réalisée</option>
+        <option value="classe">Classe</option>
+      </select>
+
+      <button id="creerGroupesBtn">Créer groupes</button>
+      <button id="exportCSVBtn">Exporter CSV</button>
+      <input type="text" id="rechercheInput" placeholder="Recherche rapide..." />
+    </div>
+
+    <table id="elevesTable">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Classe</th>
+          <th>Sexe</th>
+          <th>VMA</th>
+          <th>Distance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Élèves ajoutés ici -->
+      </tbody>
+    </table>
+
+    <section id="groupesSection" style="display:none;">
+      <h2>Groupes créés</h2>
+      <button id="exportGroupesCSVBtn">Télécharger groupes CSV</button>
+      <table id="groupesTable">
+        <thead>
+          <tr>
+            <th>Groupe</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Classe</th>
+            <th>Sexe</th>
+            <th>VMA</th>
+            <th>Distance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Groupes affichés ici -->
+        </tbody>
+      </table>
     </section>
+  </main>
+  <footer>
+    Equipe EPS-Lycée Vauban - LUXEMBOURG - JB
+  </footer>
 
-    <section class="resultats-section">
-        <h2>Résultats scannés</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nom Élève 1</th>
-                    <th>Prénom Élève 1</th>
-                    <th>Classe</th>
-                    <th>Sexe</th>
-                    <th>Nom Élève 2</th>
-                    <th>Prénom Élève 2</th>
-                    <th>Classe</th>
-                    <th>Sexe</th>
-                    <th>Tours</th>
-                    <th>Distance Totale (m)</th>
-                    <th>VMA (km/h)</th>
-                </tr>
-            </thead>
-            <tbody id="resultatsTable"></tbody>
-        </table>
-    </section>
-</main>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <script>
+    const startScanBtn = document.getElementById('startScanBtn');
+    const videoElem = document.getElementById('video');
+    const elevesTableBody = document.querySelector('#elevesTable tbody');
+    const triSelect = document.getElementById('triSelect');
+    const creerGroupesBtn = document.getElementById('creerGroupesBtn');
+    const exportCSVBtn = document.getElementById('exportCSVBtn');
+    const rechercheInput = document.getElementById('rechercheInput');
+    const groupesSection = document.getElementById('groupesSection');
+    const groupesTableBody = document.querySelector('#groupesTable tbody');
+    const exportGroupesCSVBtn = document.getElementById('exportGroupesCSVBtn');
 
-<footer>
-    <p>&copy; 2025 Application Sport - Tous droits réservés</p>
-</footer>
+    let eleves = [];
+    let groupes = [];
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/instascan/1.0.0/instascan.min.js"></script>
-<script src="profs.js"></script>
+    // Ajouter élèves sans doublon
+    function ajouterEleves(nouveauxEleves) {
+      nouveauxEleves.forEach(el => {
+        if (!eleves.some(e => e.nom === el.nom && e.prenom === el.prenom && e.classe === el.classe)) {
+          eleves.push(el);
+        }
+      });
+      afficherEleves();
+    }
+
+    // Afficher élèves filtrés et triés
+    function afficherEleves() {
+      const filtre = rechercheInput.value.toLowerCase();
+      const tri = triSelect.value;
+
+      let liste = eleves.filter(e => {
+        return (
+          e.nom.toLowerCase().includes(filtre) ||
+          e.prenom.toLowerCase().includes(filtre) ||
+          e.classe.toLowerCase().includes(filtre) ||
+          e.sexe.toLowerCase().includes(filtre)
+        );
+      });
+
+      if (tri === 'alphabetique') {
+        liste.sort((a,b) => a.nom.localeCompare(b.nom));
+      } else if (tri === 'vma') {
+        liste.sort((a,b) => (b.vma || 0) - (a.vma || 0));
+      } else if (tri === 'sexe') {
+        liste.sort((a,b) => a.sexe.localeCompare(b.sexe));
+      } else if (tri === 'distance') {
+        liste.sort((a,b) => (b.distance || 0) - (a.distance || 0));
+      } else if (tri === 'classe') {
+        liste.sort((a,b) => a.classe.localeCompare(b.classe));
+      }
+
+      elevesTableBody.innerHTML = '';
+      liste.forEach(e => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${e.nom}</td>
+          <td>${e.prenom}</td>
+          <td>${e.classe}</td>
+          <td>${e.sexe}</td>
+          <td>${e.vma !== null && e.vma !== undefined ? e.vma : ''}</td>
+          <td>${e.distance !== null && e.distance !== undefined ? e.distance : ''}</td>
+        `;
+        elevesTableBody.appendChild(tr);
+      });
+    }
+
+    // Créer groupes mixtes par VMA
+    function creerGroupes() {
+      groupesSection.style.display = 'block';
+      groupesTableBody.innerHTML = '';
+      groupes = [];
+
+      let elevesAvecVma = eleves.filter(e => e.vma !== null && e.vma !== undefined).sort((a,b) => b.vma - a.vma);
+      let elevesSansVma = eleves.filter(e => e.vma === null || e.vma === undefined);
+
+      const n = elevesAvecVma.length;
+      if (n < 4) {
+        alert('Pas assez d\'élèves avec VMA pour créer des groupes');
+        return;
+      }
+
+      const seuilHaute = elevesAvecVma[Math.floor(n / 3)].vma;
+      const seuilBasse = elevesAvecVma[Math.floor(2 * n / 3)].vma;
+
+      const haute = elevesAvecVma.filter(e => e.vma >= seuilHaute);
+      const moyenne = elevesAvecVma.filter(e => e.vma < seuilHaute && e.vma >= seuilBasse);
+      const basse = elevesAvecVma.filter(e => e.vma < seuilBasse);
+
+      let groupesTemp = [];
+
+      while (true) {
+        if (haute.length === 0 || moyenne.length < 2 || basse.length === 0) break;
+
+        const groupe = [];
+        groupe.push(haute.pop());
+        groupe.push(moyenne.pop());
+        groupe.push(moyenne.pop());
+        groupe.push(basse.pop());
+
+        groupesTemp.push(groupe);
+      }
+
+      groupes = groupesTemp;
+
+      groupes.forEach((groupe, i) => {
+        groupe.forEach(e => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>G${i+1}</td>
+            <td>${e.nom}</td>
+            <td>${e.prenom}</td>
+            <td>${e.classe}</td>
+            <td>${e.sexe}</td>
+            <td>${e.vma !== null && e.vma !== undefined ? e.vma : ''}</td>
+            <td>${e.distance !== null && e.distance !== undefined ? e.distance : ''}</td>
+          `;
+          groupesTableBody.appendChild(tr);
+        });
+      });
+    }
+
+    // Export CSV
+    function exportCSV(data, filename) {
+      const csvRows = [];
+      const headers = Object.keys(data[0]);
+      csvRows.push(headers.join(';'));
+      data.forEach(row => {
+        const values = headers.map(h => row[h]);
+        csvRows.push(values.join(';'));
+      });
+      const csvString = csvRows.join('\n');
+      const blob = new Blob([csvString], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    exportCSVBtn.addEventListener('click', () => {
+      if (eleves.length === 0) {
+        alert('Aucun élève à exporter');
+        return;
+      }
+      exportCSV(eleves, 'eleves.csv');
+    });
+
+    exportGroupesCSVBtn.addEventListener('click', () => {
+      if (groupes.length === 0) {
+        alert('Aucun groupe à exporter');
+        return;
+      }
+      const flatGroupes = groupes.flat().map(e => ({
+        Groupe: groupes.findIndex(g => g.includes(e)) + 1,
+        Nom: e.nom,
+        Prenom: e.prenom,
+        Classe: e.classe,
+        Sexe: e.sexe,
+        VMA: e.vma,
+        Distance: e.distance
+      }));
+      exportCSV(flatGroupes, 'groupes.csv');
+    });
+
+    // Recherche et tri
+    rechercheInput.addEventListener('input', afficherEleves);
+    triSelect.addEventListener('change', afficherEleves);
+    creerGroupesBtn.addEventListener('click', creerGroupes);
+
+    // Scan QR code
+    let scanning = false;
+    let html5QrcodeScanner = null;
+
+    startScanBtn.addEventListener('click', () => {
+      if (!scanning) {
+        startScanBtn.textContent = 'Arrêter le scan';
+        videoElem.style.display = 'block';
+
+        html5QrcodeScanner = new Html5Qrcode("video");
+
+        html5QrcodeScanner.start(
+          { facingMode: "environment" },
+          {
+            fps: 10,
+            qrbox: 250
+          },
+          qrCodeMessage => {
+            try {
+              const data = JSON.parse(qrCodeMessage);
+              if (data.eleves && Array.isArray(data.eleves)) {
+                ajouterEleves(data.eleves);
+                alert("Élève(s) ajouté(s) via QR code !");
+              } else {
+                alert("QR code invalide");
+              }
+            } catch (e) {
+              alert("Erreur lors de la lecture du QR code");
+            }
+            // On arrête le scan après 1 lecture
+            html5QrcodeScanner.stop().then(() => {
+              scanning = false;
+              startScanBtn.textContent = 'Scanner un QR Code';
+              videoElem.style.display = 'none';
+            }).catch(err => {
+              console.error(err);
+            });
+          },
+          errorMessage => {
+            // console.log('Scan erreur :', errorMessage);
+          }
+        ).catch(err => {
+          alert('Erreur accès caméra : ' + err);
+          scanning = false;
+          startScanBtn.textContent = 'Scanner un QR Code';
+          videoElem.style.display = 'none';
+        });
+
+        scanning = true;
+      } else {
+        html5QrcodeScanner.stop().then(() => {
+          scanning = false;
+          startScanBtn.textContent = 'Scanner un QR Code';
+          videoElem.style.display = 'none';
+        }).catch(err => {
+          console.error(err);
+        });
+      }
+    });
+  </script>
 </body>
 </html>
