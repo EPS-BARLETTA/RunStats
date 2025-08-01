@@ -1,78 +1,51 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - Interface Professeur</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Professeurs - Résultats</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>RunStats - Equipe EPS Lycée Vauban - LUXEMBOURG</h1>
-  </header>
-  <main>
-    <section>
-      <button id="startScanBtn">Scanner un QR Code</button>
-      <div id="video" style="width:320px; height:240px; border:1px solid #ccc; display:none;"></div>
+<header>
+    <h1>Résultats des Courses - Professeurs</h1>
+</header>
+
+<main class="container">
+    <section class="scanner-section">
+        <h2>Scanner un QR Code</h2>
+        <video id="preview" class="scanner-video"></video>
+        <button id="scanBtn" class="btn-scan">📷 Lancer le Scan</button>
     </section>
 
-    <section>
-      <h2>Liste des élèves</h2>
-      <div class="actions">
-        <label for="triSelect">Trier par :</label>
-        <select id="triSelect">
-          <option value="alphabetique">Ordre alphabétique (Nom)</option>
-          <option value="vma">VMA</option>
-          <option value="sexe">Sexe</option>
-          <option value="distance">Distance réalisée</option>
-          <option value="classe">Classe</option>
-        </select>
-        <button id="creerGroupesBtn">Créer groupes</button>
-        <button id="exportCSVBtn">Exporter CSV</button>
-        <input type="text" id="rechercheInput" placeholder="Recherche rapide..." />
-      </div>
-      <table id="elevesTable" border="1" cellpadding="5" cellspacing="0">
-        <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Classe</th>
-            <th>Sexe</th>
-            <th>VMA</th>
-            <th>Distance</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- données insérées ici -->
-        </tbody>
-      </table>
+    <section class="resultats-section">
+        <h2>Résultats scannés</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom Élève 1</th>
+                    <th>Prénom Élève 1</th>
+                    <th>Classe</th>
+                    <th>Sexe</th>
+                    <th>Nom Élève 2</th>
+                    <th>Prénom Élève 2</th>
+                    <th>Classe</th>
+                    <th>Sexe</th>
+                    <th>Tours</th>
+                    <th>Distance Totale (m)</th>
+                    <th>VMA (km/h)</th>
+                </tr>
+            </thead>
+            <tbody id="resultatsTable"></tbody>
+        </table>
     </section>
+</main>
 
-    <section id="groupesSection" style="display:none;">
-      <h2>Groupes créés</h2>
-      <button id="exportGroupesCSVBtn">Télécharger groupes CSV</button>
-      <table id="groupesTable" border="1" cellpadding="5" cellspacing="0">
-        <thead>
-          <tr>
-            <th>Groupe</th>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Classe</th>
-            <th>Sexe</th>
-            <th>VMA</th>
-            <th>Distance</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- groupes insérés ici -->
-        </tbody>
-      </table>
-    </section>
-  </main>
-  <footer>
-    Equipe EPS-Lycée Vauban- LUXEMBOURG-JB
-  </footer>
+<footer>
+    <p>&copy; 2025 Application Sport - Tous droits réservés</p>
+</footer>
 
-  <script src="profs.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/instascan/1.0.0/instascan.min.js"></script>
+<script src="profs.js"></script>
 </body>
 </html>
