@@ -1,104 +1,96 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - Élève</title>
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    /* Style bouton rond tour */
-    #addTourBtn {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-      transition: background-color 0.3s ease;
-      margin: 10px 0;
-    }
-    #addTourBtn:hover {
-      background-color: #45a049;
-    }
-    #generateQRBtn {
-      background-color: #2196F3;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      cursor: pointer;
-      border-radius: 8px;
-      margin-top: 15px;
-    }
-    #generateQRBtn:hover {
-      background-color: #1976d2;
-    }
-    #chronoDisplay {
-      font-size: 1.2em;
-      margin: 10px 0;
-      font-weight: bold;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RunStats - Élèves</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <h1>RunStats - Élève</h1>
+    <h1>RunStats - Course des élèves</h1>
   </header>
-  <main>
-    <form id="eleve-form">
+
+  <main class="eleve-container">
+    <!-- Paramètres course -->
+    <section class="course-settings">
+      <label for="courseDuration">Durée (minutes) :</label>
+      <input type="number" id="courseDuration" value="6" min="1" max="60">
+
+      <label for="lapDistance">Distance d'un tour (m) :</label>
+      <input type="number" id="lapDistance" value="200" min="50" max="1000">
+    </section>
+
+    <!-- Bloc des 2 élèves -->
+    <section class="eleves-info">
       <!-- Élève 1 -->
-      <fieldset>
-        <legend>Élève 1</legend>
-        <label for="nom1">Nom :</label>
-        <input type="text" id="nom1" required />
-        <label for="prenom1">Prénom :</label>
-        <input type="text" id="prenom1" required />
-        <label for="classe1">Classe :</label>
-        <input type="text" id="classe1" required />
-        <label for="sexe1">Sexe :</label>
-        <select id="sexe1" required>
+      <div class="eleve-card eleve-1">
+        <h2>Élève 1</h2>
+        <label>Nom :</label>
+        <input type="text" id="nom1">
+        <label>Prénom :</label>
+        <input type="text" id="prenom1">
+        <label>Classe :</label>
+        <input type="text" id="classe1">
+        <label>Sexe :</label>
+        <select id="sexe1">
           <option value="M">M</option>
           <option value="F">F</option>
         </select>
-        <label for="distance1">Distance d'un tour (m) :</label>
-        <input type="number" id="distance1" required min="1" />
-      </fieldset>
 
-      <!-- Élève 2 -->
-      <fieldset>
-        <legend>Élève 2</legend>
-        <label for="nom2">Nom :</label>
-        <input type="text" id="nom2" required />
-        <label for="prenom2">Prénom :</label>
-        <input type="text" id="prenom2" required />
-        <label for="classe2">Classe :</label>
-        <input type="text" id="classe2" required />
-        <label for="sexe2">Sexe :</label>
-        <select id="sexe2" required>
-          <option value="M">M</option>
-          <option value="F">F</option>
-        </select>
-        <label for="distance2">Distance d'un tour (m) :</label>
-        <input type="number" id="distance2" required min="1" />
-      </fieldset>
-
-      <div>
-        <button type="button" id="addTourBtn" title="Ajouter un tour">+</button>
-        <div id="chronoDisplay">Durée : 00:00:00</div>
+        <div class="course-stats">
+          <p>Temps restant : <span id="time1">--:--</span></p>
+          <p>Tours : <span id="laps1">0</span></p>
+          <p>Distance : <span id="distance1">0</span> m</p>
+          <p>Vitesse moy : <span id="vitesse1">0</span> km/h</p>
+          <p>VMA estimée : <span id="vma1">0</span> km/h</p>
+        </div>
       </div>
 
-      <button type="button" id="generateQRBtn">Générer QR Code</button>
-    </form>
+      <!-- Élève 2 -->
+      <div class="eleve-card eleve-2">
+        <h2>Élève 2</h2>
+        <label>Nom :</label>
+        <input type="text" id="nom2">
+        <label>Prénom :</label>
+        <input type="text" id="prenom2">
+        <label>Classe :</label>
+        <input type="text" id="classe2">
+        <label>Sexe :</label>
+        <select id="sexe2">
+          <option value="M">M</option>
+          <option value="F">F</option>
+        </select>
 
-    <div id="qrcode" style="margin-top:20px;"></div>
+        <div class="course-stats">
+          <p>Temps restant : <span id="time2">--:--</span></p>
+          <p>Tours : <span id="laps2">0</span></p>
+          <p>Distance : <span id="distance2">0</span> m</p>
+          <p>Vitesse moy : <span id="vitesse2">0</span> km/h</p>
+          <p>VMA estimée : <span id="vma2">0</span> km/h</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Boutons de contrôle -->
+    <div class="control-buttons">
+      <button id="startBtn" class="btn-rect start">Démarrer</button>
+      <button id="lapBtn" class="btn-round">+ Tour</button>
+      <button id="resetBtn" class="btn-rect reset">Reset</button>
+    </div>
+
+    <!-- QR Code -->
+    <div class="qrcode-container">
+      <h3>QR Code résultats :</h3>
+      <div id="qrcode"></div>
+    </div>
   </main>
+
   <footer>
     Equipe EPS-Lycée Vauban- LUXEMBOURG-JB
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
   <script src="eleve.js"></script>
 </body>
 </html>
