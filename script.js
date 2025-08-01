@@ -1,186 +1,349 @@
-// ------------------ Variables ------------------
-let tempsTotal = 0; // en secondes
-let chronoInterval;
-let distanceTotale = 0;
-let piste = 0;
-let courseActuelle = 1; // 1 ou 2
-let resultats = [];
-let dureeMinutes = 0;
+// ==== Variables globales ====
+const eleves = []; // stockage élèves scannés
+let groupes = [];
 
-// ------------------ Initialisation ------------------
-document.getElementById("startBtn").addEventListener("click", demarrerChrono);
-document.getElementById("lapBtn").addEventListener("click", ajouterTour);
-document.getElementById("resetBtn").addEventListener("click", resetCourse);
+const eleveForm = document.getElementById('eleve-form');
+const qrContainer = document.getElementById('qr-container');
+const qrCodeCanvas = document.getElementById('qr-code');
+const switchProfBtn = document.getElementById('switch-prof');
+const switchEleveBtn = document.getElementById('switch-eleve');
 
-document.querySelectorAll(".etatBtn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    sauvegarderEtat(btn.dataset.forme);
-  });
-});
+const profContainer = document.getElementById('prof-container');
+const eleveContainer = document.getElementById('eleve-container');
 
-document.getElementById("accessProfBtn").addEventListener("click", () => {
-  if (document.getElementById("profCode").value === "1234") {
-    document.getElementById("profPanel").style.display = "block";
-    lancerScannerQR();
-  } else {
-    alert("Code incorrect");
-  }
-});
+const scanBtn = document.getElementById('start-scan');
+const videoPreview = document.getElementById('video-preview');
 
-// ------------------ Fonctions Chrono ------------------
-function demarrerChrono() {
-  // Récupère paramètres
-  dureeMinutes = parseInt(document.getElementById("tempsCourse").value);
-  piste = parseFloat(document.getElementById("distancePiste").value);
+const elevesTableBody = document.querySelector('#eleves-table tbody');
+const groupesContainer = document.getElementById('groupes-container');
 
-  if (!dureeMinutes || !piste) {
-    alert("Entrez la durée et la distance de piste !");
-    return;
-  }
+const sortSelect = document.getElementById('sort-select');
+const filterInput = document.getElementById('filter-input');
+const exportCsvBtn = document.getElementById('export-csv');
+const createGroupsBtn = document.getElementById('create-groups');
 
-  tempsTotal = dureeMinutes * 60; // convertir en secondes
-  distanceTotale = 0;
-  afficherStats();
 
-  document.getElementById("etatForme").style.display = "none";
-  document.getElementById("chronoDisplay").textContent = formatTemps(tempsTotal);
+// ==== Fonction générer QR Code côté élève ====
 
-  // Lancer compte à rebours
-  chronoInterval = setInterval(() => {
-    tempsTotal--;
-    document.getElementById("chronoDisplay").textContent = formatTemps(tempsTotal);
+function generateQRCode(data) {
+    qrContainer.innerHTML = '';
+    // Utilisation de QRCode.js (lib à inclure dans HTML)
+    new QRCode(qrContainer, {
+        text: JSON.stringify(data),
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+}
 
-    if (tempsTotal <= 0) {
-      clearInterval(chronoInterval);
-      finCourse();
+// ==== Soumission du formulaire élève ====
+
+eleveForm.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const data = {
+        nom: eleveForm.nom.value.trim(),
+        prenom: eleveForm.prenom.value.trim(),
+        classe: eleveForm.classe.value,
+        sexe: eleveForm.sexe.value,
+        vma: parseFloat(eleveForm.vma.value),
+        distance: parseFloat(eleveForm.distance.value)
+    };
+
+    if (!data.nom || !data.prenom || !data.classe || !data.sexe || isNaN(data.vma) || isNaN(data.distance)) {
+        alert('Veuillez remplir tous les champs correctement.');
+        return;
     }
-  }, 1000);
+
+    generateQRCode(data);
+});
+
+
+// ==== Switch entre interface élève et prof ====
+
+switchProfBtn.addEventListener('click', () => {
+    eleveContainer.classList.remove('active');
+    profContainer.classList.add('active');
+    stopVideoStream();
+});
+
+switchEleveBtn.addEventListener('click', () => {
+    profContainer.classList.remove('active');
+    eleveContainer.classList.add('active');
+    stopVideoStream();
+});
+
+// ==== Scanner QR Code côté prof ====
+
+let videoStream;
+const canvasElement = document.createElement('canvas');
+const canvasContext = canvasElement.getContext('2d');
+
+scanBtn.addEventListener('click', async () => {
+    // demande caméra
+    try {
+        videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+        videoPreview.srcObject = videoStream;
+        videoPreview.play();
+        scanBtn.disabled = true;
+        scanQRCodeLoop();
+    } catch (error) {
+        alert('Impossible d\'accéder à la caméra: ' + error);
+    }
+});
+
+function stopVideoStream() {
+    if (videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+        videoStream = null;
+        scanBtn.disabled = false;
+        videoPreview.srcObject = null;
+    }
 }
 
-function ajouterTour() {
-  if (!piste) {
-    alert("Entrez la distance de la piste !");
-    return;
-  }
-  distanceTotale += piste;
-  afficherStats();
-}
+function scanQRCodeLoop() {
+    if (!videoStream) return;
 
-function resetCourse() {
-  clearInterval(chronoInterval);
-  tempsTotal = 0;
-  distanceTotale = 0;
-  document.getElementById("chronoDisplay").textContent = "00:00";
-  document.getElementById("totalDistance").textContent = "0";
-  document.getElementById("vitesseMoyenne").textContent = "0";
-  document.getElementById("vmaEstimee").textContent = "0";
-  document.getElementById("etatForme").style.display = "none";
-  document.getElementById("qrCodeBox").innerHTML = "";
-  courseActuelle = 1;
-  resultats = [];
-}
+    canvasElement.width = videoPreview.videoWidth;
+    canvasElement.height = videoPreview.videoHeight;
+    canvasContext.drawImage(videoPreview, 0, 0, canvasElement.width, canvasElement.height);
 
-// ------------------ Fonctions Stats ------------------
-function afficherStats() {
-  // Calcul vitesse moyenne (km/h) = distance (m) / temps (s) * 3.6
-  let tempsEcoule = dureeMinutes * 60 - tempsTotal;
-  let vitesseMoy = tempsEcoule > 0 ? (distanceTotale / tempsEcoule) * 3.6 : 0;
-  let vmaEstimee = vitesseMoy * 1.05; // estimation
+    const imageData = canvasContext.getImageData(0, 0, canvasElement.width, canvasElement.height);
+    const code = jsQR(imageData.data, imageData.width, imageData.height);
 
-  document.getElementById("totalDistance").textContent = distanceTotale.toFixed(0);
-  document.getElementById("vitesseMoyenne").textContent = vitesseMoy.toFixed(1);
-  document.getElementById("vmaEstimee").textContent = vmaEstimee.toFixed(1);
-}
-
-function finCourse() {
-  document.getElementById("etatForme").style.display = "block";
-}
-
-// Sauvegarde l'état de forme + passe à l'élève suivant ou affiche QR
-function sauvegarderEtat(emoji) {
-  const nom = document.getElementById(`nom${courseActuelle}`).value;
-  const prenom = document.getElementById(`prenom${courseActuelle}`).value;
-  const sexe = document.getElementById(`sexe${courseActuelle}`).value;
-
-  const vma = parseFloat(document.getElementById("vmaEstimee").textContent);
-  resultats.push({
-    nom,
-    prenom,
-    sexe,
-    distance: distanceTotale,
-    vma: vma,
-    forme: emoji
-  });
-
-  if (courseActuelle === 1) {
-    // Passer à l'élève 2
-    courseActuelle = 2;
-    resetCourse();
-    alert("Course 1 terminée. Préparez l'élève 2 !");
-  } else {
-    // Générer QR après élève 2
-    genererQRCode();
-  }
-}
-
-// ------------------ QR Code ------------------
-function genererQRCode() {
-  const data = JSON.stringify(resultats);
-  document.getElementById("qrCodeBox").innerHTML = "";
-  new QRCode(document.getElementById("qrCodeBox"), {
-    text: data,
-    width: 256,
-    height: 256
-  });
-}
-
-// ------------------ Scanner QR (Espace Prof) ------------------
-function lancerScannerQR() {
-  const scanner = new Html5Qrcode("reader");
-
-  Html5Qrcode.getCameras().then(cameras => {
-    if (cameras && cameras.length) {
-      // Priorité à la caméra arrière
-      const cam = cameras.find(c => c.label.toLowerCase().includes('back')) || cameras[0];
-      scanner.start(
-        cam.id,
-        {
-          fps: 10,
-          qrbox: 250
-        },
-        (decodedText) => {
-          try {
-            const data = JSON.parse(decodedText);
-            remplirTableProf(data);
-          } catch (e) {
-            alert("QR invalide");
-          }
+    if (code) {
+        try {
+            const eleveData = JSON.parse(code.data);
+            if (eleveData.nom && eleveData.prenom) {
+                addEleve(eleveData);
+                alert(`Élève ajouté: ${eleveData.prenom} ${eleveData.nom}`);
+                stopVideoStream();
+                return; // Stop scan après détection
+            }
+        } catch {
+            // QR code non valide pour élève, on continue
         }
-      );
     }
-  }).catch(err => console.error(err));
+    requestAnimationFrame(scanQRCodeLoop);
 }
 
-// ------------------ Table Prof ------------------
-function remplirTableProf(data) {
-  const tbody = document.getElementById("profTableBody");
-  tbody.innerHTML = "";
-  data.forEach(el => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${el.nom}</td>
-      <td>${el.prenom}</td>
-      <td>${el.sexe}</td>
-      <td>${el.distance}</td>
-      <td>${el.vma}</td>
+// ==== Ajouter élève dans tableau et tableau principal ====
+
+function addEleve(eleve) {
+    // Eviter doublons sur nom+prenom+classe
+    const exists = eleves.some(e => e.nom === eleve.nom && e.prenom === eleve.prenom && e.classe === eleve.classe);
+    if (!exists) {
+        eleves.push(eleve);
+        refreshTable();
+    } else {
+        alert('Cet élève est déjà enregistré.');
+    }
+}
+
+// ==== Afficher tableau principal ====
+
+function refreshTable() {
+    // Appliquer filtre et tri
+    let filtered = eleves.filter(e => e.classe.toLowerCase().includes(filterInput.value.toLowerCase()));
+
+    // Tri
+    const sortBy = sortSelect.value;
+    filtered.sort((a,b) => {
+        if (sortBy === 'nom') {
+            return a.nom.localeCompare(b.nom);
+        } else if (sortBy === 'vma') {
+            return b.vma - a.vma;
+        } else if (sortBy === 'sexe') {
+            return a.sexe.localeCompare(b.sexe);
+        } else if (sortBy === 'distance') {
+            return b.distance - a.distance;
+        } else if (sortBy === 'classe') {
+            return a.classe.localeCompare(b.classe);
+        }
+        return 0;
+    });
+
+    elevesTableBody.innerHTML = '';
+    for (const e of filtered) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${e.nom}</td>
+            <td>${e.prenom}</td>
+            <td>${e.classe}</td>
+            <td>${e.sexe}</td>
+            <td>${e.vma.toFixed(2)}</td>
+            <td>${e.distance.toFixed(2)}</td>
+        `;
+        elevesTableBody.appendChild(tr);
+    }
+}
+
+// ==== Recherche temps réel ====
+
+filterInput.addEventListener('input', refreshTable);
+
+// ==== Export CSV ====
+
+exportCsvBtn.addEventListener('click', () => {
+    let csv = 'Nom,Prénom,Classe,Sexe,VMA,Distance\n';
+    eleves.forEach(e => {
+        csv += `${e.nom},${e.prenom},${e.classe},${e.sexe},${e.vma},${e.distance}\n`;
+    });
+    downloadCSV(csv, 'eleves.csv');
+});
+
+function downloadCSV(csv, filename) {
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+// ==== Création groupes mixtes VMA haute/moyenne/basse ====
+
+createGroupsBtn.addEventListener('click', () => {
+    if (eleves.length < 4) {
+        alert("Il faut au moins 4 élèves pour créer des groupes.");
+        return;
+    }
+
+    groupes = creerGroupes(eleves);
+    afficherGroupes(groupes);
+});
+
+// Fonction créer groupes
+function creerGroupes(listeEleves) {
+    // Trier par VMA décroissante
+    const sorted = [...listeEleves].sort((a,b) => b.vma - a.vma);
+
+    // Séparer par sexe pour forcer mixité
+    const filles = sorted.filter(e => e.sexe.toLowerCase() === 'f');
+    const garcons = sorted.filter(e => e.sexe.toLowerCase() === 'm');
+
+    const groupes = [];
+    let indexF = 0, indexG = 0;
+
+    // On va créer les groupes un par un en forçant mixité (au moins 1 fille et 1 garçon par groupe si possible)
+    while ((indexF < filles.length || indexG < garcons.length) && (groupes.length * 4 < sorted.length)) {
+        const groupe = [];
+
+        // 1 VMA haute (priorité fille, sinon garçon)
+        if (indexF < filles.length) {
+            groupe.push(filles[indexF++]);
+        } else if (indexG < garcons.length) {
+            groupe.push(garcons[indexG++]);
+        }
+
+        // 2 VMA moyennes (on va chercher dans les deux listes au milieu)
+        // Ici simplifié, on prend au hasard 2 du reste trié par VMA
+        // Pour garder la répartition on va prendre 2 du milieu
+
+        // On crée une liste des élèves restant (sans ceux du groupe)
+        const restants = sorted.filter(e => !groupes.flat().includes(e) && !groupe.includes(e));
+
+        // On cherche 2 élèves avec VMA moyenne (au milieu)
+        const vmaMax = Math.max(...restants.map(e => e.vma));
+        const vmaMin = Math.min(...restants.map(e => e.vma));
+        const vmaMilieu = (vmaMax + vmaMin) / 2;
+
+        // Trier restants par écart à vmaMilieu
+        restants.sort((a,b) => Math.abs(a.vma - vmaMilieu) - Math.abs(b.vma - vmaMilieu));
+
+        // Ajouter 2 élèves du milieu (en essayant la mixité)
+        for (let i=0; i<restants.length && groupe.length < 3; i++) {
+            const e = restants[i];
+            // On évite 2 fois même sexe consécutif
+            if (groupe.filter(x => x.sexe === e.sexe).length < 2) {
+                groupe.push(e);
+            }
+        }
+
+        // Si pas assez, compléter avec restants
+        while (groupe.length < 3 && restants.length > 0) {
+            groupe.push(restants.shift());
+        }
+
+        // 1 VMA basse
+        // Trouver élève avec VMA la plus basse restant
+        const restantBas = sorted.filter(e => !groupes.flat().includes(e) && !groupe.includes(e));
+        if (restantBas.length > 0) {
+            const vmaMinRestant = Math.min(...restantBas.map(e => e.vma));
+            const eleveBas = restantBas.find(e => e.vma === vmaMinRestant);
+            groupe.push(eleveBas);
+        }
+
+        groupes.push(groupe);
+    }
+
+    return groupes;
+}
+
+// Affichage des groupes avec couleurs distinctes
+function afficherGroupes(groupes) {
+    groupesContainer.innerHTML = '<h2>Groupes Créés</h2>';
+
+    const colors = ['#f44336', '#2196f3', '#4caf50', '#ff9800', '#9c27b0', '#00bcd4', '#e91e63', '#8bc34a'];
+
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    thead.innerHTML = `
+        <tr>
+            <th>Groupe</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Classe</th>
+            <th>Sexe</th>
+            <th>VMA</th>
+            <th>Distance</th>
+        </tr>
     `;
-    tbody.appendChild(tr);
-  });
-}
+    table.appendChild(thead);
 
-// ------------------ Utilitaires ------------------
-function formatTemps(sec) {
-  let m = Math.floor(sec / 60);
-  let s = sec % 60;
-  return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    const tbody = document.createElement('tbody');
+
+    groupes.forEach((groupe, i) => {
+        const color = colors[i % colors.length];
+        groupe.forEach(eleve => {
+            const tr = document.createElement('tr');
+            tr.style.backgroundColor = color + '33'; // couleur semi-transparente
+            tr.innerHTML = `
+                <td>${i+1}</td>
+                <td>${eleve.nom}</td>
+                <td>${eleve.prenom}</td>
+                <td>${eleve.classe}</td>
+                <td>${eleve.sexe}</td>
+                <td>${eleve.vma.toFixed(2)}</td>
+                <td>${eleve.distance.toFixed(2)}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    });
+
+    table.appendChild(tbody);
+    groupesContainer.appendChild(table);
+
+    // Ajouter bouton téléchargement CSV groupes
+    let exportBtn = document.getElementById('export-groupes-csv');
+    if (!exportBtn) {
+        exportBtn = document.createElement('button');
+        exportBtn.id = 'export-groupes-csv';
+        exportBtn.textContent = 'Télécharger groupes CSV';
+        exportBtn.style.marginTop = '10px';
+        groupesContainer.appendChild(exportBtn);
+
+        exportBtn.addEventListener('click', () => {
+            let csv = 'Groupe,Nom,Prénom,Classe,Sexe,VMA,Distance\n';
+            groupes.forEach((groupe, i) => {
+                groupe.forEach(e => {
+                    csv += `${i+1},${e.nom},${e.prenom},${e.classe},${e.sexe},${e.vma},${e.distance}\n`;
+                });
+            });
+            downloadCSV(csv, 'groupes.csv');
+        });
+    }
 }
