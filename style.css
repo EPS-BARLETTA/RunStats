@@ -1,287 +1,165 @@
 /* style.css */
 
-/* Reset & global */
-* {
-  box-sizing: border-box;
-  margin: 0; padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
 body {
-  background: #f0f4f8;
-  color: #222;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f5f9fc;
+  margin: 0;
+  padding: 0;
+  color: #333;
 }
 
-/* Container centré pour index.html */
-.container-center {
-  text-align: center;
-  margin-top: 10vh;
-}
-
-.app-title {
-  font-size: 4rem;
-  color: #0077cc;
-  margin-bottom: 0.2em;
-}
-
-.subtitle {
-  font-size: 1.3rem;
-  color: #555;
-  margin-bottom: 2em;
-}
-
-/* Boutons page d'accueil */
-.button-group {
-  display: flex;
-  justify-content: center;
-  gap: 3em;
-}
-
-.btn {
-  text-decoration: none;
+header, footer {
+  background-color: #004080;
   color: white;
-  padding: 1.3em 2.8em;
-  font-weight: 700;
-  font-size: 1.3rem;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  transition: background-color 0.3s ease;
-}
-
-/* Bouton élève : rond */
-.btn-eleve {
-  background-color: #28a745; /* vert */
-  border-radius: 50%;
-  width: 110px;
-  height: 110px;
-  line-height: 110px;
+  padding: 1em 0;
   text-align: center;
-  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.5);
+  font-weight: bold;
 }
 
-.btn-eleve:hover {
-  background-color: #218838;
+main {
+  max-width: 900px;
+  margin: 1.5em auto;
+  padding: 0 1em;
 }
 
-/* Bouton prof : carré */
-.btn-prof {
-  background-color: #ffc107; /* jaune */
-  border-radius: 8px;
-  width: 140px;
-  height: 110px;
-  line-height: 110px;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(255, 193, 7, 0.5);
-}
-
-.btn-prof:hover {
-  background-color: #e0a800;
-}
-
-/* Pied de page commun */
-footer {
-  background-color: #0077cc;
-  color: white;
-  text-align: center;
-  padding: 1.2em 0;
-  font-size: 0.9rem;
-  user-select: none;
-}
-
-/* Styles communs aux pages avec formulaires */
-
-/* Section avec encadrés élèves */
 .eleve-container {
   display: flex;
-  justify-content: space-around;
-  gap: 1.5em;
-  margin: 2em auto;
-  max-width: 900px;
+  justify-content: space-between;
+  gap: 1em;
+  margin-bottom: 1.5em;
 }
 
 .encadre {
-  padding: 1em 1.5em;
-  border-radius: 10px;
-  width: 45%;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  color: white;
+  border-radius: 8px;
+  padding: 1em;
+  flex: 1;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.eleve1 {
+  background-color: #d0ebff; /* bleu clair */
+  border: 2px solid #339af0;
+}
+
+.eleve2 {
+  background-color: #ffe3e3; /* rose clair */
+  border: 2px solid #f03e3e;
+}
+
+.eleve-container label {
+  display: block;
+  margin-top: 0.6em;
   font-weight: 600;
 }
 
-.encadre.eleve1 {
-  background-color: #17a2b8; /* bleu cyan */
+.eleve-container input, .eleve-container select {
+  width: 95%;
+  padding: 0.4em;
+  margin-top: 0.2em;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 1em;
 }
 
-.encadre.eleve2 {
-  background-color: #6f42c1; /* violet */
-}
+/* Section saisie durée / distance / vma */
 
-.encadre input, .encadre select {
-  width: 100%;
-  margin-top: 0.5em;
-  padding: 0.5em;
-  border-radius: 6px;
-  border: none;
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-/* Encadré paramètres course */
 .course-container {
-  max-width: 600px;
-  margin: 1em auto 2em;
+  background-color: #fff3bf; /* jaune clair */
+  border: 2px solid #fcc419;
+  border-radius: 8px;
   padding: 1em 1.5em;
-  border-radius: 10px;
-  background-color: #fd7e14; /* orange vif */
-  color: white;
-  font-weight: 600;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  max-width: 400px;
+  margin: 0 auto 1.5em auto;
+  box-shadow: 0 0 8px rgba(252,196,25,0.4);
 }
 
 .course-container label {
   display: block;
   margin-top: 1em;
-  font-size: 1.1rem;
+  font-weight: 700;
 }
 
 .course-container input {
   width: 100%;
-  margin-top: 0.3em;
   padding: 0.5em;
+  margin-top: 0.3em;
+  font-size: 1em;
+  border: 1.5px solid #fcc419;
   border-radius: 6px;
-  border: none;
-  font-size: 1rem;
-  font-weight: 500;
 }
 
-/* Boutons course */
+/* Boutons */
+
+button {
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6em 1.2em;
+  font-size: 1.1em;
+  transition: background-color 0.3s ease;
+}
+
 .btn-start {
-  display: block;
-  margin: 2em auto 1em;
-  background-color: #007bff;
+  background-color: #1971c2; /* bleu */
   color: white;
-  font-size: 1.4rem;
-  font-weight: 700;
-  padding: 0.9em 2.5em;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,123,255,0.5);
-  transition: background-color 0.3s ease;
-}
-
-.btn-start:hover {
-  background-color: #0056b3;
-}
-
-.btn-plus-tour {
-  display: inline-block;
-  background-color: #28a745;
-  color: white;
-  font-weight: 700;
-  padding: 0.6em 1.8em;
-  border-radius: 30px; /* ovale */
-  font-size: 1.3rem;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(40,167,69,0.5);
-  user-select: none;
-  transition: background-color 0.3s ease;
-}
-
-.btn-plus-tour:hover {
-  background-color: #1e7e34;
-}
-
-.btn-reset {
-  display: inline-block;
-  background-color: #dc3545;
-  color: white;
-  font-weight: 700;
-  padding: 0.6em 1.8em;
-  border-radius: 8px;
-  font-size: 1.3rem;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(220,53,69,0.5);
-  user-select: none;
-  transition: background-color 0.3s ease;
-  margin-left: 1em;
-}
-
-.btn-reset:hover {
-  background-color: #a71d2a;
-}
-
-/* Timer affichage */
-.timer-display {
-  font-size: 3rem;
-  text-align: center;
-  margin-top: 1.5em;
-  font-weight: 700;
-  color: #222;
-}
-
-/* Tableaux dans profs.html */
-table {
-  border-collapse: collapse;
-  width: 100%;
-  max-width: 900px;
-  margin: auto;
   margin-top: 1em;
 }
 
-th, td {
-  padding: 0.7em 1em;
-  border: 1px solid #ddd;
+.btn-start:hover:not(:disabled) {
+  background-color: #1864ab;
 }
 
-th {
-  background-color: #0077cc;
+.btn-plus-tour {
+  background-color: #37b24d; /* vert */
   color: white;
-  cursor: pointer;
+  border-radius: 20px;
+  padding: 0.8em 2.2em;
+  font-size: 1.2em;
+  margin-right: 1em;
 }
 
-tr:nth-child(even) {
-  background-color: #f9f9f9;
+.btn-plus-tour:hover:not(:disabled) {
+  background-color: #2f9e44;
 }
 
-tr:hover {
-  background-color: #dbe9f7;
-}
-
-/* Formulaire du code PIN */
-#accessSection {
-  max-width: 400px;
-  margin: 5em auto 2em;
-  text-align: center;
-}
-
-#accessSection input {
-  padding: 0.6em 0.8em;
-  font-size: 1.1rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  margin-right: 0.8em;
-  width: 150px;
-}
-
-#accessSection button {
-  padding: 0.6em 1.2em;
-  font-size: 1.1rem;
-  background-color: #0077cc;
+.btn-reset {
+  background-color: #f03e3e; /* rouge */
   color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  padding: 0.6em 1.5em;
 }
 
-#accessSection button:hover {
-  background-color: #005ea2;
+.btn-reset:hover:not(:disabled) {
+  background-color: #c92a2a;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Timer */
+
+.timer-display {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #1971c2;
+  margin-bottom: 1em;
+}
+
+/* Stats */
+
+#stats p {
+  margin: 0.5em 0;
+}
+
+/* Responsive */
+
+@media (max-width: 700px) {
+  .eleve-container {
+    flex-direction: column;
+  }
+  .course-container {
+    max-width: 100%;
+  }
 }
