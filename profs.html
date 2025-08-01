@@ -1,55 +1,45 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RunStats - Professeur</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RunStats - Accès Professeurs</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="page-prof">
-    <header>
-        <h1>RunStats - Mode Professeur</h1>
-    </header>
+<body>
+  <header>
+    <h1>RunStats - Accès Professeurs</h1>
+  </header>
 
-    <main>
-        <!-- Section PIN -->
-        <section id="pin-section">
-            <p>Veuillez entrer le code PIN pour accéder aux données :</p>
-            <input type="password" id="pinInput" placeholder="Code PIN">
-            <button id="validatePinBtn" class="btn-rect bleu">Valider</button>
-            <p id="pinError" class="error" style="display:none;">Code PIN incorrect</p>
-        </section>
+  <section id="accessSection">
+    <p>Veuillez entrer le code PIN pour accéder aux données :</p>
+    <input type="password" id="pinInput" placeholder="Code PIN" />
+    <button id="pinSubmit">Valider</button>
+  </section>
 
-        <!-- Section tableau résultats -->
-        <section id="prof-section" style="display:none;">
-            <h2>Résultats élèves</h2>
-            
-            <div class="table-actions">
-                <button id="sortDistance" class="btn-rect">Trier par distance</button>
-                <button id="sortVma" class="btn-rect">Trier par VMA</button>
-                <button id="sortSexe" class="btn-rect">Trier par sexe</button>
-                <button id="newGroups" class="btn-rect vert">Créer groupes</button>
-                <button id="exportData" class="btn-rect bleu">Exporter</button>
-            </div>
+  <section id="dataSection" style="display:none;">
+    <div style="margin-bottom: 1em;">
+      <label for="sortSelect">Trier par :</label>
+      <select id="sortSelect">
+        <option value="">-- Sélectionner --</option>
+        <option value="distance">Distance réalisé</option>
+        <option value="vma">VMA estimée</option>
+        <option value="sexe">Sexe</option>
+      </select>
 
-            <table id="resultsTable">
-                <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Classe</th>
-                        <th>Sexe</th>
-                        <th>Distance (m)</th>
-                        <th>VMA estimée</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Rempli dynamiquement -->
-                </tbody>
-            </table>
-        </section>
-    </main>
+      <button id="groupBtn" style="margin-left: 1em;">Créer groupes selon VMA</button>
+      <button id="exportBtn" style="margin-left: 1em;">Exporter CSV</button>
+    </div>
 
-    <script src="profs.js"></script>
+    <div id="tableContainer">
+      <!-- Tableau affiché ici -->
+    </div>
+  </section>
+
+  <footer style="margin-top:2em; text-align:center; font-size:0.8em;">
+    Équipe EPS Lycée Vauban - LUXEMBOURG - JB
+  </footer>
+
+  <script src="profs.js"></script>
 </body>
 </html>
