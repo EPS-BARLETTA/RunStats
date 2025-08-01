@@ -1,111 +1,261 @@
-/* ----- Page Professeurs ----- */
+/* === RESET DE BASE === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
 
-/* Conteneur général */
-#profSection {
-  margin-top: 20px;
+body {
+  background: #f4f6f8;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header, footer {
+  background: #4a90e2;
+  color: white;
   text-align: center;
+  padding: 15px;
+  font-size: 1.2em;
+}
+
+/* === TITRES === */
+h1, h2, h3 {
+  margin: 15px 0;
+  text-align: center;
+}
+
+/* === PAGE ACCUEIL (index.html) === */
+#home {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+#home h1 {
+  font-size: 3rem;
+  color: #333;
+}
+
+#home h2 {
+  font-size: 1.5rem;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+#home-buttons {
+  display: flex;
+  gap: 30px;
+}
+
+.btn-round, .btn-square {
+  padding: 20px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.btn-round {
+  background: #ff6b6b;
+  color: white;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+}
+
+.btn-square {
+  background: #4ecdc4;
+  color: white;
+  border-radius: 8px;
+  width: 120px;
+  height: 100px;
+}
+
+.btn-round:hover, .btn-square:hover {
+  transform: scale(1.1);
+}
+
+/* === PAGE ELEVE (eleve.html) === */
+#elevePage {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Formulaire élèves */
+.eleve-container {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.eleve-box {
+  width: 45%;
+  padding: 15px;
+  border-radius: 10px;
+  color: white;
+}
+
+.eleve1-box {
+  background: #ff9f43; /* orange */
+}
+
+.eleve2-box {
+  background: #1dd1a1; /* vert */
+}
+
+/* Encadré course */
+.course-info {
+  background: #54a0ff;
+  padding: 15px;
+  border-radius: 10px;
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.course-info input {
+  margin: 5px 0;
+  padding: 8px;
+  width: 90%;
+  border-radius: 5px;
+  border: none;
+}
+
+/* Boutons course */
+.buttons-course {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.btn-start {
+  background: #2e86de;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-lap {
+  background: #10ac84;
+  color: white;
+  padding: 20px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+}
+
+.btn-reset {
+  background: #ee5253;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Chronomètre affichage */
+#timer {
+  font-size: 2.5em;
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* QR code affichage */
+#qrCode {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* === PAGE PROFESSEUR (profs.html) === */
+#loginSection, #profSection {
+  padding: 20px;
+  text-align: center;
+}
+
+#pinInput {
+  padding: 10px;
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.error {
+  color: red;
+  margin-top: 5px;
 }
 
 /* Tableau résultats */
 #resultsTable {
-  width: 100%;
-  border-collapse: collapse;
+  width: 90%;
   margin: 20px auto;
-  font-size: 16px;
-  background-color: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  overflow: hidden;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
 }
 
-#resultsTable thead {
-  background-color: #4CAF50;
-  color: white;
-}
-
-#resultsTable th,
-#resultsTable td {
+#resultsTable th, #resultsTable td {
   padding: 10px;
-  border-bottom: 1px solid #ddd;
+  border: 1px solid #ddd;
   text-align: center;
 }
 
+#resultsTable th {
+  background: #4a90e2;
+  color: white;
+}
+
 #resultsTable tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background: #f2f2f2;
 }
 
-/* Boutons tri / export */
+/* Boutons tri et export */
 #profSection button {
+  padding: 10px 15px;
   margin: 5px;
-  padding: 10px 20px;
   border: none;
-  border-radius: 20px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 14px;
-  transition: background 0.3s;
+  background: #4a90e2;
+  color: white;
 }
 
-#sortDistance {
-  background-color: #ff9800;
-  color: #fff;
+#profSection button:hover {
+  background: #357ABD;
 }
 
-#sortDistance:hover {
-  background-color: #e68a00;
-}
-
-#sortVMA {
-  background-color: #2196F3;
-  color: #fff;
-}
-
-#sortVMA:hover {
-  background-color: #0b7dda;
-}
-
-#sortSexe {
-  background-color: #9c27b0;
-  color: #fff;
-}
-
-#sortSexe:hover {
-  background-color: #7b1fa2;
-}
-
-#exportBtn {
-  background-color: #607d8b;
-  color: #fff;
-}
-
-#exportBtn:hover {
-  background-color: #546e7a;
-}
-
-/* Groupes générés */
-.group-box {
-  background-color: #f0f8ff;
-  border: 2px solid #2196F3;
-  border-radius: 12px;
-  padding: 10px;
-  margin: 10px auto;
+/* Champ QR input */
+#qrInput {
   width: 80%;
-  text-align: left;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.group-box h4 {
-  margin-bottom: 8px;
-  color: #2196F3;
-}
-
-.group-box p {
-  margin: 2px 0;
+  height: 80px;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
   font-size: 14px;
 }
 
-/* Erreur PIN */
-.error {
-  color: red;
-  font-weight: bold;
-  margin-top: 10px;
+/* Groupes */
+#groupsContainer {
+  margin-top: 20px;
+  padding: 10px;
+  background: #e8f0fe;
+  border-radius: 10px;
+  min-height: 50px;
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
 }
