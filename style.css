@@ -1,229 +1,180 @@
 /* style.css */
 
-/* Reset de base */
+/* Reset */
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
+/* Structure générale */
 body {
-  background-color: #f5f5f5;
-  color: #333;
-  min-height: 100vh;
+  background: #f5f5f5;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
 
-header, footer {
-  background-color: #004080;
-  color: white;
+header {
+  background: #333;
+  color: #fff;
   text-align: center;
   padding: 1rem;
-  font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
 }
 
 main {
   flex: 1;
-  padding: 2rem;
-}
-
-.centered-buttons {
   display: flex;
-  justify-content: center;
-  gap: 2rem;
-  margin-top: 3rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px;
 }
 
-.centered-buttons button {
-  background-color: #007acc;
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-size: 1.3rem;
-  padding: 1rem 2rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.centered-buttons button:hover {
-  background-color: #005f99;
-}
-
-/* Élève page */
-
-.eleve-container {
+/* Encadrés élèves */
+.eleves-container {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 2rem;
-  gap: 2rem;
+  width: 100%;
+  max-width: 900px;
+  margin-bottom: 20px;
 }
 
 .eleve-box {
   flex: 1;
-  padding: 1rem;
+  padding: 15px;
   border-radius: 10px;
-  background-color: #cce7ff; /* Bleu clair */
-  box-shadow: 0 0 8px rgba(0, 122, 204, 0.3);
-}
-
-.eleve-box.right {
-  background-color: #d9f2d9; /* Vert clair */
-  box-shadow: 0 0 8px rgba(50, 180, 50, 0.3);
+  color: #333;
 }
 
 .eleve-box h2 {
   text-align: center;
-  margin-bottom: 1rem;
-  font-weight: 700;
-  color: #004080;
+  margin-bottom: 10px;
+}
+
+.eleve1 {
+  background: #add8e6; /* Bleu clair */
+  margin-right: 10px;
+}
+
+.eleve2 {
+  background: #90ee90; /* Vert clair */
+  margin-left: 10px;
 }
 
 .eleve-box label {
   display: block;
-  margin: 0.5rem 0 0.2rem 0;
-  font-weight: 600;
+  margin: 5px 0 2px;
 }
 
-.eleve-box input[type="text"],
-.eleve-box select,
-.eleve-box input[type="number"] {
+.eleve-box input,
+.eleve-box select {
   width: 100%;
-  padding: 0.4rem;
+  padding: 5px;
+  margin-bottom: 8px;
   border-radius: 5px;
   border: 1px solid #ccc;
 }
 
-.course-info {
-  background-color: #f0f8ff;
+/* Bloc central pour paramètres course */
+.course-settings {
+  background: #fff;
+  padding: 15px;
   border-radius: 10px;
-  padding: 1rem;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   text-align: center;
-  margin-bottom: 2rem;
-  box-shadow: 0 0 8px rgba(0, 122, 204, 0.2);
 }
 
+.course-settings label {
+  margin: 0 10px;
+}
+
+/* Boutons */
 .buttons-container {
   display: flex;
   justify-content: center;
-  gap: 2rem;
-  margin-bottom: 2rem;
+  align-items: center;
+  margin: 20px 0;
 }
 
 button {
+  padding: 10px 20px;
   border: none;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
+  font-size: 16px;
+  margin: 0 10px;
+  transition: background 0.3s ease;
 }
 
-button.start-btn {
-  background-color: #007acc;
+#startBtn {
+  background: #28a745;
   color: white;
-  padding: 0.8rem 2rem;
-  border-radius: 6px;
 }
 
-button.start-btn:hover {
-  background-color: #005f99;
+#startBtn:hover {
+  background: #218838;
 }
 
-button.reset-btn {
-  background-color: #66bb6a;
+#resetBtn {
+  background: #dc3545;
   color: white;
-  padding: 0.8rem 2rem;
-  border-radius: 6px;
 }
 
-button.reset-btn:hover {
-  background-color: #4caf50;
+#resetBtn:hover {
+  background: #c82333;
 }
 
-button.add-tour-btn {
-  background-color: #ff9800;
+#addTourBtn {
+  background: #007bff;
   color: white;
-  width: 70px;
-  height: 70px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  font-size: 2rem;
-  line-height: 70px;
-  text-align: center;
-  padding: 0;
-  box-shadow: 0 0 10px #ffa726;
-}
-
-button.add-tour-btn:hover {
-  background-color: #fb8c00;
-}
-
-/* Prof page */
-
-#startScanBtn {
-  display: block;
-  margin: 2rem auto;
-  background-color: #007acc;
-  color: white;
-  font-size: 1.2rem;
-  padding: 1rem 2.5rem;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,122,204,0.3);
-  transition: background-color 0.3s ease;
-}
-
-#startScanBtn:hover {
-  background-color: #005f99;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-th, td {
-  padding: 0.75rem 1rem;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-th {
-  background-color: #007acc;
-  color: white;
-}
-
-.actions {
+  font-size: 22px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  margin-top: 1rem;
-  flex-wrap: wrap;
-  gap: 1rem;
 }
 
-.actions label {
-  font-weight: 600;
+#addTourBtn:hover {
+  background: #0069d9;
 }
 
-.actions select, .actions input[type="text"] {
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  min-width: 150px;
-}
-
-/* Footer styling for gray background on Eleve page */
-footer {
-  background-color: #e0e0e0;
-  color: #333;
+/* Infos course */
+.infos-course {
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 400px;
   text-align: center;
-  padding: 1rem;
-  font-weight: 600;
-  font-size: 1rem;
-  margin-top: auto;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.infos-course p {
+  margin: 5px 0;
+  font-weight: bold;
+}
+
+/* QR code container */
+#qrContainer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#qrCode {
+  margin-top: 10px;
+}
+
+/* Pied de page */
+footer {
+  background: #e0e0e0;
+  text-align: center;
+  padding: 10px;
+  font-size: 14px;
 }
