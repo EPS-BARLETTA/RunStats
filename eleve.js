@@ -1,184 +1,199 @@
 // eleve.js
-// Gestion de la logique pour la page élèves : saisie, chrono, tours, calculs, QR code
 
-let courseIndex = 1; // 1 = élève 1, 2 = élève 2
-let tours = [0, 0]; // Nombre de tours pour chaque élève
-let distanceTour = 0; // En mètres
-let dureeCourse = 0; // En minutes -> converti en secondes
-let timerInterval;
-let tempsRestant; // En secondes
+// Données
+let currentCourse = 1;
+let toursEleve1 = 0;
+let toursEleve2 = 0;
+let dureeCourse = 0;
+let distanceTour = 0;
+let tempsRestant = 0;
+let timerInterval = null;
 
-// Elements DOM
-const timerEl = document.getElementById("timer");
-const startBtn = document.getElementById("startBtn");
-const lapBtn = document.getElementById("lapBtn");
-const resetBtn = document.getElementById("resetBtn");
-const qrcodeEl = document.getElementById("qrcode");
+const eleve1Data = {};
+const eleve2Data = {};
 
-// Vérifie que tous les champs sont remplis
-function verifChamps() {
-    const champs = [
-        document.getElementById("nom1").value.trim(),
-        document.getElementById("prenom1").value.trim(),
-        document.getElementById("classe1").value.trim(),
-        document.getElementById("sexe1").value.trim(),
-        document.getElementById("nom2").value.trim(),
-        document.getElementById("prenom2").value.trim(),
-        document.getElementById("classe2").value.trim(),
-        document.getElementById("sexe2").value.trim(),
-        document.getElementById("distanceTour").value.trim(),
-        document.getElementById("dureeCourse").value.trim()
-    ];
-    return champs.every(c => c !== "");
+// Récupération éléments DOM
+const minuteurEl = document.getElementById('minuteur');
+const minuteurContainer = document.getElementById('minuteur-container');
+const boutonsCourse = document.querySelector('.boutons-course');
+const parametresCourse = document.querySelector('.parametres-course');
+const elevesContainer = document.querySelector('.eleves-container');
+const infosCourse = document.querySelector('.infos-course');
+const qrContainer = document.getElementById('qrCode-container');
+
+// Boutons
+const startBtn = document.getElementById('startBtn');
+const tourBtn = document.getElementById('tourBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+// Vérifier infos saisies
+function infosValides() {
+  const nom1 = document.getElementById('nom1').value.trim();
+  const prenom1 = document.getElementById('prenom1').value.trim();
+  const sexe1 = document.getElementById('sexe1').value;
+  const classe1 = document.getElementById('classe1').value.trim();
+
+  const nom2 = document.getElementById('nom2').value.trim();
+  const prenom2 = document.getElementById('prenom2').value.trim();
+  const sexe2 = document.getElementById('sexe2').value;
+  const classe2 = document.getElementById('classe2').value.trim();
+
+  const duree = document.getElementById('dureeCourse').value;
+  const distance = document.getElementById('distanceTour').value;
+
+  return (
+    nom1 && prenom1 && sexe1 !== 'choisir' && classe1 &&
+    nom2 && prenom2 && sexe2 !== 'choisir' && classe2 &&
+    duree > 0 && distance > 0
+  );
 }
 
-// Met à jour l’affichage des infos de course
-function majInfos() {
-    const distance1 = tours[0] * distanceTour;
-    const distance2 = tours[1] * distanceTour;
+// Démarrage course
+startBtn.addEventListener('click', () => {
+  if (!infosValides()) {
+    alert('Veuillez saisir toutes les informations avant de démarrer la course.');
+    return;
+  }
 
-    const tempsCourseHeures = (dureeCourse * 60) / 3600; // temps en heures
+  if (currentCourse === 1) {
+    setInfosEleve1();
+  } else {
+    setInfosEleve2();
+  }
 
-    // Vitesse moyenne = distance totale (km) / temps (h)
-    const vitesse1 = tempsCourseHeures > 0 ? (distance1 / 1000) / tempsCourseHeures : 0;
-    const vitesse2 = tempsCourseHeures > 0 ? (distance2 / 1000) / tempsCourseHeures : 0;
+  // Cacher les saisies
+  elevesContainer.style.display = 'none';
+  parametresCourse.style.display = 'none';
 
-    // VMA estimée = vitesse moyenne (simplifiée)
-    document.getElementById("dist1").textContent = distance1;
-    document.getElementById("dist2").textContent = distance2;
-    document.getElementById("vitesse1").textContent = vitesse1.toFixed(2);
-    document.getElementById("vitesse2").textContent = vitesse2.toFixed(2);
-    document.getElementById("vma1").textContent = vitesse1.toFixed(2);
-    document.getElementById("vma2").textContent = vitesse2.toFixed(2);
-}
+  // Préparer minuteur
+  dureeCourse = parseInt(document.getElementById('dureeCourse').value) * 60;
+  distanceTour = parseFloat(document.getElementById('distanceTour').value);
+  tempsRestant = dureeCourse;
 
-// Formate mm:ss
-function formatTime(seconds) {
-    const min = Math.floor(seconds / 60);
-    const sec = seconds % 60;
-    return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
-}
+  afficherMinuteur();
+  minuteurContainer.classList.remove('hidden');
 
-// Lance le minuteur
-function startTimer() {
-    tempsRestant = dureeCourse * 60;
-    timerEl.textContent = formatTime(tempsRestant);
-    timerEl.classList.remove("hidden");
+  // Démarrer chrono
+  timerInterval = setInterval(() => {
+    tempsRestant--;
+    afficherMinuteur();
 
-    timerInterval = setInterval(() => {
-        tempsRestant--;
-
-        // Clignotement rouge à 10 sec
-        if (tempsRestant <= 10) {
-            timerEl.style.color = (tempsRestant % 2 === 0) ? "red" : "#ff5555";
-        } else {
-            timerEl.style.color = "#000";
-        }
-
-        timerEl.textContent = formatTime(tempsRestant);
-
-        if (tempsRestant <= 0) {
-            clearInterval(timerInterval);
-            finCourse();
-        }
-    }, 1000);
-}
-
-// Fin de course pour un élève
-function finCourse() {
-    alert(`Course de l'élève ${courseIndex} terminée !`);
-    lapBtn.disabled = true;
-
-    if (courseIndex === 1) {
-        courseIndex = 2;
-        tours[1] = 0; // reset tours pour 2e élève
-        // Affiche bouton "Démarrer" pour lancer la 2e course
-        startBtn.disabled = false;
-        startBtn.textContent = "Démarrer élève 2";
-    } else {
-        // Les deux courses sont terminées -> génération QR code
-        genererQRCode();
-    }
-}
-
-// Ajoute un tour
-function ajouterTour() {
-    if (courseIndex === 1) {
-        tours[0]++;
-    } else {
-        tours[1]++;
-    }
-    majInfos();
-}
-
-// Reset complet
-function resetCourse() {
-    clearInterval(timerInterval);
-    courseIndex = 1;
-    tours = [0, 0];
-    timerEl.textContent = "00:00";
-    timerEl.classList.add("hidden");
-    startBtn.textContent = "Démarrer";
-    lapBtn.disabled = true;
-    majInfos();
-    qrcodeEl.classList.add("hidden");
-    qrcodeEl.innerHTML = "";
-}
-
-// Génération du QR code avec les infos des deux élèves
-function genererQRCode() {
-    const data = {
-        eleve1: {
-            nom: document.getElementById("nom1").value,
-            prenom: document.getElementById("prenom1").value,
-            classe: document.getElementById("classe1").value,
-            sexe: document.getElementById("sexe1").value,
-            distance: tours[0] * distanceTour
-        },
-        eleve2: {
-            nom: document.getElementById("nom2").value,
-            prenom: document.getElementById("prenom2").value,
-            classe: document.getElementById("classe2").value,
-            sexe: document.getElementById("sexe2").value,
-            distance: tours[1] * distanceTour
-        }
-    };
-
-    qrcodeEl.classList.remove("hidden");
-    qrcodeEl.innerHTML = "";
-    new QRCode(qrcodeEl, {
-        text: JSON.stringify(data),
-        width: 200,
-        height: 200
-    });
-}
-
-// Bouton démarrer
-startBtn.addEventListener("click", () => {
-    if (!verifChamps()) {
-        alert("Veuillez remplir toutes les informations avant de démarrer !");
-        return;
+    if (tempsRestant <= 10) {
+      minuteurEl.classList.add('clignote');
     }
 
-    distanceTour = parseInt(document.getElementById("distanceTour").value);
-    dureeCourse = parseInt(document.getElementById("dureeCourse").value);
-
-    // Cache les saisies
-    document.querySelector(".eleves-container").classList.add("hidden");
-    document.querySelector(".parametres-course").classList.add("hidden");
-
-    lapBtn.disabled = false;
-    startBtn.disabled = true;
-
-    startTimer();
+    if (tempsRestant <= 0) {
+      clearInterval(timerInterval);
+      minuteurEl.classList.remove('clignote');
+      finCourse();
+    }
+  }, 1000);
 });
 
 // Bouton + Tour
-lapBtn.addEventListener("click", ajouterTour);
+tourBtn.addEventListener('click', () => {
+  if (currentCourse === 1) {
+    toursEleve1++;
+  } else {
+    toursEleve2++;
+  }
+  majInfosCourse();
+});
 
-// Bouton Reset
-resetBtn.addEventListener("click", resetCourse);
+// Reset
+resetBtn.addEventListener('click', () => {
+  clearInterval(timerInterval);
+  toursEleve1 = 0;
+  toursEleve2 = 0;
+  currentCourse = 1;
+  minuteurEl.textContent = "00:00";
+  elevesContainer.style.display = 'flex';
+  parametresCourse.style.display = 'block';
+  infosCourse.innerHTML = '';
+  qrContainer.classList.add('hidden');
+});
 
-// Init
-lapBtn.disabled = true;
-majInfos();
+// Affichage minuteur
+function afficherMinuteur() {
+  const minutes = Math.floor(tempsRestant / 60);
+  const secondes = tempsRestant % 60;
+  minuteurEl.textContent = `${minutes.toString().padStart(2, '0')}:${secondes.toString().padStart(2, '0')}`;
+}
+
+// Fin de course
+function finCourse() {
+  if (currentCourse === 1) {
+    alert('Course 1 terminée. Cliquez sur "Démarrer" pour lancer la course 2.');
+    currentCourse = 2;
+    elevesContainer.style.display = 'flex';
+    parametresCourse.style.display = 'block';
+  } else {
+    alert('Course 2 terminée. QR Code généré !');
+    genererQRCode();
+  }
+}
+
+// Stocker infos élève
+function setInfosEleve1() {
+  eleve1Data.nom = document.getElementById('nom1').value;
+  eleve1Data.prenom = document.getElementById('prenom1').value;
+  eleve1Data.classe = document.getElementById('classe1').value;
+  eleve1Data.sexe = document.getElementById('sexe1').value;
+}
+
+function setInfosEleve2() {
+  eleve2Data.nom = document.getElementById('nom2').value;
+  eleve2Data.prenom = document.getElementById('prenom2').value;
+  eleve2Data.classe = document.getElementById('classe2').value;
+  eleve2Data.sexe = document.getElementById('sexe2').value;
+}
+
+// Mise à jour infos course
+function majInfosCourse() {
+  let distance1 = toursEleve1 * distanceTour;
+  let distance2 = toursEleve2 * distanceTour;
+
+  let vitesse1 = (distance1 / (dureeCourse / 3600)).toFixed(2); // km/h
+  let vitesse2 = (distance2 / (dureeCourse / 3600)).toFixed(2);
+
+  infosCourse.innerHTML = `
+    <div class="resultats">
+      <h4>${eleve1Data.prenom || 'Élève 1'} :</h4>
+      <p>Tours : ${toursEleve1}</p>
+      <p>Distance : ${distance1.toFixed(2)} m</p>
+      <p>Vitesse Moyenne : ${vitesse1} km/h</p>
+    </div>
+    <div class="resultats">
+      <h4>${eleve2Data.prenom || 'Élève 2'} :</h4>
+      <p>Tours : ${toursEleve2}</p>
+      <p>Distance : ${distance2.toFixed(2)} m</p>
+      <p>Vitesse Moyenne : ${vitesse2} km/h</p>
+    </div>
+  `;
+}
+
+// Générer QR Code
+function genererQRCode() {
+  qrContainer.innerHTML = '';
+
+  const data = {
+    eleve1: {
+      ...eleve1Data,
+      tours: toursEleve1,
+      distance: toursEleve1 * distanceTour
+    },
+    eleve2: {
+      ...eleve2Data,
+      tours: toursEleve2,
+      distance: toursEleve2 * distanceTour
+    }
+  };
+
+  const qr = new QRCode(qrContainer, {
+    text: JSON.stringify(data),
+    width: 180,
+    height: 180
+  });
+
+  qrContainer.classList.remove('hidden');
+}
