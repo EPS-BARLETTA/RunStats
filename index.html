@@ -1,134 +1,99 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RunStats - Equipe EPS Lycée Vauban - Luxembourg</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- QR Code library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <!-- QR Scanner library -->
-  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Course VMA</title>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-  <header>
-    <h1>RunStats - Equipe EPS Lycée Vauban - Luxembourg</h1>
-  </header>
-
-  <main>
-    <!-- Formulaire des deux élèves -->
-    <section class="input-duo">
-      <div class="eleve">
-        <h2>Élève 1</h2>
-        <div class="input-groupe">
-          <label>Nom</label>
-          <input type="text" id="nom1" placeholder="Nom">
-          <label>Prénom</label>
-          <input type="text" id="prenom1" placeholder="Prénom">
-          <label>Sexe</label>
-          <select id="sexe1">
-            <option value="">Choix</option>
-            <option value="Fille">Fille</option>
-            <option value="Garçon">Garçon</option>
-          </select>
+    <!-- Interface Élèves -->
+    <div id="eleve-interface" class="container active">
+        <h1>Inscription Élèves</h1>
+        <form id="eleve-form">
+            <input type="text" id="nom" placeholder="Nom" required>
+            <input type="text" id="prenom" placeholder="Prénom" required>
+            <input type="text" id="classe" placeholder="Classe" required>
+            <select id="sexe" required>
+                <option value="">Sexe</option>
+                <option value="F">Fille</option>
+                <option value="M">Garçon</option>
+            </select>
+            <input type="number" id="vma" placeholder="VMA" required>
+            <input type="number" id="distance" placeholder="Distance" required>
+            <button type="submit">Générer QR Code</button>
+        </form>
+        <div id="qr-container">
+            <canvas id="qr-code"></canvas>
         </div>
-      </div>
+        <button id="switch-prof">Espace Prof</button>
+    </div>
 
-      <div class="eleve">
-        <h2>Élève 2</h2>
-        <div class="input-groupe">
-          <label>Nom</label>
-          <input type="text" id="nom2" placeholder="Nom">
-          <label>Prénom</label>
-          <input type="text" id="prenom2" placeholder="Prénom">
-          <label>Sexe</label>
-          <select id="sexe2">
-            <option value="">Choix</option>
-            <option value="Fille">Fille</option>
-            <option value="Garçon">Garçon</option>
-          </select>
+    <!-- Interface Prof -->
+    <div id="prof-login" class="container">
+        <h1>Connexion Prof</h1>
+        <input type="password" id="prof-code" placeholder="Code d’accès">
+        <button id="login-btn">Connexion</button>
+        <button id="switch-eleve">Retour Élèves</button>
+    </div>
+
+    <div id="prof-interface" class="container">
+        <h1>Espace Prof</h1>
+        <div id="qr-scanner">
+            <video id="preview"></video>
+            <p>Scannez un QR code pour ajouter les données</p>
         </div>
-      </div>
-    </section>
 
-    <!-- Paramètres course -->
-    <section>
-      <div class="input-groupe">
-        <label>Durée de la course (minutes)</label>
-        <input type="number" id="tempsCourse" min="1" placeholder="Ex: 6">
-        <label>Distance de la piste (m)</label>
-        <input type="number" id="distancePiste" placeholder="Ex: 200">
-        <label>VMA (optionnel)</label>
-        <input type="number" id="vmaInput" placeholder="Ex: 15">
-      </div>
-    </section>
-
-    <!-- Chronomètre -->
-    <section id="chrono">
-      <div id="chronoDisplay">00:00</div>
-      <div class="chrono-btns">
-        <button id="startBtn" class="btn-start">Démarrer</button>
-        <button id="lapBtn" class="btn-lap">+<br>Tour</button>
-        <button id="resetBtn" class="btn-reset">Reset</button>
-      </div>
-    </section>
-
-    <!-- Statistiques -->
-    <section id="statsBox">
-      <div class="stat ligne-bleue">
-        <div>Distance totale (m)</div>
-        <div id="totalDistance">0</div>
-      </div>
-      <div class="stat ligne-verte">
-        <div>Vitesse moyenne (km/h)</div>
-        <div id="vitesseMoyenne">0</div>
-      </div>
-      <div class="stat ligne-jaune">
-        <div>VMA estimée (km/h)</div>
-        <div id="vmaEstimee">0</div>
-      </div>
-    </section>
-
-    <!-- État de forme (émoticônes) -->
-    <section id="etatForme" style="display:none;">
-      <button class="etatBtn" data-forme="bien">😊</button>
-      <button class="etatBtn" data-forme="moyen">😬</button>
-      <button class="etatBtn" data-forme="mauvais">🤢</button>
-    </section>
-
-    <!-- QR Code généré -->
-    <section id="qrCodeBox"></section>
-
-    <!-- Espace Prof -->
-    <section id="profAccess">
-      <h2>Accès Prof</h2>
-      <input type="password" id="profCode" placeholder="Entrer le code PIN">
-      <button id="accessProfBtn">Valider</button>
-
-      <div id="profPanel" style="display:none;">
-        <div id="qr-scan-container">
-          <div id="reader" style="width:300px;margin:auto;"></div>
+        <!-- Tableau principal -->
+        <div class="table-actions">
+            <button id="sort-alpha">Trier A-Z</button>
+            <button id="sort-vma">Trier VMA</button>
+            <button id="sort-distance">Trier Distance</button>
+            <button id="sort-classe">Trier Classe</button>
+            <button id="sort-sexe">Trier Sexe</button>
+            <input type="text" id="search" placeholder="Recherche...">
+            <button id="export-csv">Exporter CSV</button>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Nom</th>
-              <th>Prénom</th>
-              <th>Sexe</th>
-              <th>Distance (m)</th>
-              <th>VMA (km/h)</th>
-            </tr>
-          </thead>
-          <tbody id="profTableBody"></tbody>
+
+        <table id="eleve-table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Classe</th>
+                    <th>Sexe</th>
+                    <th>VMA</th>
+                    <th>Distance</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
         </table>
-      </div>
-    </section>
-  </main>
 
-  <footer>
-    RunStats - Equipe EPS Lycée Vauban - Luxembourg - JB
-  </footer>
+        <!-- Bouton création groupes -->
+        <button id="create-groups">Créer Groupes</button>
 
-  <script src="script.js"></script>
+        <!-- Tableau groupes -->
+        <div id="groupes-container" class="hidden">
+            <h2>Groupes créés</h2>
+            <table id="group-table">
+                <thead>
+                    <tr>
+                        <th>Groupe</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Classe</th>
+                        <th>Sexe</th>
+                        <th>VMA</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <button id="export-groups-csv">Télécharger Groupes (CSV)</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="../js/script.js"></script>
 </body>
 </html>
