@@ -1,61 +1,78 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Course VMA</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Application Course - Élèves & Prof</title>
+
+    <!-- Styles CSS -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Librairies QRCode & jsQR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 </head>
 <body>
-    <!-- Interface Élèves -->
-    <div id="eleve-interface" class="container active">
-        <h1>Inscription Élèves</h1>
+
+    <!-- Navigation entre Élève et Prof -->
+    <div class="nav-buttons">
+        <button id="switch-eleve">Interface Élève</button>
+        <button id="switch-prof">Interface Prof</button>
+    </div>
+
+    <!-- Interface Élève -->
+    <section id="eleve-container" class="active">
+        <h1>Interface Élève</h1>
         <form id="eleve-form">
-            <input type="text" id="nom" placeholder="Nom" required>
-            <input type="text" id="prenom" placeholder="Prénom" required>
-            <input type="text" id="classe" placeholder="Classe" required>
-            <select id="sexe" required>
-                <option value="">Sexe</option>
-                <option value="F">Fille</option>
-                <option value="M">Garçon</option>
-            </select>
-            <input type="number" id="vma" placeholder="VMA" required>
-            <input type="number" id="distance" placeholder="Distance" required>
+            <label>Nom : <input type="text" name="nom" required /></label><br />
+            <label>Prénom : <input type="text" name="prenom" required /></label><br />
+            <label>Classe : 
+                <select name="classe" required>
+                    <option value="">--Choisir--</option>
+                    <option value="6ème">6ème</option>
+                    <option value="5ème">5ème</option>
+                    <option value="4ème">4ème</option>
+                    <option value="3ème">3ème</option>
+                </select>
+            </label><br />
+            <label>Sexe : 
+                <select name="sexe" required>
+                    <option value="">--Choisir--</option>
+                    <option value="M">Masculin</option>
+                    <option value="F">Féminin</option>
+                </select>
+            </label><br />
+            <label>VMA (km/h) : <input type="number" step="0.01" name="vma" min="0" required /></label><br />
+            <label>Distance réalisée (m) : <input type="number" step="0.01" name="distance" min="0" required /></label><br />
             <button type="submit">Générer QR Code</button>
         </form>
-        <div id="qr-container">
-            <canvas id="qr-code"></canvas>
-        </div>
-        <button id="switch-prof">Espace Prof</button>
-    </div>
+
+        <div id="qr-container"></div>
+    </section>
 
     <!-- Interface Prof -->
-    <div id="prof-login" class="container">
-        <h1>Connexion Prof</h1>
-        <input type="password" id="prof-code" placeholder="Code d’accès">
-        <button id="login-btn">Connexion</button>
-        <button id="switch-eleve">Retour Élèves</button>
-    </div>
+    <section id="prof-container" class="inactive">
+        <h1>Interface Professeur</h1>
 
-    <div id="prof-interface" class="container">
-        <h1>Espace Prof</h1>
-        <div id="qr-scanner">
-            <video id="preview"></video>
-            <p>Scannez un QR code pour ajouter les données</p>
-        </div>
+        <button id="start-scan">Scanner QR Code</button><br />
+        <video id="video-preview" width="300" height="200" autoplay muted></video>
 
-        <!-- Tableau principal -->
-        <div class="table-actions">
-            <button id="sort-alpha">Trier A-Z</button>
-            <button id="sort-vma">Trier VMA</button>
-            <button id="sort-distance">Trier Distance</button>
-            <button id="sort-classe">Trier Classe</button>
-            <button id="sort-sexe">Trier Sexe</button>
-            <input type="text" id="search" placeholder="Recherche...">
+        <div class="table-controls">
+            <label>Trier par : 
+                <select id="sort-select">
+                    <option value="nom">Nom (A-Z)</option>
+                    <option value="vma">VMA (décroissant)</option>
+                    <option value="sexe">Sexe</option>
+                    <option value="distance">Distance (décroissant)</option>
+                    <option value="classe">Classe</option>
+                </select>
+            </label>
+            <label>Filtrer classe : <input id="filter-input" type="text" placeholder="Tapez pour filtrer..." /></label>
             <button id="export-csv">Exporter CSV</button>
+            <button id="create-groups">Créer groupes</button>
         </div>
 
-        <table id="eleve-table">
+        <table id="eleves-table" border="1" cellpadding="5" cellspacing="0">
             <thead>
                 <tr>
                     <th>Nom</th>
@@ -69,31 +86,10 @@
             <tbody></tbody>
         </table>
 
-        <!-- Bouton création groupes -->
-        <button id="create-groups">Créer Groupes</button>
+        <div id="groupes-container"></div>
+    </section>
 
-        <!-- Tableau groupes -->
-        <div id="groupes-container" class="hidden">
-            <h2>Groupes créés</h2>
-            <table id="group-table">
-                <thead>
-                    <tr>
-                        <th>Groupe</th>
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Classe</th>
-                        <th>Sexe</th>
-                        <th>VMA</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-            <button id="export-groups-csv">Télécharger Groupes (CSV)</button>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-    <script src="https://unpkg.com/html5-qrcode"></script>
-    <script src="../js/script.js"></script>
+    <!-- Script JS -->
+    <script src="script.js"></script>
 </body>
 </html>
