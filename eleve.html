@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - Élève</title>
+  <title>RunStats - Élèves</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
   <header>
-    <h1 style="text-align:center; margin-top: 1em;">RunStats - Page Élève</h1>
+    <h1>RunStats - Saisie Élèves</h1>
   </header>
 
   <main>
@@ -24,9 +23,9 @@
         <input type="text" id="classe1" placeholder="Classe" />
         <label for="sexe1">Sexe :</label>
         <select id="sexe1">
-          <option value="">Choix</option>
-          <option value="Fille">Fille</option>
-          <option value="Garçon">Garçon</option>
+          <option value="">--Choisir--</option>
+          <option value="fille">Fille</option>
+          <option value="garcon">Garçon</option>
         </select>
       </div>
 
@@ -40,9 +39,9 @@
         <input type="text" id="classe2" placeholder="Classe" />
         <label for="sexe2">Sexe :</label>
         <select id="sexe2">
-          <option value="">Choix</option>
-          <option value="Fille">Fille</option>
-          <option value="Garçon">Garçon</option>
+          <option value="">--Choisir--</option>
+          <option value="fille">Fille</option>
+          <option value="garcon">Garçon</option>
         </select>
       </div>
     </section>
@@ -56,29 +55,27 @@
       <input type="number" id="vmaConnue" step="0.1" min="0" placeholder="ex : 14.5" />
     </section>
 
-    <div style="text-align:center;">
-      <button class="btn-start" id="startBtn">Démarrer</button>
-    </div>
-
-    <section id="courseSection" style="display:none; text-align:center; margin-top: 2em;">
+    <section id="courseSection" style="display:none; text-align:center;">
       <div class="timer-display" id="timer">00:00</div>
-
-      <div style="margin-top: 2em;">
-        <button class="btn-plus-tour" id="plusTourBtn">+ Tour</button>
-        <button class="btn-reset" id="resetBtn">Reset</button>
-      </div>
-
-      <div id="stats" style="margin-top: 2em; font-size:1.2rem;">
+      <div id="stats">
         <p><strong>Nombre de tours :</strong> <span id="nbTours">0</span></p>
         <p><strong>Distance parcourue (m) :</strong> <span id="distanceParcourue">0</span></p>
         <p><strong>Vitesse moyenne (km/h) :</strong> <span id="vitesseMoyenne">0</span></p>
-        <p><strong>Estimation VMA (km/h) :</strong> <span id="vmaEstimee">0</span></p>
+        <p><strong>VMA estimée (km/h) :</strong> <span id="vmaEstimee">0</span></p>
+      </div>
+      <div style="margin-top:1em;">
+        <button id="plusTourBtn" class="btn-plus-tour">+ Tour</button>
+        <button id="resetBtn" class="btn-reset">Reset</button>
       </div>
     </section>
+
+    <div style="text-align:center; margin-top: 2em;">
+      <button id="startBtn" class="btn-start">Démarrer</button>
+    </div>
   </main>
 
   <footer>
-    Équipe EPS Lycée Vauban - LUXEMBOURG - JB
+    <p>Équipe EPS Lycée Vauban - LUXEMBOURG - JB</p>
   </footer>
 
   <script src="eleve.js"></script>
