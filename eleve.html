@@ -5,79 +5,279 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RunStats - Élèves</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Styles spécifiques pour la page élève */
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1.5em;
+    }
+
+    header h1 {
+      margin: 0;
+      color: #1e3a8a;
+      font-size: 2.5em;
+    }
+
+    header p {
+      margin: 0.2em 0 0 0;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    section#inputSection {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 1em;
+      flex-wrap: wrap;
+      gap: 1em;
+    }
+
+    .eleveCard {
+      background: #e0e7ff;
+      border-radius: 8px;
+      padding: 1em;
+      width: 300px;
+      box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .eleveCard:nth-child(2) {
+      background: #fef3c7;
+      box-shadow: 0 0 8px rgba(202, 138, 4, 0.3);
+    }
+
+    .eleveCard h2 {
+      margin-top: 0;
+      text-align: center;
+      color: #1e40af;
+    }
+
+    .eleveCard:nth-child(2) h2 {
+      color: #92400e;
+    }
+
+    label {
+      display: block;
+      margin-top: 0.6em;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    select,
+    input[type="number"] {
+      width: 100%;
+      padding: 0.4em;
+      margin-top: 0.2em;
+      border-radius: 4px;
+      border: 1px solid #cbd5e1;
+      font-size: 1em;
+    }
+
+    section#courseInputs {
+      background: #d1fae5;
+      padding: 1em;
+      border-radius: 8px;
+      width: 640px;
+      margin: 0 auto 1.5em auto;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+    }
+
+    section#courseInputs label {
+      font-weight: 700;
+      margin-top: 0;
+    }
+
+    section#courseInputs input[type="number"] {
+      width: 120px;
+      font-size: 1em;
+      margin-right: 1em;
+    }
+
+    #startBtn {
+      display: block;
+      margin: 1em auto 0 auto;
+      padding: 0.7em 1.5em;
+      font-size: 1.2em;
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(37, 99, 235, 0.5);
+      transition: background-color 0.3s ease;
+    }
+
+    #startBtn:hover {
+      background-color: #1d4ed8;
+    }
+
+    section#courseSection {
+      display: none;
+      max-width: 400px;
+      margin: 0 auto;
+      text-align: center;
+      background: #e0f2fe;
+      padding: 1.5em;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(14, 165, 233, 0.4);
+    }
+
+    #eleveInfo {
+      font-weight: 700;
+      font-size: 1.3em;
+      margin-bottom: 0.5em;
+      color: #0c4a6e;
+    }
+
+    #timer {
+      font-size: 3em;
+      font-weight: 700;
+      margin-bottom: 0.5em;
+      color: #0c4a6e;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    #nbTours,
+    #distanceParcourue,
+    #vitesseMoyenne,
+    #vmaEstimee {
+      font-weight: 700;
+      font-size: 1.2em;
+      color: #0369a1;
+    }
+
+    .infoLabel {
+      font-weight: 600;
+      margin-top: 0.7em;
+      color: #075985;
+    }
+
+    #plusTourBtn {
+      margin: 1em 0.6em 0 0.6em;
+      padding: 0.6em 1.4em;
+      font-size: 1.4em;
+      border-radius: 50px;
+      background-color: #22c55e;
+      color: white;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(34, 197, 94, 0.5);
+      transition: background-color 0.3s ease;
+      min-width: 120px;
+    }
+
+    #plusTourBtn:hover {
+      background-color: #16a34a;
+    }
+
+    #resetBtn {
+      margin: 1em 0 0 0.6em;
+      padding: 0.6em 1.2em;
+      font-size: 1.1em;
+      border-radius: 8px;
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(239, 68, 68, 0.5);
+      transition: background-color 0.3s ease;
+      min-width: 100px;
+    }
+
+    #resetBtn:hover {
+      background-color: #b91c1c;
+    }
+
+    #resultatsFinal {
+      max-width: 500px;
+      margin: 2em auto;
+      background: #fef3c7;
+      padding: 1.2em 1.5em;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(202, 138, 4, 0.3);
+      color: #92400e;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>RunStats - Saisie Élèves</h1>
+    <h1>RunStats - Élèves</h1>
+    <p>Equipe EPS Lycée Vauban - Luxembourg</p>
   </header>
 
   <main>
-    <section class="eleve-container" id="inputSection">
-      <div class="encadre eleve1">
+    <section id="inputSection">
+      <div class="eleveCard" id="eleve1">
         <h2>Élève 1</h2>
-        <label for="nom1">Nom :</label>
-        <input type="text" id="nom1" placeholder="Nom" />
-        <label for="prenom1">Prénom :</label>
-        <input type="text" id="prenom1" placeholder="Prénom" />
-        <label for="classe1">Classe :</label>
-        <input type="text" id="classe1" placeholder="Classe" />
-        <label for="sexe1">Sexe :</label>
-        <select id="sexe1">
-          <option value="">--Choisir--</option>
-          <option value="fille">Fille</option>
-          <option value="garcon">Garçon</option>
+        <label for="nom1">Nom</label>
+        <input type="text" id="nom1" required />
+        <label for="prenom1">Prénom</label>
+        <input type="text" id="prenom1" required />
+        <label for="classe1">Classe</label>
+        <input type="text" id="classe1" />
+        <label for="sexe1">Sexe</label>
+        <select id="sexe1" required>
+          <option value="">Choix</option>
+          <option value="Fille">Fille</option>
+          <option value="Garçon">Garçon</option>
         </select>
       </div>
 
-      <div class="encadre eleve2">
+      <div class="eleveCard" id="eleve2">
         <h2>Élève 2</h2>
-        <label for="nom2">Nom :</label>
-        <input type="text" id="nom2" placeholder="Nom" />
-        <label for="prenom2">Prénom :</label>
-        <input type="text" id="prenom2" placeholder="Prénom" />
-        <label for="classe2">Classe :</label>
-        <input type="text" id="classe2" placeholder="Classe" />
-        <label for="sexe2">Sexe :</label>
-        <select id="sexe2">
-          <option value="">--Choisir--</option>
-          <option value="fille">Fille</option>
-          <option value="garcon">Garçon</option>
+        <label for="nom2">Nom</label>
+        <input type="text" id="nom2" required />
+        <label for="prenom2">Prénom</label>
+        <input type="text" id="prenom2" required />
+        <label for="classe2">Classe</label>
+        <input type="text" id="classe2" />
+        <label for="sexe2">Sexe</label>
+        <select id="sexe2" required>
+          <option value="">Choix</option>
+          <option value="Fille">Fille</option>
+          <option value="Garçon">Garçon</option>
         </select>
       </div>
     </section>
 
-    <section class="course-container" id="courseInputs">
-      <label for="dureeCourse">Durée de la course (minutes) :</label>
-      <input type="number" id="dureeCourse" min="1" placeholder="ex : 12" />
-      <label for="distanceTour">Distance du tour (mètres) :</label>
-      <input type="number" id="distanceTour" min="1" placeholder="ex : 400" />
-      <label for="vmaConnue">VMA (km/h) (optionnel) :</label>
-      <input type="number" id="vmaConnue" step="0.1" min="0" placeholder="ex : 14.5" />
+    <section id="courseInputs">
+      <label for="dureeCourse">Durée de la course (minutes) *</label>
+      <input type="number" id="dureeCourse" min="1" required />
+
+      <label for="distanceTour">Distance d’un tour (mètres) *</label>
+      <input type="number" id="distanceTour" min="1" step="0.1" required />
+
+      <label for="vmaConnue">VMA connue (optionnelle, km/h)</label>
+      <input type="number" id="vmaConnue" min="0" step="0.1" />
     </section>
 
-    <section id="courseSection" style="display:none; text-align:center;">
-      <div class="timer-display" id="timer">00:00</div>
-      <div id="stats">
-        <p><strong>Nombre de tours :</strong> <span id="nbTours">0</span></p>
-        <p><strong>Distance parcourue (m) :</strong> <span id="distanceParcourue">0</span></p>
-        <p><strong>Vitesse moyenne (km/h) :</strong> <span id="vitesseMoyenne">0</span></p>
-        <p><strong>VMA estimée (km/h) :</strong> <span id="vmaEstimee">0</span></p>
-      </div>
-      <div style="margin-top:1em;">
-        <button id="plusTourBtn" class="btn-plus-tour">+ Tour</button>
-        <button id="resetBtn" class="btn-reset">Reset</button>
-      </div>
+    <button id="startBtn">Démarrer la course</button>
+
+    <section id="courseSection">
+      <!-- Nom prénom élève courant -->
+      <!-- inséré dynamiquement par JS dans #eleveInfo -->
+      <div id="timer">00:00</div>
+
+      <div class="infoLabel">Nombre de tours : <span id="nbTours">0</span></div>
+      <div class="infoLabel">Distance parcourue (m) : <span id="distanceParcourue">0</span></div>
+      <div class="infoLabel">Vitesse moyenne (km/h) : <span id="vitesseMoyenne">0.00</span></div>
+      <div class="infoLabel">VMA estimée (km/h) : <span id="vmaEstimee">0.00</span></div>
+
+      <button id="plusTourBtn">+ Tour</button>
+      <button id="resetBtn">Reset</button>
     </section>
 
-    <div style="text-align:center; margin-top: 2em;">
-      <button id="startBtn" class="btn-start">Démarrer</button>
-    </div>
   </main>
 
-  <footer>
-    <p>Équipe EPS Lycée Vauban - LUXEMBOURG - JB</p>
-  </footer>
-
   <script src="eleve.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 </body>
 </html>
