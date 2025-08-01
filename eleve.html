@@ -1,3 +1,4 @@
+<!-- eleve.html -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -5,76 +6,86 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Course - Élèves</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 </head>
 <body>
-  <!-- Titre -->
   <header>
-    Suivi Course - Élèves
+    <h1>Suivi de course - Élèves</h1>
   </header>
 
-  <!-- Conteneur des deux élèves -->
-  <main class="eleve-container">
+  <main>
+    <!-- Encadrés pour Élève 1 et Élève 2 -->
+    <div class="eleve-container">
+      <div class="eleve-box">
+        <h2>Élève 1</h2>
+        <label>Nom :</label>
+        <input type="text" id="nom1">
+        <label>Prénom :</label>
+        <input type="text" id="prenom1">
+        <label>Classe :</label>
+        <input type="text" id="classe1">
+        <label>Sexe :</label>
+        <select id="sexe1">
+          <option value="">Choisir</option>
+          <option value="Fille">Fille</option>
+          <option value="Garçon">Garçon</option>
+        </select>
+      </div>
 
-    <!-- Élève 1 -->
-    <div class="eleve-card" id="eleve1">
-      <h2>Élève 1</h2>
-      <input type="text" id="nom1" placeholder="Nom">
-      <input type="text" id="prenom1" placeholder="Prénom">
-      <input type="text" id="classe1" placeholder="Classe">
-      <select id="sexe1">
-        <option value="H">Homme</option>
-        <option value="F">Femme</option>
-      </select>
-
-      <label>Durée course (secondes) :</label>
-      <input type="number" id="dureeCourse" value="120">
-
-      <label>Distance d'un tour (mètres) :</label>
-      <input type="number" id="distanceTour" value="200">
-
-      <div class="stats">
-        <p>Temps restant : <span id="timer">0</span> s</p>
-        <p>Tours : <span id="laps">0</span></p>
-        <p>Distance parcourue : <span id="distance">0</span> m</p>
-        <p>Vitesse moyenne : <span id="vitesse">0</span> km/h</p>
-        <p>Estimation VMA : <span id="vma">0</span> km/h</p>
+      <div class="eleve-box right">
+        <h2>Élève 2</h2>
+        <label>Nom :</label>
+        <input type="text" id="nom2">
+        <label>Prénom :</label>
+        <input type="text" id="prenom2">
+        <label>Classe :</label>
+        <input type="text" id="classe2">
+        <label>Sexe :</label>
+        <select id="sexe2">
+          <option value="">Choisir</option>
+          <option value="Fille">Fille</option>
+          <option value="Garçon">Garçon</option>
+        </select>
       </div>
     </div>
 
-    <!-- Élève 2 -->
-    <div class="eleve-card" id="eleve2">
-      <h2>Élève 2</h2>
-      <input type="text" id="nom2" placeholder="Nom">
-      <input type="text" id="prenom2" placeholder="Prénom">
-      <input type="text" id="classe2" placeholder="Classe">
-      <select id="sexe2">
-        <option value="H">Homme</option>
-        <option value="F">Femme</option>
-      </select>
+    <!-- Encadré central pour la configuration course -->
+    <div class="course-info">
+      <h3>Paramètres de la course</h3>
+      <label>Distance d'un tour (mètres) :</label>
+      <input type="number" id="distanceTour" value="400">
+      <label>Durée de la course (minutes) :</label>
+      <input type="number" id="dureeCourse" value="6">
+    </div>
 
-      <!-- Les stats de l'élève 2 sont les mêmes (partagées avec élève 1 car même chrono) -->
-      <div class="stats">
-        <p>(Course commune avec Élève 1)</p>
-      </div>
+    <!-- Boutons de contrôle -->
+    <div class="buttons-container">
+      <button class="start-btn" id="startBtn">Démarrer</button>
+      <button class="add-tour-btn" id="addTourBtn">+</button>
+      <button class="reset-btn" id="resetBtn">Reset</button>
+    </div>
+
+    <!-- Affichage des infos de course -->
+    <div id="infosCourse" class="course-info" style="display:none;">
+      <h3>Résultats de la course</h3>
+      <p id="chrono">Temps restant : 00:00</p>
+      <p id="tours">Nombre de tours : 0</p>
+      <p id="distance">Distance parcourue : 0 m</p>
+      <p id="vitesse">Vitesse moyenne : 0 km/h</p>
+      <p id="vma">Estimation VMA : 0 km/h</p>
+    </div>
+
+    <!-- QR Code généré automatiquement à la fin -->
+    <div id="qrContainer" class="course-info" style="display:none;">
+      <h3>QR Code Résultats</h3>
+      <canvas id="qrCode"></canvas>
     </div>
   </main>
 
-  <!-- Boutons centrés -->
-  <div class="buttons-container">
-    <button id="startBtn">Démarrer</button>
-    <button id="lapBtn">+</button>
-    <button id="resetBtn">Reset</button>
-  </div>
-
-  <!-- QR Code -->
-  <div id="qrcode"></div>
-
-  <!-- Bannière -->
   <footer>
-    Application Course - Version Élève
+    <p>Application Course - Élèves</p>
   </footer>
 
-  <!-- Script -->
   <script src="eleve.js"></script>
 </body>
 </html>
