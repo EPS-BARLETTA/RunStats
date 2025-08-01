@@ -1,261 +1,183 @@
-/* === RESET DE BASE === */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
-}
+/* style.css */
 
 body {
-  background: #f4f6f8;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f8ff;
   color: #333;
+  margin: 0; padding: 0;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
 header, footer {
-  background: #4a90e2;
+  background-color: #004080;
   color: white;
   text-align: center;
-  padding: 15px;
-  font-size: 1.2em;
+  padding: 15px 10px;
 }
 
-/* === TITRES === */
-h1, h2, h3 {
-  margin: 15px 0;
-  text-align: center;
+header h1 {
+  margin: 0;
+  font-size: 2.4em;
 }
 
-/* === PAGE ACCUEIL (index.html) === */
-#home {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+header h2 {
+  margin: 5px 0 0;
+  font-weight: 400;
+  font-size: 1.1em;
+  opacity: 0.8;
 }
 
-#home h1 {
-  font-size: 3rem;
-  color: #333;
-}
-
-#home h2 {
-  font-size: 1.5rem;
-  color: #666;
-  margin-bottom: 30px;
-}
-
-#home-buttons {
-  display: flex;
-  gap: 30px;
-}
-
-.btn-round, .btn-square {
+main#elevePage {
+  flex-grow: 1;
   padding: 20px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  border: none;
-  transition: transform 0.2s ease, background 0.3s ease;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-.btn-round {
-  background: #ff6b6b;
-  color: white;
-  border-radius: 50%;
-  width: 100px;
-  height: 100px;
-}
-
-.btn-square {
-  background: #4ecdc4;
-  color: white;
-  border-radius: 8px;
-  width: 120px;
-  height: 100px;
-}
-
-.btn-round:hover, .btn-square:hover {
-  transform: scale(1.1);
-}
-
-/* === PAGE ELEVE (eleve.html) === */
-#elevePage {
-  flex: 1;
-  padding: 20px;
-}
-
-/* Formulaire élèves */
 .eleve-container {
   display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 25px;
 }
 
 .eleve-box {
-  width: 45%;
-  padding: 15px;
-  border-radius: 10px;
-  color: white;
+  flex: 1;
+  background-color: #cfe7ff;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #a3c2f1;
 }
 
 .eleve1-box {
-  background: #ff9f43; /* orange */
+  background-color: #cfe7ff; /* bleu clair */
 }
 
 .eleve2-box {
-  background: #1dd1a1; /* vert */
+  background-color: #ffd9b3; /* orange clair */
 }
 
-/* Encadré course */
+.eleve-box h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #004080;
+}
+
+label {
+  font-size: 0.95em;
+  display: block;
+  margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 7px 10px;
+  margin-top: 3px;
+  border-radius: 4px;
+  border: 1px solid #888;
+  font-size: 1em;
+  box-sizing: border-box;
+}
+
 .course-info {
-  background: #54a0ff;
-  padding: 15px;
-  border-radius: 10px;
-  color: white;
-  text-align: center;
-  margin-bottom: 20px;
+  background-color: #e6ffe6; /* vert très clair */
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #a3d6a3;
+  margin-bottom: 25px;
+  max-width: 450px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.course-info input {
-  margin: 5px 0;
-  padding: 8px;
-  width: 90%;
-  border-radius: 5px;
-  border: none;
-}
-
-/* Boutons course */
 .buttons-course {
   display: flex;
   justify-content: center;
-  gap: 15px;
-  margin-bottom: 20px;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1em;
+  font-weight: 600;
+  padding: 12px 24px;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease;
 }
 
 .btn-start {
-  background: #2e86de;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
+  background-color: #0077cc;
+  min-width: 110px;
+}
+
+.btn-start:hover:not(:disabled) {
+  background-color: #005fa3;
 }
 
 .btn-lap {
-  background: #10ac84;
-  color: white;
-  padding: 20px;
-  border-radius: 50px;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2em;
+  background-color: #28a745; /* vert */
+  min-width: 90px;
+  border-radius: 20px; /* ovale */
+  padding-left: 24px;
+  padding-right: 24px;
+  font-weight: 700;
+}
+
+.btn-lap:hover:not(:disabled) {
+  background-color: #1e7e34;
 }
 
 .btn-reset {
-  background: #ee5253;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
+  background-color: #dc3545; /* rouge */
+  min-width: 90px;
 }
 
-/* Chronomètre affichage */
+.btn-reset:hover:not(:disabled) {
+  background-color: #a71d2a;
+}
+
+button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
 #timer {
-  font-size: 2.5em;
   text-align: center;
-  margin: 20px 0;
+  font-size: 2em;
+  font-weight: 700;
+  color: #004080;
+  margin-bottom: 20px;
+  min-height: 2.5em;
 }
 
-/* QR code affichage */
-#qrCode {
-  text-align: center;
-  margin-top: 20px;
-}
-
-/* === PAGE PROFESSEUR (profs.html) === */
-#loginSection, #profSection {
-  padding: 20px;
-  text-align: center;
-}
-
-#pinInput {
-  padding: 10px;
-  width: 200px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin: 10px 0;
-}
-
-.error {
-  color: red;
-  margin-top: 5px;
-}
-
-/* Tableau résultats */
-#resultsTable {
-  width: 90%;
-  margin: 20px auto;
-  border-collapse: collapse;
-  background: white;
-  box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
-}
-
-#resultsTable th, #resultsTable td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: center;
-}
-
-#resultsTable th {
-  background: #4a90e2;
-  color: white;
-}
-
-#resultsTable tr:nth-child(even) {
-  background: #f2f2f2;
-}
-
-/* Boutons tri et export */
-#profSection button {
-  padding: 10px 15px;
-  margin: 5px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background: #4a90e2;
-  color: white;
-}
-
-#profSection button:hover {
-  background: #357ABD;
-}
-
-/* Champ QR input */
-#qrInput {
-  width: 80%;
-  height: 80px;
-  margin: 10px 0;
-  padding: 10px;
-  border: 1px solid #ccc;
+#infosCourse {
+  background-color: #f9f9f9;
+  max-width: 480px;
+  margin: 0 auto 25px;
+  padding: 15px 20px;
   border-radius: 8px;
-  font-size: 14px;
+  box-shadow: 0 0 8px #ccc;
+  font-size: 1.1em;
+  color: #333;
+  line-height: 1.4;
 }
 
-/* Groupes */
-#groupsContainer {
-  margin-top: 20px;
-  padding: 10px;
-  background: #e8f0fe;
-  border-radius: 10px;
-  min-height: 50px;
+#qrCode {
+  max-width: 240px;
+  margin: 0 auto 40px;
+  text-align: center;
 }
 
-/* Footer */
 footer {
-  margin-top: auto;
+  font-size: 0.9em;
+  opacity: 0.7;
+  padding: 12px 10px;
 }
