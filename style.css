@@ -1,252 +1,196 @@
-/* style.css */
-
-/* Reset basique */
+/* ===== RESET DE BASE ===== */
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
   font-family: Arial, sans-serif;
 }
 
 body {
-  background: #f9f9f9;
+  background: #f4f4f4;
   color: #333;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  min-height: 100vh;
 }
 
+/* ===== HEADER ===== */
 header {
-  background: #007acc;
-  color: white;
-  padding: 15px 0;
   text-align: center;
-  font-size: 1.8rem;
-  font-weight: bold;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  padding: 20px 10px;
 }
 
+header h1 {
+  font-size: 3rem;
+  margin-bottom: 5px;
+}
+
+header h2 {
+  font-size: 1.2rem;
+  color: #555;
+}
+
+/* ===== CONTENEUR PRINCIPAL ===== */
 main {
-  flex-grow: 1;
+  flex: 1;
   padding: 20px;
-  max-width: 900px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-/* Élèves containers */
-
-#elevesContainer {
+/* ===== LAYOUT PAGE ÉLÈVE ===== */
+.eleve-container {
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  margin-bottom: 20px;
 }
 
-#eleve1, #eleve2 {
-  border-radius: 12px;
+.eleve-card {
+  flex: 1;
   padding: 20px;
-  width: 48%;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  font-size: 1rem;
+  border-radius: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-#eleve1 {
-  background: #d0e7ff; /* bleu clair */
+.eleve1 {
+  background: #add8e6; /* Bleu clair */
 }
 
-#eleve2 {
-  background: #c7f0d4; /* vert clair */
+.eleve2 {
+  background: #90ee90; /* Vert clair */
 }
 
-#eleve1 h2, #eleve2 h2 {
-  margin-bottom: 10px;
-  font-weight: 700;
-  font-size: 1.4rem;
+.eleve-card h3 {
   text-align: center;
+  margin-bottom: 15px;
 }
 
-#eleve1 label, #eleve2 label {
-  margin-bottom: 8px;
-  display: block;
-  font-weight: 600;
-}
-
-#eleve1 input[type="text"],
-#eleve2 input[type="text"],
-#eleve1 select,
-#eleve2 select {
-  margin-top: 4px;
+.eleve-card input,
+.eleve-card select {
   width: 100%;
-  padding: 6px 8px;
-  border: 1.5px solid #aaa;
-  border-radius: 6px;
-  font-size: 1rem;
-  outline-offset: 2px;
-  transition: border-color 0.3s ease;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
-#eleve1 input[type="text"]:focus,
-#eleve2 input[type="text"]:focus,
-#eleve1 select:focus,
-#eleve2 select:focus {
-  border-color: #007acc;
-}
-
-.tempsRestant {
-  font-weight: 700;
-  font-size: 1.3rem;
-  text-align: center;
-  margin-top: 6px;
-  color: #333;
-}
-
-#info1, #info2 {
-  margin-top: 15px;
-  padding: 12px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1.1rem;
-}
-
-#info1 {
-  background: #a9caff; /* bleu plus soutenu */
-  color: #003366;
-}
-
-#info2 {
-  background: #b8e6b7; /* vert plus soutenu */
-  color: #255d27;
-}
-
-/* Section réglages */
-
-#courseSettings {
-  background: #f0f0f0;
+/* ===== PARAMÈTRES DE COURSE ===== */
+.parametres-course {
+  background: #e0e0e0;
+  padding: 15px;
   border-radius: 10px;
-  padding: 15px 20px;
-  font-size: 1.1rem;
   text-align: center;
-  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
 }
 
-#courseSettings label {
-  margin: 0 15px;
-  font-weight: 600;
+.parametres-course label {
+  font-weight: bold;
 }
 
-#courseSettings input[type="number"] {
-  width: 70px;
-  padding: 6px 8px;
-  border: 1.5px solid #aaa;
-  border-radius: 6px;
+/* ===== BOUTONS ===== */
+.boutons-course {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 20px 0;
+}
+
+button {
+  padding: 12px 25px;
   font-size: 1rem;
-  outline-offset: 2px;
-  transition: border-color 0.3s ease;
-}
-
-#courseSettings input[type="number"]:focus {
-  border-color: #007acc;
-}
-
-/* Boutons */
-
-#boutons {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-#boutons button {
-  cursor: pointer;
   border: none;
   border-radius: 8px;
-  font-weight: 700;
-  transition: background-color 0.25s ease;
-  box-shadow: 0 3px 7px rgba(0,0,0,0.1);
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease;
 }
 
 #startBtn {
-  background-color: #4a90e2;
+  background-color: #4caf50;
   color: white;
-  padding: 14px 30px;
-  font-size: 1.25rem;
-  margin-right: 25px;
 }
 
 #startBtn:hover {
-  background-color: #357abd;
+  background-color: #45a049;
 }
 
-#addTourBtn {
-  background-color: #50c878;
+#tourBtn {
+  background-color: #2196f3;
   color: white;
+  font-size: 1.5rem;
   width: 70px;
   height: 70px;
-  font-size: 2.5rem;
   border-radius: 50%;
-  margin: 0 20px;
-  vertical-align: middle;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-#addTourBtn:hover {
-  background-color: #3da65a;
+#tourBtn:hover {
+  background-color: #1e88e5;
 }
 
 #resetBtn {
-  background-color: #e94e4e;
+  background-color: #f44336;
   color: white;
-  padding: 14px 30px;
-  font-size: 1.25rem;
-  margin-left: 25px;
 }
 
 #resetBtn:hover {
-  background-color: #c73838;
+  background-color: #e53935;
 }
 
-/* QR Code container */
-
-#qrCodeContainer {
+/* ===== INFOS COURSE ===== */
+#infosCourse {
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 10px;
   text-align: center;
-  margin-top: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Footer */
+/* ===== QR CODE ===== */
+#qrCodeContainer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
 
+/* ===== FOOTER ===== */
 footer {
-  background: #ddd;
-  padding: 15px 0;
+  background: #d3d3d3;
+  padding: 10px;
   text-align: center;
   font-size: 0.9rem;
-  color: #555;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
 }
 
-/* Responsive */
+/* ===== PAGE PRINCIPALE INDEX ===== */
+.index-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  margin-top: 50px;
+}
 
-@media (max-width: 700px) {
-  #elevesContainer {
-    flex-direction: column;
-  }
+.index-buttons a {
+  padding: 25px 50px;
+  font-size: 1.5rem;
+  border-radius: 15px;
+  text-decoration: none;
+  color: white;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
 
-  #eleve1, #eleve2 {
-    width: 100%;
-    margin-bottom: 20px;
-  }
+.index-buttons a:hover {
+  transform: scale(1.05);
+}
 
-  #boutons button {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-  }
+.index-buttons .eleve-btn {
+  background-color: #4cafef;
+}
 
-  #addTourBtn {
-    width: 100%;
-    height: 60px;
-    font-size: 2rem;
-    border-radius: 12px;
-    margin: 10px 0;
-  }
+.index-buttons .prof-btn {
+  background-color: #66bb6a;
 }
