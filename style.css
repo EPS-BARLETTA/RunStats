@@ -1,258 +1,111 @@
-/* style.css */
+/* ----- Page Professeurs ----- */
 
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f0f4f8;
-  margin: 0;
-  padding: 0;
-  color: #222;
-}
-
-.container {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 20px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
-}
-
-.accueil {
+/* Conteneur général */
+#profSection {
+  margin-top: 20px;
   text-align: center;
-  padding: 60px 20px 40px;
 }
 
-h1 {
-  font-size: 3rem;
-  margin-bottom: 0;
-  color: #2c3e50;
-}
-
-.subtitle {
-  font-size: 1.2rem;
-  color: #7f8c8d;
-  margin-top: 6px;
-  margin-bottom: 40px;
-}
-
-.btn-group {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin-bottom: 50px;
-}
-
-.btn {
-  font-size: 1.3rem;
-  font-weight: 700;
-  cursor: pointer;
-  border: none;
-  padding: 18px 36px;
-  transition: background-color 0.3s ease;
-  user-select: none;
-}
-
-.btn.rond {
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-.btn-eleve {
-  background-color: #3498db; /* Bleu élève */
-}
-
-.btn-eleve:hover {
-  background-color: #2980b9;
-}
-
-.btn-prof {
-  background-color: #e74c3c; /* Rouge prof */
-  border-radius: 8px; /* carré avec coins arrondis */
-  width: auto;
-  height: auto;
-  padding: 18px 40px;
-  border-radius: 12px;
-}
-
-.btn-prof:hover {
-  background-color: #c0392b;
-}
-
-footer {
-  text-align: center;
-  font-size: 0.9rem;
-  color: #95a5a6;
-  padding-top: 30px;
-  border-top: 1px solid #ecf0f1;
-}
-
-/* Styles spécifiques aux pages élèves */
-
-#inputSection {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 30px;
-  justify-content: center;
-}
-
-.eleve-card {
-  background-color: #d6eaf8;
-  border: 2px solid #3498db;
-  border-radius: 10px;
-  padding: 20px;
-  width: 45%;
-  box-sizing: border-box;
-}
-
-.eleve-card.eleve2 {
-  background-color: #fadbd8;
-  border-color: #e74c3c;
-}
-
-.eleve-card h3 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  color: #2c3e50;
-}
-
-.eleve-card label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 600;
-}
-
-.eleve-card input,
-.eleve-card select {
+/* Tableau résultats */
+#resultsTable {
   width: 100%;
-  padding: 6px 8px;
-  margin-bottom: 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
+  border-collapse: collapse;
+  margin: 20px auto;
+  font-size: 16px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-#courseInputs {
-  background-color: #f9f9f9;
-  border: 2px solid #2ecc71;
-  border-radius: 10px;
-  padding: 15px 20px;
-  max-width: 500px;
-  margin: 0 auto 30px;
-  box-sizing: border-box;
+#resultsTable thead {
+  background-color: #4CAF50;
+  color: white;
 }
 
-#courseInputs label {
-  font-weight: 600;
-}
-
-#courseInputs input {
-  width: 100px;
-  padding: 6px 10px;
-  margin-left: 10px;
-  font-size: 1rem;
-  border-radius: 6px;
-  border: 1px solid #bbb;
-}
-
-/* Section course */
-
-#courseSection {
-  display: none;
+#resultsTable th,
+#resultsTable td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
   text-align: center;
 }
 
-#eleveInfo {
-  font-size: 1.3rem;
-  font-weight: 700;
-  margin-bottom: 15px;
+#resultsTable tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
 
-#timer {
-  font-size: 3rem;
-  font-weight: 900;
-  margin-bottom: 25px;
-  color: #2980b9;
+/* Boutons tri / export */
+#profSection button {
+  margin: 5px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
 }
 
-.stats {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  font-weight: 600;
-  font-size: 1.2rem;
-  margin-bottom: 30px;
+#sortDistance {
+  background-color: #ff9800;
+  color: #fff;
 }
 
-.stats div {
-  background-color: #ecf0f1;
-  padding: 15px 25px;
+#sortDistance:hover {
+  background-color: #e68a00;
+}
+
+#sortVMA {
+  background-color: #2196F3;
+  color: #fff;
+}
+
+#sortVMA:hover {
+  background-color: #0b7dda;
+}
+
+#sortSexe {
+  background-color: #9c27b0;
+  color: #fff;
+}
+
+#sortSexe:hover {
+  background-color: #7b1fa2;
+}
+
+#exportBtn {
+  background-color: #607d8b;
+  color: #fff;
+}
+
+#exportBtn:hover {
+  background-color: #546e7a;
+}
+
+/* Groupes générés */
+.group-box {
+  background-color: #f0f8ff;
+  border: 2px solid #2196F3;
   border-radius: 12px;
-  min-width: 120px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  padding: 10px;
+  margin: 10px auto;
+  width: 80%;
+  text-align: left;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-#plusTourBtn {
-  background-color: #27ae60;
-  color: white;
-  border-radius: 30px;
-  padding: 12px 40px;
-  font-size: 1.3rem;
-  border: none;
-  cursor: pointer;
-  user-select: none;
-  box-shadow: 0 4px 8px rgba(39, 174, 96, 0.4);
-  margin-right: 15px;
-  transition: background-color 0.3s ease;
+.group-box h4 {
+  margin-bottom: 8px;
+  color: #2196F3;
 }
 
-#plusTourBtn:hover {
-  background-color: #219150;
+.group-box p {
+  margin: 2px 0;
+  font-size: 14px;
 }
 
-#startBtn {
-  background-color: #2980b9;
-  color: white;
-  border-radius: 6px;
-  padding: 12px 35px;
-  font-size: 1.3rem;
-  border: none;
-  cursor: pointer;
-  user-select: none;
-  box-shadow: 0 4px 8px rgba(41, 128, 185, 0.4);
-  margin-right: 15px;
-  transition: background-color 0.3s ease;
-}
-
-#startBtn:hover {
-  background-color: #1f5f8b;
-}
-
-#resetBtn {
-  background-color: #e74c3c;
-  color: white;
-  border-radius: 6px;
-  padding: 12px 35px;
-  font-size: 1.3rem;
-  border: none;
-  cursor: pointer;
-  user-select: none;
-  box-shadow: 0 4px 8px rgba(231, 76, 60, 0.4);
-  transition: background-color 0.3s ease;
-}
-
-#resetBtn:hover {
-  background-color: #c0392b;
-}
-
-/* QR code container */
-#qrcode {
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
+/* Erreur PIN */
+.error {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
 }
