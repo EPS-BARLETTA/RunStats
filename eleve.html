@@ -1,102 +1,77 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RunStats - Élèves</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RunStats - Élève</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <header>
-    <h1>RunStats</h1>
-    <h2>Équipe EPS Lycée Vauban - LUXEMBOURG</h2>
-  </header>
+<body class="page-eleve">
+    <header>
+        <h1>RunStats - Mode Élève</h1>
+    </header>
 
-  <main class="eleve-page">
+    <main>
+        <!-- Formulaire des élèves -->
+        <section id="form-section">
+            <div class="eleve-container">
+                <div class="eleve-card eleve1">
+                    <h2>Élève 1</h2>
+                    <input type="text" id="nom1" placeholder="Nom">
+                    <input type="text" id="prenom1" placeholder="Prénom">
+                    <input type="text" id="classe1" placeholder="Classe">
+                    <select id="sexe1">
+                        <option value="">Sexe</option>
+                        <option value="Fille">Fille</option>
+                        <option value="Garçon">Garçon</option>
+                    </select>
+                </div>
 
-    <!-- Zone minuteur (cachée par défaut) -->
-    <div id="minuteur-container" class="hidden">
-      <div id="minuteur">00:00</div>
-    </div>
+                <div class="eleve-card eleve2">
+                    <h2>Élève 2</h2>
+                    <input type="text" id="nom2" placeholder="Nom">
+                    <input type="text" id="prenom2" placeholder="Prénom">
+                    <input type="text" id="classe2" placeholder="Classe">
+                    <select id="sexe2">
+                        <option value="">Sexe</option>
+                        <option value="Fille">Fille</option>
+                        <option value="Garçon">Garçon</option>
+                    </select>
+                </div>
+            </div>
 
-    <!-- Formulaire Élèves + paramètres course -->
-    <div id="saisie-container">
+            <!-- Paramètres course -->
+            <div class="course-params">
+                <input type="number" id="duree" placeholder="Durée (minutes)">
+                <input type="number" id="distanceTour" placeholder="Distance tour (m)">
+                <input type="number" id="vma" placeholder="VMA (optionnel)">
+            </div>
 
-      <div class="eleves-container">
-        <!-- Élève 1 -->
-        <div class="eleve-card bleu">
-          <h3>Élève 1</h3>
-          <input type="text" id="nom1" placeholder="Nom">
-          <input type="text" id="prenom1" placeholder="Prénom">
-          <input type="text" id="classe1" placeholder="Classe">
-          <select id="sexe1">
-            <option value="">Sexe</option>
-            <option value="Fille">Fille</option>
-            <option value="Garçon">Garçon</option>
-          </select>
-        </div>
+            <!-- Boutons -->
+            <div class="btn-course">
+                <button id="startBtn" class="btn-rect bleu">Démarrer</button>
+                <button id="resetBtn" class="btn-rect rouge">Reset</button>
+            </div>
+        </section>
 
-        <!-- Élève 2 -->
-        <div class="eleve-card vert">
-          <h3>Élève 2</h3>
-          <input type="text" id="nom2" placeholder="Nom">
-          <input type="text" id="prenom2" placeholder="Prénom">
-          <input type="text" id="classe2" placeholder="Classe">
-          <select id="sexe2">
-            <option value="">Sexe</option>
-            <option value="Fille">Fille</option>
-            <option value="Garçon">Garçon</option>
-          </select>
-        </div>
-      </div>
+        <!-- Section course active -->
+        <section id="course-section" style="display:none;">
+            <h2 id="timer">00:00</h2>
+            <div class="btn-tour">
+                <button id="addLapBtn" class="btn-oval vert">+ Tour</button>
+            </div>
+            <div id="resultats"></div>
+        </section>
 
-      <!-- Paramètres course -->
-      <div class="parametres-course">
-        <label for="distanceTour">Distance d'un tour (mètres)</label>
-        <input type="number" id="distanceTour" placeholder="Ex : 400">
+        <!-- QR code affiché après la course -->
+        <section id="qr-section" style="display:none;">
+            <h2>Résultats</h2>
+            <div id="qrcode"></div>
+            <button onclick="window.location.href='index.html'" class="btn-rect bleu">Retour accueil</button>
+        </section>
+    </main>
 
-        <label for="dureeCourse">Durée de la course (minutes)</label>
-        <input type="number" id="dureeCourse" placeholder="Ex : 6">
-      </div>
-
-    </div>
-
-    <!-- Boutons contrôle -->
-    <div class="boutons-course">
-      <button id="startBtn" class="btn start">Démarrer</button>
-      <button id="tourBtn" class="btn tour">+ Tour</button>
-      <button id="resetBtn" class="btn reset">Reset</button>
-    </div>
-
-    <!-- Informations de course -->
-    <div id="infos-course" class="infos-course">
-      <h3>Informations de course</h3>
-      <div id="resultats-eleve1" class="resultats">
-        <h4>Élève 1</h4>
-        <p>Distance parcourue : <span id="distance1">0</span> m</p>
-        <p>Vitesse moyenne : <span id="vitesse1">0</span> km/h</p>
-        <p>VMA estimée : <span id="vma1">0</span> km/h</p>
-      </div>
-      <div id="resultats-eleve2" class="resultats">
-        <h4>Élève 2</h4>
-        <p>Distance parcourue : <span id="distance2">0</span> m</p>
-        <p>Vitesse moyenne : <span id="vitesse2">0</span> km/h</p>
-        <p>VMA estimée : <span id="vma2">0</span> km/h</p>
-      </div>
-    </div>
-
-    <!-- QR Code (caché par défaut) -->
-    <div id="qrCode-container" class="hidden">
-      <h3>QR Code Résultats</h3>
-      <canvas id="qrCode"></canvas>
-    </div>
-
-  </main>
-
-  <footer>
-    <p>RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</p>
-  </footer>
-
-  <script src="eleve.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
