@@ -1,167 +1,55 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - Interface Professeur</title>
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    header, footer {
-      text-align: center;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-    #startScanBtn {
-      display: block;
-      margin: 0 auto 30px auto;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      font-size: 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      transition: background-color 0.3s ease;
-    }
-    #startScanBtn:hover {
-      background-color: #45a049;
-    }
-    #video {
-      display: block;
-      margin: 0 auto 30px auto;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-    }
-    .actions {
-      margin-bottom: 15px;
-      text-align: center;
-    }
-    #triSelect, #rechercheInput, #creerGroupesBtn, #exportCSVBtn {
-      margin: 0 10px 10px 10px;
-      padding: 8px 12px;
-      font-size: 14px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    #creerGroupesBtn, #exportCSVBtn {
-      background-color: #2196F3;
-      color: white;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    #creerGroupesBtn:hover, #exportCSVBtn:hover {
-      background-color: #0b7dda;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 40px;
-    }
-    th, td {
-      padding: 10px;
-      text-align: center;
-      border: 1px solid #ddd;
-    }
-    th {
-      background-color: #f2f2f2;
-      cursor: pointer;
-      user-select: none;
-    }
-    #groupesSection {
-      margin-top: 40px;
-    }
-    #exportGroupesCSVBtn {
-      display: block;
-      margin: 10px auto 20px auto;
-      background-color: #FF9800;
-      color: white;
-      border: none;
-      padding: 12px 25px;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    #exportGroupesCSVBtn:hover {
-      background-color: #e68a00;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RunStats - Professeur</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <header>
-    <h1>RunStats - Equipe EPS Lycée Vauban - LUXEMBOURG</h1>
-  </header>
+<body class="page-prof">
+    <header>
+        <h1>RunStats - Mode Professeur</h1>
+    </header>
 
-  <main>
-    <button id="startScanBtn">Scanner un QR Code</button>
-    <video id="video" width="320" height="240" style="display:none;"></video>
+    <main>
+        <!-- Section PIN -->
+        <section id="pin-section">
+            <p>Veuillez entrer le code PIN pour accéder aux données :</p>
+            <input type="password" id="pinInput" placeholder="Code PIN">
+            <button id="validatePinBtn" class="btn-rect bleu">Valider</button>
+            <p id="pinError" class="error" style="display:none;">Code PIN incorrect</p>
+        </section>
 
-    <section>
-      <div class="actions">
-        <label for="triSelect">Trier par :</label>
-        <select id="triSelect">
-          <option value="alphabetique">Ordre alphabétique (Nom)</option>
-          <option value="vma">VMA</option>
-          <option value="sexe">Sexe</option>
-          <option value="distance">Distance réalisée</option>
-          <option value="classe">Classe</option>
-        </select>
+        <!-- Section tableau résultats -->
+        <section id="prof-section" style="display:none;">
+            <h2>Résultats élèves</h2>
+            
+            <div class="table-actions">
+                <button id="sortDistance" class="btn-rect">Trier par distance</button>
+                <button id="sortVma" class="btn-rect">Trier par VMA</button>
+                <button id="sortSexe" class="btn-rect">Trier par sexe</button>
+                <button id="newGroups" class="btn-rect vert">Créer groupes</button>
+                <button id="exportData" class="btn-rect bleu">Exporter</button>
+            </div>
 
-        <button id="creerGroupesBtn">Créer groupes</button>
-        <button id="exportCSVBtn">Exporter CSV</button>
+            <table id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Classe</th>
+                        <th>Sexe</th>
+                        <th>Distance (m)</th>
+                        <th>VMA estimée</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rempli dynamiquement -->
+                </tbody>
+            </table>
+        </section>
+    </main>
 
-        <input type="text" id="rechercheInput" placeholder="Recherche rapide..." />
-      </div>
-
-      <table id="elevesTable">
-        <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Classe</th>
-            <th>Sexe</th>
-            <th>VMA</th>
-            <th>Distance</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- données insérées ici -->
-        </tbody>
-      </table>
-    </section>
-
-    <section id="groupesSection" style="display:none;">
-      <h2>Groupes créés</h2>
-      <button id="exportGroupesCSVBtn">Télécharger groupes CSV</button>
-      <table id="groupesTable">
-        <thead>
-          <tr>
-            <th>Groupe</th>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Classe</th>
-            <th>Sexe</th>
-            <th>VMA</th>
-            <th>Distance</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- groupes ici -->
-        </tbody>
-      </table>
-    </section>
-  </main>
-
-  <footer>
-    Equipe EPS-Lycée Vauban- LUXEMBOURG-JB
-  </footer>
-
-  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="script.js"></script>
 </body>
 </html>
