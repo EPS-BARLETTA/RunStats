@@ -1,120 +1,101 @@
-// Variables globales
-let eleveActif = JSON.parse(sessionStorage.getItem('eleveActif'));
-let eleve1 = JSON.parse(sessionStorage.getItem('eleve1'));
-let eleve2 = JSON.parse(sessionStorage.getItem('eleve2'));
-let dureeMinutes = parseInt(sessionStorage.getItem('dureeCourse'));
-let distanceTour = parseFloat(sessionStorage.getItem('distanceTour'));
+// Récupérer les infos depuis localStorage
+const currentRunner = localStorage.getItem("currentRunner"); // "runner1" ou "runner2"
+const runnerData = JSON.parse(localStorage.getItem(currentRunner));
+const courseSettings = JSON.parse(localStorage.getItem("courseSettings"));
 
-let tempsRestant = dureeMinutes * 60; // secondes
-let timerInterval;
-let tours = 0;
-let distanceTotale = 0;
+// Sélection des éléments
+const runnerNameEl = document.getElementById("runnerName");
+const timerEl = document.getElementById("timer");
+const addLapBtn = document.getElementById("addLapBtn");
+const totalDistanceEl = document.getElementById("totalDistance");
+const averageSpeedEl = document.getElementById("averageSpeed");
+const vmaEstimationEl = document.getElementById("vmaEstimation");
+const finishBtn = document.getElementById("finishBtn");
 
-// DOM
-const timerDisplay = document.getElementById('timer');
-const distanceDisplay = document.getElementById('distanceTotale');
-const vitesseDisplay = document.getElementById('vitesse');
-const vmaDisplay = document.getElementById('vma');
-const nomEleve = document.getElementById('nomEleve'); // Ajoute <h3 id="nomEleve"></h3> dans course.html
-const plusTourBtn = document.getElementById('plusTour');
-const quartBtn = document.getElementById('ajoutQuart');
-const demiBtn = document.getElementById('ajoutDemi');
-const troisQuartBtn = document.getElementById('ajoutTroisQuart');
-const terminerBtn = document.getElementById('terminerCourse');
+// Variables
+let totalDistance = 0;
+let lapCount = 0;
+let timeRemaining = courseSettings.duration; // en secondes
+let timerInterval = null;
+const lapDistance = courseSettings.distance; // distance par tour en mètres
 
-// Affiche prénom de l'élève actif
-nomEleve.textContent = `${eleveActif.prenom} ${eleveActif.nom}`;
+// Afficher nom coureur
+runnerNameEl.textContent = `${runnerData.prenom} ${runnerData.nom}`;
 
-// Démarre le minuteur
+// Fonction format temps
+function formatTime(sec) {
+  const minutes = Math.floor(sec / 60);
+  const seconds = sec % 60;
+  return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+}
+
+// Mise à jour stats
+function updateStats() {
+  totalDistanceEl.textContent = totalDistance.toFixed(2);
+  const timeInHours = (courseSettings.duration - timeRemaining) / 3600;
+  const avgSpeed = timeInHours > 0 ? (totalDistance / 1000) / timeInHours : 0; // km/h
+  averageSpeedEl.textContent = avgSpeed.toFixed(2);
+  // Estimation VMA : vitesse max sur le test
+  vmaEstimationEl.textContent = avgSpeed.toFixed(2);
+}
+
+// Ajouter un tour complet
+addLapBtn.addEventListener("click", () => {
+  lapCount++;
+  totalDistance += lapDistance;
+  updateStats();
+});
+
+// Ajouter fractions de tour à la fin
+document.querySelectorAll(".fractions button").forEach(button => {
+  button.addEventListener("click", () => {
+    const fraction = parseFloat(button.dataset.value);
+    totalDistance += lapDistance * fraction;
+    updateStats();
+  });
+});
+
+// Minuteur
 function startTimer() {
+  timerEl.textContent = formatTime(timeRemaining);
+
   timerInterval = setInterval(() => {
-    tempsRestant--;
+    timeRemaining--;
 
-    // Affichage temps
-    let min = Math.floor(tempsRestant / 60);
-    let sec = tempsRestant % 60;
-    timerDisplay.textContent = `${min}:${sec < 10 ? '0' : ''}${sec}`;
-
-    // Clignotement 10 dernières secondes
-    if (tempsRestant <= 10) {
-      timerDisplay.classList.toggle('blink');
+    // Clignotement les 10 dernières secondes
+    if (timeRemaining <= 10) {
+      timerEl.classList.add("blink");
     }
 
-    // Fin course
-    if (tempsRestant <= 0) {
+    timerEl.textContent = formatTime(timeRemaining);
+
+    if (timeRemaining <= 0) {
       clearInterval(timerInterval);
-      endCourse();
+      timerEl.textContent = "0:00";
+      timerEl.classList.remove("blink");
+      finishBtn.disabled = false;
     }
   }, 1000);
 }
 
-// Ajout tour
-plusTourBtn.addEventListener('click', () => {
-  tours++;
-  distanceTotale = tours * distanceTour;
-  updateStats();
-});
-
-// Ajout fraction tours
-quartBtn.addEventListener('click', () => {
-  distanceTotale += distanceTour * 0.25;
-  updateStats();
-});
-demiBtn.addEventListener('click', () => {
-  distanceTotale += distanceTour * 0.5;
-  updateStats();
-});
-troisQuartBtn.addEventListener('click', () => {
-  distanceTotale += distanceTour * 0.75;
-  updateStats();
-});
-
-// Mise à jour stats
-function updateStats() {
-  distanceDisplay.textContent = `${distanceTotale.toFixed(1)} m`;
-
-  // Vitesse moyenne (km/h) = (distance en m / 1000) / (temps en h)
-  let tempsEcoule = dureeMinutes - tempsRestant / 60;
-  let vitesseMoyenne = tempsEcoule > 0 ? (distanceTotale / 1000) / (tempsEcoule / 60) : 0;
-  vitesseDisplay.textContent = `${vitesseMoyenne.toFixed(2)} km/h`;
-
-  // VMA estimée = vitesse moyenne * 1.05
-  let vmaEstimee = vitesseMoyenne * 1.05;
-  vmaDisplay.textContent = `${vmaEstimee.toFixed(2)} km/h`;
-}
-
-// Terminer manuellement
-terminerBtn.addEventListener('click', () => {
-  clearInterval(timerInterval);
-  endCourse();
-});
-
 // Fin de course
-function endCourse() {
-  // Sauvegarde stats
-  const stats = {
-    nom: eleveActif.nom,
-    prenom: eleveActif.prenom,
-    classe: eleveActif.classe,
-    sexe: eleveActif.sexe,
-    distance: distanceTotale,
-    vitesse: parseFloat(vitesseDisplay.textContent),
-    vma: parseFloat(vmaDisplay.textContent)
-  };
+finishBtn.addEventListener("click", () => {
+  // Sauvegarder résultats du coureur
+  runnerData.distance = totalDistance.toFixed(2);
+  runnerData.vitesse = averageSpeedEl.textContent;
+  runnerData.vma = vmaEstimationEl.textContent;
 
-  if (!sessionStorage.getItem('statsEleve1')) {
-    // Stocker stats élève 1
-    sessionStorage.setItem('statsEleve1', JSON.stringify(stats));
-    // Passer à élève 2
-    sessionStorage.setItem('eleveActif', JSON.stringify(eleve2));
-    window.location.href = 'course.html'; // Relance pour élève 2
+  localStorage.setItem(currentRunner, JSON.stringify(runnerData));
+
+  if (currentRunner === "runner1") {
+    // Passer au second coureur
+    localStorage.setItem("currentRunner", "runner2");
+    window.location.href = "course.html";
   } else {
-    // Stocker stats élève 2
-    sessionStorage.setItem('statsEleve2', JSON.stringify(stats));
-    // Aller vers le bilan
-    window.location.href = 'summary.html';
+    // Les deux courses terminées -> passer au bilan
+    window.location.href = "summary.html";
   }
-}
+});
 
-// Lancer au chargement
+// Lancer le minuteur dès chargement
 startTimer();
