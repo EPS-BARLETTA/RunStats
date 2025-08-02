@@ -3,70 +3,57 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RunStats - Gestion des courses</title>
-  <link rel="stylesheet" href="style.css" />
-  <script defer src="script.js"></script>
+  <title>RunStats</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f7f9fc;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 40px;
+      color: #2c3e50;
+    }
+
+    .start-btn {
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .start-btn:hover {
+      background-color: #005fa3;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 20px;
+      font-size: 0.9rem;
+      color: #777;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>RunStats</h1>
-    <h2>Gestion des courses</h2>
-  </header>
-
-  <main class="eleve-container">
-    <!-- Carte élève 1 -->
-    <div class="eleve-card eleve-1">
-      <h3>Élève 1</h3>
-      <label>Nom</label>
-      <input type="text" id="nom1" required />
-      <label>Prénom</label>
-      <input type="text" id="prenom1" required />
-      <label>Classe</label>
-      <input type="text" id="classe1" required />
-      <label>Sexe</label>
-      <select id="sexe1">
-        <option value="">Choisir</option>
-        <option value="Fille">Fille</option>
-        <option value="Garçon">Garçon</option>
-        <option value="Autre">Autre</option>
-      </select>
-      <label>VMA (optionnel)</label>
-      <input type="number" id="vma1" placeholder="km/h" />
-    </div>
-
-    <!-- Carte élève 2 -->
-    <div class="eleve-card eleve-2">
-      <h3>Élève 2</h3>
-      <label>Nom</label>
-      <input type="text" id="nom2" required />
-      <label>Prénom</label>
-      <input type="text" id="prenom2" required />
-      <label>Classe</label>
-      <input type="text" id="classe2" required />
-      <label>Sexe</label>
-      <select id="sexe2">
-        <option value="">Choisir</option>
-        <option value="Fille">Fille</option>
-        <option value="Garçon">Garçon</option>
-        <option value="Autre">Autre</option>
-      </select>
-      <label>VMA (optionnel)</label>
-      <input type="number" id="vma2" placeholder="km/h" />
-    </div>
-
-    <!-- Infos course -->
-    <div class="course-info">
-      <h3>Informations de course</h3>
-      <label>Durée (minutes)</label>
-      <input type="number" id="duree" required />
-      <label>Distance d'un tour (mètres)</label>
-      <input type="number" id="distance" required />
-    </div>
-
-    <button id="startCourseBtn">Démarrer la course élève 1</button>
-  </main>
-
-  <footer>Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+  <h1>RunStats</h1>
+  <a href="eleve.html">
+    <button class="start-btn">Commencer</button>
+  </a>
+  <footer>
+    RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB
+  </footer>
 </body>
 </html>
-
