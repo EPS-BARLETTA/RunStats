@@ -1,62 +1,207 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>RunStats - Course</title>
-  <link rel="stylesheet" href="eleve.css">
+  <link rel="stylesheet" href="eleve.css" />
+  <style>
+    /* Styles spécifiques à course.html, en complément de eleve.css */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      justify-content: space-between;
+    }
+    header {
+      padding: 1rem;
+      text-align: center;
+      background: #4a90e2;
+      color: white;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    header h2 {
+      margin: 0;
+      font-weight: 400;
+      font-size: 1.2rem;
+      opacity: 0.8;
+    }
+    main {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      gap: 1rem;
+    }
+    #boutonPlusTour {
+      font-size: 1.2rem;
+      padding: 0.7rem 1.5rem;
+      background-color: #5cb85c;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease;
+      width: 120px;
+    }
+    #boutonPlusTour:hover {
+      background-color: #4cae4c;
+    }
+    #timerCircle {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background-color: #d9f0d9; /* vert clair */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      font-weight: 700;
+      color: #3a7d3a;
+      user-select: none;
+      box-shadow: inset 0 0 10px #a1d6a1;
+      transition: background-color 0.3s ease;
+    }
+    #timerCircle.blink {
+      animation: blinkAnim 1s steps(2, start) infinite;
+      background-color: #f2b8b5; /* rouge clair clignotant */
+      color: #7f0000;
+    }
+    @keyframes blinkAnim {
+      50% {
+        background-color: #d9534f;
+        color: white;
+      }
+      100% {
+        background-color: #f2b8b5;
+        color: #7f0000;
+      }
+    }
+    #infosCourse {
+      width: 90%;
+      max-width: 400px;
+      background-color: white;
+      border: 2px solid #4a90e2;
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      font-size: 1.1rem;
+      color: #333;
+      user-select: none;
+    }
+    #infosCourse div {
+      margin: 0.5rem 0;
+      display: flex;
+      justify-content: space-between;
+    }
+    #finCourseOptions {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    #finCourseOptions label {
+      font-size: 1rem;
+      margin-right: 0.6rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    #finCourseOptions input[type="radio"] {
+      cursor: pointer;
+    }
+    #btnFinCourse, #btnLancerCourse2, #btnFinTout {
+      margin-top: 1rem;
+      background-color: #0275d8;
+      border: none;
+      color: white;
+      padding: 0.8rem 1.8rem;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      user-select: none;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease;
+      width: 220px;
+    }
+    #btnFinCourse:hover, #btnLancerCourse2:hover, #btnFinTout:hover {
+      background-color: #025aa5;
+    }
+    footer {
+      text-align: center;
+      padding: 0.8rem 0;
+      font-size: 0.85rem;
+      background-color: #4a90e2;
+      color: white;
+      user-select: none;
+    }
+    /* Responsive tablette */
+    @media (max-width: 768px) {
+      #timerCircle {
+        width: 180px;
+        height: 180px;
+        font-size: 4rem;
+      }
+      #boutonPlusTour, #btnFinCourse, #btnLancerCourse2, #btnFinTout {
+        width: 90%;
+        max-width: 280px;
+      }
+      main {
+        padding: 0.8rem;
+      }
+      #infosCourse {
+        max-width: 100%;
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- En-tête -->
-  <header class="header">
+
+  <header>
     <h1>RunStats</h1>
-    <p>Course</p>
+    <h2 id="pageSubTitle">Course</h2>
   </header>
 
-  <!-- Zone minuteur -->
-  <main class="course-container">
-    <h2 id="eleveName"></h2>
+  <main>
+    <button id="boutonPlusTour" title="Ajouter un tour">+ Tour</button>
 
-    <div class="timer-wrapper">
-      <button id="addLapBtn" class="btn btn-tour">+ Tour</button>
-      <div class="timer-circle">
-        <span id="timerDisplay">00:00</span>
-      </div>
+    <div id="timerCircle">00:00</div>
+
+    <div id="infosCourse">
+      <div><strong>Distance totale :</strong> <span id="distanceTotale">0.00 m</span></div>
+      <div><strong>Vitesse moyenne :</strong> <span id="vitesseMoyenne">0.00 km/h</span></div>
+      <div><strong>Estimation VMA :</strong> <span id="vmaEstimee">-- km/h</span></div>
     </div>
 
-    <!-- Stats -->
-    <div class="stats">
-      <div class="stat">
-        <h3>Distance totale</h3>
-        <p id="distanceTotale">0 m</p>
+    <div id="finCourseOptions" style="display:none;">
+      <div>
+        <label><input type="radio" name="fractionTour" value="0.25" /> + 1/4 tour</label>
+        <label><input type="radio" name="fractionTour" value="0.5" /> + 1/2 tour</label>
+        <label><input type="radio" name="fractionTour" value="0.75" /> + 3/4 tour</label>
       </div>
-      <div class="stat">
-        <h3>Vitesse moyenne</h3>
-        <p id="vitesseMoyenne">0 km/h</p>
-      </div>
-      <div class="stat">
-        <h3>Estimation VMA</h3>
-        <p id="estimationVMA">-</p>
-      </div>
+      <button id="btnFinCourse">Valider et terminer la course</button>
     </div>
 
-    <!-- Ajout fraction tour -->
-    <div class="fraction-buttons">
-      <button class="btn btn-fraction" data-fraction="0.25">+ 1/4 Tour</button>
-      <button class="btn btn-fraction" data-fraction="0.5">+ 1/2 Tour</button>
-      <button class="btn btn-fraction" data-fraction="0.75">+ 3/4 Tour</button>
-    </div>
+    <button id="btnLancerCourse2" style="display:none;">Lancer la course de l'élève 2</button>
+    <button id="btnFinTout" style="display:none;">Terminer et passer à la zone de téléchargement</button>
 
-    <!-- Bouton fin course -->
-    <button id="endCourseBtn" class="btn btn-primary">Fin de la course</button>
   </main>
 
-  <!-- Pied de page -->
-  <footer class="footer">
-    Équipe EPS Lycée Vauban - LUXEMBOURG - JB
+  <footer>
+    Equipe EPS Lycée Vauban - LUXEMBOURG - JB
   </footer>
 
   <script src="course.js"></script>
 </body>
 </html>
-
