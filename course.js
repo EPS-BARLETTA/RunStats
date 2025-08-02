@@ -1,58 +1,107 @@
-let eleve1 = JSON.parse(sessionStorage.getItem("eleve1"));
-let eleve2 = JSON.parse(sessionStorage.getItem("eleve2"));
-
-let currentEleve = sessionStorage.getItem("currentEleve") === "2" ? eleve2 : eleve1;
 let tours = 0;
-let tempsRestant = currentEleve.temps * 60;
+let debut;
+let eleveActuel = "eleve1";
+let eleveData;
+let chronoElement = document.getElementById("chronoCenter");
+let circle = document.getElementById("progressCircle");
+let duree;
+let longueurTour;
 
-const nomEleveSpan = document.getElementById("nomEleve");
-const tempsSpan = document.getElementById("tempsRestant");
-const toursSpan = document.getElementById("tours");
-const ajouterBtn = document.getElementById("ajouterTourBtn");
-const finSection = document.getElementById("fin-course");
-const terminerBtn = document.getElementById("terminerBtn");
+function formatChrono(ms) {
+  const sec = Math.floor(ms / 1000);
+  const min = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${min.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+}
 
-nomEleveSpan.textContent = `${currentEleve.prenom} ${currentEleve.nom}`;
+function updateAffichage() {
+  const now = Date.now();
+  const elapsed = now - debut;
+  const secondes = elapsed / 1000;
+  const distance = tours * longueurTour;
+  const vitesse = distance / secondes;
+  const vmaEstimee = vitesse * 3.6;
 
-const interval = setInterval(() => {
-  if (tempsRestant > 0) {
-    tempsRestant--;
-    const minutes = Math.floor(tempsRestant / 60);
-    const secondes = tempsRestant % 60;
-    tempsSpan.textContent = `${minutes}m ${secondes}s`;
-  } else {
-    clearInterval(interval);
-    finSection.classList.remove("hidden");
-    ajouterBtn.disabled = true;
+  document.getElementById("chronoCenter").textContent = formatChrono(elapsed);
+  document.getElementById("distance").textContent = distance.toFixed(0);
+  document.getElementById("vitesse").textContent = vitesse.toFixed(2);
+  document.getElementById("vmaEstimee").textContent = vmaEstimee.toFixed(1);
+
+  // Chrono visuel
+  const progress = Math.min(elapsed / (duree * 60000), 1);
+  circle.style.strokeDashoffset = 283 * (1 - progress);
+
+  // clignotement si < 10s restantes
+  if ((duree * 60 - secondes) <= 10) {
+    chronoElement.classList.add("red");
   }
-}, 1000);
 
-ajouterBtn.addEventListener("click", () => {
+  if (elapsed < duree * 60000) {
+    requestAnimationFrame(updateAffichage);
+  } else {
+    document.getElementById("ajouterTourBtn").disabled = true;
+    document.getElementById("fin-course").classList.remove("hidden");
+  }
+}
+
+function commencerCourse() {
+  debut = Date.now();
+  requestAnimationFrame(updateAffichage);
+}
+
+function chargerEleve() {
+  const stored = sessionStorage.getItem(eleveActuel);
+  if (!stored) return window.location.href = "eleve.html";
+  eleveData = JSON.parse(stored);
+
+  document.getElementById("nomEleve").textContent = `${eleveData.prenom} ${eleveData.nom}`;
+  duree = eleveData.temps;
+  longueurTour = eleveData.longueurTour;
+
+  commencerCourse();
+}
+
+document.getElementById("ajouterTourBtn").addEventListener("click", () => {
   tours++;
-  toursSpan.textContent = tours;
+  document.getElementById("tours").textContent = tours;
 });
 
 document.querySelectorAll("#fin-course button[data-frac]").forEach(btn => {
   btn.addEventListener("click", () => {
-    let frac = parseFloat(btn.getAttribute("data-frac"));
+    const frac = parseFloat(btn.getAttribute("data-frac"));
     tours += frac;
-    toursSpan.textContent = tours;
-    btn.disabled = true;
+    document.getElementById("tours").textContent = tours.toFixed(2);
   });
 });
 
-terminerBtn.addEventListener("click", () => {
-  currentEleve.distance = tours * currentEleve.longueurTour;
-  currentEleve.vitesse = currentEleve.distance / (currentEleve.temps * 60);
-  currentEleve.vmaEstimee = Math.round(currentEleve.vitesse * 3.6 * 10) / 10;
+document.getElementById("terminerBtn").addEventListener("click", () => {
+  const now = Date.now();
+  const dureeSec = (now - debut) / 1000;
+  const distance = tours * longueurTour;
+  const vitesse = distance / dureeSec;
+  const vmaEstimee = vitesse * 3.6;
 
-  if (sessionStorage.getItem("currentEleve") === "2") {
-    // fin des deux courses
-    sessionStorage.setItem("eleve2", JSON.stringify(currentEleve));
-    window.location.href = "summary.html";
-  } else {
-    sessionStorage.setItem("eleve1", JSON.stringify(currentEleve));
+  const result = {
+    nom: eleveData.nom,
+    prenom: eleveData.prenom,
+    classe: eleveData.classe,
+    sexe: eleveData.sexe,
+    distance: Math.round(distance),
+    vitesse: vitesse,
+    vmaEstimee: Math.round(vmaEstimee),
+    vma: eleveData.vma
+  };
+
+  sessionStorage.setItem(eleveActuel, JSON.stringify(result));
+
+  if (eleveActuel === "eleve1") {
     sessionStorage.setItem("currentEleve", "2");
-    window.location.reload();
+    sessionStorage.setItem("eleve1", JSON.stringify(result));
+    window.location.href = "course.html";
+  } else {
+    sessionStorage.setItem("eleve2", JSON.stringify(result));
+    window.location.href = "summary.html";
   }
 });
+
+document.addEventListener("DOMContentLoaded", chargerEleve);
