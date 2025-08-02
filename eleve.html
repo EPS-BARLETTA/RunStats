@@ -2,180 +2,762 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Course Élèves Simple</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Gestion des Courses - EPS Tablette</title>
 <style>
+  /* Reset simple */
+  * {
+    box-sizing: border-box;
+  }
   body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    max-width: 600px;
-    margin: auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4f8;
+    color: #222;
+    margin: 0;
+    padding: 15px 10px;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
   }
-  label {
-    display: block;
-    margin: 8px 0 4px;
+
+  h2 {
+    text-align: center;
+    font-weight: 700;
+    font-size: 2.4rem;
+    margin-bottom: 20px;
+    color: #004b87;
   }
-  input, select {
-    width: 100%;
-    padding: 6px;
+
+  .container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 900px;
+    margin: 0 auto 30px;
+  }
+
+  .eleve {
+    flex: 1 1 420px;
+    background: #fff;
+    border-radius: 18px;
+    padding: 20px 25px;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.12);
+    min-width: 320px;
+  }
+  #eleve1 {
+    border-left: 14px solid #65c178; /* vert clair */
+  }
+  #eleve2 {
+    border-left: 14px solid #6ea9ef; /* bleu clair */
+  }
+
+  h3 {
+    margin-top: 0;
+    font-size: 1.8rem;
+    color: #004b87;
+    font-weight: 700;
     margin-bottom: 12px;
   }
-  #minuteur {
-    font-size: 5rem;
-    text-align: center;
-    margin: 20px 0;
-    color: #004080;
+
+  label {
+    font-weight: 600;
+    margin: 14px 0 6px;
+    display: block;
+    font-size: 1.1rem;
   }
-  #boutonLancer {
-    padding: 12px 20px;
+
+  input[type=text], select, input[type=number] {
+    width: 100%;
+    padding: 12px 14px;
     font-size: 1.2rem;
-    background: #0077cc;
-    color: white;
+    border-radius: 12px;
+    border: 2.5px solid #ccc;
+    transition: border-color 0.3s ease;
+  }
+  input[type=text]:focus,
+  select:focus,
+  input[type=number]:focus {
+    border-color: #004b87;
+    outline: none;
+  }
+  input::placeholder {
+    color: #aaa;
+  }
+
+  .info-course {
+    margin-top: 25px;
+    border-top: 2px solid #d1d9e6;
+    padding-top: 18px;
+  }
+  .info-course h4 {
+    margin-top: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #004b87;
+  }
+
+  #main-controls {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  #btnStart, #btnNextCourse, #btnFinCourse1 {
+    font-size: 1.6rem;
+    background: #004b87;
+    color: #fff;
+    padding: 18px 44px;
     border: none;
-    border-radius: 8px;
+    border-radius: 22px;
     cursor: pointer;
+    font-weight: 700;
+    box-shadow: 0 6px 12px rgba(0,75,135,0.5);
+    transition: background-color 0.25s ease;
+    user-select: none;
   }
-  #infos {
-    background: #eee;
-    padding: 15px;
-    border-radius: 10px;
-    margin-top: 20px;
+  #btnStart:disabled,
+  #btnNextCourse:disabled,
+  #btnFinCourse1:disabled {
+    background: #a1a8b3;
+    cursor: not-allowed;
+    box-shadow: none;
   }
-  #eleve1-info {
-    background: #cce5ff;
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 15px;
+  #btnStart:hover:not(:disabled),
+  #btnNextCourse:hover:not(:disabled),
+  #btnFinCourse1:hover:not(:disabled) {
+    background: #003463;
   }
-  #eleve2-info {
-    background: #d4edda;
-    padding: 10px;
-    border-radius: 8px;
+
+  #timer-section {
+    max-width: 460px;
+    margin: 0 auto 40px;
+    user-select: none;
+  }
+  #timer-container {
+    position: relative;
+    margin: 0 auto 18px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    border: 9px solid #004b87;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #004b87;
+    font-size: 5.6rem;
+    font-weight: 700;
+    box-shadow: 0 6px 14px rgba(0,75,135,0.3);
+    background: #e7f0fc;
+  }
+  #timer-container.blink {
+    animation: blinkAnimation 1s step-start infinite;
+    color: #d93025;
+    border-color: #d93025;
+    box-shadow: 0 6px 20px #d93025aa;
+  }
+  @keyframes blinkAnimation {
+    50% {opacity: 0;}
+  }
+
+  #btnAddTour {
+    position: absolute;
+    top: -60px;
+    background: #0070d1;
+    border: none;
+    color: white;
+    font-size: 1.4rem;
+    padding: 12px 28px;
+    border-radius: 18px;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0,112,209,0.6);
+    transition: background-color 0.25s ease;
+  }
+  #btnAddTour:hover {
+    background: #004b87;
+  }
+
+  #info-course-resume {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 16px 24px;
+    box-shadow: 0 6px 15px rgba(0,75,135,0.12);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #004b87;
+  }
+  #info-course-resume > div {
+    margin-bottom: 12px;
+  }
+  #info-course-resume > div:last-child {
+    margin-bottom: 0;
+  }
+
+  #add-fraction-tours {
+    margin-top: 25px;
+    text-align: center;
+    user-select: none;
+  }
+  #add-fraction-tours p {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #004b87;
+  }
+  #add-fraction-tours button {
+    background: #0070d1;
+    border: none;
+    color: white;
+    font-size: 1.4rem;
+    padding: 12px 28px;
+    margin: 0 10px 14px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0,112,209,0.6);
+    transition: background-color 0.25s ease;
+  }
+  #add-fraction-tours button:hover {
+    background: #004b87;
+  }
+
+  /* Page bilan */
+  #page-bilan {
+    max-width: 900px;
+    margin: 0 auto;
+    display: none;
+    user-select: none;
+  }
+  #page-bilan h2 {
+    color: #004b87;
+    font-size: 2.4rem;
+    text-align: center;
+  }
+  #page-bilan table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 25px;
+    font-size: 1.3rem;
+  }
+  #page-bilan th, #page-bilan td {
+    border: 1.8px solid #004b87;
+    padding: 12px 14px;
+    text-align: center;
+  }
+  #page-bilan th {
+    background: #0070d1;
+    color: white;
+  }
+
+  #btnDownloadCSV, #btnDownloadQR {
+    margin: 25px 10px 40px;
+    padding: 16px 40px;
+    font-size: 1.5rem;
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 6px 16px rgba(0,75,135,0.5);
+    transition: background-color 0.25s ease;
+  }
+  #btnDownloadCSV {
+    background: #28a745;
+  }
+  #btnDownloadCSV:hover {
+    background: #1e7e34;
+  }
+  #btnDownloadQR {
+    background: #0070d1;
+  }
+  #btnDownloadQR:hover {
+    background: #004b87;
+  }
+
+  #qr-code {
+    text-align: center;
+  }
+
+  /* Responsive vertical stacking on narrow screens */
+  @media (max-width: 740px) {
+    .container {
+      flex-direction: column;
+      align-items: center;
+    }
+    .eleve {
+      width: 90vw;
+      max-width: 420px;
+    }
+    #timer-container {
+      width: 180px;
+      height: 180px;
+      font-size: 4.8rem;
+      border-width: 7px;
+    }
+    #btnAddTour {
+      top: -50px;
+      font-size: 1.1rem;
+      padding: 8px 22px;
+    }
+    #btnStart, #btnNextCourse, #btnFinCourse1 {
+      font-size: 1.4rem;
+      padding: 16px 32px;
+    }
+    #info-course-resume {
+      font-size: 1.1rem;
+    }
   }
 </style>
 </head>
 <body>
 
-<h2>Course Élèves</h2>
+<h2>Gestion des Courses - EPS Tablette</h2>
 
-<form id="form-eleve1">
-  <h3>Élève 1</h3>
-  <label for="nom1">Nom :</label>
-  <input type="text" id="nom1" required />
-  <label for="prenom1">Prénom :</label>
-  <input type="text" id="prenom1" required />
-</form>
+<div id="page-main">
 
-<form id="form-eleve2">
-  <h3>Élève 2</h3>
-  <label for="nom2">Nom :</label>
-  <input type="text" id="nom2" required />
-  <label for="prenom2">Prénom :</label>
-  <input type="text" id="prenom2" required />
-</form>
+  <div class="container">
 
-<label for="duree">Durée (minutes) :</label>
-<input type="number" id="duree" value="1" min="1" max="120" />
+    <section class="eleve" id="eleve1" aria-label="Informations élève 1">
+      <h3>Élève 1</h3>
+      <label for="nom1">Nom :</label>
+      <input type="text" id="nom1" aria-required="true" placeholder="Ex: Dupont" autocomplete="off" />
+      <label for="prenom1">Prénom :</label>
+      <input type="text" id="prenom1" aria-required="true" placeholder="Ex: Marie" autocomplete="off" />
+      <label for="classe1">Classe :</label>
+      <input type="text" id="classe1" aria-required="true" placeholder="Ex: 4èmeB" autocomplete="off" />
+      <label for="sexe1">Sexe :</label>
+      <select id="sexe1" aria-required="true">
+        <option value="">Choisir</option>
+        <option value="Fille">Fille</option>
+        <option value="Garçon">Garçon</option>
+        <option value="Autre">Autre</option>
+      </select>
 
-<label for="distanceTour">Distance tour (mètres) :</label>
-<input type="number" id="distanceTour" value="400" min="10" />
+      <div class="info-course" aria-label="Informations course élève 1">
+        <h4>Informations course</h4>
+        <label for="duree1">Durée (minutes) :</label>
+        <input type="number" id="duree1" min="1" value="1" aria-required="true" />
+        <label for="distanceTour1">Distance tour (mètres) :</label>
+        <input type="number" id="distanceTour1" min="10" value="400" aria-required="true" />
+        <label for="vma1">VMA (km/h) :</label>
+        <input type="number" id="vma1" min="1" step="0.1" value="12" aria-required="true" />
+      </div>
+    </section>
 
-<button id="boutonLancer">Lancer la course 1</button>
+    <section class="eleve" id="eleve2" aria-label="Informations élève 2">
+      <h3>Élève 2</h3>
+      <label for="nom2">Nom :</label>
+      <input type="text" id="nom2" aria-required="true" placeholder="Ex: Martin" autocomplete="off" />
+      <label for="prenom2">Prénom :</label>
+      <input type="text" id="prenom2" aria-required="true" placeholder="Ex: Paul" autocomplete="off" />
+      <label for="classe2">Classe :</label>
+      <input type="text" id="classe2" aria-required="true" placeholder="Ex: 4èmeB" autocomplete="off" />
+      <label for="sexe2">Sexe :</label>
+      <select id="sexe2" aria-required="true">
+        <option value="">Choisir</option>
+        <option value="Fille">Fille</option>
+        <option value="Garçon">Garçon</option>
+        <option value="Autre">Autre</option>
+      </select>
 
-<div id="minuteur">00:00</div>
+      <div class="info-course" aria-label="Informations course élève 2">
+        <h4>Informations course</h4>
+        <label for="duree2">Durée (minutes) :</label>
+        <input type="number" id="duree2" min="1" value="1" aria-required="true" />
+        <label for="distanceTour2">Distance tour (mètres) :</label>
+        <input type="number" id="distanceTour2" min="10" value="400" aria-required="true" />
+        <label for="vma2">VMA (km/h) :</label>
+        <input type="number" id="vma2" min="1" step="0.1" value="12" aria-required="true" />
+      </div>
+    </section>
 
-<div id="infos">
-  <div id="eleve1-info"></div>
-  <div id="eleve2-info"></div>
+  </div>
+
+  <div id="main-controls">
+    <button id="btnStart" aria-label="Démarrer la course" type="button">Démarrer la course</button>
+  </div>
+
+  <section id="timer-section" aria-live="polite" aria-atomic="true">
+    <div id="timer-container" role="timer" aria-live="assertive" aria-atomic="true">
+      <span id="timer-display">00:00</span>
+      <button id="btnAddTour" aria-label="Ajouter un tour supplémentaire" type="button" style="display:none;">+ Tour</button>
+    </div>
+  </section>
+
+  <div id="add-fraction-tours" style="display:none;">
+    <p>Ajouter un tour fractionné pour Élève 1 :</p>
+    <button id="btnAddFraction1" type="button">+ Tour Fractionné</button>
+    <button id="btnFinCourse1" disabled type="button">Fin de course Élève 1</button>
+  </div>
+
 </div>
 
+<section id="page-bilan" aria-label="Bilan des courses">
+  <h2>Bilan des courses</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Élève</th>
+        <th>Durée (min)</th>
+        <th>Distance totale (m)</th>
+        <th>Nombre de tours</th>
+        <th>Vitesse moyenne (km/h)</th>
+      </tr>
+    </thead>
+    <tbody id="bilan-body"></tbody>
+  </table>
+
+  <div style="text-align:center;">
+    <button id="btnDownloadCSV" type="button" aria-label="Télécharger les résultats au format CSV">Télécharger CSV</button>
+    <button id="btnDownloadQR" type="button" aria-label="Télécharger le QR Code des résultats">Télécharger QR Code</button>
+  </div>
+
+  <div id="qr-code" aria-label="QR Code des résultats" role="img" aria-live="polite"></div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
 <script>
-  const boutonLancer = document.getElementById('boutonLancer');
-  const minuteur = document.getElementById('minuteur');
-  const eleve1Info = document.getElementById('eleve1-info');
-  const eleve2Info = document.getElementById('eleve2-info');
+  // Variables globales
+  let timerInterval = null;
+  let timerDuration = 0;
+  let timerRemaining = 0;
+  let timerRunning = false;
+  let currentCourseIndex = 1; // 1 = élève 1, 2 = élève 2
 
-  let courseActuelle = 1;
-  let timerId = null;
-  let tempsRestant = 0;
+  // Données des courses
+  let eleves = {
+    1: {
+      nom: '',
+      prenom: '',
+      classe: '',
+      sexe: '',
+      duree: 0,
+      distanceTour: 0,
+      vma: 0,
+      tours: 0,
+      toursFractionnes: 0,
+      tempsParTour: [],
+      tempsFractionnes: [],
+      debutCourse: null,
+      finCourse: null,
+      totalDistance: 0,
+      vitesseMoyenne: 0
+    },
+    2: {
+      nom: '',
+      prenom: '',
+      classe: '',
+      sexe: '',
+      duree: 0,
+      distanceTour: 0,
+      vma: 0,
+      tours: 0,
+      toursFractionnes: 0,
+      tempsParTour: [],
+      tempsFractionnes: [],
+      debutCourse: null,
+      finCourse: null,
+      totalDistance: 0,
+      vitesseMoyenne: 0
+    }
+  };
 
-  function formatTemps(sec) {
-    const m = Math.floor(sec / 60);
-    const s = sec % 60;
-    return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  // Sélecteurs inputs
+  const inputs1 = {
+    nom: document.getElementById('nom1'),
+    prenom: document.getElementById('prenom1'),
+    classe: document.getElementById('classe1'),
+    sexe: document.getElementById('sexe1'),
+    duree: document.getElementById('duree1'),
+    distanceTour: document.getElementById('distanceTour1'),
+    vma: document.getElementById('vma1'),
+  };
+  const inputs2 = {
+    nom: document.getElementById('nom2'),
+    prenom: document.getElementById('prenom2'),
+    classe: document.getElementById('classe2'),
+    sexe: document.getElementById('sexe2'),
+    duree: document.getElementById('duree2'),
+    distanceTour: document.getElementById('distanceTour2'),
+    vma: document.getElementById('vma2'),
+  };
+
+  // Elements DOM principaux
+  const btnStart = document.getElementById('btnStart');
+  const btnAddTour = document.getElementById('btnAddTour');
+  const timerDisplay = document.getElementById('timer-display');
+  const timerContainer = document.getElementById('timer-container');
+  const addFractionTours = document.getElementById('add-fraction-tours');
+  const btnAddFraction1 = document.getElementById('btnAddFraction1');
+  const btnFinCourse1 = document.getElementById('btnFinCourse1');
+  const pageMain = document.getElementById('page-main');
+  const pageBilan = document.getElementById('page-bilan');
+  const bilanBody = document.getElementById('bilan-body');
+  const btnDownloadCSV = document.getElementById('btnDownloadCSV');
+  const btnDownloadQR = document.getElementById('btnDownloadQR');
+  const qrCodeDiv = document.getElementById('qr-code');
+
+  // Fonctions utilitaires
+  function formatTime(sec) {
+    let min = Math.floor(sec / 60);
+    let s = sec % 60;
+    return `${min.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
   }
 
-  function lancerTimer(dureeMinutes, callbackFin) {
-    tempsRestant = dureeMinutes * 60;
-    minuteur.textContent = formatTemps(tempsRestant);
+  // Met à jour les données élèves depuis les inputs
+  function updateEleveData(num) {
+    const inputs = (num === 1) ? inputs1 : inputs2;
+    eleves[num].nom = inputs.nom.value.trim();
+    eleves[num].prenom = inputs.prenom.value.trim();
+    eleves[num].classe = inputs.classe.value.trim();
+    eleves[num].sexe = inputs.sexe.value;
+    eleves[num].duree = parseInt(inputs.duree.value) || 0;
+    eleves[num].distanceTour = parseInt(inputs.distanceTour.value) || 0;
+    eleves[num].vma = parseFloat(inputs.vma.value) || 0;
+  }
 
-    timerId = setInterval(() => {
-      tempsRestant--;
-      minuteur.textContent = formatTemps(tempsRestant);
-      if (tempsRestant <= 10) {
-        minuteur.style.color = 'red';
+  // Valide les données élèves avant démarrage
+  function validerDonnees() {
+    for(let i=1; i<=2; i++) {
+      updateEleveData(i);
+      if (!eleves[i].nom || !eleves[i].prenom || !eleves[i].classe || !eleves[i].sexe || eleves[i].duree <= 0 || eleves[i].distanceTour <= 0 || eleves[i].vma <= 0) {
+        alert(`Veuillez remplir correctement tous les champs pour l'élève ${i}`);
+        return false;
       }
-      if (tempsRestant <= 0) {
-        clearInterval(timerId);
-        minuteur.style.color = '#004080';
-        callbackFin();
+    }
+    return true;
+  }
+
+  // Timer fonction
+  function startTimer(duration) {
+    timerRemaining = duration;
+    timerDisplay.textContent = formatTime(timerRemaining);
+    timerContainer.classList.remove('blink');
+    btnAddTour.style.display = 'none';
+
+    timerInterval = setInterval(() => {
+      timerRemaining--;
+      timerDisplay.textContent = formatTime(timerRemaining);
+
+      // Si il reste moins de 10 sec on fait clignoter
+      if (timerRemaining <= 10 && timerRemaining > 0) {
+        timerContainer.classList.add('blink');
+      }
+
+      if(timerRemaining <= 0) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        timerDisplay.textContent = '00:00';
+        timerContainer.classList.remove('blink');
+        onCourseTerminee();
       }
     }, 1000);
   }
 
-  boutonLancer.addEventListener('click', e => {
-    e.preventDefault();
+  // Quand une course se termine
+  function onCourseTerminee() {
+    // Met à jour fin de course pour l'élève en cours
+    let eleve = eleves[currentCourseIndex];
+    eleve.finCourse = new Date();
 
-    // Validation simples
-    const nom1 = document.getElementById('nom1').value.trim();
-    const prenom1 = document.getElementById('prenom1').value.trim();
-    const nom2 = document.getElementById('nom2').value.trim();
-    const prenom2 = document.getElementById('prenom2').value.trim();
-
-    if (nom1 === '' || prenom1 === '') {
-      alert('Merci de remplir le nom et prénom de l\'élève 1');
-      return;
-    }
-    if (nom2 === '' || prenom2 === '') {
-      alert('Merci de remplir le nom et prénom de l\'élève 2');
-      return;
-    }
-
-    const duree = parseInt(document.getElementById('duree').value);
-    const distanceTour = parseFloat(document.getElementById('distanceTour').value);
-
-    if (isNaN(duree) || duree < 1) {
-      alert('Durée invalide');
-      return;
-    }
-    if (isNaN(distanceTour) || distanceTour < 10) {
-      alert('Distance tour invalide');
-      return;
-    }
-
-    boutonLancer.disabled = true;
-
-    if (courseActuelle === 1) {
-      eleve1Info.innerHTML = `<strong>Élève 1:</strong> ${nom1} ${prenom1}<br>Durée: ${duree} minutes<br>Distance tour: ${distanceTour} m`;
-      eleve2Info.innerHTML = '';
-
-      lancerTimer(duree, () => {
-        alert("Fin de la course 1. Prêt pour la course 2.");
-        courseActuelle = 2;
-        minuteur.textContent = '00:00';
-        boutonLancer.textContent = 'Lancer la course 2';
-        boutonLancer.disabled = false;
-      });
+    // Calcul du nombre de tours à partir du temps total / temps moyen par tour
+    if(eleve.tempsParTour.length > 0) {
+      eleve.tours = eleve.tempsParTour.length;
     } else {
-      eleve2Info.innerHTML = `<strong>Élève 2:</strong> ${nom2} ${prenom2}<br>Durée: ${duree} minutes<br>Distance tour: ${distanceTour} m`;
-
-      lancerTimer(duree, () => {
-        alert("Fin de la course 2. Toutes les courses sont terminées.");
-        boutonLancer.disabled = true;
-      });
+      // Si pas de tours enregistrés, on estime via VMA, distance et durée
+      eleve.tours = Math.floor(eleve.vma * eleve.duree * 1000 / (60 * eleve.distanceTour)); 
     }
-  });
-</script>
 
+    eleve.totalDistance = eleve.tours * eleve.distanceTour;
+
+    // Calcul vitesse moyenne = distance totale / temps total (h)
+    eleve.vitesseMoyenne = ((eleve.totalDistance / 1000) / (eleve.duree / 60)).toFixed(2);
+
+    if(currentCourseIndex === 1) {
+      // Passage élève 2
+      currentCourseIndex = 2;
+      alert("Course élève 1 terminée. Préparez-vous pour la course élève 2.");
+      prepareCourse(currentCourseIndex);
+    } else {
+      // Fin des 2 courses => bilan
+      alert("Les deux courses sont terminées.");
+      showBilan();
+    }
+  }
+
+  // Prépare interface pour la course d'un élève
+  function prepareCourse(num) {
+    // Reset timer
+    clearInterval(timerInterval);
+    timerRunning = false;
+    timerDisplay.textContent = "00:00";
+    timerContainer.classList.remove('blink');
+    btnAddTour.style.display = 'none';
+
+    // Active bouton démarrer
+    btnStart.disabled = false;
+    btnStart.textContent = `Démarrer la course Élève ${num}`;
+
+    // Affiche inputs de l'élève courant et désactive ceux de l'autre
+    for(let i=1; i<=2; i++) {
+      let eleveSection = document.getElementById(`eleve${i}`);
+      if(i === num) {
+        eleveSection.style.opacity = '1';
+        eleveSection.style.pointerEvents = 'auto';
+      } else {
+        eleveSection.style.opacity = '0.5';
+        eleveSection.style.pointerEvents = 'none';
+      }
+    }
+
+    // Affiche ou cache la zone d'ajout de tours fractionnés
+    if(num === 1) {
+      addFractionTours.style.display = 'block';
+      btnFinCourse1.disabled = true;
+    } else {
+      addFractionTours.style.display = 'none';
+    }
+  }
+
+  // Gestion des tours
+  function ajouterTour(num) {
+    let eleve = eleves[num];
+    if(!eleve.debutCourse) eleve.debutCourse = new Date();
+    // Enregistre le temps écoulé depuis le début de la course
+    let now = new Date();
+    let tempsTourSec = Math.floor((now - eleve.debutCourse) / 1000);
+    eleve.tempsParTour.push(tempsTourSec);
+    eleve.tours++;
+    btnAddTour.textContent = `+ Tour (${eleve.tours})`;
+    btnFinCourse1.disabled = false;
+  }
+
+  function ajouterTourFractionne() {
+    let eleve = eleves[1];
+    let now = new Date();
+    if(!eleve.debutCourse) eleve.debutCourse = now;
+    let tempsSec = Math.floor((now - eleve.debutCourse) / 1000);
+    eleve.tempsFractionnes.push(tempsSec);
+    eleve.toursFractionnes++;
+    alert(`Tour fractionné ajouté ! Total fractionnés: ${eleve.toursFractionnes}`);
+    btnFinCourse1.disabled = false;
+  }
+
+  // Démarrage course
+  btnStart.addEventListener('click', () => {
+    if(!validerDonnees()) return;
+
+    updateEleveData(currentCourseIndex);
+    const eleve = eleves[currentCourseIndex];
+    timerDuration = eleve.duree * 60;
+    eleve.debutCourse = new Date();
+    eleve.tours = 0;
+    eleve.toursFractionnes = 0;
+    eleve.tempsParTour = [];
+    eleve.tempsFractionnes = [];
+    btnStart.disabled = true;
+    timerRunning = true;
+    btnAddTour.style.display = 'inline-block';
+    btnAddTour.textContent = '+ Tour';
+    startTimer(timerDuration);
+  });
+
+  // Ajouter tour manuel
+  btnAddTour.addEventListener('click', () => {
+    if(timerRunning) ajouterTour(currentCourseIndex);
+  });
+
+  // Ajouter tour fractionné élève 1
+  btnAddFraction1.addEventListener('click', () => {
+    if(timerRunning) ajouterTourFractionne();
+  });
+
+  // Fin de course élève 1 manuel
+  btnFinCourse1.addEventListener('click', () => {
+    if(timerRunning) {
+      clearInterval(timerInterval);
+      timerRunning = false;
+    }
+    onCourseTerminee();
+  });
+
+  // Affiche bilan final
+  function showBilan() {
+    pageMain.style.display = 'none';
+    pageBilan.style.display = 'block';
+
+    bilanBody.innerHTML = '';
+
+    for(let i=1; i<=2; i++) {
+      let e = eleves[i];
+      let tr = document.createElement('tr');
+      let nomPrenom = `${e.nom} ${e.prenom}`;
+      tr.innerHTML = `
+        <td>${nomPrenom}</td>
+        <td>${e.duree}</td>
+        <td>${e.totalDistance}</td>
+        <td>${e.tours}</td>
+        <td>${e.vitesseMoyenne}</td>
+      `;
+      bilanBody.appendChild(tr);
+    }
+
+    generateQRCode();
+  }
+
+  // Génère QR Code pour les résultats CSV en base64
+  function generateQRCode() {
+    const csv = generateCSVString();
+    QRCode.toDataURL(csv, { errorCorrectionLevel: 'H', margin: 2, scale: 6 }, function (err, url) {
+      if (err) {
+        qrCodeDiv.textContent = 'Erreur génération QR Code.';
+        return;
+      }
+      qrCodeDiv.innerHTML = `<img src="${url}" alt="QR Code des résultats de la course" />`;
+    });
+  }
+
+  // Génère CSV
+  function generateCSVString() {
+    let csv = 'Élève,Durée (min),Distance totale (m),Nombre de tours,Vitesse moyenne (km/h)\n';
+    for(let i=1; i<=2; i++) {
+      let e = eleves[i];
+      csv += `"${e.nom} ${e.prenom}",${e.duree},${e.totalDistance},${e.tours},${e.vitesseMoyenne}\n`;
+    }
+    return csv;
+  }
+
+  // Téléchargement CSV
+  btnDownloadCSV.addEventListener('click', () => {
+    const csv = generateCSVString();
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'resultats_courses.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  // Téléchargement QR code (image PNG)
+  btnDownloadQR.addEventListener('click', () => {
+    const img = qrCodeDiv.querySelector('img');
+    if(!img) {
+      alert("QR Code non généré.");
+      return;
+    }
+    const a = document.createElement('a');
+    a.href = img.src;
+    a.download = 'qr_resultats_courses.png';
+    a.click();
+  });
+
+  // Initialisation
+  prepareCourse(currentCourseIndex);
+</script>
 </body>
 </html>
