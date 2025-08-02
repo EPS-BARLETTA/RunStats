@@ -1,400 +1,118 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>RunStats - Élève</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #f0f8ff;
-    margin: 0; padding: 0;
-    display: flex; flex-direction: column; min-height: 100vh;
-  }
-  header {
-    text-align: center;
-    padding: 20px;
-    font-size: 2em;
-    font-weight: bold;
-    background-color: #0077cc;
-    color: white;
-  }
-  main {
-    flex: 1;
-    padding: 20px;
-    max-width: 900px;
-    margin: auto;
-  }
-  .form-group {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-  .eleve-box {
-    flex: 1 1 48%;
-    border-radius: 8px;
-    padding: 15px;
-    color: white;
-  }
-  .eleve1 {
-    background: #007acc;
-  }
-  .eleve2 {
-    background: #009933;
-  }
-  label {
-    display: block;
-    margin-top: 10px;
-  }
-  input[type="text"], select, input[type="number"] {
-    width: 95%;
-    padding: 6px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    margin-top: 4px;
-  }
-  .course-info {
-    background: #cceeff;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    display: flex;
-    gap: 15px;
-    align-items: flex-end;
-    justify-content: space-between;
-  }
-  .course-info > div {
-    flex: 1 1 30%;
-  }
-  .course-info label {
-    color: #004466;
-    font-weight: bold;
-  }
-  .buttons-top {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    margin-bottom: 25px;
-  }
-  button {
-    font-size: 1.2em;
-    padding: 10px 25px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  #startBtn {
-    background-color: #0077cc;
-    color: white;
-  }
-  #plusTourBtn {
-    background-color: #33cc33;
-    color: white;
-    border-radius: 25px;
-    width: 100px;
-  }
-  #resetBtn {
-    background-color: #cc3300;
-    color: white;
-  }
-  #timerContainer {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  #timerCircle {
-    margin: auto;
-    width: 160px;
-    height: 160px;
-    border: 6px solid #0077cc;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3em;
-    font-weight: bold;
-    color: #0077cc;
-    user-select: none;
-  }
-  #timerCircle.blink {
-    color: red;
-    border-color: red;
-    animation: blinkAnim 1s steps(2, start) infinite;
-  }
-  @keyframes blinkAnim {
-    to { visibility: hidden; }
-  }
-  #courseData {
-    display: flex;
-    justify-content: space-around;
-    gap: 15px;
-    font-weight: bold;
-    font-size: 1.2em;
-  }
-  #courseData > div {
-    background: #0077cc;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 8px;
-    flex: 1 1 30%;
-    user-select: none;
-  }
-  footer {
-    background-color: #0077cc;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    font-size: 0.9em;
-  }
-  /* Masquer les sections au démarrage du chrono */
-  .hidden {
-    display: none;
-  }
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RunStats - Élève</title>
+    <link rel="stylesheet" href="eleve.css" />
 </head>
 <body>
+    <header>
+        <h1>RunStats</h1>
+        <h2>Équipe EPS Lycée Vauban - Luxembourg</h2>
+    </header>
 
-<header>RunStats</header>
+    <main>
+        <section id="saisie-section">
+            <div class="eleves-container">
+                <div class="eleve-box bleu">
+                    <h3>Élève 1</h3>
+                    <label>Nom <input type="text" id="nom1" /></label>
+                    <label>Prénom <input type="text" id="prenom1" /></label>
+                    <label>Classe <input type="text" id="classe1" /></label>
+                    <label>Sexe
+                        <select id="sexe1">
+                            <option value="">Choisir</option>
+                            <option value="Fille">Fille</option>
+                            <option value="Garçon">Garçon</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="eleve-box vert">
+                    <h3>Élève 2</h3>
+                    <label>Nom <input type="text" id="nom2" /></label>
+                    <label>Prénom <input type="text" id="prenom2" /></label>
+                    <label>Classe <input type="text" id="classe2" /></label>
+                    <label>Sexe
+                        <select id="sexe2">
+                            <option value="">Choisir</option>
+                            <option value="Fille">Fille</option>
+                            <option value="Garçon">Garçon</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
 
-<main>
-  <div id="formInputs">
-    <div class="form-group">
-      <div class="eleve-box eleve1">
-        <h3>Élève 1</h3>
-        <label for="nom1">Nom</label>
-        <input type="text" id="nom1" />
-        <label for="prenom1">Prénom</label>
-        <input type="text" id="prenom1" />
-        <label for="classe1">Classe</label>
-        <input type="text" id="classe1" />
-        <label for="sexe1">Sexe</label>
-        <select id="sexe1">
-          <option value="">Choisir</option>
-          <option value="fille">Fille</option>
-          <option value="garcon">Garçon</option>
-        </select>
-      </div>
+            <div id="course-info" class="info-box bleu-clair">
+                <label>Durée course (min) <input type="number" id="duree" min="1" /></label>
+                <label>Distance tour (m) <input type="number" id="distanceTour" min="1" /></label>
+                <label>VMA (optionnel) <input type="number" id="vma" min="0" step="0.1" /></label>
+            </div>
 
-      <div class="eleve-box eleve2">
-        <h3>Élève 2</h3>
-        <label for="nom2">Nom</label>
-        <input type="text" id="nom2" />
-        <label for="prenom2">Prénom</label>
-        <input type="text" id="prenom2" />
-        <label for="classe2">Classe</label>
-        <input type="text" id="classe2" />
-        <label for="sexe2">Sexe</label>
-        <select id="sexe2">
-          <option value="">Choisir</option>
-          <option value="fille">Fille</option>
-          <option value="garcon">Garçon</option>
-        </select>
-      </div>
-    </div>
+            <div class="boutons-top">
+                <button id="demarrerBtn" class="btn bleu-rect">Démarrer</button>
+                <button id="plusTourBtn" class="btn vert-oval" disabled>+ Tour</button>
+                <button id="resetBtn" class="btn gris-rect">Reset</button>
+            </div>
+        </section>
 
-    <div class="course-info">
-      <div>
-        <label for="duree">Durée (minutes)</label>
-        <input type="number" id="duree" min="1" />
-      </div>
-      <div>
-        <label for="distanceTour">Distance tour (m)</label>
-        <input type="number" id="distanceTour" min="1" />
-      </div>
-      <div>
-        <label for="vmaInput">VMA (optionnelle km/h)</label>
-        <input type="number" id="vmaInput" step="0.1" min="0" />
-      </div>
-    </div>
-  </div>
+        <section id="course-section" class="hidden">
+            <div class="boutons-course">
+                <button id="demarrerCourseBtn" class="btn bleu-rect">Démarrer</button>
+                <button id="plusTourCourseBtn" class="btn vert-oval" disabled>+ Tour</button>
+                <button id="resetCourseBtn" class="btn gris-rect">Reset</button>
+            </div>
 
-  <div class="buttons-top">
-    <button id="startBtn">Démarrer</button>
-    <button id="plusTourBtn" disabled>+ tour</button>
-    <button id="resetBtn">Reset</button>
-  </div>
+            <div id="timer-container">
+                <div id="timer-circle">
+                    <span id="timer-display">00:00</span>
+                </div>
+            </div>
 
-  <div id="timerContainer" class="hidden">
-    <div id="timerCircle">00:00</div>
-  </div>
+            <div id="ajout-temps" class="hidden">
+                <p>Ajouter un temps supplémentaire :</p>
+                <button class="btn vert-oval ajout-temps-btn" data-ajout="0.25">+ 1/4 tour</button>
+                <button class="btn vert-oval ajout-temps-btn" data-ajout="0.5">+ 1/2 tour</button>
+                <button class="btn vert-oval ajout-temps-btn" data-ajout="0.75">+ 3/4 tour</button>
+            </div>
 
-  <div id="courseData" class="hidden">
-    <div id="distanceData">Distance: 0 m</div>
-    <div id="vitesseData">Vitesse: 0 km/h</div>
-    <div id="vmaData">VMA estimée: 0 km/h</div>
-  </div>
+            <div id="infos-course" class="infos-course-container">
+                <div class="info-item bleu-info">
+                    <h4>Élève courant</h4>
+                    <p id="eleve-courant"></p>
+                </div>
+                <div class="info-item vert-info">
+                    <h4>Distance réalisée (m)</h4>
+                    <p id="distance-realise">0</p>
+                </div>
+                <div class="info-item jaune-info">
+                    <h4>Vitesse (m/min)</h4>
+                    <p id="vitesse">0</p>
+                </div>
+                <div class="info-item orange-info">
+                    <h4>Estimation VMA (m/min)</h4>
+                    <p id="vma-estimee">0</p>
+                </div>
+                <div class="info-item violet-info">
+                    <h4>Tour numéro</h4>
+                    <p id="num-tour">0</p>
+                </div>
+            </div>
+        </section>
 
-  <div id="message" style="text-align:center; margin-top:20px; font-weight:bold; font-size:1.1em; color:#0077cc;"></div>
-</main>
+        <section id="fin-section" class="hidden">
+            <h3>Fin des deux courses</h3>
+            <button id="exportCsvBtn" class="btn bleu-rect">Exporter CSV</button>
+            <button id="qrCodeBtn" class="btn bleu-rect">Générer QR Code</button>
+            <div id="qrcode"></div>
+        </section>
+    </main>
 
-<footer>Equipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+    <footer>
+        <p>Équipe EPS Lycée Vauban - LUXEMBOURG - JB</p>
+    </footer>
 
-<script>
-  const nom1 = document.getElementById('nom1');
-  const prenom1 = document.getElementById('prenom1');
-  const classe1 = document.getElementById('classe1');
-  const sexe1 = document.getElementById('sexe1');
-
-  const nom2 = document.getElementById('nom2');
-  const prenom2 = document.getElementById('prenom2');
-  const classe2 = document.getElementById('classe2');
-  const sexe2 = document.getElementById('sexe2');
-
-  const dureeInput = document.getElementById('duree');
-  const distanceTourInput = document.getElementById('distanceTour');
-  const vmaInput = document.getElementById('vmaInput');
-
-  const startBtn = document.getElementById('startBtn');
-  const plusTourBtn = document.getElementById('plusTourBtn');
-  const resetBtn = document.getElementById('resetBtn');
-
-  const timerContainer = document.getElementById('timerContainer');
-  const timerCircle = document.getElementById('timerCircle');
-  const courseData = document.getElementById('courseData');
-  const distanceData = document.getElementById('distanceData');
-  const vitesseData = document.getElementById('vitesseData');
-  const vmaData = document.getElementById('vmaData');
-  const formInputs = document.getElementById('formInputs');
-  const message = document.getElementById('message');
-
-  let isRunning = false;
-  let tourCount = 0;
-  let totalDuration = 0; // en secondes
-  let intervalId;
-  let startTime = 0;
-  let remainingTime = 0;
-  let courseNum = 1;
-  let currentRunner = 1;
-
-  function formatTime(sec) {
-    const minutes = Math.floor(sec / 60);
-    const seconds = sec % 60;
-    return `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
-  }
-
-  function calculateSpeed(distanceMeters, timeSeconds) {
-    if (timeSeconds <= 0) return 0;
-    const speed = (distanceMeters / 1000) / (timeSeconds / 3600);
-    return speed.toFixed(2);
-  }
-
-  function updateCourseData(distance, vitesse, vma) {
-    distanceData.textContent = `Distance: ${distance.toFixed(1)} m`;
-    vitesseData.textContent = `Vitesse: ${vitesse} km/h`;
-    vmaData.textContent = `VMA estimée: ${vma.toFixed(2)} km/h`;
-  }
-
-  function startTimer() {
-    if (isRunning) return;
-
-    // Validation rapide des champs
-    if (!nom1.value.trim() || !prenom1.value.trim() ||
-        !nom2.value.trim() || !prenom2.value.trim()) {
-      alert('Merci de renseigner les noms et prénoms des deux élèves.');
-      return;
-    }
-    if (!dureeInput.value || !distanceTourInput.value) {
-      alert('Merci de renseigner la durée et la distance du tour.');
-      return;
-    }
-
-    isRunning = true;
-    tourCount = 0;
-    totalDuration = parseInt(dureeInput.value, 10) * 60;
-    remainingTime = totalDuration;
-
-    formInputs.classList.add('hidden');
-    plusTourBtn.disabled = false;
-    startBtn.disabled = true;
-
-    timerContainer.classList.remove('hidden');
-    courseData.classList.remove('hidden');
-    message.textContent = `Course ${courseNum} Élève ${currentRunner} - Tours: 0`;
-
-    startTime = Date.now();
-    updateTimerDisplay();
-
-    intervalId = setInterval(() => {
-      remainingTime--;
-      updateTimerDisplay();
-
-      if (remainingTime <= 10) {
-        timerCircle.classList.add('blink');
-      } else {
-        timerCircle.classList.remove('blink');
-      }
-
-      if (remainingTime <= 0) {
-        clearInterval(intervalId);
-        isRunning = false;
-        plusTourBtn.disabled = true;
-
-        if (courseNum === 1) {
-          message.textContent = "Course 1 terminée. Cliquez sur Démarrer pour la course 2.";
-          courseNum = 2;
-          currentRunner = 2;
-          startBtn.disabled = false;
-        } else {
-          message.textContent = "Course 2 terminée. Merci !";
-          startBtn.disabled = true;
-          plusTourBtn.disabled = true;
-        }
-      }
-    }, 1000);
-  }
-
-  function updateTimerDisplay() {
-    timerCircle.textContent = formatTime(remainingTime);
-  }
-
-  plusTourBtn.addEventListener('click', () => {
-    if (!isRunning) return;
-    tourCount++;
-
-    const distanceTour = parseFloat(distanceTourInput.value);
-    const distance = tourCount * distanceTour;
-
-    const now = Date.now();
-    const elapsedSinceStart = (now - startTime) / 1000;
-    const timeRun = totalDuration - remainingTime;
-
-    const vitesse = calculateSpeed(distance, timeRun);
-
-    let vmaUser = parseFloat(vmaInput.value);
-    if (isNaN(vmaUser) || vmaUser <= 0) {
-      vmaUser = vitesse * 1.05;
-    }
-
-    updateCourseData(distance, vitesse, vmaUser);
-
-    message.textContent = `Course ${courseNum} Élève ${currentRunner} - Tours: ${tourCount}`;
-  });
-
-  startBtn.addEventListener('click', startTimer);
-
-  resetBtn.addEventListener('click', () => {
-    clearInterval(intervalId);
-    isRunning = false;
-    tourCount = 0;
-    totalDuration = 0;
-    remainingTime = 0;
-    courseNum = 1;
-    currentRunner = 1;
-
-    formInputs.classList.remove('hidden');
-    plusTourBtn.disabled = true;
-    startBtn.disabled = false;
-
-    timerContainer.classList.add('hidden');
-    courseData.classList.add('hidden');
-    message.textContent = '';
-
-    updateCourseData(0, 0, 0);
-    timerCircle.textContent = "00:00";
-    timerCircle.classList.remove('blink');
-  });
-
-</script>
-
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script src="eleve.js"></script>
 </body>
 </html>
