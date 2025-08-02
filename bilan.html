@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RunStats - Zone de téléchargement</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>RunStats</h1>
+    <h2>zone de téléchargement</h2>
+  </header>
+
+  <main>
+    <section id="bilan-section" style="max-width: 700px; margin: auto;">
+      <h3>Bilan des courses</h3>
+      <table id="bilan-table" border="1" style="width:100%; border-collapse: collapse; text-align: center;">
+        <thead>
+          <tr>
+            <th>Élève</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Classe</th>
+            <th>Sexe</th>
+            <th>Distance (m)</th>
+            <th>Vitesse Moyenne (km/h)</th>
+            <th>VMA estimée (km/h)</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div style="margin-top: 20px; display: flex; justify-content: center; gap: 20px;">
+        <button id="download-csv">Télécharger CSV</button>
+        <button id="download-qr">Télécharger QR Code</button>
+      </div>
+
+      <div id="qr-code" style="margin-top: 20px; text-align: center;"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Equipe EPS Lycée Vauban - LUXEMBOURG - JB</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script src="bilan.js"></script>
+</body>
+</html>
