@@ -1,51 +1,114 @@
-/* style.css */
-
-body {
-  font-family: Arial, sans-serif;
+/* Réinitialisation */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  background-color: #f0f4f8;
-  color: #333;
-  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+/* Corps de page */
+body {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  min-height: 100vh;
+  background: #f5f5f5;
 }
 
-h1 {
+/* Header */
+header {
   text-align: center;
-  margin-top: 3rem;
-  font-size: 3rem;
-  color: #007acc;
+  padding: 20px;
+  background-color: #333;
+  color: #fff;
 }
 
-.home-main {
-  flex-grow: 1;
+header h1 {
+  font-size: 2.2rem;
+}
+
+header h2 {
+  font-size: 1rem;
+  font-weight: normal;
+  color: #ddd;
+}
+
+/* Conteneur principal */
+main.eleve-container {
+  flex: 1;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
+  gap: 20px;
+  padding: 20px;
 }
 
-.btn-center {
-  background-color: #007acc;
+/* Cartes Élèves */
+.eleve-card {
+  flex: 1 1 300px;
+  max-width: 400px;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.eleve-1 {
+  background-color: #d1f7d6; /* Vert clair */
+}
+
+.eleve-2 {
+  background-color: #d1e7ff; /* Bleu clair */
+}
+
+/* Sections infos course */
+.course-info {
+  flex: 1 1 100%;
+  max-width: 800px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+label {
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+input, select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+/* Bouton démarrage */
+#startCourseBtn {
+  margin: 20px auto;
+  padding: 15px 25px;
+  font-size: 1.2rem;
+  background-color: #4CAF50;
   color: white;
   border: none;
-  padding: 2rem 3rem;
-  font-size: 1.8rem;
-  border-radius: 50px;
+  border-radius: 10px;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 122, 204, 0.4);
-  transition: background-color 0.3s ease;
+  transition: background 0.3s;
 }
 
-.btn-center:hover {
-  background-color: #005f99;
+#startCourseBtn:hover {
+  background-color: #45a049;
 }
 
+/* Pied de page */
 footer {
-  background-color: #ddd;
   text-align: center;
-  padding: 0.8rem 1rem;
+  padding: 10px;
+  background: #222;
+  color: #fff;
   font-size: 0.9rem;
-  color: #555;
 }
