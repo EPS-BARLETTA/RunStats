@@ -1,6 +1,6 @@
 body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #f0f8ff, #e1f0ff);
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
   margin: 0;
   padding: 0;
   color: #333;
@@ -17,47 +17,51 @@ main {
   padding: 30px;
   max-width: 900px;
   margin: auto;
-  background-color: #fff;
+  background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
+.resume-container {
+  padding: 20px;
   margin-bottom: 20px;
 }
 
-th,
-td {
-  border: 1px solid #ccc;
-  padding: 10px;
+.resume-container p {
+  font-size: 1.1rem;
+  margin: 8px 0;
+}
+
+.qr-container {
   text-align: center;
+  margin-bottom: 30px;
 }
 
-th {
-  background-color: #f3f3f3;
-}
-
-#telechargements {
+.download-zone {
   text-align: center;
+  margin-bottom: 40px;
 }
 
-#downloadCSV {
-  background-color: #4CAF50;
-  color: white;
+button {
   padding: 12px 24px;
+  font-size: 1rem;
+  background-color: #0077cc;
+  color: white;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
   cursor: pointer;
-  margin-bottom: 20px;
 }
 
-#downloadCSV:hover {
-  background-color: #3a8a3a;
+button:hover {
+  background-color: #005fa3;
 }
 
-#qr {
-  margin-top: 10px;
+footer {
+  text-align: center;
+  padding: 15px;
+  font-size: 0.9rem;
+  background-color: #f3f3f3;
+  color: #555;
+  margin-top: 40px;
+  border-top: 1px solid #ccc;
 }
