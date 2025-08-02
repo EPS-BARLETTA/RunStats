@@ -1,70 +1,52 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - Course</title>
-  <link rel="stylesheet" href="course.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RunStats - Course</title>
+<link rel="stylesheet" href="course.css" />
 </head>
 <body>
-  <header>
-    <h1>RunStats</h1>
-    <h2>Course</h2>
-  </header>
+<header>
+  <h1>RunStats</h1>
+  <h2>Course</h2>
+</header>
 
-  <main class="container">
-    <section class="eleves-info">
-      <div class="eleve-card eleve-1">
-        <h3>Élève 1</h3>
-        <p><strong>Nom :</strong> <span id="eleve1-nom"></span></p>
-        <p><strong>Prénom :</strong> <span id="eleve1-prenom"></span></p>
-        <p><strong>Classe :</strong> <span id="eleve1-classe"></span></p>
-        <p><strong>Sexe :</strong> <span id="eleve1-sexe"></span></p>
-      </div>
-      <div class="eleve-card eleve-2">
-        <h3>Élève 2</h3>
-        <p><strong>Nom :</strong> <span id="eleve2-nom"></span></p>
-        <p><strong>Prénom :</strong> <span id="eleve2-prenom"></span></p>
-        <p><strong>Classe :</strong> <span id="eleve2-classe"></span></p>
-        <p><strong>Sexe :</strong> <span id="eleve2-sexe"></span></p>
-      </div>
-    </section>
+<main>
+  <section id="eleve-info" class="eleve-card">
+    <h3>Élève en course</h3>
+    <p><strong>Nom :</strong> <span id="nom"></span></p>
+    <p><strong>Prénom :</strong> <span id="prenom"></span></p>
+    <p><strong>Classe :</strong> <span id="classe"></span></p>
+    <p><strong>Sexe :</strong> <span id="sexe"></span></p>
+  </section>
 
-    <section class="course-info">
-      <p><strong>Durée (minutes) :</strong> <span id="course-duration"></span></p>
-      <p><strong>Distance tour (m) :</strong> <span id="course-distance"></span></p>
-    </section>
+  <section id="course-info" class="course-info">
+    <div id="timer-container">
+      <button id="addTourBtn">+ Tour</button>
+      <div id="timer" class="timer">00:00</div>
+    </div>
 
-    <section class="timer-section">
-      <button id="startCourseBtn">Démarrer course élève 1</button>
+    <div id="stats">
+      <p>Distance totale (m) : <span id="distance">0.00</span></p>
+      <p>Vitesse moyenne (km/h) : <span id="vitesse">0.00</span></p>
+      <p>VMA estimée (km/h) : <span id="vma">0.00</span></p>
+    </div>
 
-      <div id="timer-container" class="hidden">
-        <button id="addTourBtn">+ Tour</button>
-        <div id="timer-circle">
-          <span id="timer">00:00</span>
-        </div>
-        <div class="stats">
-          <p><strong>Distance totale (m) :</strong> <span id="total-distance">0</span></p>
-          <p><strong>Vitesse moyenne (km/h) :</strong> <span id="avg-speed">0</span></p>
-          <p><strong>VMA estimée (km/h) :</strong> <span id="vma-estimate">0</span></p>
-        </div>
-        <div id="fraction-tours" class="fraction-tours hidden">
-          <p>Ajouter fraction de tour :</p>
-          <button data-fraction="0.25">+1/4 tour</button>
-          <button data-fraction="0.5">+1/2 tour</button>
-          <button data-fraction="0.75">+3/4 tour</button>
-          <button id="finishCourseBtn">Finir cette course</button>
-        </div>
-      </div>
+    <div id="fraction-tours" style="margin-top:20px;">
+      <button data-fraction="0.25" class="fraction-btn">+ 1/4 tour</button>
+      <button data-fraction="0.5" class="fraction-btn">+ 1/2 tour</button>
+      <button data-fraction="0.75" class="fraction-btn">+ 3/4 tour</button>
+    </div>
 
-      <button id="nextCourseBtn" class="hidden">Lancer course élève 2</button>
-    </section>
-  </main>
+    <button id="finishCourseBtn" style="margin-top:30px;">Terminer la course</button>
+  </section>
+</main>
 
-  <footer>
-    Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-  </footer>
+<footer>
+  Équipe EPS Lycée Vauban - LUXEMBOURG - JB
+</footer>
 
-  <script src="course.js"></script>
+<script src="course.js"></script>
 </body>
 </html>
