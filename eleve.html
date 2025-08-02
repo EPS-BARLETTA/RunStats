@@ -4,113 +4,123 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>RunStats - Élève</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link rel="stylesheet" href="eleve.css" />
 </head>
 <body>
-
     <header>
         <h1>RunStats</h1>
+        <p>Équipe EPS Lycée Vauban - Luxembourg</p>
     </header>
 
     <main>
-        <section id="saisie-section">
-
-            <div id="eleves-container">
-                <div id="eleve1-info" class="eleve-info bleu">
+        <section id="form-section">
+            <div class="eleve-container">
+                <div class="eleve bleu">
                     <h2>Élève 1</h2>
-                    <label>Nom <input type="text" id="nom1" /></label>
-                    <label>Prénom <input type="text" id="prenom1" /></label>
-                    <label>Classe <input type="text" id="classe1" /></label>
-                    <label>Sexe 
-                        <select id="sexe1">
-                            <option value="">Choisir</option>
-                            <option value="Fille">Fille</option>
-                            <option value="Garçon">Garçon</option>
-                        </select>
-                    </label>
+                    <label for="nom1">Nom :</label>
+                    <input type="text" id="nom1" />
+                    <label for="prenom1">Prénom :</label>
+                    <input type="text" id="prenom1" />
+                    <label for="classe1">Classe :</label>
+                    <input type="text" id="classe1" />
+                    <label for="sexe1">Sexe :</label>
+                    <select id="sexe1">
+                        <option value="">Choisir</option>
+                        <option value="fille">Fille</option>
+                        <option value="garcon">Garçon</option>
+                    </select>
                 </div>
 
-                <div id="eleve2-info" class="eleve-info vert">
+                <div class="eleve vert">
                     <h2>Élève 2</h2>
-                    <label>Nom <input type="text" id="nom2" /></label>
-                    <label>Prénom <input type="text" id="prenom2" /></label>
-                    <label>Classe <input type="text" id="classe2" /></label>
-                    <label>Sexe 
-                        <select id="sexe2">
-                            <option value="">Choisir</option>
-                            <option value="Fille">Fille</option>
-                            <option value="Garçon">Garçon</option>
-                        </select>
-                    </label>
+                    <label for="nom2">Nom :</label>
+                    <input type="text" id="nom2" />
+                    <label for="prenom2">Prénom :</label>
+                    <input type="text" id="prenom2" />
+                    <label for="classe2">Classe :</label>
+                    <input type="text" id="classe2" />
+                    <label for="sexe2">Sexe :</label>
+                    <select id="sexe2">
+                        <option value="">Choisir</option>
+                        <option value="fille">Fille</option>
+                        <option value="garcon">Garçon</option>
+                    </select>
                 </div>
             </div>
 
-            <div id="course-info" class="course-info-encadre">
-                <label>Durée course (min) <input type="number" id="duree" min="1" /></label>
-                <label>Distance tour (m) <input type="number" id="distanceTour" min="1" /></label>
-                <label>VMA (optionnel) <input type="number" id="vma" min="1" step="0.1" /></label>
+            <div class="course-info bleu-clair">
+                <label for="duree">Durée (minutes) :</label>
+                <input type="number" id="duree" min="1" />
+                <label for="distance">Distance tour (m) :</label>
+                <input type="number" id="distance" min="1" />
+                <label for="vma">VMA (optionnelle) :</label>
+                <input type="number" id="vma" min="0" step="0.01" />
             </div>
 
-            <div id="buttons-start">
-                <button id="demarrer-btn" class="btn-bleu">Démarrer</button>
-                <button id="plus-tour-btn" class="btn-vert" disabled>+ Tour</button>
-                <button id="reset-btn" class="btn-gris">Reset</button>
+            <div class="boutons-saisie">
+                <button id="start-btn" class="blue-btn">Démarrer</button>
+                <button id="reset-btn" class="red-btn">Reset</button>
             </div>
         </section>
 
         <section id="course-section" class="hidden">
-            <div id="buttons-top">
-                <button id="demarrer-course-btn" class="btn-bleu">Démarrer</button>
-                <button id="plus-tour-course-btn" class="btn-vert" disabled>+ Tour</button>
-                <button id="reset-course-btn" class="btn-gris">Reset</button>
+            <div class="course-controls">
+                <button id="start-course-btn" class="blue-btn">Démarrer</button>
+                <button id="add-tour-btn" class="green-btn">+ Tour</button>
+                <button id="reset-course-btn" class="red-btn">Reset</button>
             </div>
 
-            <div id="timer-circle">00:00</div>
-
-            <div id="infos-course" class="infos-course-container">
-                <div id="eleve1-course" class="eleve-course bleu encadre-bleu">
-                    <h3>Élève 1 (courant)</h3>
-                    <p><strong>Nom:</strong> <span id="nom1-course"></span></p>
-                    <p><strong>Prénom:</strong> <span id="prenom1-course"></span></p>
-                    <p><strong>Distance totale (m):</strong> <span id="distance1"></span></p>
-                    <p><strong>Vitesse (m/min):</strong> <span id="vitesse1"></span></p>
-                    <p><strong>Estimation VMA:</strong> <span id="vma1"></span></p>
-                </div>
-
-                <div id="eleve2-course" class="eleve-course vert">
-                    <h3>Élève 2</h3>
-                    <p><strong>Nom:</strong> <span id="nom2-course"></span></p>
-                    <p><strong>Prénom:</strong> <span id="prenom2-course"></span></p>
-                    <p><strong>Distance totale (m):</strong> <span id="distance2"></span></p>
-                    <p><strong>Vitesse (m/min):</strong> <span id="vitesse2"></span></p>
-                    <p><strong>Estimation VMA:</strong> <span id="vma2"></span></p>
+            <div id="timer-container">
+                <div id="countdown-circle">
+                    <span id="countdown">00:00</span>
                 </div>
             </div>
 
-            <div id="nombre-tours" class="nombre-tours">Nombre de tours : 0</div>
-
-            <div id="ajout-tours-section" class="hidden">
-                <p>Ajouter un tour partiel à la distance totale ?</p>
-                <button class="btn-vert" data-ajout="0.25">+ 1/4 tour</button>
-                <button class="btn-vert" data-ajout="0.5">+ 1/2 tour</button>
-                <button class="btn-vert" data-ajout="0.75">+ 3/4 tour</button>
+            <div class="infos-course">
+                <div class="info bleu">
+                    <h3>Élève courant :</h3>
+                    <p id="eleve-courant"></p>
+                </div>
+                <div class="info mauve">
+                    <h3>Nombre de tours :</h3>
+                    <p id="nombre-tours">0</p>
+                </div>
+                <div class="info orange">
+                    <h3>Distance réalisée (m) :</h3>
+                    <p id="distance-realisee">0</p>
+                </div>
+                <div class="info vert">
+                    <h3>Vitesse (km/h) :</h3>
+                    <p id="vitesse">0</p>
+                </div>
+                <div class="info rouge">
+                    <h3>Estimation VMA (km/h) :</h3>
+                    <p id="vma-estimee">0</p>
+                </div>
             </div>
 
-            <div id="partage-section" class="hidden">
-                <button id="qr-btn" class="btn-bleu">Générer QR Code</button>
-                <button id="export-btn" class="btn-bleu">Exporter CSV</button>
-                <div id="qrcode"></div>
+            <div id="ajout-distance-options" class="hidden">
+                <p>Ajouter une distance supplémentaire :</p>
+                <button class="ajout-btn" data-ajout="0.25">+ 1/4 tour</button>
+                <button class="ajout-btn" data-ajout="0.5">+ 1/2 tour</button>
+                <button class="ajout-btn" data-ajout="0.75">+ 3/4 tour</button>
+                <button id="fin-course-btn" class="blue-btn">Terminer</button>
             </div>
         </section>
 
+        <section id="resultats" class="hidden">
+            <h2>Résultats finaux</h2>
+            <div id="resultats-eleves"></div>
+            <button id="export-csv-btn" class="blue-btn">Exporter CSV</button>
+            <div id="qrcode"></div>
+        </section>
     </main>
 
     <footer>
-        <p>Equipe EPS Lycée Vauban - LUXEMBOURG - JB</p>
+        <p>Équipe EPS Lycée Vauban - LUXEMBOURG - JB</p>
     </footer>
 
-    <script src="script.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script src="eleve.js"></script>
 </body>
 </html>
