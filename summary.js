@@ -1,106 +1,68 @@
-// summary.js
+// Récupération des données stockées après les courses
+const summaryData = JSON.parse(localStorage.getItem("courseData")) || [];
 
-// Fonction pour récupérer les données des coureurs depuis sessionStorage
-function getRunnersData() {
-  const eleve1 = JSON.parse(sessionStorage.getItem('eleve1'));
-  const eleve2 = JSON.parse(sessionStorage.getItem('eleve2'));
-  return [eleve1, eleve2];
+// Sélection des éléments
+const resultsTableBody = document.querySelector("#resultsTableBody");
+const downloadCSVBtn = document.querySelector("#downloadCSVBtn");
+const downloadQRBtn = document.querySelector("#downloadQRBtn");
+const qrContainer = document.querySelector("#qrcode");
+
+// Affiche les résultats dans le tableau
+function displayResults() {
+    resultsTableBody.innerHTML = "";
+
+    summaryData.forEach((eleve, index) => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+            <td>${eleve.nom}</td>
+            <td>${eleve.prenom}</td>
+            <td>${eleve.classe}</td>
+            <td>${eleve.sexe}</td>
+            <td>${eleve.distance.toFixed(2)} m</td>
+            <td>${eleve.vitesse.toFixed(2)} km/h</td>
+            <td>${eleve.vma ? eleve.vma + " km/h" : "—"}</td>
+        `;
+
+        resultsTableBody.appendChild(tr);
+    });
 }
 
-// Fonction pour remplir le tableau bilan avec les données
-function displayBilan() {
-  const [eleve1, eleve2] = getRunnersData();
-  const tbody = document.querySelector('#bilanTable tbody');
-  tbody.innerHTML = '';
-
-  [eleve1, eleve2].forEach((eleve) => {
-    if (!eleve) return;
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${eleve.nom} ${eleve.prenom}</td>
-      <td>${eleve.classe}</td>
-      <td>${eleve.sexe}</td>
-      <td>${eleve.distance.toFixed(3)}</td>
-      <td>${eleve.vitesse.toFixed(2)}</td>
-      <td>${eleve.vma.toFixed(2)}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-// Générer un CSV à partir des données
+// Génération CSV
 function generateCSV() {
-  const [eleve1, eleve2] = getRunnersData();
-  let csvContent = "data:text/csv;charset=utf-8,";
-  csvContent += "Nom Prénom,Classe,Sexe,Distance réalisée (km),Vitesse moyenne (km/h),VMA estimée (km/h)\r\n";
+    let csvContent = "Nom;Prénom;Classe;Sexe;Distance (m);Vitesse (km/h);VMA (km/h)\n";
 
-  [eleve1, eleve2].forEach(eleve => {
-    if (!eleve) return;
-    const row = [
-      `${eleve.nom} ${eleve.prenom}`,
-      eleve.classe,
-      eleve.sexe,
-      eleve.distance.toFixed(3),
-      eleve.vitesse.toFixed(2),
-      eleve.vma.toFixed(2),
-    ];
-    csvContent += row.join(",") + "\r\n";
-  });
+    summaryData.forEach(eleve => {
+        csvContent += `${eleve.nom};${eleve.prenom};${eleve.classe};${eleve.sexe};${eleve.distance.toFixed(2)};${eleve.vitesse.toFixed(2)};${eleve.vma || ""}\n`;
+    });
 
-  return encodeURI(csvContent);
-}
-
-// Créer et déclencher le téléchargement du CSV
-function downloadCSV() {
-  const encodedUri = generateCSV();
-  const link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
-  link.setAttribute("download", "runstats_bilan.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
-// Générer un QR code avec le résumé des deux coureurs (format JSON string)
-function downloadQR() {
-  const [eleve1, eleve2] = getRunnersData();
-  if (!eleve1 || !eleve2) {
-    alert("Données manquantes pour générer le QR code.");
-    return;
-  }
-
-  const data = {
-    eleve1,
-    eleve2
-  };
-
-  const jsonData = JSON.stringify(data);
-
-  // Créer un canvas temporaire pour générer le QR
-  const canvas = document.createElement("canvas");
-
-  QRCode.toCanvas(canvas, jsonData, { width: 300 }, function (error) {
-    if (error) {
-      alert("Erreur lors de la génération du QR code.");
-      console.error(error);
-      return;
-    }
-
-    // Convertir le canvas en image téléchargeable
-    const imgData = canvas.toDataURL("image/png");
-
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.href = imgData;
-    link.download = "runstats_bilan_qrcode.png";
-    document.body.appendChild(link);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "resultats_courses.csv");
     link.click();
-    document.body.removeChild(link);
-  });
 }
 
-// Event listeners
-document.getElementById("downloadCSV").addEventListener("click", downloadCSV);
-document.getElementById("downloadQR").addEventListener("click", downloadQR);
+// Génération QR Code (encodage JSON)
+function generateQRCode() {
+    qrContainer.innerHTML = ""; // Nettoyer si déjà présent
 
-// Au chargement de la page, afficher le bilan
-window.onload = displayBilan;
+    const qrData = JSON.stringify(summaryData);
+
+    new QRCode(qrContainer, {
+        text: qrData,
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+}
+
+// Écouteurs
+downloadCSVBtn.addEventListener("click", generateCSV);
+downloadQRBtn.addEventListener("click", generateQRCode);
+
+// Initialisation
+displayResults();
