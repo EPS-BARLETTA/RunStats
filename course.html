@@ -1,207 +1,179 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>RunStats - Course</title>
-  <link rel="stylesheet" href="eleve.css" />
-  <style>
-    /* Styles spécifiques à course.html, en complément de eleve.css */
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f5f7fa;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      justify-content: space-between;
-    }
-    header {
-      padding: 1rem;
-      text-align: center;
-      background: #4a90e2;
-      color: white;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-    header h2 {
-      margin: 0;
-      font-weight: 400;
-      font-size: 1.2rem;
-      opacity: 0.8;
-    }
-    main {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      gap: 1rem;
-    }
-    #boutonPlusTour {
-      font-size: 1.2rem;
-      padding: 0.7rem 1.5rem;
-      background-color: #5cb85c;
-      border: none;
-      border-radius: 8px;
-      color: white;
-      cursor: pointer;
-      user-select: none;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-      transition: background-color 0.3s ease;
-      width: 120px;
-    }
-    #boutonPlusTour:hover {
-      background-color: #4cae4c;
-    }
-    #timerCircle {
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      background-color: #d9f0d9; /* vert clair */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 5rem;
-      font-weight: 700;
-      color: #3a7d3a;
-      user-select: none;
-      box-shadow: inset 0 0 10px #a1d6a1;
-      transition: background-color 0.3s ease;
-    }
-    #timerCircle.blink {
-      animation: blinkAnim 1s steps(2, start) infinite;
-      background-color: #f2b8b5; /* rouge clair clignotant */
-      color: #7f0000;
-    }
-    @keyframes blinkAnim {
-      50% {
-        background-color: #d9534f;
-        color: white;
-      }
-      100% {
-        background-color: #f2b8b5;
-        color: #7f0000;
-      }
-    }
-    #infosCourse {
-      width: 90%;
-      max-width: 400px;
-      background-color: white;
-      border: 2px solid #4a90e2;
-      border-radius: 12px;
-      padding: 1rem 1.5rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      font-size: 1.1rem;
-      color: #333;
-      user-select: none;
-    }
-    #infosCourse div {
-      margin: 0.5rem 0;
-      display: flex;
-      justify-content: space-between;
-    }
-    #finCourseOptions {
-      margin-top: 1rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.8rem;
-    }
-    #finCourseOptions label {
-      font-size: 1rem;
-      margin-right: 0.6rem;
-      cursor: pointer;
-      user-select: none;
-    }
-    #finCourseOptions input[type="radio"] {
-      cursor: pointer;
-    }
-    #btnFinCourse, #btnLancerCourse2, #btnFinTout {
-      margin-top: 1rem;
-      background-color: #0275d8;
-      border: none;
-      color: white;
-      padding: 0.8rem 1.8rem;
-      font-size: 1.1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      user-select: none;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-      transition: background-color 0.3s ease;
-      width: 220px;
-    }
-    #btnFinCourse:hover, #btnLancerCourse2:hover, #btnFinTout:hover {
-      background-color: #025aa5;
-    }
-    footer {
-      text-align: center;
-      padding: 0.8rem 0;
-      font-size: 0.85rem;
-      background-color: #4a90e2;
-      color: white;
-      user-select: none;
-    }
-    /* Responsive tablette */
-    @media (max-width: 768px) {
-      #timerCircle {
-        width: 180px;
-        height: 180px;
-        font-size: 4rem;
-      }
-      #boutonPlusTour, #btnFinCourse, #btnLancerCourse2, #btnFinTout {
-        width: 90%;
-        max-width: 280px;
-      }
-      main {
-        padding: 0.8rem;
-      }
-      #infosCourse {
-        max-width: 100%;
-        font-size: 1rem;
-      }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RunStats - Course</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    margin: 0; padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  h1, h3 {
+    margin: 0;
+    text-align: center;
+  }
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+  }
+  h3 {
+    font-weight: normal;
+    color: #555;
+    margin-bottom: 20px;
+  }
+  .timer-container {
+    background: #fff;
+    border-radius: 100%;
+    width: 180px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    font-weight: bold;
+    color: #333;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+  }
+  .timer-blink {
+    animation: blink 1s steps(2, start) infinite;
+    color: red;
+  }
+  @keyframes blink {
+    50% { visibility: hidden; }
+  }
+  button {
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    width: 150px;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+  .stats {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 12px;
+    width: 300px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    font-size: 1.1rem;
+    color: #333;
+  }
+  .stats div {
+    margin-bottom: 10px;
+  }
+  footer {
+    margin-top: 30px;
+    text-align: center;
+    color: #555;
+  }
+</style>
 </head>
 <body>
 
-  <header>
-    <h1>RunStats</h1>
-    <h2 id="pageSubTitle">Course</h2>
-  </header>
+<h1>RunStats</h1>
+<h3>Course</h3>
 
-  <main>
-    <button id="boutonPlusTour" title="Ajouter un tour">+ Tour</button>
+<button id="addLapBtn">+ Tour</button>
 
-    <div id="timerCircle">00:00</div>
+<div class="timer-container" id="timerDisplay">--:--</div>
 
-    <div id="infosCourse">
-      <div><strong>Distance totale :</strong> <span id="distanceTotale">0.00 m</span></div>
-      <div><strong>Vitesse moyenne :</strong> <span id="vitesseMoyenne">0.00 km/h</span></div>
-      <div><strong>Estimation VMA :</strong> <span id="vmaEstimee">-- km/h</span></div>
-    </div>
+<div class="stats">
+  <div>Distance totale parcourue: <span id="totalDistance">0</span> m</div>
+  <div>Vitesse moyenne: <span id="avgSpeed">0</span> m/s</div>
+  <div>VMA estimée: <span id="vma">-</span> m/s</div>
+</div>
 
-    <div id="finCourseOptions" style="display:none;">
-      <div>
-        <label><input type="radio" name="fractionTour" value="0.25" /> + 1/4 tour</label>
-        <label><input type="radio" name="fractionTour" value="0.5" /> + 1/2 tour</label>
-        <label><input type="radio" name="fractionTour" value="0.75" /> + 3/4 tour</label>
-      </div>
-      <button id="btnFinCourse">Valider et terminer la course</button>
-    </div>
+<footer>
+  Équipe EPS Lycée Vauban - LUXEMBOURG - JB
+</footer>
 
-    <button id="btnLancerCourse2" style="display:none;">Lancer la course de l'élève 2</button>
-    <button id="btnFinTout" style="display:none;">Terminer et passer à la zone de téléchargement</button>
+<script>
+  // Récupérer durée et distance depuis sessionStorage
+  const durationSec = parseInt(sessionStorage.getItem('courseDuration'));
+  const totalDistanceGoal = parseFloat(sessionStorage.getItem('courseDistance'));
 
-  </main>
+  if (!durationSec || !totalDistanceGoal) {
+    alert('Erreur : données de la course manquantes.');
+    window.location.href = 'eleve.html';
+  }
 
-  <footer>
-    Equipe EPS Lycée Vauban - LUXEMBOURG - JB
-  </footer>
+  let timeLeft = durationSec;
+  let timerInterval = null;
+  let laps = 0;
+  let totalDistance = 0;
 
-  <script src="course.js"></script>
+  const timerDisplay = document.getElementById('timerDisplay');
+  const addLapBtn = document.getElementById('addLapBtn');
+  const totalDistanceSpan = document.getElementById('totalDistance');
+  const avgSpeedSpan = document.getElementById('avgSpeed');
+  const vmaSpan = document.getElementById('vma');
+
+  // Fonction de mise à jour du timer
+  function updateTimer() {
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      timerDisplay.textContent = "00:00";
+      addLapBtn.disabled = true;
+      alert("Temps écoulé, fin de la course !");
+      // Ici tu peux ajouter la transition vers la page suivante
+      return;
+    }
+
+    // Format mm:ss
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timerDisplay.textContent = 
+      (minutes < 10 ? '0' + minutes : minutes) + ':' + 
+      (seconds < 10 ? '0' + seconds : seconds);
+
+    // Clignotement dernières 10 secondes
+    if(timeLeft <= 10) {
+      timerDisplay.classList.add('timer-blink');
+    } else {
+      timerDisplay.classList.remove('timer-blink');
+    }
+
+    timeLeft--;
+  }
+
+  // Fonction mise à jour stats
+  function updateStats() {
+    totalDistanceSpan.textContent = totalDistance.toFixed(1);
+    const elapsedTime = durationSec - timeLeft;
+    const avgSpeed = elapsedTime > 0 ? totalDistance / elapsedTime : 0;
+    avgSpeedSpan.textContent = avgSpeed.toFixed(2);
+    // Estimation simple VMA = vitesse max atteinte sur un tour = vitesse moyenne * 1.1 (exemple)
+    vmaSpan.textContent = elapsedTime > 0 ? (avgSpeed * 1.1).toFixed(2) : '-';
+  }
+
+  // Fonction ajout tour (suppose un tour = distanceGoal / nombreTours ?)
+  addLapBtn.addEventListener('click', () => {
+    // On ajoute une fraction de la distance en fonction du temps écoulé
+    // Ici on simplifie: 1 tour = distance totale divisée par 4 (à ajuster selon besoin)
+    const lapDistance = totalDistanceGoal / 4; 
+    totalDistance += lapDistance;
+    updateStats();
+  });
+
+  // Démarrer timer automatiquement au chargement
+  timerDisplay.textContent = '--:--';
+  updateTimer();
+  timerInterval = setInterval(updateTimer, 1000);
+
+  updateStats();
+</script>
+
 </body>
 </html>
