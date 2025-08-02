@@ -5,22 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RunStats - Zone de téléchargement</title>
   <link rel="stylesheet" href="summary.css" />
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
 <body>
   <header>
     <h1>RunStats</h1>
-    <h2>Zone de téléchargement</h2>
+    <h2>zone de téléchargement</h2>
   </header>
 
   <main>
-    <section id="resultContainer" style="padding: 20px; max-width: 900px; margin: auto;">
-      <!-- Le tableau récapitulatif ou QR code sera injecté ici -->
+    <section id="resultsSection">
+      <h3>Bilan des courses</h3>
+      <table id="resultsTable" border="1" cellspacing="0" cellpadding="5">
+        <thead>
+          <tr>
+            <th>Élève</th>
+            <th>Durée (min)</th>
+            <th>Distance (m)</th>
+            <th>Vitesse moyenne (km/h)</th>
+            <th>VMA estimée (km/h)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Rempli par JS -->
+        </tbody>
+      </table>
     </section>
 
-    <section style="text-align: center; margin: 30px 0;">
-      <button id="downloadCSVBtn" class="btn">Télécharger CSV</button>
-      <button id="downloadQRBtn" class="btn">Afficher QR Code</button>
+    <section id="downloadSection" style="margin-top: 20px;">
+      <button id="downloadCsvBtn">Télécharger CSV</button>
+      <button id="downloadQrBtn">Télécharger QR Code</button>
+      <div id="qrCodeContainer" style="margin-top: 15px;"></div>
     </section>
   </main>
 
@@ -28,6 +42,7 @@
     Équipe EPS Lycée Vauban - LUXEMBOURG - JB
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
   <script src="summary.js"></script>
 </body>
 </html>
