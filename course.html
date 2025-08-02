@@ -12,9 +12,21 @@
   </header>
 
   <main>
+    <section id="chrono-section">
+      <div class="circular-timer">
+        <svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" class="track"/>
+          <circle cx="50" cy="50" r="45" class="progress" id="progressCircle"/>
+        </svg>
+        <div id="chronoCenter">00:00</div>
+      </div>
+    </section>
+
     <section class="info-eleve">
       <p><strong>Élève :</strong> <span id="nomEleve"></span></p>
-      <p><strong>Temps :</strong> <span id="tempsRestant"></span></p>
+      <p><strong>Distance :</strong> <span id="distance"></span> m</p>
+      <p><strong>Vitesse :</strong> <span id="vitesse"></span> m/s</p>
+      <p><strong>VMA estimée :</strong> <span id="vmaEstimee"></span> km/h</p>
     </section>
 
     <section class="course-controls">
@@ -31,6 +43,10 @@
       <button id="terminerBtn">Terminer la course</button>
     </section>
   </main>
+
+  <footer>
+    <p>&copy; 2025 RunStats – Projet EPS Vauban</p>
+  </footer>
 
   <script src="course.js"></script>
 </body>
