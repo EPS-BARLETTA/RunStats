@@ -1,175 +1,182 @@
-/* eleve.css */
+/* Réinitialisation */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
 
+/* Corps de page */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f5f5f5;
-  margin: 0; padding: 0;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background: #f5f5f5;
+  color: #222;
 }
 
 header {
-  background: #2c3e50;
+  background-color: #333;
   color: white;
-  padding: 20px 10px;
+  padding: 15px 10px;
   text-align: center;
   user-select: none;
 }
 
 header h1 {
-  margin: 0;
-  font-size: 2.8rem;
+  font-size: 2.5rem;
+  margin-bottom: 5px;
 }
 
 header h2 {
-  margin: 5px 0 0 0;
+  font-size: 1.3rem;
   font-weight: 400;
-  font-size: 1.2rem;
-  opacity: 0.7;
+  color: #ccc;
 }
 
+/* Conteneur principal */
 main {
-  flex-grow: 1;
-  padding: 20px;
+  flex: 1;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 30px;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  gap: 25px;
 }
 
+/* Section élève */
 .eleves-container {
   display: flex;
-  gap: 30px;
-  flex-wrap: wrap;
   justify-content: center;
+  gap: 30px;
   width: 100%;
   max-width: 900px;
 }
 
-.eleve-card {
-  box-sizing: border-box;
-  flex: 1 1 350px;
-  padding: 20px;
+.eleve {
+  background: #fff;
+  padding: 20px 25px;
   border-radius: 12px;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  width: 45%;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+  position: relative;
+  user-select: none;
 }
 
 .eleve-1 {
-  background-color: #d1f2d8; /* vert clair */
-  border: 2px solid #2e7d32;
-  color: #1b5e20;
+  background-color: #d1f7d6; /* vert clair */
 }
 
 .eleve-2 {
-  background-color: #cce7f9; /* bleu clair */
-  border: 2px solid #1565c0;
-  color: #0d47a1;
+  background-color: #d1e7ff; /* bleu clair */
 }
 
-.eleve-card h3 {
-  margin: 0 0 10px 0;
-  font-size: 1.6rem;
-  font-weight: 600;
-  text-align: center;
-  user-select: none;
+/* Status badge */
+.status {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #444;
 }
 
-label {
-  font-weight: 600;
-  font-size: 0.9rem;
-  user-select: none;
-}
-
-input[type="text"],
-input[type="number"],
-select {
-  width: 100%;
-  padding: 8px 10px;
-  font-size: 1rem;
-  border: 1.8px solid #ccc;
-  border-radius: 6px;
-  outline-offset: 2px;
-  transition: border-color 0.3s ease;
-}
-
-input[type="text"]:focus,
-input[type="number"]:focus,
-select:focus {
-  border-color: #3f51b5;
-}
-
-.course-info {
-  max-width: 400px;
-  width: 100%;
-  padding: 20px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+/* Timer section */
+.timer-section {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  padding: 25px 40px;
+  width: 350px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  font-weight: 600;
-  color: #333;
-}
-
-.course-info label {
-  font-weight: 600;
+  align-items: center;
+  gap: 20px;
   user-select: none;
 }
 
-.course-info input {
-  font-weight: 400;
-}
-
-#startEleve1 {
-  margin-top: 25px;
-  padding: 16px 25px;
+/* Bouton + Tour */
+#addTourBtn {
+  padding: 12px 25px;
   font-size: 1.3rem;
-  border-radius: 14px;
+  border-radius: 10px;
   border: none;
   background-color: #4caf50;
   color: white;
   cursor: pointer;
-  font-weight: 700;
-  box-shadow: 0 5px 10px rgba(76,175,80,0.7);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  user-select: none;
-  align-self: center;
-  max-width: 250px;
+  transition: background-color 0.3s;
   width: 100%;
 }
 
-#startEleve1:hover {
-  background-color: #388e3c;
-  box-shadow: 0 6px 14px rgba(56,142,60,0.9);
+#addTourBtn:hover {
+  background-color: #3e8e41;
 }
 
-footer {
-  background: #2c3e50;
+/* Timer cercle */
+#timerCircle {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background-color: #222;
   color: white;
-  padding: 15px 10px;
-  text-align: center;
-  font-size: 0.9rem;
+  font-size: 3.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   user-select: none;
+  transition: background-color 0.5s;
 }
 
-/* Responsive pour tablette */
-@media (max-width: 768px) {
-  main {
-    padding: 15px 10px;
+/* Clignotement du timer les 10 dernières secondes */
+.blink {
+  animation: blink-animation 1s steps(2, start) infinite;
+}
+
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
   }
-  .eleves-container {
-    flex-direction: column;
-    align-items: center;
-  }
-  .eleve-card {
-    flex: 1 1 90%;
-  }
-  .course-info {
-    max-width: 90%;
-  }
+}
+
+/* Statistiques */
+.stats {
+  width: 100%;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.stats p {
+  margin-bottom: 10px;
+}
+
+/* Bouton fin de course */
+#finishCourseBtn {
+  padding: 15px 40px;
+  font-size: 1.4rem;
+  border-radius: 12px;
+  border: none;
+  background-color: #e53935;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  user-select: none;
+  width: 100%;
+  max-width: 350px;
+}
+
+#finishCourseBtn:hover {
+  background-color: #b71c1c;
+}
+
+/* Pied de page */
+footer {
+  background-color: #222;
+  color: #ddd;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 15px 10px;
+  user-select: none;
 }
