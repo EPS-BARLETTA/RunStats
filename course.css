@@ -20,9 +20,9 @@ main {
   padding: 20px;
 }
 
-/* Bloc contenant tout : chrono + bouton + infos */
+/* Bloc contenant chrono + bouton + infos */
 #chrono-section {
-  background-color: #d6eaf8; /* Encadré bleu clair */
+  background-color: #d6eaf8;
   border-radius: 20px;
   padding: 30px;
   margin-bottom: 20px;
@@ -54,7 +54,7 @@ main {
 
 .progress {
   fill: none;
-  stroke: #2ecc71; /* barre de progression verte */
+  stroke: #2ecc71;
   stroke-width: 10;
   stroke-dasharray: 283;
   stroke-dashoffset: 283;
@@ -75,7 +75,7 @@ main {
   font-weight: bold;
 }
 
-/* Ajout d'un tour : bouton rond, vert */
+/* Bouton rond vert "Ajouter un tour" */
 #ajouterTourBtn {
   background-color: #2ecc71;
   border-radius: 50%;
@@ -96,7 +96,26 @@ main {
   background-color: #27ae60;
 }
 
-.course-controls, .info-eleve, #fin-course {
+/* Infos coureur encadrées */
+.info-eleve {
+  background-color: #d6eaf8;
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  color: #2c3e50;
+  width: 90%;
+  max-width: 400px;
+  text-align: left;
+}
+
+.info-eleve p {
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+/* Autres boutons */
+.course-controls, #fin-course {
   margin-top: 20px;
   text-align: center;
 }
@@ -142,4 +161,5 @@ button.hidden {
 
 footer {
   margin-top: 40px;
+  text-align: center;
 }
