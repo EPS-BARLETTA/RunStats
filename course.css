@@ -2,7 +2,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #2980b9;
+  background-color: #2980b9; /* Fond bleu foncé */
   color: white;
 }
 
@@ -20,8 +20,9 @@ main {
   padding: 20px;
 }
 
+/* Bloc contenant tout : chrono + bouton + infos */
 #chrono-section {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: #d6eaf8; /* Encadré bleu clair */
   border-radius: 20px;
   padding: 30px;
   margin-bottom: 20px;
@@ -29,6 +30,7 @@ main {
   width: 90%;
   max-width: 400px;
   text-align: center;
+  color: #2c3e50;
 }
 
 .circular-timer {
@@ -46,13 +48,13 @@ main {
 
 .track {
   fill: none;
-  stroke: #ccc;
+  stroke: #bbdefb; /* fond clair cercle */
   stroke-width: 10;
 }
 
 .progress {
   fill: none;
-  stroke: #2ecc71;
+  stroke: #2ecc71; /* barre de progression verte */
   stroke-width: 10;
   stroke-dasharray: 283;
   stroke-dashoffset: 283;
@@ -65,7 +67,7 @@ main {
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 2.5rem;
-  color: white;
+  color: #2c3e50;
 }
 
 #chronoCenter.red {
@@ -73,12 +75,33 @@ main {
   font-weight: bold;
 }
 
+/* Ajout d'un tour : bouton rond, vert */
+#ajouterTourBtn {
+  background-color: #2ecc71;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+#ajouterTourBtn:hover {
+  background-color: #27ae60;
+}
+
 .course-controls, .info-eleve, #fin-course {
   margin-top: 20px;
   text-align: center;
 }
 
-button {
+button:not(#ajouterTourBtn) {
   padding: 10px 20px;
   margin: 10px 5px;
   font-size: 1rem;
@@ -89,7 +112,7 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+button:not(#ajouterTourBtn):hover {
   background-color: #1f7cb7;
 }
 
