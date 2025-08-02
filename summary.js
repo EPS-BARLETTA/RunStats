@@ -25,10 +25,27 @@ function genererCSV(eleve1, eleve2) {
 }
 
 function genererQRCode(data) {
-  const texte = JSON.stringify(data);
-  QRCode.toCanvas(document.getElementById("qrcode"), texte, { width: 200 }, function (error) {
+  const canvas = document.createElement("canvas");
+  QRCode.toCanvas(canvas, JSON.stringify(data), { width: 200 }, function (error) {
     if (error) console.error(error);
+    else {
+      document.getElementById("qrcode").innerHTML = "";
+      document.getElementById("qrcode").appendChild(canvas);
+    }
   });
+}
+
+function telechargerQRCode() {
+  const canvas = document.querySelector("#qrcode canvas");
+  if (!canvas) {
+    alert("QR code non généré.");
+    return;
+  }
+
+  const lien = document.createElement("a");
+  lien.href = canvas.toDataURL("image/png");
+  lien.download = "RunStats_QRcode.png";
+  lien.click();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -44,6 +61,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("downloadCSV").addEventListener("click", () => {
       genererCSV(eleve1, eleve2);
     });
+
+    document.getElementById("downloadQR").addEventListener("click", telechargerQRCode);
   } else {
     alert("Aucune donnée disponible. Veuillez relancer une course.");
   }
