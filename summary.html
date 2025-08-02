@@ -1,49 +1,49 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - Zone de téléchargement</title>
-  <link rel="stylesheet" href="summary.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RunStats - Bilan</title>
+  <link rel="stylesheet" href="course.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 </head>
 <body>
+  <header>
+    <h1>RunStats</h1>
+    <h2>Zone de téléchargement</h2>
+  </header>
 
-<header>
-  <h1>RunStats</h1>
-  <h2>Zone de téléchargement</h2>
-</header>
+  <main class="summary-container">
+    <div class="summary-card">
+      <h3>Bilan des courses</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Classe</th>
+            <th>Sexe</th>
+            <th>Distance (m)</th>
+            <th>Vitesse Moy. (km/h)</th>
+            <th>VMA Estimée (km/h)</th>
+          </tr>
+        </thead>
+        <tbody id="summaryTable"></tbody>
+      </table>
+    </div>
 
-<main>
-  <table class="results-table" id="resultsTable">
-    <thead>
-      <tr>
-        <th>Nom</th>
-        <th>Prénom</th>
-        <th>Classe</th>
-        <th>Sexe</th>
-        <th>Distance réalisée (m)</th>
-        <th>Vitesse moyenne (km/h)</th>
-        <th>VMA estimée (km/h)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Les lignes des élèves seront insérées ici via JavaScript -->
-    </tbody>
-  </table>
+    <div class="actions">
+      <button id="downloadCSV">Télécharger CSV</button>
+      <button id="generateQR">Générer QR Code</button>
+    </div>
 
-  <div class="buttons-container">
-    <button id="downloadCsvBtn">Télécharger CSV</button>
-    <button id="downloadQrBtn">Télécharger QR Code</button>
-  </div>
+    <canvas id="qrCodeCanvas"></canvas>
+  </main>
 
-  <div id="qrcode"></div>
-</main>
+  <footer>
+    Équipe EPS Lycée Vauban - LUXEMBOURG - JB
+  </footer>
 
-<footer>
-  Equipe EPS Lycée Vauban - LUXEMBOURG - JB
-</footer>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="summary.js"></script>
+  <script src="summary.js"></script>
 </body>
 </html>
