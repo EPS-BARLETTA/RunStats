@@ -3,22 +3,80 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - Accueil</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>RunStats</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f0f8ff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      justify-content: center;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 0.2em;
+    }
+    h2 {
+      font-weight: normal;
+      margin-bottom: 2em;
+      color: #555;
+    }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 3em;
+    }
+    button {
+      padding: 2rem 3rem;
+      font-size: 1.5rem;
+      border: none;
+      cursor: pointer;
+      border-radius: 50%;
+      width: 120px;
+      height: 120px;
+      color: white;
+      transition: background-color 0.3s;
+    }
+    #btnEleve {
+      background-color: #3b82f6;
+    }
+    #btnEleve:hover {
+      background-color: #2563eb;
+    }
+    #btnProf {
+      background-color: #f97316;
+      border-radius: 15px; /* carré avec bords arrondis */
+      width: 140px;
+      height: 80px;
+    }
+    #btnProf:hover {
+      background-color: #c2410c;
+    }
+    footer {
+      margin-top: auto;
+      padding: 1em;
+      background: #ddd;
+      font-size: 0.9rem;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
-  <main class="home-container">
-    <h1>RunStats</h1>
-    <h2>Équipe EPS Lycée Vauban - Luxembourg</h2>
+  <h1>RunStats</h1>
+  <h2>Equipe EPS Lycée Vauban - Luxembourg</h2>
 
-    <div class="button-group">
-      <a href="eleve.html" class="btn btn-round btn-eleve">Élève</a>
-      <a href="prof.html" class="btn btn-square btn-prof">Professeurs</a>
-    </div>
+  <div class="buttons">
+    <button id="btnEleve" onclick="location.href='eleve.html'">Élèves</button>
+    <button id="btnProf" onclick="location.href='profs.html'">Professeurs</button>
+  </div>
 
-    <footer>
-      Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-    </footer>
-  </main>
+  <footer>
+    Equipe EPS Lycée Vauban - LUXEMBOURG - JB
+  </footer>
 </body>
 </html>
