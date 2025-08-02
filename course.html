@@ -1,95 +1,46 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RunStats - Gestion</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RunStats - Course</title>
+  <link rel="stylesheet" href="course.css" />
+  <script defer src="course.js"></script>
 </head>
 <body>
-<header>
-  <h1>RunStats</h1>
-  <h2>Gestion des courses</h2>
-</header>
+  <header>
+    <h1>RunStats</h1>
+    <h2>Course</h2>
+  </header>
 
-<main class="eleve-container">
-  <!-- Infos Élève 1 -->
-  <div class="eleve-card eleve-1">
-    <h3>Élève 1</h3>
-    <label>Nom</label>
-    <input type="text" id="nom1">
-    <label>Prénom</label>
-    <input type="text" id="prenom1">
-    <label>Classe</label>
-    <input type="text" id="classe1">
-    <label>Sexe</label>
-    <select id="sexe1">
-      <option value="M">M</option>
-      <option value="F">F</option>
-    </select>
-  </div>
+  <main class="course-container">
+    <!-- Nom élève affiché dynamiquement -->
+    <h3 id="runnerName"></h3>
 
-  <!-- Infos Élève 2 -->
-  <div class="eleve-card eleve-2">
-    <h3>Élève 2</h3>
-    <label>Nom</label>
-    <input type="text" id="nom2">
-    <label>Prénom</label>
-    <input type="text" id="prenom2">
-    <label>Classe</label>
-    <input type="text" id="classe2">
-    <label>Sexe</label>
-    <select id="sexe2">
-      <option value="M">M</option>
-      <option value="F">F</option>
-    </select>
-  </div>
+    <!-- Bouton ajout tour -->
+    <button id="addLapBtn">+ Tour</button>
 
-  <!-- Paramètres de course -->
-  <div class="course-info">
-    <h3>Paramètres</h3>
-    <label>Durée (minutes)</label>
-    <input type="number" id="duree" value="10">
-    <label>Distance d'un tour (m)</label>
-    <input type="number" id="distanceTour" value="400">
-  </div>
+    <!-- Minuteur -->
+    <div id="timer" class="timer">00:00</div>
 
-  <button id="startCourseBtn">Démarrer la course élève 1</button>
-</main>
+    <!-- Stats -->
+    <div class="stats">
+      <p>Distance totale : <span id="totalDistance">0</span> m</p>
+      <p>Vitesse moyenne : <span id="avgSpeed">0</span> km/h</p>
+      <p>VMA estimée : <span id="vmaEst">0</span> km/h</p>
+    </div>
 
-<footer>
-  Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-</footer>
+    <!-- Boutons pour fractions -->
+    <div class="fractions">
+      <button data-fraction="0.25">+ 1/4 tour</button>
+      <button data-fraction="0.5">+ 1/2 tour</button>
+      <button data-fraction="0.75">+ 3/4 tour</button>
+    </div>
 
-<script>
-document.getElementById('startCourseBtn').addEventListener('click', () => {
-  // Récupérer valeurs
-  const eleve1 = {
-    nom: document.getElementById('nom1').value,
-    prenom: document.getElementById('prenom1').value,
-    classe: document.getElementById('classe1').value,
-    sexe: document.getElementById('sexe1').value
-  };
-  const eleve2 = {
-    nom: document.getElementById('nom2').value,
-    prenom: document.getElementById('prenom2').value,
-    classe: document.getElementById('classe2').value,
-    sexe: document.getElementById('sexe2').value
-  };
-  const duree = document.getElementById('duree').value;
-  const distanceTour = document.getElementById('distanceTour').value;
+    <!-- Bouton fin course -->
+    <button id="finishBtn">Terminer la course</button>
+  </main>
 
-  // Sauvegarde des données
-  sessionStorage.setItem('eleve1', JSON.stringify(eleve1));
-  sessionStorage.setItem('eleve2', JSON.stringify(eleve2));
-  sessionStorage.setItem('dureeCourse', duree);
-  sessionStorage.setItem('distanceTour', distanceTour);
-
-  // On lance la course pour l'élève 1
-  sessionStorage.setItem('eleveActif', JSON.stringify(eleve1));
-
-  window.location.href = 'course.html';
-});
-</script>
+  <footer>Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
 </body>
 </html>
