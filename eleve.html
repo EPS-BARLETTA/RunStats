@@ -1,63 +1,77 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>RunStats - Gestion des courses</title>
-<style>
-  body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
-  .container { max-width: 400px; margin: auto; background: #fff; padding: 20px; border-radius: 12px; }
-  label { display: block; margin: 10px 0 5px; }
-  input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; }
-  button { margin-top: 20px; padding: 12px; width: 100%; background: #4CAF50; color: white; border: none; border-radius: 10px; font-size: 1.1rem; cursor: pointer; }
-  button:hover { background: #45a049; }
-  footer { text-align:center; margin-top:30px; color:#555; }
-  h1 { text-align:center; }
-  h3 { text-align:center; font-weight: normal; color: #555; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RunStats - Gestion des courses</title>
+  <link rel="stylesheet" href="eleve.css" />
 </head>
 <body>
+  <header>
+    <h1>RunStats</h1>
+    <h2>gestion des courses</h2>
+  </header>
 
-<div class="container">
-  <h1>RunStats</h1>
-  <h3>Gestion des courses</h3>
+  <main class="eleve-container">
+    <section class="eleve-card eleve-1">
+      <h3>Élève 1 (coureur)</h3>
+      <label for="prenom1">Prénom :</label>
+      <input id="prenom1" type="text" placeholder="Prénom élève 1" />
 
-  <label for="duration">Durée de la course (secondes)</label>
-  <input type="number" id="duration" min="10" placeholder="ex: 60" />
+      <label for="nom1">Nom :</label>
+      <input id="nom1" type="text" placeholder="Nom élève 1" />
 
-  <label for="distance">Distance (mètres)</label>
-  <input type="number" id="distance" min="10" placeholder="ex: 400" />
+      <label for="classe1">Classe :</label>
+      <input id="classe1" type="text" placeholder="Classe élève 1" />
 
-  <button id="startCourseBtn">Démarrer la course 1</button>
-</div>
+      <label>Sexe :</label>
+      <select id="sexe1">
+        <option value="">Choisir</option>
+        <option value="Fille">Fille</option>
+        <option value="Garçon">Garçon</option>
+        <option value="Autre">Autre</option>
+      </select>
+    </section>
 
-<footer>
-  Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-</footer>
+    <section class="eleve-card eleve-2">
+      <h3>Élève 2 (observateur)</h3>
+      <label for="prenom2">Prénom :</label>
+      <input id="prenom2" type="text" placeholder="Prénom élève 2" />
 
-<script>
-  const startBtn = document.getElementById('startCourseBtn');
-  startBtn.addEventListener('click', () => {
-    const duration = document.getElementById('duration').value;
-    const distance = document.getElementById('distance').value;
+      <label for="nom2">Nom :</label>
+      <input id="nom2" type="text" placeholder="Nom élève 2" />
 
-    if (!duration || duration <= 0) {
-      alert('Veuillez entrer une durée valide');
-      return;
-    }
-    if (!distance || distance <= 0) {
-      alert('Veuillez entrer une distance valide');
-      return;
-    }
+      <label for="classe2">Classe :</label>
+      <input id="classe2" type="text" placeholder="Classe élève 2" />
 
-    // Enregistrer les données en sessionStorage
-    sessionStorage.setItem('courseDuration', duration);
-    sessionStorage.setItem('courseDistance', distance);
+      <label>Sexe :</label>
+      <select id="sexe2">
+        <option value="">Choisir</option>
+        <option value="Fille">Fille</option>
+        <option value="Garçon">Garçon</option>
+        <option value="Autre">Autre</option>
+      </select>
+    </section>
 
-    // Lancer la course (ouvrir course.html)
-    window.location.href = 'course.html';
-  });
-</script>
+    <section class="course-info">
+      <h3>Informations course</h3>
+      <label for="duree">Durée (minutes) :</label>
+      <input id="duree" type="number" min="1" placeholder="Durée course" />
 
+      <label for="distanceTour">Distance tour (mètres) :</label>
+      <input id="distanceTour" type="number" min="1" placeholder="Distance tour" />
+
+      <label for="vma">VMA (km/h, optionnel) :</label>
+      <input id="vma" type="number" step="0.1" min="0" placeholder="VMA" />
+    </section>
+
+    <button id="startCourseBtn">Démarrer la course Élève 1</button>
+  </main>
+
+  <footer>
+    Équipe EPS Lycée Vauban - LUXEMBOURG - JB
+  </footer>
+
+  <script src="eleve.js"></script>
 </body>
 </html>
