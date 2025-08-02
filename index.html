@@ -1,33 +1,51 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>RunStats - Accueil</title>
-<link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Course d'Endurance</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container accueil">
-    <h1>RunStats</h1>
-    <p class="subtitle">Equipe EPS Lycée Vauban - Luxembourg</p>
+    <header>Course d'Endurance - Gestion</header>
 
-    <div class="btn-group">
-      <button id="btnEleve" class="btn rond btn-eleve">Élèves</button>
-      <button id="btnProf" class="btn rond btn-prof">Professeurs</button>
-    </div>
+    <main>
+        <!-- Section infos course -->
+        <section id="infos-course">
+            <h2>Paramètres de la Course</h2>
+            <label>Durée (minutes) :
+                <input type="number" id="duree-course" value="20">
+            </label>
+            <label>Distance d'un tour (mètres) :
+                <input type="number" id="distance-tour" value="400">
+            </label>
+            <button id="start-course">Démarrer la Course</button>
+            <button id="stop-course" disabled>Arrêter la Course</button>
+            <div id="timer">00:00</div>
+        </section>
+
+        <!-- Section QR code -->
+        <section id="qr-section">
+            <h2>QR Code d'Inscription</h2>
+            <div id="qrcode"></div>
+        </section>
+
+        <!-- Boutons de gestion -->
+        <div class="button-group">
+            <button id="add-eleve-btn">Ajouter Élève</button>
+            <button id="reset-eleves-btn">Réinitialiser Élèves</button>
+            <button id="save-data-btn">Sauvegarder Données</button>
+        </div>
+
+        <!-- Conteneur élèves -->
+        <section id="eleves-container"></section>
+    </main>
 
     <footer>
-      <p>Equipe EPS Lycée Vauban - LUXEMBOURG - JB</p>
+        © 2025 Gestion Course Endurance
     </footer>
-  </div>
 
-<script>
-  document.getElementById('btnEleve').addEventListener('click', () => {
-    window.location.href = "eleve.html";
-  });
-  document.getElementById('btnProf').addEventListener('click', () => {
-    window.location.href = "profs.html";
-  });
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
