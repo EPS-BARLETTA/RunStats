@@ -2,58 +2,78 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RunStats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RunStats – Accueil</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f7f9fc;
       margin: 0;
-      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #e9f2ff;
       display: flex;
       flex-direction: column;
-      height: 100vh;
-      justify-content: center;
+      min-height: 100vh;
       align-items: center;
+      justify-content: center;
+    }
+
+    .container {
       text-align: center;
+      background: #ffffff;
+      padding: 40px 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      max-width: 400px;
+      width: 90%;
     }
 
     h1 {
-      font-size: 3rem;
-      margin-bottom: 40px;
+      margin-bottom: 20px;
       color: #2c3e50;
     }
 
-    .start-btn {
-      padding: 15px 30px;
-      font-size: 1.2rem;
-      background-color: #0077cc;
+    button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      background-color: #3498db;
       color: white;
       border: none;
       border-radius: 8px;
       cursor: pointer;
-      transition: background-color 0.3s;
     }
 
-    .start-btn:hover {
-      background-color: #005fa3;
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .logo {
+      width: 100px;
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      opacity: 0.8;
     }
 
     footer {
-      position: absolute;
-      bottom: 20px;
-      font-size: 0.9rem;
-      color: #777;
+      margin-top: 40px;
+      font-size: 0.85rem;
+      color: #666;
     }
   </style>
 </head>
 <body>
-  <h1>RunStats</h1>
-  <a href="eleve.html">
-    <button class="start-btn">Commencer</button>
-  </a>
+
+  <div class="container">
+    <h1>Bienvenue sur RunStats</h1>
+    <p>Cliquez ci-dessous pour démarrer</p>
+    <button onclick="window.location.href='eleve.html'">Je suis élève</button>
+  </div>
+
+  <img class="logo" src="Vauban_logo.jpg" alt="Logo Vauban" />
+
   <footer>
     RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB
   </footer>
+
 </body>
 </html>
