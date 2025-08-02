@@ -1,37 +1,41 @@
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #eef6fc;
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  color: #333;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  background-color: #2980b9;
+  color: white;
 }
 
-header {
-  background-color: #2c3e50;
-  color: white;
-  padding: 20px;
+header, footer {
+  background-color: #21618c;
+  padding: 1em;
   text-align: center;
 }
 
 main {
-  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   padding: 20px;
-  max-width: 800px;
-  margin: auto;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+#chrono-section {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  width: 90%;
+  max-width: 400px;
   text-align: center;
 }
 
 .circular-timer {
   position: relative;
-  width: 160px;
-  height: 160px;
-  margin: 20px auto 15px;
+  width: 200px;
+  height: 200px;
+  margin: auto;
 }
 
 .circular-timer svg {
@@ -42,16 +46,16 @@ main {
 
 .track {
   fill: none;
-  stroke: #eee;
+  stroke: #ccc;
   stroke-width: 10;
 }
 
 .progress {
   fill: none;
-  stroke: #3498db;
+  stroke: #2ecc71;
   stroke-width: 10;
   stroke-dasharray: 283;
-  stroke-dashoffset: 0;
+  stroke-dashoffset: 283;
   transition: stroke-dashoffset 0.5s linear;
 }
 
@@ -60,81 +64,59 @@ main {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 1.8rem;
-  font-weight: bold;
+  font-size: 2.5rem;
+  color: white;
 }
 
 #chronoCenter.red {
   color: red;
-  animation: clignote 1s infinite;
+  font-weight: bold;
 }
 
-@keyframes clignote {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
-
-.course-controls {
-  margin-top: 10px;
-}
-
-.course-controls button {
-  padding: 12px 25px;
-  font-size: 1rem;
-  background-color: #0077cc;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-bottom: 8px;
-}
-
-.course-controls button:hover {
-  background-color: #005fa3;
-}
-
-.info-eleve, #fin-course {
+.course-controls, .info-eleve, #fin-course {
   margin-top: 20px;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-  text-align: left;
+  text-align: center;
 }
 
-#fin-course button {
-  margin: 5px;
-  padding: 10px 18px;
+button {
+  padding: 10px 20px;
+  margin: 10px 5px;
+  font-size: 1rem;
   border: none;
   border-radius: 6px;
-  background-color: #2ecc71;
+  background-color: #3498db;
   color: white;
   cursor: pointer;
 }
 
-#fin-course button:hover {
-  background-color: #27ae60;
+button:hover {
+  background-color: #1f7cb7;
 }
 
-#passerCoureur2Btn {
-  background-color: #e67e22;
-  display: block;
-  margin: 15px auto 0;
-}
-
-#passerCoureur2Btn:hover {
-  background-color: #d35400;
+button.hidden {
+  display: none;
 }
 
 .hidden {
   display: none;
 }
 
+#fin-course button {
+  background-color: #f39c12;
+}
+
+#fin-course button:hover {
+  background-color: #d68910;
+}
+
+#finCourseBtn {
+  background-color: #2ecc71;
+}
+
+#finCourseBtn:hover {
+  background-color: #27ae60;
+}
+
 footer {
-  text-align: center;
-  padding: 15px;
-  font-size: 0.9rem;
-  background-color: #f3f3f3;
-  color: #555;
-  border-top: 1px solid #ccc;
+  margin-top: 40px;
 }
