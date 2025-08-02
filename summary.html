@@ -5,43 +5,91 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RunStats - Zone de téléchargement</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="summary.css" />
+  <style>
+    main {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.3rem;
+    }
+    h2 {
+      font-weight: normal;
+      color: #555;
+      margin-bottom: 1.5rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1.5rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      font-size: 1rem;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    button {
+      padding: 12px 25px;
+      margin: 0 15px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    footer {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #fff;
+      background-color: #222;
+      padding: 10px;
+      text-align: center;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
   <header>
     <h1>RunStats</h1>
-    <h2>zone de téléchargement</h2>
+    <h2>Zone de téléchargement</h2>
   </header>
-
-  <main class="summary-container">
-    <table id="resultsTable">
+  <main>
+    <table id="bilanTable">
       <thead>
         <tr>
-          <th>Élève</th>
-          <th>Prénom</th>
+          <th>Nom Prénom</th>
           <th>Classe</th>
           <th>Sexe</th>
-          <th>Distance réalisée (m)</th>
+          <th>Distance réalisée (km)</th>
           <th>Vitesse moyenne (km/h)</th>
           <th>VMA estimée (km/h)</th>
         </tr>
       </thead>
       <tbody>
-        <!-- Rempli dynamiquement -->
+        <!-- données dynamiques -->
       </tbody>
     </table>
-
-    <div class="buttons-container">
+    <div>
       <button id="downloadCSV">Télécharger CSV</button>
       <button id="downloadQR">Télécharger QR Code</button>
-      <canvas id="qrCanvas" style="display:none;"></canvas>
     </div>
   </main>
-
   <footer>
     Equipe EPS Lycée Vauban - LUXEMBOURG - JB
   </footer>
-
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
   <script src="summary.js"></script>
 </body>
