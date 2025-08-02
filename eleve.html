@@ -69,7 +69,7 @@
 
   /* Conteneur central */
   #course-container {
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
     width: 320px;
@@ -140,10 +140,29 @@
     line-height: 1.6;
   }
 
+  /* Encadrés élèves */
+  #eleve1-info, #eleve2-info {
+    margin-top: 20px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    width: 320px;
+    box-shadow: 0 3px 8px rgb(0 0 0 / 0.1);
+    font-weight: 600;
+    color: #003366;
+  }
+  #eleve1-info {
+    background-color: #cce5ff; /* bleu clair */
+    border: 2px solid #004080;
+  }
+  #eleve2-info {
+    background-color: #d4edda; /* vert clair */
+    border: 2px solid #28a745;
+  }
+
   /* Fin course - fractions de tour */
   #fin-course-controls {
     margin-top: 25px;
-    display: flex;
+    display: none;
     gap: 10px;
     flex-wrap: wrap;
     justify-content: center;
@@ -165,7 +184,7 @@
   /* Footer actions final */
   #final-actions {
     margin-top: 40px;
-    display: flex;
+    display: none;
     gap: 20px;
   }
   #final-actions button {
@@ -233,238 +252,175 @@
   <input type="number" id="vma" min="5" max="25" step="0.1" value="12" />
 </div>
 
-<!-- Contrôles et minuteur -->
-<div id="course-container" style="display:none;">
+<!-- Conteneur course -->
+<div id="course-container">
   <div id="controls">
-    <button id="demarrer">Démarrer la course 1</button>
-    <button id="plusTour" disabled>+ Tour</button>
-    <button id="reset">Reset</button>
+    <button id="demarrer">Lancer les courses</button>
   </div>
-
   <div id="minuteur">00:00</div>
 
-  <div id="infos-course">
-    <div id="coureur-nom"></div>
-    <div id="distanceParcourue">Distance parcourue: 0 m</div>
-    <div id="vitesse">Vitesse: 0 km/h</div>
-    <div id="vmaEstimee">VMA estimée: 0 km/h</div>
-    <div id="nombreTours">Nombre de tours: 0</div>
+  <!-- Encadrés élèves affichés sous minuteur -->
+  <div id="eleves-course-info" style="display:none;">
+    <div id="eleve1-info">
+      <strong>Élève 1 :</strong> <span id="eleve1-nom"></span><br/>
+      Durée : <span id="eleve1-duree"></span> minutes<br/>
+      Distance tour : <span id="eleve1-distance"></span> m<br/>
+      VMA (optionnelle) : <span id="eleve1-vma"></span> km/h
+    </div>
+    <div id="eleve2-info">
+      <strong>Élève 2 :</strong> <span id="eleve2-nom"></span><br/>
+      Durée : <span id="eleve2-duree"></span> minutes<br/>
+      Distance tour : <span id="eleve2-distance"></span> m<br/>
+      VMA (optionnelle) : <span id="eleve2-vma"></span> km/h
+    </div>
   </div>
 
-  <!-- Contrôles fin course (fractions) -->
-  <div id="fin-course-controls" style="display:none;">
-    <button data-fraction="0.25">+ 1/4 tour</button>
-    <button data-fraction="0.5">+ 1/2 tour</button>
-    <button data-fraction="0.75">+ 3/4 tour</button>
-    <button id="fin-course-suivant" style="background:#004080;">Passer à la course suivante</button>
+  <!-- Boutons gestion course -->
+  <div id="fin-course-controls">
+    <button id="plusTour">+ fraction tour</button>
+    <button id="finCourseSuivant">Passer à la course suivante</button>
   </div>
 </div>
 
-<!-- Actions finales -->
-<div id="final-actions" style="display:none;">
-  <button id="genQRCode">Générer QR Code</button>
-  <button id="exportCsv">Exporter CSV</button>
+<!-- Actions finales après 2 courses -->
+<div id="final-actions">
+  <button id="btnQR">Générer QR Code</button>
+  <button id="btnExportCSV">Exporter CSV</button>
 </div>
 
-<!-- QR Code container -->
-<div id="qrCodeContainer" style="margin-top:30px;"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 <script>
   // Variables globales
-  let duree, distanceTour, vmaInput;
-  let tempsRestant = 0;
+  let currentCourse = 1; // 1 ou 2
   let timerInterval = null;
+  let tempsRestant = 0; // en secondes
+  let duree = 6;
+  let distanceTour = 400;
+  let vmaInput = 12;
   let tours = 0;
   let fractionTourAjoutee = 0;
-  let currentCourse = 1; // 1 ou 2
-  let eleve1Data = { nom: '', prenom: '', classe: '', sexe: '' };
-  let eleve2Data = { nom: '', prenom: '', classe: '', sexe: '' };
-  let dataCourse1 = null;
-  let dataCourse2 = null;
 
-  // DOM
+  let eleve1Data = null;
+  let eleve2Data = null;
+
+  // Eléments DOM
   const demarrerBtn = document.getElementById('demarrer');
   const plusTourBtn = document.getElementById('plusTour');
-  const resetBtn = document.getElementById('reset');
+  const finCourseSuivantBtn = document.getElementById('finCourseSuivant');
   const minuteurDisplay = document.getElementById('minuteur');
+
+  const eleve1Form = document.getElementById('eleve1-form');
+  const eleve2Form = document.getElementById('eleve2-form');
+  const formElevesDiv = document.getElementById('form-eleves');
+
+  const paramsCourseDiv = document.getElementById('params-course');
   const courseContainer = document.getElementById('course-container');
-  const coureurNomDisplay = document.getElementById('coureur-nom');
-  const distanceParcourueDisplay = document.getElementById('distanceParcourue');
-  const vitesseDisplay = document.getElementById('vitesse');
-  const vmaEstimeeDisplay = document.getElementById('vmaEstimee');
-  const nombreToursDisplay = document.getElementById('nombreTours');
   const finCourseControls = document.getElementById('fin-course-controls');
-  const finCourseBtns = finCourseControls.querySelectorAll('button[data-fraction]');
-  const finCourseSuivantBtn = document.getElementById('fin-course-suivant');
   const finalActions = document.getElementById('final-actions');
-  const genQRCodeBtn = document.getElementById('genQRCode');
-  const exportCsvBtn = document.getElementById('exportCsv');
-  const qrCodeContainer = document.getElementById('qrCodeContainer');
 
-  // Form inputs élève
-  const nom1Input = document.getElementById('nom1');
-  const prenom1Input = document.getElementById('prenom1');
-  const classe1Input = document.getElementById('classe1');
-  const sexe1Input = document.getElementById('sexe1');
+  const elevesCourseInfo = document.getElementById('eleves-course-info');
 
-  const nom2Input = document.getElementById('nom2');
-  const prenom2Input = document.getElementById('prenom2');
-  const classe2Input = document.getElementById('classe2');
-  const sexe2Input = document.getElementById('sexe2');
+  // Encadrés élèves info
+  const eleve1NomSpan = document.getElementById('eleve1-nom');
+  const eleve1DureeSpan = document.getElementById('eleve1-duree');
+  const eleve1DistanceSpan = document.getElementById('eleve1-distance');
+  const eleve1VmaSpan = document.getElementById('eleve1-vma');
 
-  // Params inputs
-  const dureeInput = document.getElementById('duree');
-  const distanceTourInput = document.getElementById('distanceTour');
-  const vmaInputInput = document.getElementById('vma');
+  const eleve2NomSpan = document.getElementById('eleve2-nom');
+  const eleve2DureeSpan = document.getElementById('eleve2-duree');
+  const eleve2DistanceSpan = document.getElementById('eleve2-distance');
+  const eleve2VmaSpan = document.getElementById('eleve2-vma');
 
-  // Format time mm:ss
-  function formatTime(seconds) {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+  // Fonctions utilitaires
+  function validerEleve(form) {
+    const nom = form.querySelector('input[id^="nom"]').value.trim();
+    const prenom = form.querySelector('input[id^="prenom"]').value.trim();
+    const sexe = form.querySelector('select[id^="sexe"]').value.trim();
+    return nom !== '' && prenom !== '' && sexe !== '';
   }
 
-  // Start timer
+  function getEleveData(form) {
+    return {
+      nom: form.querySelector('input[id^="nom"]').value.trim(),
+      prenom: form.querySelector('input[id^="prenom"]').value.trim(),
+      classe: form.querySelector('input[id^="classe"]').value.trim(),
+      sexe: form.querySelector('select[id^="sexe"]').value.trim()
+    };
+  }
+
+  function updateTimerDisplay() {
+    const minutes = Math.floor(tempsRestant / 60);
+    const secondes = tempsRestant % 60;
+    minuteurDisplay.textContent =
+      (minutes < 10 ? '0' : '') + minutes + ':' + (secondes < 10 ? '0' : '') + secondes;
+
+    if (tempsRestant <= 10) {
+      minuteurDisplay.classList.add('warning');
+    } else {
+      minuteurDisplay.classList.remove('warning');
+    }
+  }
+
   function startTimer() {
-    tempsRestant = duree * 60;
-    updateTimerDisplay();
-    minuteurDisplay.classList.remove('warning');
+    clearInterval(timerInterval);
     timerInterval = setInterval(() => {
       tempsRestant--;
       updateTimerDisplay();
-      if (tempsRestant <= 10) {
-        minuteurDisplay.classList.add('warning');
-      }
       if (tempsRestant <= 0) {
         clearInterval(timerInterval);
-        finCourse();
+        finCourseControls.style.display = 'flex';
+        plusTourBtn.disabled = true;
+        demarrerBtn.disabled = false;
       }
     }, 1000);
   }
 
-  // Update timer display
-  function updateTimerDisplay() {
-    minuteurDisplay.textContent = formatTime(tempsRestant);
-  }
-
-  // Update infos course
-  function updateCourseDetails() {
-    const distanceParcourue = (tours + fractionTourAjoutee) * distanceTour;
-    const tempsEcoule = (duree * 60) - tempsRestant;
-
-    // vitesse moyenne en km/h
-    const vitesse = tempsEcoule > 0 ? (distanceParcourue / tempsEcoule) * 3.6 : 0;
-
-    distanceParcourueDisplay.textContent = `Distance parcourue: ${distanceParcourue.toFixed(2)} m`;
-    vitesseDisplay.textContent = `Vitesse: ${vitesse.toFixed(2)} km/h`;
-    vmaEstimeeDisplay.textContent = `VMA estimée: ${vitesse.toFixed(2)} km/h`;
-    nombreToursDisplay.textContent = `Nombre de tours: ${(tours + fractionTourAjoutee).toFixed(2)}`;
-  }
-
-  // Reset complet
-  function resetAll() {
-    clearInterval(timerInterval);
-    tempsRestant = 0;
-    tours = 0;
-    fractionTourAjoutee = 0;
-    currentCourse = 1;
-    dataCourse1 = null;
-    dataCourse2 = null;
-    eleve1Data = { nom: '', prenom: '', classe: '', sexe: '' };
-    eleve2Data = { nom: '', prenom: '', classe: '', sexe: '' };
-
-    // Reset inputs
-    nom1Input.value = '';
-    prenom1Input.value = '';
-    classe1Input.value = '';
-    sexe1Input.value = '';
-
-    nom2Input.value = '';
-    prenom2Input.value = '';
-    classe2Input.value = '';
-    sexe2Input.value = '';
-
-    dureeInput.value = 6;
-    distanceTourInput.value = 400;
-    vmaInputInput.value = 12;
-
-    demarrerBtn.textContent = 'Démarrer la course 1';
-    demarrerBtn.disabled = false;
-    plusTourBtn.disabled = true;
-    finCourseControls.style.display = 'none';
-    courseContainer.style.display = 'none';
-    finalActions.style.display = 'none';
-    qrCodeContainer.innerHTML = '';
-    minuteurDisplay.textContent = '00:00';
-    minuteurDisplay.classList.remove('warning');
-    coureurNomDisplay.textContent = '';
-    distanceParcourueDisplay.textContent = 'Distance parcourue: 0 m';
-    vitesseDisplay.textContent = 'Vitesse: 0 km/h';
-    vmaEstimeeDisplay.textContent = 'VMA estimée: 0 km/h';
-    nombreToursDisplay.textContent = 'Nombre de tours: 0';
-  }
-
-  // Fin course - afficher boutons ajout fraction + bouton suivant
-  function finCourse() {
-    clearInterval(timerInterval);
-    demarrerBtn.disabled = true;
-    plusTourBtn.disabled = true;
-    finCourseControls.style.display = 'flex';
-  }
-
-  // Valider formulaire élève
-  function validerEleve(form) {
-    const nom = form.querySelector('input[type=text]').value.trim();
-    const prenom = form.querySelectorAll('input[type=text]')[1].value.trim();
-    const sexe = form.querySelector('select').value;
-    return nom && prenom && sexe;
-  }
-
-  // Récupérer données élève
-  function getEleveData(form) {
-    return {
-      nom: form.querySelector('input[type=text]').value.trim(),
-      prenom: form.querySelectorAll('input[type=text]')[1].value.trim(),
-      classe: form.querySelectorAll('input[type=text]')[2].value.trim(),
-      sexe: form.querySelector('select').value
-    };
-  }
-
-  // Lancer course (1 ou 2)
+  // Début course
   function lancerCourse() {
-    // Vérifier formulaire de l'élève courant
-    const form = currentCourse === 1 ? document.getElementById('eleve1-form') : document.getElementById('eleve2-form');
+    // Lecture paramètres
+    duree = parseInt(document.getElementById('duree').value);
+    distanceTour = parseFloat(document.getElementById('distanceTour').value);
+    vmaInput = parseFloat(document.getElementById('vma').value);
+
+    // Valider formulaire courant
+    const form = currentCourse === 1 ? eleve1Form : eleve2Form;
     if (!validerEleve(form)) {
       alert(`Merci de remplir correctement le formulaire de l'élève ${currentCourse}`);
       return;
     }
 
-    // Récupérer paramètres
-    duree = parseInt(dureeInput.value);
-    distanceTour = parseFloat(distanceTourInput.value);
-    vmaInput = parseFloat(vmaInputInput.value);
-
-    // Récupérer données élève courant
     if (currentCourse === 1) {
       eleve1Data = getEleveData(form);
-      coureurNomDisplay.textContent = `Coureur : ${eleve1Data.nom} ${eleve1Data.prenom}`;
+      eleve1NomSpan.textContent = `${eleve1Data.nom} ${eleve1Data.prenom}`;
+      eleve1DureeSpan.textContent = duree;
+      eleve1DistanceSpan.textContent = distanceTour;
+      eleve1VmaSpan.textContent = isNaN(vmaInput) ? '-' : vmaInput.toFixed(1);
+
+      eleve2NomSpan.textContent = '';
+      eleve2DureeSpan.textContent = '';
+      eleve2DistanceSpan.textContent = '';
+      eleve2VmaSpan.textContent = '';
+
     } else {
       eleve2Data = getEleveData(form);
-      coureurNomDisplay.textContent = `Coureur : ${eleve2Data.nom} ${eleve2Data.prenom}`;
+      eleve2NomSpan.textContent = `${eleve2Data.nom} ${eleve2Data.prenom}`;
+      eleve2DureeSpan.textContent = duree;
+      eleve2DistanceSpan.textContent = distanceTour;
+      eleve2VmaSpan.textContent = isNaN(vmaInput) ? '-' : vmaInput.toFixed(1);
     }
 
-    // Masquer formulaire, afficher course container
-    document.getElementById('form-eleves').style.display = 'none';
-    document.getElementById('params-course').style.display = 'none';
-    courseContainer.style.display = 'flex';
+    // Masquer formulaires et paramètres
+    formElevesDiv.style.display = 'none';
+    paramsCourseDiv.style.display = 'none';
 
-    // Initialiser états
+    // Afficher container course et encadrés
+    courseContainer.style.display = 'flex';
+    elevesCourseInfo.style.display = 'block';
+
     tours = 0;
     fractionTourAjoutee = 0;
     tempsRestant = duree * 60;
     updateTimerDisplay();
-    minuteurDisplay.classList.remove('warning');
+
     demarrerBtn.disabled = true;
     plusTourBtn.disabled = false;
     finCourseControls.style.display = 'none';
@@ -472,139 +428,71 @@
     startTimer();
   }
 
-  // Ajouter un tour complet
+  // Bouton + fraction tour
   plusTourBtn.addEventListener('click', () => {
-    tours++;
-    updateCourseDetails();
+    fractionTourAjoutee += 0.25;
+    alert(`+0,25 tour ajouté. Tours total : ${(tours + fractionTourAjoutee).toFixed(2)}`);
   });
 
-  // Boutons fin course (ajout fraction)
-  finCourseBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const frac = parseFloat(btn.getAttribute('data-fraction'));
-      fractionTourAjoutee += frac;
-      updateCourseDetails();
-    });
-  });
-
-  // Passer à course suivante (après fin course 1)
+  // Bouton fin course et passer à la suivante ou fin des 2 courses
   finCourseSuivantBtn.addEventListener('click', () => {
-    // Sauvegarder données course 1 ou 2
+    clearInterval(timerInterval);
+
     const distanceTotale = (tours + fractionTourAjoutee) * distanceTour;
     const tempsEcoule = duree * 60;
     const vitesseMoyenne = distanceTotale > 0 ? (distanceTotale / tempsEcoule) * 3.6 : 0;
 
     if (currentCourse === 1) {
-      dataCourse1 = {
-        eleve: eleve1Data,
-        distanceTotale,
-        vitesseMoyenne,
-        vmaEstimee: vitesseMoyenne,
-        tours: tours + fractionTourAjoutee
-      };
-      // Lancer course 2
+      // Stocker données course 1
+      eleve1Data.distanceTotale = distanceTotale;
+      eleve1Data.vitesseMoyenne = vitesseMoyenne;
+      eleve1Data.toursEffectues = tours + fractionTourAjoutee;
+
+      // Préparer course 2
       currentCourse = 2;
+
+      // Réactiver bouton démarrer pour course 2
       demarrerBtn.textContent = 'Démarrer la course 2';
       demarrerBtn.disabled = false;
+
       plusTourBtn.disabled = true;
       finCourseControls.style.display = 'none';
+      minuteurDisplay.textContent = '00:00';
+
+      // Vider infos minuteur
       tours = 0;
       fractionTourAjoutee = 0;
       tempsRestant = 0;
-      minuteurDisplay.textContent = '00:00';
-      coureurNomDisplay.textContent = '';
-      distanceParcourueDisplay.textContent = 'Distance parcourue: 0 m';
-      vitesseDisplay.textContent = 'Vitesse: 0 km/h';
-      vmaEstimeeDisplay.textContent = 'VMA estimée: 0 km/h';
-      nombreToursDisplay.textContent = 'Nombre de tours: 0';
+
+      // Afficher formulaire élève 2 et paramètres pour éventuellement modifier
+      formElevesDiv.style.display = 'flex';
+      paramsCourseDiv.style.display = 'block';
+
+      // Laisser les encadrés visibles pour rappel
     } else {
-      // Sauvegarder course 2
-      dataCourse2 = {
-        eleve: eleve2Data,
-        distanceTotale,
-        vitesseMoyenne,
-        vmaEstimee: vitesseMoyenne,
-        tours: tours + fractionTourAjoutee
-      };
+      // Stocker données course 2
+      eleve2Data.distanceTotale = distanceTotale;
+      eleve2Data.vitesseMoyenne = vitesseMoyenne;
+      eleve2Data.toursEffectues = tours + fractionTourAjoutee;
 
-      // Fin du process, afficher boutons QR et CSV
+      // Fin des deux courses : cacher tout sauf final actions
       courseContainer.style.display = 'none';
+      elevesCourseInfo.style.display = 'none';
       finalActions.style.display = 'flex';
+
+      // Afficher résumé dans console (tu peux adapter selon besoins)
+      console.log('Résultats courses :');
+      console.log('Course 1', eleve1Data);
+      console.log('Course 2', eleve2Data);
     }
   });
 
-  // Bouton démarrer
-  demarrerBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    lancerCourse();
-  });
+  // Démarrer / lancer course bouton
+  demarrerBtn.addEventListener('click', lancerCourse);
 
-  // Bouton reset
-  resetBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    if(confirm('Voulez-vous vraiment réinitialiser toutes les données ?')) {
-      resetAll();
-      document.getElementById('form-eleves').style.display = 'flex';
-      document.getElementById('params-course').style.display = 'block';
-    }
-  });
-
-  // Générer QR Code (contenant résumé des 2 courses)
-  genQRCodeBtn.addEventListener('click', () => {
-    qrCodeContainer.innerHTML = '';
-    if (!dataCourse1 || !dataCourse2) {
-      alert('Les données des deux courses ne sont pas complètes.');
-      return;
-    }
-    const qrText = JSON.stringify({ course1: dataCourse1, course2: dataCourse2 });
-    QRCode.toCanvas(qrText, { width: 200 }, function (error, canvas) {
-      if (error) {
-        alert('Erreur génération QR Code.');
-        console.error(error);
-        return;
-      }
-      qrCodeContainer.appendChild(canvas);
-    });
-  });
-
-  // Export CSV
-  exportCsvBtn.addEventListener('click', () => {
-    if (!dataCourse1 || !dataCourse2) {
-      alert('Les données des deux courses ne sont pas complètes.');
-      return;
-    }
-    const csvRows = [];
-    csvRows.push(['Course','Nom','Prénom','Classe','Sexe','Distance totale (m)','Vitesse moyenne (km/h)','VMA estimée (km/h)','Nombre de tours']);
-    [dataCourse1, dataCourse2].forEach((c, i) => {
-      csvRows.push([
-        `Course ${i+1}`,
-        c.eleve.nom,
-        c.eleve.prenom,
-        c.eleve.classe,
-        c.eleve.sexe,
-        c.distanceTotale.toFixed(2),
-        c.vitesseMoyenne.toFixed(2),
-        c.vmaEstimee.toFixed(2),
-        c.tours.toFixed(2)
-      ].join(';'));
-    });
-
-    const csvString = csvRows.join('\n');
-    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'donnees_courses.csv';
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  });
-
-  // Initialisation (reset)
-  resetAll();
+  // Si tu veux gérer les boutons QR et CSV plus tard
+  document.getElementById('btnQR').addEventListener('click', () => alert('Génération QR Code (à implémenter)'));
+  document.getElementById('btnExportCSV').addEventListener('click', () => alert('Export CSV (à implémenter)'));
 </script>
-
 </body>
 </html>
