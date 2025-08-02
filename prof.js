@@ -1,197 +1,156 @@
-// prof.js
+const pinInput = document.getElementById('pin');
+const loginBtn = document.getElementById('loginBtn');
+const loginMsg = document.getElementById('login-msg');
+const profSection = document.getElementById('prof-section');
+const loginSection = document.getElementById('login-section');
+
+const startScanBtn = document.getElementById('startScanBtn');
+const stopScanBtn = document.getElementById('stopScanBtn');
+const video = document.getElementById('video');
+
+const dataTableBody = document.querySelector('#dataTable tbody');
+const searchInput = document.getElementById('searchInput');
+const exportCSVBtn = document.getElementById('exportCSVBtn');
 
 const PIN_CODE = 'EPS76';
 
-const loginSection = document.getElementById('loginSection');
-const pinInput = document.getElementById('pinInput');
-const loginBtn = document.getElementById('loginBtn');
-const loginMessage = document.getElementById('loginMessage');
+let scanning = false;
+let videoStream;
+let dataRecords = [];
 
-const dataSection = document.getElementById('dataSection');
-const logoutBtn = document.getElementById('logoutBtn');
-
-const resultsTableBody = document.querySelector('#resultsTable tbody');
-
-const sortDistanceBtn = document.getElementById('sortDistance');
-const sortVmaBtn = document.getElementById('sortVMA');
-const sortSexeBtn = document.getElementById('sortSexe');
-const createGroupsBtn = document.getElementById('createGroups');
-const exportCSVBtn = document.getElementById('exportCSV');
-
-let results = [];
-let currentSort = null;
-
-// Affiche message erreur
-function showError(msg) {
-  loginMessage.textContent = msg;
-}
-
-// Efface message erreur
-function clearError() {
-  loginMessage.textContent = '';
-}
-
-// Afficher données dans tableau
-function afficherTableau(data) {
-  resultsTableBody.innerHTML = '';
-  data.forEach(groupe => {
-    groupe.eleves.forEach(eleve => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${eleve.nom}</td>
-        <td>${eleve.prenom}</td>
-        <td>${eleve.classe}</td>
-        <td>${eleve.sexe}</td>
-        <td>${eleve.distanceParcourue ?? groupe.totalDistance}</td>
-        <td>${eleve.vmaEstimee ?? groupe.vmaEstimee.toFixed(2)}</td>
-      `;
-      resultsTableBody.appendChild(tr);
-    });
-  });
-}
-
-// Charger résultats depuis localStorage
-function chargerResultats() {
-  const stored = localStorage.getItem('runstats_results');
-  if (stored) {
-    let allResults = JSON.parse(stored);
-
-    // Transformer en tableau d’objets pour affichage
-    // Chaque entrée = un groupe avec 2 élèves
-    results = allResults.map(r => ({
-      eleves: r.eleves.map((e, i) => ({
-        ...e,
-        distanceParcourue: r.tours * r.distanceTour,
-        vmaEstimee: r.vmaEstimee,
-      })),
-      totalDistance: r.tours * r.distanceTour,
-      vmaEstimee: r.vmaEstimee,
-    }));
-
-    afficherTableau(results);
-  } else {
-    resultsTableBody.innerHTML = '<tr><td colspan="6">Aucun résultat trouvé.</td></tr>';
-  }
-}
-
-// Trier tableau
-function trierTableau(critere) {
-  if (!results.length) return;
-
-  switch (critere) {
-    case 'distance':
-      results.sort((a,b) => (b.totalDistance || 0) - (a.totalDistance || 0));
-      break;
-    case 'vma':
-      results.sort((a,b) => (b.vmaEstimee || 0) - (a.vmaEstimee || 0));
-      break;
-    case 'sexe':
-      // Trier par premier élève sexe
-      results.sort((a,b) => a.eleves[0].sexe.localeCompare(b.eleves[0].sexe));
-      break;
-  }
-  afficherTableau(results);
-  currentSort = critere;
-}
-
-// Créer groupes équilibrés
-function creerGroupesEquilibres() {
-  // On va prendre tous les élèves de tous les groupes,
-  // les trier par VMA décroissante et sexe, puis créer
-  // de nouveaux groupes équilibrés par paires.
-
-  // Extraire tous les élèves
-  const tousEleves = [];
-  results.forEach(groupe => {
-    groupe.eleves.forEach(e => {
-      tousEleves.push({
-        ...e,
-        vma: e.vmaEstimee,
-      });
-    });
-  });
-
-  if (tousEleves.length < 2) {
-    alert('Pas assez d’élèves pour créer des groupes.');
-    return;
-  }
-
-  // Trier par sexe, puis vma décroissante
-  tousEleves.sort((a,b) => {
-    if (a.sexe === b.sexe) {
-      return b.vma - a.vma;
-    }
-    return a.sexe.localeCompare(b.sexe);
-  });
-
-  // Former paires (groupes)
-  const nouveauxGroupes = [];
-  for (let i=0; i<tousEleves.length; i+=2) {
-    if (i+1 < tousEleves.length) {
-      nouveauxGroupes.push({
-        eleves: [tousEleves[i], tousEleves[i+1]],
-        totalDistance: 0,
-        vmaEstimee: 0
-      });
-    }
-  }
-
-  // Mettre à jour résultats
-  results = nouveauxGroupes;
-  afficherTableau(results);
-}
-
-// Export CSV
-function exporterCSV() {
-  if (!results.length) {
-    alert('Aucun résultat à exporter.');
-    return;
-  }
-
-  let csv = 'Nom,Prénom,Classe,Sexe,Distance (m),VMA Estimée (km/h)\n';
-
-  results.forEach(groupe => {
-    groupe.eleves.forEach(eleve => {
-      csv += `${eleve.nom},${eleve.prenom},${eleve.classe},${eleve.sexe},${eleve.distanceParcourue},${eleve.vmaEstimee.toFixed(2)}\n`;
-    });
-  });
-
-  const blob = new Blob([csv], {type: 'text/csv'});
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'runstats_resultats.csv';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-// Gestion login/logout
+// --- Login ---
 loginBtn.addEventListener('click', () => {
   const pin = pinInput.value.trim();
   if (pin === PIN_CODE) {
-    clearError();
-    loginSection.classList.add('hidden');
-    dataSection.classList.remove('hidden');
-    chargerResultats();
+    loginSection.style.display = 'none';
+    profSection.style.display = 'block';
+    loginMsg.textContent = '';
   } else {
-    showError('Code PIN incorrect.');
+    loginMsg.textContent = 'Code PIN incorrect';
   }
 });
 
-logoutBtn.addEventListener('click', () => {
-  dataSection.classList.add('hidden');
-  loginSection.classList.remove('hidden');
-  pinInput.value = '';
-  loginMessage.textContent = '';
-  resultsTableBody.innerHTML = '';
-  results = [];
+// --- Scan QR code ---
+startScanBtn.addEventListener('click', () => {
+  if (scanning) return;
+  startCamera();
 });
 
-sortDistanceBtn.addEventListener('click', () => trierTableau('distance'));
-sortVmaBtn.addEventListener('click', () => trierTableau('vma'));
-sortSexeBtn.addEventListener('click', () => trierTableau('sexe'));
-createGroupsBtn.addEventListener('click', creerGroupesEquilibres);
-exportCSVBtn.addEventListener('click', exporterCSV);
+stopScanBtn.addEventListener('click', () => {
+  stopCamera();
+});
+
+// Fonction démarrer caméra + scanner
+function startCamera() {
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+    .then(stream => {
+      scanning = true;
+      videoStream = stream;
+      video.srcObject = stream;
+      video.setAttribute("playsinline", true); // ios
+      video.play();
+      stopScanBtn.disabled = false;
+      startScanBtn.disabled = true;
+      scanLoop();
+    })
+    .catch(err => alert("Erreur accès caméra : " + err));
+}
+
+function stopCamera() {
+  scanning = false;
+  stopScanBtn.disabled = true;
+  startScanBtn.disabled = false;
+  if (videoStream) {
+    videoStream.getTracks().forEach(track => track.stop());
+  }
+}
+
+// Scanner en boucle
+function scanLoop() {
+  if (!scanning) return;
+
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+  const code = jsQR(imageData.data, canvas.width, canvas.height);
+
+  if (code) {
+    try {
+      const jsonData = JSON.parse(code.data);
+      addDataRecord(jsonData);
+      alert("Données scannées et ajoutées");
+      // arrête la caméra après scan réussi
+      stopCamera();
+    } catch (e) {
+      console.error("QR code non valide", e);
+    }
+  } else {
+    requestAnimationFrame(scanLoop);
+  }
+}
+
+// Ajouter données dans tableau
+function addDataRecord(data) {
+  // Vérifier doublons sur eleve1.nom + eleve1.prenom
+  const exists = dataRecords.some(r =>
+    r.eleve1.nom === data.eleve1.nom &&
+    r.eleve1.prenom === data.eleve1.prenom
+  );
+  if (!exists) {
+    dataRecords.push(data);
+    renderTable();
+  } else {
+    alert("Cet élève a déjà été scanné.");
+  }
+}
+
+// Afficher tableau
+function renderTable() {
+  dataTableBody.innerHTML = '';
+  const filterText = searchInput.value.toLowerCase();
+
+  dataRecords
+    .filter(d => d.eleve1.nom.toLowerCase().includes(filterText))
+    .forEach(d => {
+      const tr = document.createElement('tr');
+
+      tr.innerHTML = `
+        <td>${d.eleve1.nom}</td>
+        <td>${d.eleve1.prenom}</td>
+        <td>${d.eleve1.sexe}</td>
+        <td>${(d.tours * d.distanceTour).toFixed(2)}</td>
+        <td>${d.vmaEstimee.toFixed(2)}</td>
+      `;
+      dataTableBody.appendChild(tr);
+    });
+}
+
+// Recherche dynamique
+searchInput.addEventListener('input', renderTable);
+
+// Export CSV simple
+exportCSVBtn.addEventListener('click', () => {
+  if (dataRecords.length === 0) {
+    alert("Aucune donnée à exporter.");
+    return;
+  }
+
+  let csvContent = "data:text/csv;charset=utf-8,";
+  csvContent += "Nom,Prénom,Sexe,Distance parcourue (m),VMA estimée (m/min)\n";
+
+  dataRecords.forEach(d => {
+    csvContent += `${d.eleve1.nom},${d.eleve1.prenom},${d.eleve1.sexe},${(d.tours * d.distanceTour).toFixed(2)},${d.vmaEstimee.toFixed(2)}\n`;
+  });
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "runstats_data.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+});
