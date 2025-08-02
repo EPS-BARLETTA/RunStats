@@ -1,21 +1,66 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RunStats</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RunStats - Accueil</title>
+  <style>
+    body {
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background: #f4f4f9;
+      color: #333;
+      text-align: center;
+    }
+    h1 {
+      font-size: 4rem;
+      margin-bottom: 2rem;
+      color: #2c3e50;
+    }
+    button {
+      padding: 1rem 2rem;
+      font-size: 1.5rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    footer {
+      margin-top: auto;
+      padding: 1rem 0;
+      font-size: 0.9rem;
+      color: #7f8c8d;
+      width: 100%;
+      background: #eaeaea;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      text-align: center;
+    }
+  </style>
 </head>
-<body class="home">
-    <div class="container">
-        <h1>RunStats</h1>
-        <h2>Équipe EPS Lycée Vauban - Luxembourg</h2>
-        <div class="buttons">
-            <button class="btn-eleve" onclick="location.href='eleve.html'">Élève</button>
-        </div>
-    </div>
-    <footer>
-        Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-    </footer>
+<body>
+  <h1>RunStats</h1>
+  <button id="btnEleve">Élève</button>
+
+  <footer>
+    Equipe EPS Lycée Vauban - LUXEMBOURG - JB
+  </footer>
+
+  <script>
+    document.getElementById('btnEleve').addEventListener('click', () => {
+      window.location.href = 'eleve.html';
+    });
+  </script>
 </body>
 </html>
