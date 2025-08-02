@@ -3,496 +3,179 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Gestion Course Élèves</title>
+<title>Course Élèves Simple</title>
 <style>
   body {
     font-family: Arial, sans-serif;
-    background: #f0f4f8;
-    margin: 0; padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /* Formulaire côte à côte */
-  #form-eleves {
-    display: flex;
-    gap: 40px;
-    margin-bottom: 30px;
-  }
-  .eleve-form {
-    background: white;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 3px 8px rgb(0 0 0 / 0.1);
-    width: 280px;
+    max-width: 600px;
+    margin: auto;
   }
-  .eleve-form h3 {
-    margin-top: 0;
-    color: #004080;
-    text-align: center;
-  }
-  .eleve-form label {
+  label {
     display: block;
-    margin: 8px 0 3px;
-    font-weight: 600;
-    color: #003366;
+    margin: 8px 0 4px;
   }
-  .eleve-form input, .eleve-form select {
+  input, select {
     width: 100%;
-    padding: 6px 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 6px;
+    margin-bottom: 12px;
   }
-
-  /* Section paramètres course */
-  #params-course {
-    margin-bottom: 40px;
-    background: white;
-    padding: 15px 25px;
-    border-radius: 10px;
-    box-shadow: 0 3px 8px rgb(0 0 0 / 0.1);
-    width: 600px;
-  }
-  #params-course label {
-    font-weight: 600;
-    color: #003366;
-    margin-right: 15px;
-  }
-  #params-course input {
-    width: 100px;
-    padding: 6px 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    margin-right: 25px;
-  }
-
-  /* Conteneur central */
-  #course-container {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    width: 320px;
-    position: relative;
-  }
-
-  /* Minuteur cercle */
   #minuteur {
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    border: 8px solid #004080;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 4rem;
-    font-weight: 700;
+    font-size: 5rem;
+    text-align: center;
+    margin: 20px 0;
     color: #004080;
-    user-select: none;
-    transition: color 0.3s ease;
   }
-
-  /* Clignotement quand reste 10s */
-  .warning {
-    animation: blinkRed 1s infinite;
-    color: red !important;
-    border-color: red !important;
-  }
-  @keyframes blinkRed {
-    0%, 50%, 100% { opacity: 1; }
-    25%, 75% { opacity: 0; }
-  }
-
-  /* Boutons au-dessus du minuteur */
-  #controls {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 25px;
-  }
-  #controls button {
+  #boutonLancer {
+    padding: 12px 20px;
+    font-size: 1.2rem;
     background: #0077cc;
-    border: none;
     color: white;
-    font-weight: 700;
-    padding: 10px 18px;
-    border-radius: 6px;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background 0.25s ease;
   }
-  #controls button:hover:not(:disabled) {
-    background: #005999;
-  }
-  #controls button:disabled {
-    background: #cccccc;
-    cursor: not-allowed;
-  }
-
-  /* Infos de course sous le minuteur */
-  #infos-course {
-    margin-top: 20px;
-    width: 320px;
-    background: white;
-    padding: 15px 20px;
+  #infos {
+    background: #eee;
+    padding: 15px;
     border-radius: 10px;
-    box-shadow: 0 3px 8px rgb(0 0 0 / 0.1);
-    color: #003366;
-    font-weight: 600;
-    line-height: 1.6;
-  }
-
-  /* Encadrés élèves */
-  #eleve1-info, #eleve2-info {
     margin-top: 20px;
-    padding: 15px 20px;
-    border-radius: 10px;
-    width: 320px;
-    box-shadow: 0 3px 8px rgb(0 0 0 / 0.1);
-    font-weight: 600;
-    color: #003366;
   }
   #eleve1-info {
-    background-color: #cce5ff; /* bleu clair */
-    border: 2px solid #004080;
+    background: #cce5ff;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
   }
   #eleve2-info {
-    background-color: #d4edda; /* vert clair */
-    border: 2px solid #28a745;
-  }
-
-  /* Fin course - fractions de tour */
-  #fin-course-controls {
-    margin-top: 25px;
-    display: none;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  #fin-course-controls button {
-    background: #28a745;
-    border: none;
-    color: white;
-    font-weight: 700;
-    padding: 10px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.25s ease;
-  }
-  #fin-course-controls button:hover {
-    background: #1e7e34;
-  }
-
-  /* Footer actions final */
-  #final-actions {
-    margin-top: 40px;
-    display: none;
-    gap: 20px;
-  }
-  #final-actions button {
-    background: #004080;
-    border: none;
-    color: white;
-    font-weight: 700;
-    padding: 12px 22px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background 0.25s ease;
-  }
-  #final-actions button:hover {
-    background: #00264d;
+    background: #d4edda;
+    padding: 10px;
+    border-radius: 8px;
   }
 </style>
 </head>
 <body>
 
-<!-- Formulaire élève côte à côte -->
-<div id="form-eleves">
-  <form class="eleve-form" id="eleve1-form" autocomplete="off">
-    <h3>Élève 1 (Course 1)</h3>
-    <label for="nom1">Nom :</label>
-    <input type="text" id="nom1" required />
-    <label for="prenom1">Prénom :</label>
-    <input type="text" id="prenom1" required />
-    <label for="classe1">Classe :</label>
-    <input type="text" id="classe1" />
-    <label for="sexe1">Sexe :</label>
-    <select id="sexe1" required>
-      <option value="">-- Choisir --</option>
-      <option value="M">Masculin</option>
-      <option value="F">Féminin</option>
-      <option value="Autre">Autre</option>
-    </select>
-  </form>
+<h2>Course Élèves</h2>
 
-  <form class="eleve-form" id="eleve2-form" autocomplete="off">
-    <h3>Élève 2 (Course 2)</h3>
-    <label for="nom2">Nom :</label>
-    <input type="text" id="nom2" required />
-    <label for="prenom2">Prénom :</label>
-    <input type="text" id="prenom2" required />
-    <label for="classe2">Classe :</label>
-    <input type="text" id="classe2" />
-    <label for="sexe2">Sexe :</label>
-    <select id="sexe2" required>
-      <option value="">-- Choisir --</option>
-      <option value="M">Masculin</option>
-      <option value="F">Féminin</option>
-      <option value="Autre">Autre</option>
-    </select>
-  </form>
-</div>
+<form id="form-eleve1">
+  <h3>Élève 1</h3>
+  <label for="nom1">Nom :</label>
+  <input type="text" id="nom1" required />
+  <label for="prenom1">Prénom :</label>
+  <input type="text" id="prenom1" required />
+</form>
 
-<!-- Paramètres course -->
-<div id="params-course">
-  <label for="duree">Durée (minutes) :</label>
-  <input type="number" id="duree" min="1" max="120" value="6" />
-  <label for="distanceTour">Distance tour (mètres) :</label>
-  <input type="number" id="distanceTour" min="10" value="400" />
-  <label for="vma">VMA estimée (km/h) :</label>
-  <input type="number" id="vma" min="5" max="25" step="0.1" value="12" />
-</div>
+<form id="form-eleve2">
+  <h3>Élève 2</h3>
+  <label for="nom2">Nom :</label>
+  <input type="text" id="nom2" required />
+  <label for="prenom2">Prénom :</label>
+  <input type="text" id="prenom2" required />
+</form>
 
-<!-- Conteneur course -->
-<div id="course-container">
-  <div id="controls">
-    <button id="demarrer">Lancer les courses</button>
-  </div>
-  <div id="minuteur">00:00</div>
+<label for="duree">Durée (minutes) :</label>
+<input type="number" id="duree" value="1" min="1" max="120" />
 
-  <!-- Encadrés élèves affichés sous minuteur -->
-  <div id="eleves-course-info" style="display:none;">
-    <div id="eleve1-info">
-      <strong>Élève 1 :</strong> <span id="eleve1-nom"></span><br/>
-      Durée : <span id="eleve1-duree"></span> minutes<br/>
-      Distance tour : <span id="eleve1-distance"></span> m<br/>
-      VMA (optionnelle) : <span id="eleve1-vma"></span> km/h
-    </div>
-    <div id="eleve2-info">
-      <strong>Élève 2 :</strong> <span id="eleve2-nom"></span><br/>
-      Durée : <span id="eleve2-duree"></span> minutes<br/>
-      Distance tour : <span id="eleve2-distance"></span> m<br/>
-      VMA (optionnelle) : <span id="eleve2-vma"></span> km/h
-    </div>
-  </div>
+<label for="distanceTour">Distance tour (mètres) :</label>
+<input type="number" id="distanceTour" value="400" min="10" />
 
-  <!-- Boutons gestion course -->
-  <div id="fin-course-controls">
-    <button id="plusTour">+ fraction tour</button>
-    <button id="finCourseSuivant">Passer à la course suivante</button>
-  </div>
-</div>
+<button id="boutonLancer">Lancer la course 1</button>
 
-<!-- Actions finales après 2 courses -->
-<div id="final-actions">
-  <button id="btnQR">Générer QR Code</button>
-  <button id="btnExportCSV">Exporter CSV</button>
+<div id="minuteur">00:00</div>
+
+<div id="infos">
+  <div id="eleve1-info"></div>
+  <div id="eleve2-info"></div>
 </div>
 
 <script>
-  // Variables globales
-  let currentCourse = 1; // 1 ou 2
-  let timerInterval = null;
-  let tempsRestant = 0; // en secondes
-  let duree = 6;
-  let distanceTour = 400;
-  let vmaInput = 12;
-  let tours = 0;
-  let fractionTourAjoutee = 0;
+  const boutonLancer = document.getElementById('boutonLancer');
+  const minuteur = document.getElementById('minuteur');
+  const eleve1Info = document.getElementById('eleve1-info');
+  const eleve2Info = document.getElementById('eleve2-info');
 
-  let eleve1Data = null;
-  let eleve2Data = null;
+  let courseActuelle = 1;
+  let timerId = null;
+  let tempsRestant = 0;
 
-  // Eléments DOM
-  const demarrerBtn = document.getElementById('demarrer');
-  const plusTourBtn = document.getElementById('plusTour');
-  const finCourseSuivantBtn = document.getElementById('finCourseSuivant');
-  const minuteurDisplay = document.getElementById('minuteur');
-
-  const eleve1Form = document.getElementById('eleve1-form');
-  const eleve2Form = document.getElementById('eleve2-form');
-  const formElevesDiv = document.getElementById('form-eleves');
-
-  const paramsCourseDiv = document.getElementById('params-course');
-  const courseContainer = document.getElementById('course-container');
-  const finCourseControls = document.getElementById('fin-course-controls');
-  const finalActions = document.getElementById('final-actions');
-
-  const elevesCourseInfo = document.getElementById('eleves-course-info');
-
-  // Encadrés élèves info
-  const eleve1NomSpan = document.getElementById('eleve1-nom');
-  const eleve1DureeSpan = document.getElementById('eleve1-duree');
-  const eleve1DistanceSpan = document.getElementById('eleve1-distance');
-  const eleve1VmaSpan = document.getElementById('eleve1-vma');
-
-  const eleve2NomSpan = document.getElementById('eleve2-nom');
-  const eleve2DureeSpan = document.getElementById('eleve2-duree');
-  const eleve2DistanceSpan = document.getElementById('eleve2-distance');
-  const eleve2VmaSpan = document.getElementById('eleve2-vma');
-
-  // Fonctions utilitaires
-  function validerEleve(form) {
-    const nom = form.querySelector('input[id^="nom"]').value.trim();
-    const prenom = form.querySelector('input[id^="prenom"]').value.trim();
-    const sexe = form.querySelector('select[id^="sexe"]').value.trim();
-    return nom !== '' && prenom !== '' && sexe !== '';
+  function formatTemps(sec) {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
   }
 
-  function getEleveData(form) {
-    return {
-      nom: form.querySelector('input[id^="nom"]').value.trim(),
-      prenom: form.querySelector('input[id^="prenom"]').value.trim(),
-      classe: form.querySelector('input[id^="classe"]').value.trim(),
-      sexe: form.querySelector('select[id^="sexe"]').value.trim()
-    };
-  }
+  function lancerTimer(dureeMinutes, callbackFin) {
+    tempsRestant = dureeMinutes * 60;
+    minuteur.textContent = formatTemps(tempsRestant);
 
-  function updateTimerDisplay() {
-    const minutes = Math.floor(tempsRestant / 60);
-    const secondes = tempsRestant % 60;
-    minuteurDisplay.textContent =
-      (minutes < 10 ? '0' : '') + minutes + ':' + (secondes < 10 ? '0' : '') + secondes;
-
-    if (tempsRestant <= 10) {
-      minuteurDisplay.classList.add('warning');
-    } else {
-      minuteurDisplay.classList.remove('warning');
-    }
-  }
-
-  function startTimer() {
-    clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
+    timerId = setInterval(() => {
       tempsRestant--;
-      updateTimerDisplay();
+      minuteur.textContent = formatTemps(tempsRestant);
+      if (tempsRestant <= 10) {
+        minuteur.style.color = 'red';
+      }
       if (tempsRestant <= 0) {
-        clearInterval(timerInterval);
-        finCourseControls.style.display = 'flex';
-        plusTourBtn.disabled = true;
-        demarrerBtn.disabled = false;
+        clearInterval(timerId);
+        minuteur.style.color = '#004080';
+        callbackFin();
       }
     }, 1000);
   }
 
-  // Début course
-  function lancerCourse() {
-    // Lecture paramètres
-    duree = parseInt(document.getElementById('duree').value);
-    distanceTour = parseFloat(document.getElementById('distanceTour').value);
-    vmaInput = parseFloat(document.getElementById('vma').value);
+  boutonLancer.addEventListener('click', e => {
+    e.preventDefault();
 
-    // Valider formulaire courant
-    const form = currentCourse === 1 ? eleve1Form : eleve2Form;
-    if (!validerEleve(form)) {
-      alert(`Merci de remplir correctement le formulaire de l'élève ${currentCourse}`);
+    // Validation simples
+    const nom1 = document.getElementById('nom1').value.trim();
+    const prenom1 = document.getElementById('prenom1').value.trim();
+    const nom2 = document.getElementById('nom2').value.trim();
+    const prenom2 = document.getElementById('prenom2').value.trim();
+
+    if (nom1 === '' || prenom1 === '') {
+      alert('Merci de remplir le nom et prénom de l\'élève 1');
+      return;
+    }
+    if (nom2 === '' || prenom2 === '') {
+      alert('Merci de remplir le nom et prénom de l\'élève 2');
       return;
     }
 
-    if (currentCourse === 1) {
-      eleve1Data = getEleveData(form);
-      eleve1NomSpan.textContent = `${eleve1Data.nom} ${eleve1Data.prenom}`;
-      eleve1DureeSpan.textContent = duree;
-      eleve1DistanceSpan.textContent = distanceTour;
-      eleve1VmaSpan.textContent = isNaN(vmaInput) ? '-' : vmaInput.toFixed(1);
+    const duree = parseInt(document.getElementById('duree').value);
+    const distanceTour = parseFloat(document.getElementById('distanceTour').value);
 
-      eleve2NomSpan.textContent = '';
-      eleve2DureeSpan.textContent = '';
-      eleve2DistanceSpan.textContent = '';
-      eleve2VmaSpan.textContent = '';
-
-    } else {
-      eleve2Data = getEleveData(form);
-      eleve2NomSpan.textContent = `${eleve2Data.nom} ${eleve2Data.prenom}`;
-      eleve2DureeSpan.textContent = duree;
-      eleve2DistanceSpan.textContent = distanceTour;
-      eleve2VmaSpan.textContent = isNaN(vmaInput) ? '-' : vmaInput.toFixed(1);
+    if (isNaN(duree) || duree < 1) {
+      alert('Durée invalide');
+      return;
+    }
+    if (isNaN(distanceTour) || distanceTour < 10) {
+      alert('Distance tour invalide');
+      return;
     }
 
-    // Masquer formulaires et paramètres
-    formElevesDiv.style.display = 'none';
-    paramsCourseDiv.style.display = 'none';
+    boutonLancer.disabled = true;
 
-    // Afficher container course et encadrés
-    courseContainer.style.display = 'flex';
-    elevesCourseInfo.style.display = 'block';
+    if (courseActuelle === 1) {
+      eleve1Info.innerHTML = `<strong>Élève 1:</strong> ${nom1} ${prenom1}<br>Durée: ${duree} minutes<br>Distance tour: ${distanceTour} m`;
+      eleve2Info.innerHTML = '';
 
-    tours = 0;
-    fractionTourAjoutee = 0;
-    tempsRestant = duree * 60;
-    updateTimerDisplay();
-
-    demarrerBtn.disabled = true;
-    plusTourBtn.disabled = false;
-    finCourseControls.style.display = 'none';
-
-    startTimer();
-  }
-
-  // Bouton + fraction tour
-  plusTourBtn.addEventListener('click', () => {
-    fractionTourAjoutee += 0.25;
-    alert(`+0,25 tour ajouté. Tours total : ${(tours + fractionTourAjoutee).toFixed(2)}`);
-  });
-
-  // Bouton fin course et passer à la suivante ou fin des 2 courses
-  finCourseSuivantBtn.addEventListener('click', () => {
-    clearInterval(timerInterval);
-
-    const distanceTotale = (tours + fractionTourAjoutee) * distanceTour;
-    const tempsEcoule = duree * 60;
-    const vitesseMoyenne = distanceTotale > 0 ? (distanceTotale / tempsEcoule) * 3.6 : 0;
-
-    if (currentCourse === 1) {
-      // Stocker données course 1
-      eleve1Data.distanceTotale = distanceTotale;
-      eleve1Data.vitesseMoyenne = vitesseMoyenne;
-      eleve1Data.toursEffectues = tours + fractionTourAjoutee;
-
-      // Préparer course 2
-      currentCourse = 2;
-
-      // Réactiver bouton démarrer pour course 2
-      demarrerBtn.textContent = 'Démarrer la course 2';
-      demarrerBtn.disabled = false;
-
-      plusTourBtn.disabled = true;
-      finCourseControls.style.display = 'none';
-      minuteurDisplay.textContent = '00:00';
-
-      // Vider infos minuteur
-      tours = 0;
-      fractionTourAjoutee = 0;
-      tempsRestant = 0;
-
-      // Afficher formulaire élève 2 et paramètres pour éventuellement modifier
-      formElevesDiv.style.display = 'flex';
-      paramsCourseDiv.style.display = 'block';
-
-      // Laisser les encadrés visibles pour rappel
+      lancerTimer(duree, () => {
+        alert("Fin de la course 1. Prêt pour la course 2.");
+        courseActuelle = 2;
+        minuteur.textContent = '00:00';
+        boutonLancer.textContent = 'Lancer la course 2';
+        boutonLancer.disabled = false;
+      });
     } else {
-      // Stocker données course 2
-      eleve2Data.distanceTotale = distanceTotale;
-      eleve2Data.vitesseMoyenne = vitesseMoyenne;
-      eleve2Data.toursEffectues = tours + fractionTourAjoutee;
+      eleve2Info.innerHTML = `<strong>Élève 2:</strong> ${nom2} ${prenom2}<br>Durée: ${duree} minutes<br>Distance tour: ${distanceTour} m`;
 
-      // Fin des deux courses : cacher tout sauf final actions
-      courseContainer.style.display = 'none';
-      elevesCourseInfo.style.display = 'none';
-      finalActions.style.display = 'flex';
-
-      // Afficher résumé dans console (tu peux adapter selon besoins)
-      console.log('Résultats courses :');
-      console.log('Course 1', eleve1Data);
-      console.log('Course 2', eleve2Data);
+      lancerTimer(duree, () => {
+        alert("Fin de la course 2. Toutes les courses sont terminées.");
+        boutonLancer.disabled = true;
+      });
     }
   });
-
-  // Démarrer / lancer course bouton
-  demarrerBtn.addEventListener('click', lancerCourse);
-
-  // Si tu veux gérer les boutons QR et CSV plus tard
-  document.getElementById('btnQR').addEventListener('click', () => alert('Génération QR Code (à implémenter)'));
-  document.getElementById('btnExportCSV').addEventListener('click', () => alert('Export CSV (à implémenter)'));
 </script>
+
 </body>
 </html>
