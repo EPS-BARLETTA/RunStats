@@ -1,293 +1,45 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>RunStats - Professeurs</title>
-<link rel="stylesheet" href="style.css" />
-<style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    max-width: 900px; margin: 20px auto; padding: 10px;
-  }
-  header, footer {
-    background-color: #cc6600; color: white; text-align: center;
-    padding: 15px 10px; font-weight: 600;
-  }
-  h1 {
-    margin: 0 0 10px;
-  }
-  #loginSection, #dataSection {
-    margin-top: 30px;
-  }
-  label {
-    font-weight: 600;
-  }
-  input[type="password"], textarea {
-    font-size: 1.1em; padding: 6px 8px; width: 100%; max-width: 400px;
-    margin-bottom: 12px; border-radius: 5px; border: 1px solid #666;
-  }
-  button {
-    padding: 10px 20px; font-size: 1.1em; cursor: pointer; border: none;
-    border-radius: 5px; background-color: #cc6600; color: white;
-    transition: background-color 0.3s ease;
-  }
-  button:hover {
-    background-color: #b35a00;
-  }
-  table {
-    border-collapse: collapse; width: 100%; margin-top: 20px;
-  }
-  th, td {
-    border: 1px solid #999; padding: 8px; text-align: center;
-  }
-  th {
-    background-color: #cc6600; color: white;
-    cursor: pointer;
-  }
-  #message {
-    margin-top: 10px; color: red; font-weight: 600;
-  }
-  textarea {
-    height: 120px;
-  }
-  #exportCSV {
-    margin-top: 20px;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RunStats - Professeurs</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-  <h1>RunStats - Accès Professeurs</h1>
-</header>
+  <header>
+    <h1>RunStats - Espace Professeurs</h1>
+  </header>
 
-<section id="loginSection">
-  <label for="pinInput">Entrez le PIN pour accéder aux résultats :</label>
-  <input type="password" id="pinInput" aria-label="PIN d'accès" />
-  <button id="btnLogin">Connexion</button>
-  <div id="message" role="alert" aria-live="assertive"></div>
-</section>
+  <main>
+    <section>
+      <h3>Liste des élèves</h3>
+      <table id="eleve-table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Classe</th>
+            <th>Distance (m)</th>
+            <th>Temps</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="eleve-body">
+          <!-- Les élèves seront insérés ici -->
+        </tbody>
+      </table>
+    </section>
 
-<section id="dataSection" style="display:none;">
-  <h2>Résultats enregistrés</h2>
-  <button id="btnLogout" style="background:#888; margin-bottom:15px;">Déconnexion</button>
-  <div>
-    <label for="qrInput">Ajouter résultats via JSON (copier-coller depuis QR code) :</label><br>
-    <textarea id="qrInput" placeholder="Coller ici les données JSON"></textarea><br>
-    <button id="btnAddResults">Ajouter résultats</button>
-  </div>
-  <table id="resultsTable" aria-label="Tableau des résultats">
-    <thead>
-      <tr>
-        <th data-key="date">Date ▼</th>
-        <th data-key="classe">Classe</th>
-        <th data-key="nom">Nom</th>
-        <th data-key="prenom">Prénom</th>
-        <th data-key="eleve">Élève</th>
-        <th data-key="tours">Tours</th>
-        <th data-key="vitesse">Vitesse moyenne (km/h)</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-  <button id="exportCSV">Exporter CSV</button>
-</section>
+    <section>
+      <button onclick="exportCSV()">Exporter CSV</button>
+    </section>
+  </main>
 
-<footer>Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+  <footer>
+    <a href="index.html"><button>Retour</button></a>
+  </footer>
 
-<script>
-(() => {
-  const PIN = 'EPS76';
-
-  const loginSection = document.getElementById('loginSection');
-  const dataSection = document.getElementById('dataSection');
-  const pinInput = document.getElementById('pinInput');
-  const btnLogin = document.getElementById('btnLogin');
-  const btnLogout = document.getElementById('btnLogout');
-  const message = document.getElementById('message');
-
-  const qrInput = document.getElementById('qrInput');
-  const btnAddResults = document.getElementById('btnAddResults');
-  const resultsTableBody = document.querySelector('#resultsTable tbody');
-  const exportCSVBtn = document.getElementById('exportCSV');
-
-  let resultsData = [];
-
-  // Stockage local
-  function loadResults() {
-    const stored = localStorage.getItem('runstats_results');
-    if (stored) {
-      try {
-        resultsData = JSON.parse(stored);
-      } catch {
-        resultsData = [];
-      }
-    }
-  }
-
-  function saveResults() {
-    localStorage.setItem('runstats_results', JSON.stringify(resultsData));
-  }
-
-  // Authentification simple
-  btnLogin.addEventListener('click', () => {
-    if (pinInput.value === PIN) {
-      loginSection.style.display = 'none';
-      dataSection.style.display = 'block';
-      message.textContent = '';
-      loadResults();
-      renderTable();
-    } else {
-      message.textContent = 'PIN incorrect.';
-      pinInput.focus();
-    }
-  });
-
-  btnLogout.addEventListener('click', () => {
-    loginSection.style.display = 'block';
-    dataSection.style.display = 'none';
-    pinInput.value = '';
-    message.textContent = '';
-  });
-
-  // Ajout des résultats via JSON QR
-  btnAddResults.addEventListener('click', () => {
-    const rawData = qrInput.value.trim();
-    if (!rawData) {
-      alert('Veuillez coller les données JSON.');
-      return;
-    }
-    try {
-      const data = JSON.parse(rawData);
-
-      // Vérification minimale
-      if (!data.eleve1 || !data.eleve2) {
-        alert('Format JSON invalide.');
-        return;
-      }
-
-      // Ajout en deux entrées : élève 1 et 2
-      // On pousse une entrée par élève avec info date, classe, nom, prénom, nombre tours, vitesse moyenne
-      function moyenneVitesse(tours) {
-        if (!tours.length) return 0;
-        const sum = tours.reduce((acc,t) => acc + t.vitesseKmH || 0, 0);
-        return (sum / tours.length).toFixed(2);
-      }
-
-      const date = data.date || new Date().toISOString();
-
-      resultsData.push({
-        date,
-        classe: data.eleve1.classe,
-        nom: data.eleve1.nom,
-        prenom: data.eleve1.prenom,
-        eleve: 'Élève 1',
-        tours: data.eleve1.tours.length,
-        vitesse: moyenneVitesse(data.eleve1.tours),
-      });
-      resultsData.push({
-        date,
-        classe: data.eleve2.classe,
-        nom: data.eleve2.nom,
-        prenom: data.eleve2.prenom,
-        eleve: 'Élève 2',
-        tours: data.eleve2.tours.length,
-        vitesse: moyenneVitesse(data.eleve2.tours),
-      });
-
-      saveResults();
-      renderTable();
-      qrInput.value = '';
-      alert('Données ajoutées avec succès.');
-
-    } catch (e) {
-      alert('Erreur lors de la lecture du JSON.');
-    }
-  });
-
-  // Tri tableau simple
-  let sortKey = 'date';
-  let sortAsc = false;
-
-  function renderTable() {
-    if (!resultsData.length) {
-      resultsTableBody.innerHTML = '<tr><td colspan="7">Aucun résultat enregistré.</td></tr>';
-      return;
-    }
-
-    // Trie
-    resultsData.sort((a,b) => {
-      if (a[sortKey] < b[sortKey]) return sortAsc ? -1 : 1;
-      if (a[sortKey] > b[sortKey]) return sortAsc ? 1 : -1;
-      return 0;
-    });
-
-    // Actualise titres avec flèche
-    const headers = document.querySelectorAll('#resultsTable th');
-    headers.forEach(th => {
-      if (th.dataset.key === sortKey) {
-        th.textContent = th.textContent.replace(/[\u25B2\u25BC]/g, '') + (sortAsc ? ' ▲' : ' ▼');
-      } else {
-        th.textContent = th.textContent.replace(/[\u25B2\u25BC]/g, '');
-      }
-    });
-
-    resultsTableBody.innerHTML = resultsData.map(row => `
-      <tr>
-        <td>${new Date(row.date).toLocaleString('fr-FR')}</td>
-        <td>${row.classe}</td>
-        <td>${row.nom}</td>
-        <td>${row.prenom}</td>
-        <td>${row.eleve}</td>
-        <td>${row.tours}</td>
-        <td>${row.vitesse}</td>
-      </tr>
-    `).join('');
-  }
-
-  // Tri click en-tête
-  document.querySelectorAll('#resultsTable th').forEach(th => {
-    th.addEventListener('click', () => {
-      const key = th.dataset.key;
-      if (key === sortKey) {
-        sortAsc = !sortAsc;
-      } else {
-        sortKey = key;
-        sortAsc = true;
-      }
-      renderTable();
-    });
-  });
-
-  // Export CSV
-  exportCSVBtn.addEventListener('click', () => {
-    if (!resultsData.length) {
-      alert('Aucune donnée à exporter.');
-      return;
-    }
-    const header = ['Date', 'Classe', 'Nom', 'Prénom', 'Élève', 'Tours', 'Vitesse moyenne (km/h)'];
-    const rows = resultsData.map(r => [
-      new Date(r.date).toLocaleString('fr-FR'),
-      r.classe,
-      r.nom,
-      r.prenom,
-      r.eleve,
-      r.tours,
-      r.vitesse,
-    ]);
-    let csvContent = [header, ...rows].map(e => e.map(v => `"${v}"`).join(',')).join('\n');
-
-    const blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'runstats_results.csv';
-    a.click();
-    URL.revokeObjectURL(url);
-  });
-
-})();
-</script>
-
+  <script src="script.js"></script>
+  <script src="profs.js"></script>
 </body>
 </html>
