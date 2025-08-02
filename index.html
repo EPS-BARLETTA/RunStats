@@ -1,60 +1,35 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>RunStats - Accueil</title>
-<link rel="stylesheet" href="style.css" />
-<style>
-  body {
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    height: 100vh; margin: 0; background: #e6f0ff;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  h1 { font-size: 3em; margin: 0; color: #003366; }
-  h2 { font-weight: 400; margin: 0 0 40px; color: #0059b3; }
-  .buttons {
-    display: flex; gap: 40px;
-  }
-  button {
-    font-size: 1.5em; cursor: pointer; border: none; color: white;
-    transition: transform 0.2s ease;
-  }
-  button:hover {
-    transform: scale(1.1);
-  }
-  #btnEleve {
-    background: #007acc; /* couleur élève */
-    width: 120px; height: 120px;
-    border-radius: 50%;
-  }
-  #btnProf {
-    background: #cc6600; /* couleur prof */
-    width: 140px; height: 140px;
-    border-radius: 12px;
-  }
-  footer {
-    position: fixed; bottom: 10px; text-align: center; width: 100%;
-    font-weight: 600; color: #003366;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RunStats - Accueil</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>RunStats</h1>
-  <h2>Équipe EPS Lycée Vauban - Luxembourg</h2>
-  <div class="buttons">
-    <button id="btnEleve" aria-label="Page Élèves">Élèves</button>
-    <button id="btnProf" aria-label="Page Professeurs">Professeurs</button>
-  </div>
-  <footer>Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+  <header>
+    <h1>RunStats</h1>
+    <h2>Suivi des courses - Lycée Vauban</h2>
+  </header>
 
-  <script>
-    document.getElementById('btnEleve').addEventListener('click', () => {
-      window.location.href = 'eleve.html';
-    });
-    document.getElementById('btnProf').addEventListener('click', () => {
-      window.location.href = 'profs.html';
-    });
-  </script>
+  <main>
+    <section>
+      <h3>Bienvenue !</h3>
+      <p>Choisissez votre profil pour continuer :</p>
+
+      <div style="margin-top: 20px;">
+        <a href="eleve.html">
+          <button>Accès Élève</button>
+        </a>
+        <a href="profs.html">
+          <button>Accès Professeur</button>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Equipe EPS - Lycée Vauban Luxembourg</p>
+  </footer>
 </body>
 </html>
