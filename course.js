@@ -1,124 +1,65 @@
-let tours = 0;
-let debut;
-let eleveData;
-let chronoElement = document.getElementById("chronoCenter");
-let circle = document.getElementById("progressCircle");
-let duree;
-let longueurTour;
-let currentEleve = "1";
-let coursEnCours = false;
+let currentRunner = 1;
+let startTime, timerInterval, laps = 0;
+let dataC1 = null;
+let dataC2 = null;
 
-function formatChrono(ms) {
-  const sec = Math.floor(ms / 1000);
-  const min = Math.floor(sec / 60);
-  const s = sec % 60;
-  return `${min.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+function startCourse() {
+  startTime = Date.now();
+  timerInterval = setInterval(updateTimer, 1000);
+  document.getElementById('startBtn').disabled = true;
 }
 
-function updateAffichage() {
-  const now = Date.now();
-  const elapsed = now - debut;
-  const secondes = elapsed / 1000;
-  const distance = tours * longueurTour;
-  const vitesse = distance / secondes;
-  const vmaEstimee = vitesse * 3.6;
-
-  chronoElement.textContent = formatChrono(elapsed);
-  document.getElementById("distance").textContent = distance.toFixed(0);
-  document.getElementById("vitesse").textContent = vitesse.toFixed(2);
-  document.getElementById("vmaEstimee").textContent = vmaEstimee.toFixed(1);
-
-  const progress = Math.min(elapsed / (duree * 60000), 1);
-  circle.style.strokeDashoffset = 283 * (1 - progress);
-
-  if ((duree * 60 - secondes) <= 10) {
-    chronoElement.classList.add("red");
-  }
-
-  if (elapsed < duree * 60000) {
-    requestAnimationFrame(updateAffichage);
-  } else {
-    document.getElementById("ajouterTourBtn").disabled = true;
-    document.getElementById("fin-course").classList.remove("hidden");
-    if (currentEleve === "2") {
-      document.getElementById("finCourseBtn").classList.remove("hidden");
-    } else {
-      document.getElementById("demarrer2Btn").classList.remove("hidden");
-    }
-    coursEnCours = false;
-  }
+function updateTimer() {
+  const elapsed = Math.floor((Date.now() - startTime) / 1000);
+  const minutes = String(Math.floor(elapsed / 60)).padStart(2, '0');
+  const seconds = String(elapsed % 60).padStart(2, '0');
+  document.getElementById('timer').textContent = `${minutes}:${seconds}`;
 }
 
-function commencerCourse() {
-  debut = Date.now();
-  tours = 0;
-  coursEnCours = true;
-  document.getElementById("ajouterTourBtn").disabled = false;
-  document.getElementById("demarrer2Btn").classList.add("hidden");
-  requestAnimationFrame(updateAffichage);
+function addLap() {
+  laps++;
+  document.getElementById('laps').textContent = laps;
 }
 
-function chargerEleve() {
-  currentEleve = sessionStorage.getItem("currentEleve") || "1";
+function endCourse() {
+  clearInterval(timerInterval);
+  const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+  const distance = laps * 200;
+  const vitesse = (distance / elapsedSeconds) * 3.6;
+  const vma = vitesse * 1.15;
 
-  const eleveKey = currentEleve === "1" ? "eleve1Data" : "eleve2Data";
-  const data = sessionStorage.getItem(eleveKey);
-
-  if (!data) {
-    alert("Les données de l'élève sont manquantes. Veuillez remplir le formulaire.");
-    return;
-  }
-
-  eleveData = JSON.parse(data);
-
-  document.getElementById("nomEleve").textContent = `${eleveData.prenom} ${eleveData.nom}`;
-  duree = eleveData.temps;
-  longueurTour = eleveData.longueurTour;
-
-  commencerCourse();
-}
-
-document.getElementById("ajouterTourBtn").addEventListener("click", () => {
-  if (coursEnCours) {
-    tours++;
-    document.getElementById("tours").textContent = tours;
-  }
-});
-
-document.querySelectorAll("#fin-course button[data-frac]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const frac = parseFloat(btn.getAttribute("data-frac"));
-    tours += frac;
-    document.getElementById("tours").textContent = tours.toFixed(2);
-  });
-});
-
-document.getElementById("demarrer2Btn").addEventListener("click", () => {
-  sessionStorage.setItem("currentEleve", "2");
-  window.location.href = "course.html";
-});
-
-document.getElementById("finCourseBtn").addEventListener("click", () => {
-  const now = Date.now();
-  const dureeSec = (now - debut) / 1000;
-  const distance = tours * longueurTour;
-  const vitesse = distance / dureeSec;
-  const vmaEstimee = vitesse * 3.6;
-
+  const runner = JSON.parse(sessionStorage.getItem(`eleve${currentRunner}`)) || {};
   const result = {
-    nom: eleveData.nom,
-    prenom: eleveData.prenom,
-    classe: eleveData.classe,
-    sexe: eleveData.sexe,
-    distance: Math.round(distance),
-    vitesse: vitesse,
-    vmaEstimee: Math.round(vmaEstimee),
-    vma: eleveData.vma
+    ...runner,
+    distance: distance,
+    vitesse: vitesse.toFixed(2),
+    vma: vma.toFixed(2)
   };
 
-  sessionStorage.setItem("eleve2", JSON.stringify(result));
-  sessionStorage.removeItem("currentEleve");
-  window.location.href = "summary.html";
-});
+  if (currentRunner === 1) {
+    dataC1 = result;
+    sessionStorage.setItem("dataC1", JSON.stringify(result));
+    currentRunner = 2;
+    laps = 0;
+    document.getElementById('laps').textContent = '0';
+    document.getElementById('timer').textContent = '00:00';
+    document.getElementById('startBtn').disabled = false;
+    document.getElementById('nextC2').style.display = 'none';
+    document.getElementById('title').textContent = `Course de ${JSON.parse(sessionStorage.getItem("eleve2")).prenom}`;
+  } else {
+    dataC2 = result;
+    sessionStorage.setItem("dataC2", JSON.stringify(result));
+    window.location.href = "resume.html";
+  }
+}
 
-document.addEventListener("DOMContentLoaded", chargerEleve);
+document.addEventListener("DOMContentLoaded", () => {
+  const runner = JSON.parse(sessionStorage.getItem("eleve1"));
+  if (runner) {
+    document.getElementById('title').textContent = `Course de ${runner.prenom}`;
+  }
+
+  document.getElementById('startBtn').addEventListener('click', startCourse);
+  document.getElementById('lapBtn').addEventListener('click', addLap);
+  document.getElementById('endBtn').addEventListener('click', endCourse);
+});
