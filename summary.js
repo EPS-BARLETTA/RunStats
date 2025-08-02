@@ -1,64 +1,50 @@
-function chargerResultats() {
-  const eleve1 = JSON.parse(sessionStorage.getItem("eleve1"));
-  const eleve2 = JSON.parse(sessionStorage.getItem("eleve2"));
-  const contenu = document.getElementById("resumeContent");
-
-  if (!eleve1 || !eleve2) {
-    contenu.innerHTML = "<p>Données manquantes.</p>";
-    return;
-  }
-
-  const data = [eleve1, eleve2];
-  let text = "";
-
-  data.forEach((e, i) => {
-    text += `<h3>Élève ${i + 1}</h3>`;
-    text += `<p>Nom : ${e.nom}</p>`;
-    text += `<p>Prénom : ${e.prenom}</p>`;
-    text += `<p>Classe : ${e.classe}</p>`;
-    text += `<p>Sexe : ${e.sexe}</p>`;
-    text += `<p>Distance : ${e.distance} m</p>`;
-    text += `<p>Vitesse : ${e.vitesse.toFixed(2)} m/s</p>`;
-    text += `<p>VMA estimée : ${e.vmaEstimee} km/h</p>`;
-    if (e.vma) {
-      text += `<p>VMA réelle : ${e.vma} km/h</p>`;
-    }
-  });
-
-  contenu.innerHTML = text;
-
-  const qrText = JSON.stringify(data);
-  QRCode.toCanvas(document.getElementById("qrCode"), qrText, {
-    width: 200,
-    margin: 2,
-    color: {
-      dark: "#000",
-      light: "#FFF"
-    }
-  });
+function afficherDonnees(eleve, prefix) {
+  document.getElementById(`nom${prefix}`).textContent = `${eleve.prenom} ${eleve.nom}`;
+  document.getElementById(`classe${prefix}`).textContent = eleve.classe;
+  document.getElementById(`sexe${prefix}`).textContent = eleve.sexe;
+  document.getElementById(`distance${prefix}`).textContent = eleve.distance;
+  document.getElementById(`vitesse${prefix}`).textContent = eleve.vitesse.toFixed(2);
+  document.getElementById(`vma${prefix}`).textContent = eleve.vmaEstimee;
 }
 
-function telechargerCSV() {
-  const eleve1 = JSON.parse(sessionStorage.getItem("eleve1"));
-  const eleve2 = JSON.parse(sessionStorage.getItem("eleve2"));
-  if (!eleve1 || !eleve2) return;
-
+function genererCSV(eleve1, eleve2) {
   const lignes = [
-    "Nom;Prénom;Classe;Sexe;Distance (m);Vitesse (m/s);VMA estimée (km/h);VMA réelle",
-    `${eleve1.nom};${eleve1.prenom};${eleve1.classe};${eleve1.sexe};${eleve1.distance};${eleve1.vitesse.toFixed(2)};${eleve1.vmaEstimee};${eleve1.vma || ""}`,
-    `${eleve2.nom};${eleve2.prenom};${eleve2.classe};${eleve2.sexe};${eleve2.distance};${eleve2.vitesse.toFixed(2)};${eleve2.vmaEstimee};${eleve2.vma || ""}`
+    ["Prénom", "Nom", "Classe", "Sexe", "Distance", "Vitesse (m/s)", "VMA estimée (km/h)"],
+    [eleve1.prenom, eleve1.nom, eleve1.classe, eleve1.sexe, eleve1.distance, eleve1.vitesse.toFixed(2), eleve1.vmaEstimee],
+    [eleve2.prenom, eleve2.nom, eleve2.classe, eleve2.sexe, eleve2.distance, eleve2.vitesse.toFixed(2), eleve2.vmaEstimee]
   ];
 
-  const blob = new Blob([lignes.join("\n")], { type: "text/csv" });
+  const contenu = lignes.map(l => l.join(";")).join("\n");
+  const blob = new Blob([contenu], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "resultats_runstats.csv";
-  a.click();
-  URL.revokeObjectURL(url);
+
+  const lien = document.createElement("a");
+  lien.setAttribute("href", url);
+  lien.setAttribute("download", "resultats_RunStats.csv");
+  lien.click();
+}
+
+function genererQRCode(data) {
+  const texte = JSON.stringify(data);
+  QRCode.toCanvas(document.getElementById("qrcode"), texte, { width: 200 }, function (error) {
+    if (error) console.error(error);
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  chargerResultats();
-  document.getElementById("downloadBtn").addEventListener("click", telechargerCSV);
+  const eleve1 = JSON.parse(sessionStorage.getItem("eleve1"));
+  const eleve2 = JSON.parse(sessionStorage.getItem("eleve2"));
+
+  if (eleve1 && eleve2) {
+    afficherDonnees(eleve1, "1");
+    afficherDonnees(eleve2, "2");
+
+    genererQRCode({ eleve1, eleve2 });
+
+    document.getElementById("downloadCSV").addEventListener("click", () => {
+      genererCSV(eleve1, eleve2);
+    });
+  } else {
+    alert("Aucune donnée disponible. Veuillez relancer une course.");
+  }
 });
