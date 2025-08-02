@@ -8,34 +8,56 @@
 </head>
 <body>
   <header>
-    <h1 id="pageTitle">RunStats</h1>
-    <h2 id="pageSubtitle">course</h2>
+    <h1>RunStats</h1>
+    <h2>Course</h2>
   </header>
 
-  <main>
-    <section id="runnerInfo" class="runner-info">
-      <!-- Info élève courant affichée ici -->
+  <main class="container">
+    <section class="eleves-info">
+      <div class="eleve-card eleve-1">
+        <h3>Élève 1</h3>
+        <p><strong>Nom :</strong> <span id="eleve1-nom"></span></p>
+        <p><strong>Prénom :</strong> <span id="eleve1-prenom"></span></p>
+        <p><strong>Classe :</strong> <span id="eleve1-classe"></span></p>
+        <p><strong>Sexe :</strong> <span id="eleve1-sexe"></span></p>
+      </div>
+      <div class="eleve-card eleve-2">
+        <h3>Élève 2</h3>
+        <p><strong>Nom :</strong> <span id="eleve2-nom"></span></p>
+        <p><strong>Prénom :</strong> <span id="eleve2-prenom"></span></p>
+        <p><strong>Classe :</strong> <span id="eleve2-classe"></span></p>
+        <p><strong>Sexe :</strong> <span id="eleve2-sexe"></span></p>
+      </div>
     </section>
 
-    <section id="timerSection" class="timer-section">
-      <button id="addTourBtn">+ Tour</button>
-      <div id="timerCircle">
-        <span id="timerDisplay">00:00</span>
-      </div>
-      <div id="statsBox">
-        <p>Distance totale : <span id="totalDistance">0</span> m</p>
-        <p>Vitesse moyenne : <span id="avgSpeed">0</span> km/h</p>
-        <p>VMA estimée : <span id="estimatedVMA">0</span> km/h</p>
-      </div>
+    <section class="course-info">
+      <p><strong>Durée (minutes) :</strong> <span id="course-duration"></span></p>
+      <p><strong>Distance tour (m) :</strong> <span id="course-distance"></span></p>
     </section>
 
-    <section id="finishingOptions" style="display:none;">
-      <p>Ajouter une fraction de tour :</p>
-      <button class="fractionBtn" data-fraction="0.25">+ 1/4 tour</button>
-      <button class="fractionBtn" data-fraction="0.5">+ 1/2 tour</button>
-      <button class="fractionBtn" data-fraction="0.75">+ 3/4 tour</button>
-      <br /><br />
-      <button id="nextCourseBtn">Lancer la course Élève 2</button>
+    <section class="timer-section">
+      <button id="startCourseBtn">Démarrer course élève 1</button>
+
+      <div id="timer-container" class="hidden">
+        <button id="addTourBtn">+ Tour</button>
+        <div id="timer-circle">
+          <span id="timer">00:00</span>
+        </div>
+        <div class="stats">
+          <p><strong>Distance totale (m) :</strong> <span id="total-distance">0</span></p>
+          <p><strong>Vitesse moyenne (km/h) :</strong> <span id="avg-speed">0</span></p>
+          <p><strong>VMA estimée (km/h) :</strong> <span id="vma-estimate">0</span></p>
+        </div>
+        <div id="fraction-tours" class="fraction-tours hidden">
+          <p>Ajouter fraction de tour :</p>
+          <button data-fraction="0.25">+1/4 tour</button>
+          <button data-fraction="0.5">+1/2 tour</button>
+          <button data-fraction="0.75">+3/4 tour</button>
+          <button id="finishCourseBtn">Finir cette course</button>
+        </div>
+      </div>
+
+      <button id="nextCourseBtn" class="hidden">Lancer course élève 2</button>
     </section>
   </main>
 
