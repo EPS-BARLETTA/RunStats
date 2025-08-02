@@ -1,83 +1,63 @@
-// summary.js
+function loadData() {
+  const eleve1 = JSON.parse(sessionStorage.getItem("eleve1"));
+  const eleve2 = JSON.parse(sessionStorage.getItem("eleve2"));
+  return [eleve1, eleve2];
+}
 
-// Récupérer les données des deux élèves dans le localStorage
-const eleve1 = JSON.parse(localStorage.getItem('eleve1Data'));
-const eleve2 = JSON.parse(localStorage.getItem('eleve2Data'));
-
-const tableBody = document.getElementById('resultsBody');
-const downloadCsvBtn = document.getElementById('downloadCsv');
-const downloadQrBtn = document.getElementById('downloadQr');
-
-// Fonction pour créer une ligne tableau pour un élève
-function createRow(eleve) {
-  if (!eleve) return '';
-
-  return `
-    <tr>
+function remplirTableau(data) {
+  const tbody = document.getElementById("table-body");
+  data.forEach(eleve => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
       <td>${eleve.nom}</td>
       <td>${eleve.prenom}</td>
       <td>${eleve.classe}</td>
       <td>${eleve.sexe}</td>
-      <td>${eleve.distance.toFixed(2)} m</td>
-      <td>${eleve.vitesse.toFixed(2)} m/s</td>
-      <td>${eleve.vma ? eleve.vma.toFixed(2) : 'N/A'} km/h</td>
-    </tr>
-  `;
-}
-
-// Insérer les lignes dans le tableau
-tableBody.innerHTML = createRow(eleve1) + createRow(eleve2);
-
-// Fonction pour générer CSV
-function generateCSV() {
-  const headers = ['Nom', 'Prénom', 'Classe', 'Sexe', 'Distance (m)', 'Vitesse (m/s)', 'VMA (km/h)'];
-  const rows = [eleve1, eleve2].map(e => [
-    e.nom,
-    e.prenom,
-    e.classe,
-    e.sexe,
-    e.distance.toFixed(2),
-    e.vitesse.toFixed(2),
-    e.vma ? e.vma.toFixed(2) : 'N/A'
-  ]);
-
-  let csvContent = headers.join(',') + '\n';
-  rows.forEach(r => {
-    csvContent += r.join(',') + '\n';
+      <td>${eleve.distance}</td>
+      <td>${eleve.vitesse.toFixed(2)}</td>
+      <td>${eleve.vmaEstimee}</td>
+      <td>${eleve.vma || ""}</td>
+    `;
+    tbody.appendChild(tr);
   });
-
-  return csvContent;
 }
 
-// Télécharger CSV
-downloadCsvBtn.addEventListener('click', () => {
-  const csv = generateCSV();
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+function genererCSV(data) {
+  const enTete = "Nom,Prénom,Classe,Sexe,Distance (m),Vitesse (m/s),VMA estimée (km/h),VMA réelle";
+  const lignes = data.map(e =>
+    `${e.nom},${e.prenom},${e.classe},${e.sexe},${e.distance},${e.vitesse.toFixed(2)},${e.vmaEstimee},${e.vma || ""}`
+  );
+  return [enTete, ...lignes].join("\n");
+}
+
+function telechargerCSV(contenu) {
+  const blob = new Blob([contenu], { type: "text/csv" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
-  a.download = 'RunStats_Bilan.csv';
+  a.download = "resultats_runstats.csv";
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-});
+}
 
-// Générer QR Code (utilisation de QRCode.js ou une librairie similaire requise)
-downloadQrBtn.addEventListener('click', () => {
-  const qrData = {
-    eleve1,
-    eleve2
-  };
-  const qrString = JSON.stringify(qrData);
+function genererQR(data) {
+  const qr = new QRious({
+    element: document.getElementById("qr"),
+    value: JSON.stringify(data),
+    size: 250,
+    background: "white",
+    foreground: "black"
+  });
+}
 
-  // Utilisation de QRCode library (assure-toi d'avoir ajouté la librairie dans summary.html)
-  const qrContainer = document.getElementById('qrCodeContainer');
-  qrContainer.innerHTML = ''; // Reset
+document.addEventListener("DOMContentLoaded", () => {
+  const data = loadData();
+  remplirTableau(data);
+  genererQR(data);
 
-  new QRCode(qrContainer, {
-    text: qrString,
-    width: 200,
-    height: 200
+  document.getElementById("downloadCSV").addEventListener("click", () => {
+    const csv = genererCSV(data);
+    telechargerCSV(csv);
   });
 });
