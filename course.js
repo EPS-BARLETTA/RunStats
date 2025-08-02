@@ -1,11 +1,11 @@
 let tours = 0;
 let debut;
-let eleveActuel = "eleve1";
 let eleveData;
 let chronoElement = document.getElementById("chronoCenter");
 let circle = document.getElementById("progressCircle");
 let duree;
 let longueurTour;
+let currentEleve;
 
 function formatChrono(ms) {
   const sec = Math.floor(ms / 1000);
@@ -27,11 +27,9 @@ function updateAffichage() {
   document.getElementById("vitesse").textContent = vitesse.toFixed(2);
   document.getElementById("vmaEstimee").textContent = vmaEstimee.toFixed(1);
 
-  // Chrono visuel
   const progress = Math.min(elapsed / (duree * 60000), 1);
   circle.style.strokeDashoffset = 283 * (1 - progress);
 
-  // clignotement si < 10s restantes
   if ((duree * 60 - secondes) <= 10) {
     chronoElement.classList.add("red");
   }
@@ -50,8 +48,11 @@ function commencerCourse() {
 }
 
 function chargerEleve() {
-  const stored = sessionStorage.getItem(eleveActuel);
+  currentEleve = sessionStorage.getItem("currentEleve") || "1";
+  const eleveKey = currentEleve === "1" ? "eleve1Data" : "eleve2Data";
+  const stored = sessionStorage.getItem(eleveKey);
   if (!stored) return window.location.href = "eleve.html";
+
   eleveData = JSON.parse(stored);
 
   document.getElementById("nomEleve").textContent = `${eleveData.prenom} ${eleveData.nom}`;
@@ -92,14 +93,14 @@ document.getElementById("terminerBtn").addEventListener("click", () => {
     vma: eleveData.vma
   };
 
-  sessionStorage.setItem(eleveActuel, JSON.stringify(result));
+  const resultKey = currentEleve === "1" ? "eleve1" : "eleve2";
+  sessionStorage.setItem(resultKey, JSON.stringify(result));
 
-  if (eleveActuel === "eleve1") {
+  if (currentEleve === "1") {
     sessionStorage.setItem("currentEleve", "2");
-    sessionStorage.setItem("eleve1", JSON.stringify(result));
     window.location.href = "course.html";
   } else {
-    sessionStorage.setItem("eleve2", JSON.stringify(result));
+    sessionStorage.removeItem("currentEleve");
     window.location.href = "summary.html";
   }
 });
