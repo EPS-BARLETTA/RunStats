@@ -1,4 +1,4 @@
-/* Réinitialisation */
+/* Reset */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -6,177 +6,111 @@
   font-family: Arial, sans-serif;
 }
 
-/* Corps de page */
+/* Body */
 body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background: #f5f5f5;
-  color: #222;
 }
 
+/* Header */
 header {
-  background-color: #333;
-  color: white;
-  padding: 15px 10px;
   text-align: center;
-  user-select: none;
+  padding: 20px;
+  background-color: #333;
+  color: #fff;
 }
 
 header h1 {
   font-size: 2.5rem;
-  margin-bottom: 5px;
 }
 
 header h2 {
-  font-size: 1.3rem;
-  font-weight: 400;
-  color: #ccc;
+  font-size: 1.2rem;
+  font-weight: normal;
+  color: #ddd;
 }
 
-/* Conteneur principal */
-main {
+/* Container */
+main.eleve-container {
   flex: 1;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  gap: 25px;
-}
-
-/* Section élève */
-.eleves-container {
-  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 30px;
-  width: 100%;
-  max-width: 900px;
+  gap: 20px;
+  padding: 20px;
 }
 
-.eleve {
-  background: #fff;
-  padding: 20px 25px;
+/* Eleve cards */
+.eleve-card {
+  flex: 1 1 300px;
+  max-width: 400px;
+  padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  width: 45%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
   gap: 10px;
-  position: relative;
-  user-select: none;
 }
 
 .eleve-1 {
-  background-color: #d1f7d6; /* vert clair */
+  background-color: #d1f7d6; /* Vert clair */
 }
 
 .eleve-2 {
-  background-color: #d1e7ff; /* bleu clair */
+  background-color: #d1e7ff; /* Bleu clair */
 }
 
-/* Status badge */
-.status {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: #444;
-}
-
-/* Timer section */
-.timer-section {
-  background: #fff;
-  border-radius: 15px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-  padding: 25px 40px;
-  width: 350px;
+/* Course info */
+.course-info {
+  flex: 1 1 100%;
+  max-width: 800px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  user-select: none;
+  gap: 10px;
 }
 
-/* Bouton + Tour */
-#addTourBtn {
-  padding: 12px 25px;
-  font-size: 1.3rem;
+/* Labels and inputs */
+label {
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+input, select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+/* Start button */
+#startCourseBtn {
+  margin: 20px auto;
+  padding: 15px 25px;
+  font-size: 1.2rem;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
   border-radius: 10px;
-  border: none;
-  background-color: #4caf50;
-  color: white;
   cursor: pointer;
-  transition: background-color 0.3s;
-  width: 100%;
+  transition: background 0.3s;
+  width: 250px;
 }
 
-#addTourBtn:hover {
-  background-color: #3e8e41;
+#startCourseBtn:hover {
+  background-color: #45a049;
 }
 
-/* Timer cercle */
-#timerCircle {
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  background-color: #222;
-  color: white;
-  font-size: 3.2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  user-select: none;
-  transition: background-color 0.5s;
-}
-
-/* Clignotement du timer les 10 dernières secondes */
-.blink {
-  animation: blink-animation 1s steps(2, start) infinite;
-}
-
-@keyframes blink-animation {
-  to {
-    visibility: hidden;
-  }
-}
-
-/* Statistiques */
-.stats {
-  width: 100%;
-  text-align: center;
-  font-size: 1.1rem;
-}
-
-.stats p {
-  margin-bottom: 10px;
-}
-
-/* Bouton fin de course */
-#finishCourseBtn {
-  padding: 15px 40px;
-  font-size: 1.4rem;
-  border-radius: 12px;
-  border: none;
-  background-color: #e53935;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  user-select: none;
-  width: 100%;
-  max-width: 350px;
-}
-
-#finishCourseBtn:hover {
-  background-color: #b71c1c;
-}
-
-/* Pied de page */
+/* Footer */
 footer {
-  background-color: #222;
-  color: #ddd;
-  font-size: 0.9rem;
   text-align: center;
-  padding: 15px 10px;
-  user-select: none;
+  padding: 10px;
+  background: #222;
+  color: #fff;
+  font-size: 0.9rem;
 }
