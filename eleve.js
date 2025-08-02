@@ -1,80 +1,40 @@
-// Récupération des éléments du DOM
-const startBtn = document.getElementById('startCourseBtn');
 
-const eleve1Inputs = {
-  nom: document.getElementById('eleve1Nom'),
-  prenom: document.getElementById('eleve1Prenom'),
-  classe: document.getElementById('eleve1Classe'),
-  sexe: document.getElementById('eleve1Sexe'),
-  vma: document.getElementById('eleve1Vma'),
-  duree: document.getElementById('courseDuration1'),
-  distance: document.getElementById('courseDistance1')
-};
+document.getElementById("studentForm").addEventListener("submit", function(e) {
+  e.preventDefault();
 
-const eleve2Inputs = {
-  nom: document.getElementById('eleve2Nom'),
-  prenom: document.getElementById('eleve2Prenom'),
-  classe: document.getElementById('eleve2Classe'),
-  sexe: document.getElementById('eleve2Sexe'),
-  vma: document.getElementById('eleve2Vma'),
-  duree: document.getElementById('courseDuration2'),
-  distance: document.getElementById('courseDistance2')
-};
-
-// Fonction pour valider les champs requis
-function validateInputs() {
-  // Vérifier nom, prenom, classe, sexe, durée et distance pour eleve1 et eleve2
-  for (const eleve of [eleve1Inputs, eleve2Inputs]) {
-    if (!eleve.nom.value.trim() ||
-        !eleve.prenom.value.trim() ||
-        !eleve.classe.value.trim() ||
-        !eleve.sexe.value) {
-      alert("Merci de renseigner le nom, prénom, classe et sexe des deux élèves.");
-      return false;
-    }
-    if (!eleve.duree.value || isNaN(eleve.duree.value) || eleve.duree.value <= 0) {
-      alert("Merci de renseigner une durée valide (en minutes).");
-      return false;
-    }
-    if (!eleve.distance.value || isNaN(eleve.distance.value) || eleve.distance.value <= 0) {
-      alert("Merci de renseigner une distance valide (en mètres).");
-      return false;
-    }
-  }
-  return true;
-}
-
-// Fonction au clic sur démarrer la course (pour élève 1 d'abord)
-startBtn.addEventListener('click', () => {
-  if (!validateInputs()) return;
-
-  // Préparer les données à envoyer vers la page course.html
-  // on envoie par URL via query parameters JSON stringifié et encodé
-  const courseData = {
-    eleve1: {
-      nom: eleve1Inputs.nom.value.trim(),
-      prenom: eleve1Inputs.prenom.value.trim(),
-      classe: eleve1Inputs.classe.value.trim(),
-      sexe: eleve1Inputs.sexe.value,
-      vma: eleve1Inputs.vma.value ? parseFloat(eleve1Inputs.vma.value) : null,
-      duree: parseFloat(eleve1Inputs.duree.value),
-      distance: parseFloat(eleve1Inputs.distance.value)
-    },
-    eleve2: {
-      nom: eleve2Inputs.nom.value.trim(),
-      prenom: eleve2Inputs.prenom.value.trim(),
-      classe: eleve2Inputs.classe.value.trim(),
-      sexe: eleve2Inputs.sexe.value,
-      vma: eleve2Inputs.vma.value ? parseFloat(eleve2Inputs.vma.value) : null,
-      duree: parseFloat(eleve2Inputs.duree.value),
-      distance: parseFloat(eleve2Inputs.distance.value)
-    }
+  // Élève 1
+  const eleve1 = {
+    prenom: document.getElementById("prenom1").value.trim(),
+    nom: document.getElementById("nom1").value.trim(),
+    classe: document.getElementById("classe1").value.trim(),
+    sexe: document.getElementById("sexe1").value,
+    temps: parseInt(document.getElementById("temps1").value),
+    longueurTour: parseInt(document.getElementById("longueur1").value),
+    vma: parseFloat(document.getElementById("vma1").value) || null
   };
 
-  // Passer les données vers course.html en les encodant en base64
-  // pour éviter problème avec caractères spéciaux dans URL
-  const dataStr = btoa(JSON.stringify(courseData));
+  // Élève 2
+  const eleve2 = {
+    prenom: document.getElementById("prenom2").value.trim(),
+    nom: document.getElementById("nom2").value.trim(),
+    classe: document.getElementById("classe2").value.trim(),
+    sexe: document.getElementById("sexe2").value,
+    temps: parseInt(document.getElementById("temps2").value),
+    longueurTour: parseInt(document.getElementById("longueur2").value),
+    vma: parseFloat(document.getElementById("vma2").value) || null
+  };
 
-  // Ouvrir course.html avec data dans query param 'data'
-  window.location.href = `course.html?data=${dataStr}&eleve=1`;
+  // Validation simple
+  const champs = Object.values(eleve1).concat(Object.values(eleve2));
+  if (champs.includes("") || champs.includes(NaN)) {
+    alert("Merci de remplir tous les champs obligatoires.");
+    return;
+  }
+
+  // Stockage dans la session
+  sessionStorage.setItem("eleve1", JSON.stringify(eleve1));
+  sessionStorage.setItem("eleve2", JSON.stringify(eleve2));
+
+  // Rediriger vers la page de course
+  window.location.href = "course.html";
 });
