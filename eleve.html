@@ -3,84 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - Élève</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>RunStats - Élèves</title>
+  <link rel="stylesheet" href="eleve.css" />
 </head>
 <body>
-  <main class="eleve-container">
+  <h1>RunStats - Saisie Élèves</h1>
 
-    <h1>RunStats - Saisie Élèves</h1>
-
-    <form id="eleveForm">
-
-      <div class="eleve-block eleve1">
-        <h3>Élève 1</h3>
-        <label>Nom <input type="text" id="nom1" required /></label>
-        <label>Prénom <input type="text" id="prenom1" required /></label>
-        <label>Classe <input type="text" id="classe1" required /></label>
-        <label>Sexe
-          <select id="sexe1" required>
-            <option value="">--Choisir--</option>
-            <option value="Fille">Fille</option>
-            <option value="Garçon">Garçon</option>
-          </select>
-        </label>
-      </div>
-
-      <div class="eleve-block eleve2">
-        <h3>Élève 2</h3>
-        <label>Nom <input type="text" id="nom2" required /></label>
-        <label>Prénom <input type="text" id="prenom2" required /></label>
-        <label>Classe <input type="text" id="classe2" required /></label>
-        <label>Sexe
-          <select id="sexe2" required>
-            <option value="">--Choisir--</option>
-            <option value="Fille">Fille</option>
-            <option value="Garçon">Garçon</option>
-          </select>
-        </label>
-      </div>
-
-      <div class="course-info">
-        <h3>Infos Course</h3>
-        <label>Durée (min)
-          <input type="number" id="duree" min="1" required />
-        </label>
-        <label>Distance tour (m)
-          <input type="number" id="distanceTour" min="1" required />
-        </label>
-        <label>VMA connue (optionnelle)
-          <input type="number" id="vmaConnue" min="1" step="0.1" />
-        </label>
-      </div>
-
-      <div class="btn-group-course">
-        <button type="button" id="demarrer" class="btn btn-rect btn-blue">Démarrer</button>
-        <button type="button" id="plusTour" class="btn btn-oval btn-green" disabled>+ Tour</button>
-        <button type="button" id="reset" class="btn btn-rect btn-red">Reset</button>
-      </div>
-    </form>
-
-    <div id="timerSection" class="hidden">
-      <h2>Course en cours</h2>
-      <div id="timer">00:00</div>
-      <div id="stats">
-        <p><strong>Tour(s) réalisé(s) :</strong> <span id="tourCount">0</span></p>
-        <p><strong>Distance parcourue (m) :</strong> <span id="distanceParcourue">0</span></p>
-        <p><strong>Vitesse actuelle (km/h) :</strong> <span id="vitesse">0</span></p>
-        <p><strong>VMA estimée (km/h) :</strong> <span id="vmaEstimee">-</span></p>
-        <p><strong>Coureur actuel :</strong> <span id="currentRunner">Élève 1</span></p>
-      </div>
+  <div id="input-section">
+    <div class="eleve-box" id="eleve1">
+      <h3>Élève 1</h3>
+      <label>Nom:<br /><input type="text" id="nom1" /></label><br />
+      <label>Prénom:<br /><input type="text" id="prenom1" /></label><br />
+      <label>Classe:<br /><input type="text" id="classe1" /></label><br />
+      <label>Sexe:<br />
+        <select id="sexe1">
+          <option value="Fille">Fille</option>
+          <option value="Garçon">Garçon</option>
+        </select>
+      </label>
     </div>
 
-    <div id="qrSection" class="hidden">
-      <h2>Résultats</h2>
-      <canvas id="qrCode"></canvas>
-      <p>Scannez ce QR code pour envoyer les résultats au professeur.</p>
+    <div class="eleve-box" id="eleve2">
+      <h3>Élève 2</h3>
+      <label>Nom:<br /><input type="text" id="nom2" /></label><br />
+      <label>Prénom:<br /><input type="text" id="prenom2" /></label><br />
+      <label>Classe:<br /><input type="text" id="classe2" /></label><br />
+      <label>Sexe:<br />
+        <select id="sexe2">
+          <option value="Fille">Fille</option>
+          <option value="Garçon">Garçon</option>
+        </select>
+      </label>
     </div>
+  </div>
+
+  <div id="course-info">
+    <h3>Informations course</h3>
+    <label>Durée (minutes): <input type="number" id="duree" min="1" /></label><br />
+    <label>Distance tour (mètres): <input type="number" id="distance" min="1" /></label><br />
+    <label>VMA (optionnelle): <input type="number" id="vma" min="0" step="0.1" /></label>
+  </div>
+
+  <div id="buttons">
+    <button id="startBtn" style="background-color: blue; color: white; padding: 10px 20px; margin: 10px;">Démarrer</button>
+    <button id="addTourBtn" style="background-color: green; color: white; padding: 10px 30px; margin: 10px; border-radius: 25px;">+ Tour</button>
+    <button id="resetBtn" style="background-color: red; color: white; padding: 10px 20px; margin: 10px;">Reset</button>
+  </div>
+
+  <div id="course-display" style="display:none;">
+    <h3>Minuteur: <span id="timer">00:00</span></h3>
+    <p>Tours: <span id="tours">0</span></p>
+    <p>Mètres parcourus: <span id="meters">0</span></p>
+    <p>Vitesse actuelle (m/min): <span id="vitesse">0</span></p>
+    <p>Estimation VMA: <span id="estVMA">0</span></p>
+  </div>
+
+  <div id="qr-code" style="margin-top: 20px;"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
   <script src="eleve.js"></script>
-  </main>
 </body>
 </html>
