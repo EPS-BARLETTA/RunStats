@@ -1,52 +1,95 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>RunStats - Course</title>
-<link rel="stylesheet" href="course.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RunStats - Gestion</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header>
   <h1>RunStats</h1>
-  <h2>Course</h2>
+  <h2>Gestion des courses</h2>
 </header>
 
-<main>
-  <section id="eleve-info" class="eleve-card">
-    <h3>Élève en course</h3>
-    <p><strong>Nom :</strong> <span id="nom"></span></p>
-    <p><strong>Prénom :</strong> <span id="prenom"></span></p>
-    <p><strong>Classe :</strong> <span id="classe"></span></p>
-    <p><strong>Sexe :</strong> <span id="sexe"></span></p>
-  </section>
+<main class="eleve-container">
+  <!-- Infos Élève 1 -->
+  <div class="eleve-card eleve-1">
+    <h3>Élève 1</h3>
+    <label>Nom</label>
+    <input type="text" id="nom1">
+    <label>Prénom</label>
+    <input type="text" id="prenom1">
+    <label>Classe</label>
+    <input type="text" id="classe1">
+    <label>Sexe</label>
+    <select id="sexe1">
+      <option value="M">M</option>
+      <option value="F">F</option>
+    </select>
+  </div>
 
-  <section id="course-info" class="course-info">
-    <div id="timer-container">
-      <button id="addTourBtn">+ Tour</button>
-      <div id="timer" class="timer">00:00</div>
-    </div>
+  <!-- Infos Élève 2 -->
+  <div class="eleve-card eleve-2">
+    <h3>Élève 2</h3>
+    <label>Nom</label>
+    <input type="text" id="nom2">
+    <label>Prénom</label>
+    <input type="text" id="prenom2">
+    <label>Classe</label>
+    <input type="text" id="classe2">
+    <label>Sexe</label>
+    <select id="sexe2">
+      <option value="M">M</option>
+      <option value="F">F</option>
+    </select>
+  </div>
 
-    <div id="stats">
-      <p>Distance totale (m) : <span id="distance">0.00</span></p>
-      <p>Vitesse moyenne (km/h) : <span id="vitesse">0.00</span></p>
-      <p>VMA estimée (km/h) : <span id="vma">0.00</span></p>
-    </div>
+  <!-- Paramètres de course -->
+  <div class="course-info">
+    <h3>Paramètres</h3>
+    <label>Durée (minutes)</label>
+    <input type="number" id="duree" value="10">
+    <label>Distance d'un tour (m)</label>
+    <input type="number" id="distanceTour" value="400">
+  </div>
 
-    <div id="fraction-tours" style="margin-top:20px;">
-      <button data-fraction="0.25" class="fraction-btn">+ 1/4 tour</button>
-      <button data-fraction="0.5" class="fraction-btn">+ 1/2 tour</button>
-      <button data-fraction="0.75" class="fraction-btn">+ 3/4 tour</button>
-    </div>
-
-    <button id="finishCourseBtn" style="margin-top:30px;">Terminer la course</button>
-  </section>
+  <button id="startCourseBtn">Démarrer la course élève 1</button>
 </main>
 
 <footer>
   Équipe EPS Lycée Vauban - LUXEMBOURG - JB
 </footer>
 
-<script src="course.js"></script>
+<script>
+document.getElementById('startCourseBtn').addEventListener('click', () => {
+  // Récupérer valeurs
+  const eleve1 = {
+    nom: document.getElementById('nom1').value,
+    prenom: document.getElementById('prenom1').value,
+    classe: document.getElementById('classe1').value,
+    sexe: document.getElementById('sexe1').value
+  };
+  const eleve2 = {
+    nom: document.getElementById('nom2').value,
+    prenom: document.getElementById('prenom2').value,
+    classe: document.getElementById('classe2').value,
+    sexe: document.getElementById('sexe2').value
+  };
+  const duree = document.getElementById('duree').value;
+  const distanceTour = document.getElementById('distanceTour').value;
+
+  // Sauvegarde des données
+  sessionStorage.setItem('eleve1', JSON.stringify(eleve1));
+  sessionStorage.setItem('eleve2', JSON.stringify(eleve2));
+  sessionStorage.setItem('dureeCourse', duree);
+  sessionStorage.setItem('distanceTour', distanceTour);
+
+  // On lance la course pour l'élève 1
+  sessionStorage.setItem('eleveActif', JSON.stringify(eleve1));
+
+  window.location.href = 'course.html';
+});
+</script>
 </body>
 </html>
