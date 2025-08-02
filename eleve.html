@@ -1,73 +1,370 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - Élève</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RunStats - Élève</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+  main {
+    max-width: 900px; margin: 20px auto; padding: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  header, footer {
+    background-color: #004080; color: white; text-align: center;
+    padding: 15px 10px; font-weight: 600;
+  }
+  header h1 {
+    margin: 0; font-size: 2.4em;
+  }
+  header h2 {
+    margin: 5px 0 15px;
+    font-weight: 400; font-size: 1.1em; opacity: 0.8;
+  }
+
+  .eleve-container {
+    display: flex; gap: 20px; margin-bottom: 25px;
+  }
+  .eleve-box {
+    flex: 1;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 6px #888;
+  }
+  .eleve1-box { background-color: #cfe7ff; }
+  .eleve2-box { background-color: #ffd9b3; }
+
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  input[type="text"], input[type="number"], select {
+    width: 100%; padding: 6px 8px; border: 1px solid #888;
+    border-radius: 4px; font-size: 1em;
+  }
+
+  .course-info {
+    margin-bottom: 25px;
+    padding: 15px 20px;
+    background-color: #e2e2e2;
+    border-radius: 8px;
+    box-shadow: 0 0 6px #aaa;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .buttons-course {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  button.btn-start {
+    background-color: #007bff;
+    color: white;
+    font-size: 1.3em;
+    padding: 10px 25px;
+    border-radius: 6px;
+    border: none;
+    margin-right: 15px;
+    cursor: pointer;
+  }
+  button.btn-lap {
+    background-color: #28a745;
+    color: white;
+    font-size: 1.5em;
+    padding: 12px 35px;
+    border-radius: 30px;
+    border: none;
+    margin-right: 15px;
+    cursor: pointer;
+    min-width: 120px;
+  }
+  button.btn-reset {
+    background-color: #dc3545;
+    color: white;
+    font-size: 1.1em;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+  }
+  button:disabled {
+    background-color: #999 !important;
+    cursor: not-allowed;
+  }
+
+  #timer {
+    font-size: 1.6em; font-weight: 600;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  #infosCourse {
+    font-size: 1.2em;
+    padding: 10px 15px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    max-width: 500px;
+    margin: 0 auto 30px;
+    box-shadow: inset 0 0 5px #ccc;
+  }
+
+  #qrCode {
+    text-align: center;
+    margin-top: 30px;
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1>RunStats</h1>
-    <h2>Équipe EPS Lycée Vauban - Luxembourg</h2>
-  </header>
+<header>
+  <h1>RunStats</h1>
+  <h2>Équipe EPS Lycée Vauban - Luxembourg</h2>
+</header>
 
-  <main id="elevePage">
-    <section class="eleve-container">
-      <div class="eleve-box eleve1-box">
-        <h3>Élève 1</h3>
-        <label>Nom:<br /><input type="text" id="nom1" /></label><br />
-        <label>Prénom:<br /><input type="text" id="prenom1" /></label><br />
-        <label>Classe:<br /><input type="text" id="classe1" /></label><br />
-        <label>Sexe:<br />
-          <select id="sexe1">
-            <option value="fille">Fille</option>
-            <option value="garcon">Garçon</option>
-          </select>
-        </label>
-      </div>
-      <div class="eleve-box eleve2-box">
-        <h3>Élève 2</h3>
-        <label>Nom:<br /><input type="text" id="nom2" /></label><br />
-        <label>Prénom:<br /><input type="text" id="prenom2" /></label><br />
-        <label>Classe:<br /><input type="text" id="classe2" /></label><br />
-        <label>Sexe:<br />
-          <select id="sexe2">
-            <option value="fille">Fille</option>
-            <option value="garcon">Garçon</option>
-          </select>
-        </label>
-      </div>
-    </section>
-
-    <section class="course-info">
-      <label>Durée de la course (minutes) :<br />
-        <input type="number" id="dureeCourse" min="1" />
-      </label><br />
-      <label>Distance d’un tour (mètres) :<br />
-        <input type="number" id="distanceTour" min="1" />
-      </label><br />
-      <label>VMA connue (optionnel) :<br />
-        <input type="number" id="vmaConnu" min="0" step="0.01" />
+<main>
+  <section class="eleve-container">
+    <div class="eleve-box eleve1-box">
+      <h3>Élève 1</h3>
+      <label>Nom:<input type="text" id="nom1" /></label>
+      <label>Prénom:<input type="text" id="prenom1" /></label>
+      <label>Classe:<input type="text" id="classe1" /></label>
+      <label>Sexe:
+        <select id="sexe1">
+          <option value="fille">Fille</option>
+          <option value="garcon">Garçon</option>
+        </select>
       </label>
-    </section>
+    </div>
+    <div class="eleve-box eleve2-box">
+      <h3>Élève 2</h3>
+      <label>Nom:<input type="text" id="nom2" /></label>
+      <label>Prénom:<input type="text" id="prenom2" /></label>
+      <label>Classe:<input type="text" id="classe2" /></label>
+      <label>Sexe:
+        <select id="sexe2">
+          <option value="fille">Fille</option>
+          <option value="garcon">Garçon</option>
+        </select>
+      </label>
+    </div>
+  </section>
 
-    <section class="buttons-course">
-      <button class="btn-start" id="btnDemarrer">Démarrer</button>
-      <button class="btn-lap" id="btnTour" disabled>+ Tour</button>
-      <button class="btn-reset" id="btnReset">Reset</button>
-    </section>
+  <section class="course-info">
+    <label>Durée de la course (minutes) :
+      <input type="number" id="dureeCourse" min="1" />
+    </label>
+    <label>Distance d’un tour (mètres) :
+      <input type="number" id="distanceTour" min="1" />
+    </label>
+    <label>VMA (km/h) - facultatif :
+      <input type="number" id="vma" step="0.1" min="0" />
+    </label>
+  </section>
 
-    <div id="timer"></div>
-    <div id="infosCourse"></div>
-    <div id="qrCode"></div>
-  </main>
+  <section class="buttons-course">
+    <button id="startCourse" class="btn-start">Démarrer</button>
+    <button id="lapCourse" class="btn-lap" disabled>+ Tour</button>
+    <button id="resetCourse" class="btn-reset">Reset</button>
+  </section>
 
-  <footer>
-    Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-  </footer>
+  <div id="timer" aria-live="polite" aria-atomic="true">00:00</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-  <script src="eleve.js"></script>
+  <div id="infosCourse" aria-live="polite" aria-atomic="true"></div>
+
+  <div id="qrCode"></div>
+</main>
+
+<footer>Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script>
+(() => {
+  // Variables et références DOM
+  const nom1 = document.getElementById('nom1');
+  const prenom1 = document.getElementById('prenom1');
+  const classe1 = document.getElementById('classe1');
+  const sexe1 = document.getElementById('sexe1');
+
+  const nom2 = document.getElementById('nom2');
+  const prenom2 = document.getElementById('prenom2');
+  const classe2 = document.getElementById('classe2');
+  const sexe2 = document.getElementById('sexe2');
+
+  const dureeCourse = document.getElementById('dureeCourse');
+  const distanceTour = document.getElementById('distanceTour');
+  const vmaInput = document.getElementById('vma');
+
+  const btnStart = document.getElementById('startCourse');
+  const btnLap = document.getElementById('lapCourse');
+  const btnReset = document.getElementById('resetCourse');
+
+  const timerDisplay = document.getElementById('timer');
+  const infosCourse = document.getElementById('infosCourse');
+  const qrCodeDiv = document.getElementById('qrCode');
+
+  // État course
+  let timerId = null;
+  let elapsedSeconds = 0;
+  let courseDurationSeconds = 0;
+  let currentLap = 0;
+  let lapsData = [];
+  let currentEleve = 1; // Alterne entre 1 et 2
+  let courseActive = false;
+
+  // Fonctions timer
+  function formatTime(seconds) {
+    const min = Math.floor(seconds / 60).toString().padStart(2,'0');
+    const sec = (seconds % 60).toString().padStart(2,'0');
+    return `${min}:${sec}`;
+  }
+
+  function updateTimer() {
+    elapsedSeconds++;
+    timerDisplay.textContent = formatTime(elapsedSeconds);
+    if (elapsedSeconds >= courseDurationSeconds) {
+      finishCourse();
+    }
+  }
+
+  // Validation simple
+  function validateInputs() {
+    if (!nom1.value.trim() || !prenom1.value.trim() || !classe1.value.trim()) {
+      alert('Veuillez remplir les informations complètes de l\'élève 1.');
+      return false;
+    }
+    if (!nom2.value.trim() || !prenom2.value.trim() || !classe2.value.trim()) {
+      alert('Veuillez remplir les informations complètes de l\'élève 2.');
+      return false;
+    }
+    if (!dureeCourse.value || dureeCourse.value <= 0) {
+      alert('Veuillez entrer une durée de course valide.');
+      return false;
+    }
+    if (!distanceTour.value || distanceTour.value <= 0) {
+      alert('Veuillez entrer une distance de tour valide.');
+      return false;
+    }
+    return true;
+  }
+
+  // Commencer course
+  btnStart.addEventListener('click', () => {
+    if (courseActive) return;
+    if (!validateInputs()) return;
+
+    courseDurationSeconds = parseInt(dureeCourse.value, 10) * 60;
+    elapsedSeconds = 0;
+    currentLap = 0;
+    lapsData = [];
+    currentEleve = 1;
+    courseActive = true;
+
+    // Désactive saisie pendant course
+    [nom1, prenom1, classe1, sexe1, nom2, prenom2, classe2, sexe2, dureeCourse, distanceTour, vmaInput].forEach(inp => inp.disabled = true);
+
+    btnStart.disabled = true;
+    btnLap.disabled = false;
+    btnReset.disabled = false;
+    qrCodeDiv.innerHTML = '';
+    infosCourse.textContent = '';
+    timerDisplay.textContent = formatTime(0);
+
+    timerId = setInterval(updateTimer, 1000);
+  });
+
+  // Ajout tour
+  btnLap.addEventListener('click', () => {
+    if (!courseActive) return;
+    currentLap++;
+    const distMetres = parseFloat(distanceTour.value);
+    const elapsedMin = elapsedSeconds / 60;
+    const vitesseKmH = (distMetres / 1000) / (elapsedMin / currentLap);
+    const vmaUser = parseFloat(vmaInput.value) || null;
+
+    // Données tour
+    const tour = {
+      lap: currentLap,
+      eleve: currentEleve,
+      tempsSec: elapsedSeconds,
+      distanceMetres: distMetres,
+      vitesseKmH,
+      vma: vmaUser,
+    };
+    lapsData.push(tour);
+
+    // Affiche info tour
+    infosCourse.innerHTML = `
+      Tour ${currentLap} - Élève ${currentEleve} <br>
+      Distance: ${distMetres} m<br>
+      Temps: ${formatTime(elapsedSeconds)}<br>
+      Vitesse estimée: ${vitesseKmH.toFixed(2)} km/h<br>
+      VMA saisie: ${vmaUser !== null ? vmaUser.toFixed(2) : 'Non saisie'}
+    `;
+
+    // Change élève
+    currentEleve = currentEleve === 1 ? 2 : 1;
+  });
+
+  // Fin course
+  function finishCourse() {
+    clearInterval(timerId);
+    courseActive = false;
+    btnLap.disabled = true;
+    btnStart.disabled = false;
+
+    // Réactivation saisie
+    [nom1, prenom1, classe1, sexe1, nom2, prenom2, classe2, sexe2, dureeCourse, distanceTour, vmaInput].forEach(inp => inp.disabled = false);
+
+    // Génération données résumé
+    const summary = {
+      eleve1: {
+        nom: nom1.value.trim(),
+        prenom: prenom1.value.trim(),
+        classe: classe1.value.trim(),
+        sexe: sexe1.value,
+        tours: lapsData.filter(l => l.eleve === 1),
+      },
+      eleve2: {
+        nom: nom2.value.trim(),
+        prenom: prenom2.value.trim(),
+        classe: classe2.value.trim(),
+        sexe: sexe2.value,
+        tours: lapsData.filter(l => l.eleve === 2),
+      },
+      dureeCourseMinutes: parseInt(dureeCourse.value, 10),
+      distanceTourMetres: parseFloat(distanceTour.value),
+      date: new Date().toISOString(),
+    };
+
+    // Génère QR code JSON
+    qrCodeDiv.innerHTML = '<h3>Résultats (QR Code)</h3>';
+    QRCode.toCanvas(qrCodeDiv, JSON.stringify(summary), { width: 200, margin: 2 }, function (error) {
+      if (error) console.error(error);
+    });
+  }
+
+  // Reset complet
+  btnReset.addEventListener('click', () => {
+    clearInterval(timerId);
+    courseActive = false;
+    elapsedSeconds = 0;
+    currentLap = 0;
+    lapsData = [];
+    currentEleve = 1;
+
+    [nom1, prenom1, classe1, sexe1, nom2, prenom2, classe2, sexe2, dureeCourse, distanceTour, vmaInput].forEach(inp => {
+      inp.disabled = false;
+      inp.value = '';
+      if (inp.tagName === 'SELECT') inp.selectedIndex = 0;
+    });
+
+    btnStart.disabled = false;
+    btnLap.disabled = true;
+    timerDisplay.textContent = '00:00';
+    infosCourse.textContent = '';
+    qrCodeDiv.innerHTML = '';
+  });
+})();
+</script>
+
 </body>
 </html>
