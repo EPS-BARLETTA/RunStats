@@ -112,3 +112,50 @@ footer {
   color: #fff;
   font-size: 0.9rem;
 }
+
+/* Styles spécifiques à la page bilan */
+
+#bilan-section h3 {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 1.6rem;
+}
+
+#bilan-table th, #bilan-table td {
+  padding: 12px 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  color: #222;
+}
+
+#bilan-table thead {
+  background-color: #4CAF50;
+  color: white;
+}
+
+#bilan-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#download-csv, #download-qr {
+  background-color: #2196F3;
+  border: none;
+  padding: 12px 20px;
+  color: white;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#download-csv:hover, #download-qr:hover {
+  background-color: #0b7dda;
+}
+
+#qr-code canvas {
+  margin: auto;
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
