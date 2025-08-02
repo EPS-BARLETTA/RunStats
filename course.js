@@ -5,7 +5,8 @@ let chronoElement = document.getElementById("chronoCenter");
 let circle = document.getElementById("progressCircle");
 let duree;
 let longueurTour;
-let currentEleve = "1"; // par défaut
+let currentEleve = "1";
+let coursEnCours = false;
 
 function formatChrono(ms) {
   const sec = Math.floor(ms / 1000);
@@ -39,11 +40,21 @@ function updateAffichage() {
   } else {
     document.getElementById("ajouterTourBtn").disabled = true;
     document.getElementById("fin-course").classList.remove("hidden");
+    if (currentEleve === "2") {
+      document.getElementById("finCourseBtn").classList.remove("hidden");
+    } else {
+      document.getElementById("demarrer2Btn").classList.remove("hidden");
+    }
+    coursEnCours = false;
   }
 }
 
 function commencerCourse() {
   debut = Date.now();
+  tours = 0;
+  coursEnCours = true;
+  document.getElementById("ajouterTourBtn").disabled = false;
+  document.getElementById("demarrer2Btn").classList.add("hidden");
   requestAnimationFrame(updateAffichage);
 }
 
@@ -68,8 +79,10 @@ function chargerEleve() {
 }
 
 document.getElementById("ajouterTourBtn").addEventListener("click", () => {
-  tours++;
-  document.getElementById("tours").textContent = tours;
+  if (coursEnCours) {
+    tours++;
+    document.getElementById("tours").textContent = tours;
+  }
 });
 
 document.querySelectorAll("#fin-course button[data-frac]").forEach(btn => {
@@ -80,7 +93,12 @@ document.querySelectorAll("#fin-course button[data-frac]").forEach(btn => {
   });
 });
 
-document.getElementById("terminerBtn").addEventListener("click", () => {
+document.getElementById("demarrer2Btn").addEventListener("click", () => {
+  sessionStorage.setItem("currentEleve", "2");
+  window.location.href = "course.html";
+});
+
+document.getElementById("finCourseBtn").addEventListener("click", () => {
   const now = Date.now();
   const dureeSec = (now - debut) / 1000;
   const distance = tours * longueurTour;
@@ -98,16 +116,9 @@ document.getElementById("terminerBtn").addEventListener("click", () => {
     vma: eleveData.vma
   };
 
-  const resultKey = currentEleve === "1" ? "eleve1" : "eleve2";
-  sessionStorage.setItem(resultKey, JSON.stringify(result));
-
-  if (currentEleve === "1") {
-    sessionStorage.setItem("currentEleve", "2");
-    window.location.href = "course.html";
-  } else {
-    sessionStorage.removeItem("currentEleve");
-    window.location.href = "summary.html";
-  }
+  sessionStorage.setItem("eleve2", JSON.stringify(result));
+  sessionStorage.removeItem("currentEleve");
+  window.location.href = "summary.html";
 });
 
 document.addEventListener("DOMContentLoaded", chargerEleve);
