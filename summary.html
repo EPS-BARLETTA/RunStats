@@ -1,55 +1,54 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RunStats - Bilan</title>
-  <link rel="stylesheet" href="summary.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RunStats - Zone de téléchargement</title>
+    <link rel="stylesheet" href="summary.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
 <body>
-  <!-- HEADER -->
-  <header>
-    <h1>RunStats</h1>
-    <h2>zone de téléchargement</h2>
-  </header>
+    <!-- HEADER -->
+    <header>
+        <h1>RunStats</h1>
+        <h2>Zone de téléchargement</h2>
+    </header>
 
-  <!-- CONTENU PRINCIPAL -->
-  <main class="summary-container">
-    <section class="results">
-      <h3>Bilan des deux coureurs</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Élève</th>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Classe</th>
-            <th>Sexe</th>
-            <th>Distance (m)</th>
-            <th>Vitesse Moy. (km/h)</th>
-            <th>VMA estimée</th>
-          </tr>
-        </thead>
-        <tbody id="resultsBody">
-          <!-- Lignes insérées via summary.js -->
-        </tbody>
-      </table>
-    </section>
+    <!-- TABLEAU DES RÉSULTATS -->
+    <main>
+        <section class="results-section">
+            <h3>Résultats des courses</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Classe</th>
+                        <th>Sexe</th>
+                        <th>Distance</th>
+                        <th>Vitesse</th>
+                        <th>VMA</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsTableBody">
+                    <!-- Dynamique via summary.js -->
+                </tbody>
+            </table>
+        </section>
 
-    <div class="export-buttons">
-      <button id="downloadCsvBtn">Télécharger en CSV</button>
-      <button id="generateQrBtn">Générer QR Code</button>
-    </div>
+        <!-- BOUTONS DE TÉLÉCHARGEMENT -->
+        <section class="download-section">
+            <button id="downloadCSVBtn">Télécharger en CSV</button>
+            <button id="downloadQRBtn">Générer QR Code</button>
+            <div id="qrcode" class="qr-container"></div>
+        </section>
+    </main>
 
-    <div id="qrcode" class="qrcode-container"></div>
-  </main>
+    <!-- FOOTER -->
+    <footer>
+        Équipe EPS Lycée Vauban - LUXEMBOURG - JB
+    </footer>
 
-  <!-- FOOTER -->
-  <footer>
-    Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-  </footer>
-
-  <script src="summary.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="summary.js"></script>
 </body>
 </html>
