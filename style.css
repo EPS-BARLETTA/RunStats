@@ -1,183 +1,163 @@
-/* style.css */
-
+/* ----------- Reset et style global ----------- */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f0f8ff;
-  color: #333;
-  margin: 0; padding: 0;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-header, footer {
-  background-color: #004080;
-  color: white;
-  text-align: center;
-  padding: 15px 10px;
-}
-
-header h1 {
   margin: 0;
-  font-size: 2.4em;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
 }
 
-header h2 {
-  margin: 5px 0 0;
-  font-weight: 400;
-  font-size: 1.1em;
-  opacity: 0.8;
-}
-
-main#elevePage {
-  flex-grow: 1;
-  padding: 20px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.eleve-container {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 25px;
-}
-
-.eleve-box {
-  flex: 1;
-  background-color: #cfe7ff;
-  padding: 15px 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px #a3c2f1;
-}
-
-.eleve1-box {
-  background-color: #cfe7ff; /* bleu clair */
-}
-
-.eleve2-box {
-  background-color: #ffd9b3; /* orange clair */
-}
-
-.eleve-box h3 {
-  margin-top: 0;
-  margin-bottom: 12px;
-  color: #004080;
-}
-
-label {
-  font-size: 0.95em;
-  display: block;
-  margin-bottom: 10px;
-}
-
-input[type="text"],
-input[type="number"],
-select {
-  width: 100%;
-  padding: 7px 10px;
-  margin-top: 3px;
-  border-radius: 4px;
-  border: 1px solid #888;
-  font-size: 1em;
-  box-sizing: border-box;
-}
-
-.course-info {
-  background-color: #e6ffe6; /* vert très clair */
-  padding: 15px 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px #a3d6a3;
-  margin-bottom: 25px;
-  max-width: 450px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.buttons-course {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 25px;
-}
-
-button {
-  cursor: pointer;
-  border: none;
-  border-radius: 6px;
-  font-size: 1.1em;
-  font-weight: 600;
-  padding: 12px 24px;
+/* ----------- Header ----------- */
+header {
+  background-color: #2196F3;
   color: white;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  transition: background-color 0.3s ease;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 
-.btn-start {
-  background-color: #0077cc;
-  min-width: 110px;
+/* ----------- Section principale ----------- */
+main {
+  padding: 20px;
 }
 
-.btn-start:hover:not(:disabled) {
-  background-color: #005fa3;
+/* ----------- Boutons ----------- */
+button {
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.2s ease-in-out;
 }
 
-.btn-lap {
-  background-color: #28a745; /* vert */
-  min-width: 90px;
-  border-radius: 20px; /* ovale */
-  padding-left: 24px;
-  padding-right: 24px;
-  font-weight: 700;
-}
-
-.btn-lap:hover:not(:disabled) {
-  background-color: #1e7e34;
-}
-
-.btn-reset {
-  background-color: #dc3545; /* rouge */
-  min-width: 90px;
-}
-
-.btn-reset:hover:not(:disabled) {
-  background-color: #a71d2a;
+button:hover {
+  background-color: #1976D2;
 }
 
 button:disabled {
-  background-color: #aaa;
+  background-color: #ccc;
   cursor: not-allowed;
 }
 
-#timer {
-  text-align: center;
-  font-size: 2em;
-  font-weight: 700;
-  color: #004080;
-  margin-bottom: 20px;
-  min-height: 2.5em;
+/* Groupe de boutons */
+.button-group {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
 }
 
-#infosCourse {
-  background-color: #f9f9f9;
-  max-width: 480px;
-  margin: 0 auto 25px;
-  padding: 15px 20px;
+/* ----------- Conteneur élèves ----------- */
+#eleves-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.eleve-box {
+  background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 0 8px #ccc;
-  font-size: 1.1em;
-  color: #333;
-  line-height: 1.4;
-}
-
-#qrCode {
-  max-width: 240px;
-  margin: 0 auto 40px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
 }
 
+.eleve-box h3 {
+  margin: 5px 0;
+  font-size: 1rem;
+}
+
+.eleve-box p {
+  margin: 2px 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* ----------- Section course ----------- */
+#infos-course {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+#timer {
+  font-size: 2rem;
+  text-align: center;
+  margin: 15px 0;
+  font-weight: bold;
+}
+
+/* ----------- QR Code ----------- */
+#qrcode {
+  margin: 20px auto;
+  text-align: center;
+}
+
+/* ----------- Messages ----------- */
+.message {
+  padding: 10px;
+  margin: 15px 0;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.message.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* ----------- Tableaux ----------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+table th,
+table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+table th {
+  background-color: #2196F3;
+  color: white;
+}
+
+/* ----------- Inputs ----------- */
+input[type="text"],
+input[type="number"],
+select {
+  padding: 8px;
+  margin: 5px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ----------- Footer ----------- */
 footer {
-  font-size: 0.9em;
-  opacity: 0.7;
-  padding: 12px 10px;
+  text-align: center;
+  padding: 10px;
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 20px;
 }
