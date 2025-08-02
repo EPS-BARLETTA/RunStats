@@ -1,110 +1,166 @@
-let courseData = {
-    duree: 0,
-    distanceTour: 0,
-    vma: null,
-    tours: 0,
-    tempsRestant: 0,
-    timerInterval: null
-};
-
-function startCourse() {
-    courseData.duree = parseInt(document.getElementById("duree").value) * 60;
-    courseData.distanceTour = parseInt(document.getElementById("distanceTour").value);
-    courseData.vma = parseFloat(document.getElementById("vma").value) || null;
-
-    if (isNaN(courseData.duree) || isNaN(courseData.distanceTour) || courseData.duree <= 0 || courseData.distanceTour <= 0) {
-        alert("Veuillez entrer une durée et une distance valides.");
-        return;
-    }
-
-    document.querySelector(".eleves-container").classList.add("hidden");
-    document.querySelector(".bloc-param").classList.add("hidden");
-    document.querySelector(".boutons").classList.add("hidden");
-    document.getElementById("courseSection").classList.remove("hidden");
-
-    courseData.tempsRestant = courseData.duree;
-    updateTimer();
-    courseData.timerInterval = setInterval(updateTimer, 1000);
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
-function updateTimer() {
-    const timer = document.getElementById("timer");
-    const minutes = Math.floor(courseData.tempsRestant / 60);
-    const secondes = courseData.tempsRestant % 60;
-    timer.textContent = `${minutes}:${secondes < 10 ? "0" : ""}${secondes}`;
-
-    if (courseData.tempsRestant <= 10) {
-        timer.style.color = "red";
-        timer.style.fontWeight = "bold";
-        timer.style.animation = "blink 1s infinite";
-    }
-
-    if (courseData.tempsRestant <= 0) {
-        clearInterval(courseData.timerInterval);
-        document.getElementById("courseSection").classList.add("hidden");
-        document.getElementById("resultSection").classList.remove("hidden");
-    }
-
-    courseData.tempsRestant--;
+/* Corps */
+body {
+    background-color: #f4f4f9;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
 }
 
-function addTour() {
-    courseData.tours++;
-    const distanceParcourue = courseData.tours * courseData.distanceTour;
-    const vitesse = (distanceParcourue / (courseData.duree - courseData.tempsRestant)) * 3.6 || 0; // en km/h
-    const vmaEstimee = vitesse.toFixed(2);
-
-    document.getElementById("infosCourse").innerHTML = `
-        <p>Tours : ${courseData.tours}</p>
-        <p>Distance parcourue : ${distanceParcourue} m</p>
-        <p>Vitesse moyenne : ${vitesse.toFixed(2)} km/h</p>
-        <p>VMA estimée : ${vmaEstimee} km/h</p>
-    `;
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-function resetData() {
-    location.reload();
+header h1 {
+    font-size: 2.5em;
+    color: #2c3e50;
 }
 
-function generateQR() {
-    const eleve1 = {
-        nom: document.getElementById("nom1").value,
-        prenom: document.getElementById("prenom1").value
-    };
-    const eleve2 = {
-        nom: document.getElementById("nom2").value,
-        prenom: document.getElementById("prenom2").value
-    };
-
-    const totalDistance = courseData.tours * courseData.distanceTour;
-
-    const data = {
-        eleve1,
-        eleve2,
-        totalDistance,
-        vmaEstimee: (totalDistance / (courseData.duree / 3.6)).toFixed(2)
-    };
-
-    const qr = new QRious({
-        element: document.getElementById("qrcode"),
-        size: 200,
-        value: JSON.stringify(data)
-    });
+header p {
+    font-size: 1.2em;
+    color: #7f8c8d;
 }
 
-function exportCSV() {
-    const eleve1Nom = document.getElementById("nom1").value;
-    const eleve1Prenom = document.getElementById("prenom1").value;
-    const eleve2Nom = document.getElementById("nom2").value;
-    const eleve2Prenom = document.getElementById("prenom2").value;
-    const totalDistance = courseData.tours * courseData.distanceTour;
-    const vmaEstimee = (totalDistance / (courseData.duree / 3.6)).toFixed(2);
+/* Container principal */
+.container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1000px;
+    gap: 20px;
+}
 
-    const csvContent = `Nom;Prénom;Distance (m);VMA estimée (km/h)\n${eleve1Nom};${eleve1Prenom};${totalDistance};${vmaEstimee}\n${eleve2Nom};${eleve2Prenom};${totalDistance};${vmaEstimee}`;
+/* Formulaire Élève */
+.eleve-form {
+    flex: 1;
+    padding: 20px;
+    border-radius: 12px;
+    color: #fff;
+}
 
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    link.setAttribute("href", URL.createObjectURL(blob));
-    link.setAttribute("download", "resultats.csv");
-    link.click();
+#eleve1 {
+    background-color: #3498db; /* Bleu */
+}
+
+#eleve2 {
+    background-color: #2ecc71; /* Vert */
+}
+
+.eleve-form h2 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.eleve-form label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.eleve-form input,
+.eleve-form select {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+/* Section course */
+.course-info {
+    width: 100%;
+    max-width: 1000px;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f1c40f;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.course-info label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.course-info input {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+/* Boutons */
+button {
+    padding: 12px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button#startBtn {
+    background-color: #2980b9;
+    color: #fff;
+}
+
+button#startBtn:hover {
+    background-color: #1f6390;
+}
+
+button#lapBtn {
+    background-color: #27ae60;
+    color: #fff;
+    border-radius: 50px; /* bouton oval */
+}
+
+button#lapBtn:hover {
+    background-color: #1e8449;
+}
+
+button#resetBtn {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+button#resetBtn:hover {
+    background-color: #c0392b;
+}
+
+/* Minuteur */
+.timer {
+    font-size: 2em;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+/* Animation clignotante rouge */
+@keyframes blink {
+    0% { color: red; opacity: 1; }
+    50% { color: red; opacity: 0; }
+    100% { color: red; opacity: 1; }
+}
+
+.blink {
+    animation: blink 1s infinite;
+}
+
+/* Pied de page */
+footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 0.9em;
+    color: #7f8c8d;
 }
