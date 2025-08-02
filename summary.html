@@ -1,59 +1,49 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RunStats - Zone de téléchargement</title>
-    <link rel="stylesheet" href="summary.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-    <script defer src="summary.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RunStats - Zone de téléchargement</title>
+  <link rel="stylesheet" href="summary.css" />
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <h1>RunStats</h1>
-        <h2>Zone de téléchargement</h2>
-    </header>
 
-    <!-- Contenu principal -->
-    <main>
-        <!-- Résultats élève 1 -->
-        <div class="result-card" id="resultEleve1">
-            <h3>Résultats Élève 1</h3>
-            <p><strong>Nom :</strong> <span id="nom1"></span></p>
-            <p><strong>Prénom :</strong> <span id="prenom1"></span></p>
-            <p><strong>Classe :</strong> <span id="classe1"></span></p>
-            <p><strong>Sexe :</strong> <span id="sexe1"></span></p>
-            <p><strong>Distance réalisée :</strong> <span id="distance1"></span> m</p>
-            <p><strong>Vitesse moyenne :</strong> <span id="vitesse1"></span> km/h</p>
-            <p><strong>Estimation VMA :</strong> <span id="vma1"></span> km/h</p>
-        </div>
+<header>
+  <h1>RunStats</h1>
+  <h2>Zone de téléchargement</h2>
+</header>
 
-        <!-- Résultats élève 2 -->
-        <div class="result-card" id="resultEleve2">
-            <h3>Résultats Élève 2</h3>
-            <p><strong>Nom :</strong> <span id="nom2"></span></p>
-            <p><strong>Prénom :</strong> <span id="prenom2"></span></p>
-            <p><strong>Classe :</strong> <span id="classe2"></span></p>
-            <p><strong>Sexe :</strong> <span id="sexe2"></span></p>
-            <p><strong>Distance réalisée :</strong> <span id="distance2"></span> m</p>
-            <p><strong>Vitesse moyenne :</strong> <span id="vitesse2"></span> km/h</p>
-            <p><strong>Estimation VMA :</strong> <span id="vma2"></span> km/h</p>
-        </div>
+<main>
+  <table class="results-table" id="resultsTable">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Classe</th>
+        <th>Sexe</th>
+        <th>Distance réalisée (m)</th>
+        <th>Vitesse moyenne (km/h)</th>
+        <th>VMA estimée (km/h)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Les lignes des élèves seront insérées ici via JavaScript -->
+    </tbody>
+  </table>
 
-        <!-- Boutons d'action -->
-        <div class="actions">
-            <button id="downloadCSV">Télécharger CSV</button>
-            <button id="generateQR">Générer QR Code</button>
-        </div>
+  <div class="buttons-container">
+    <button id="downloadCsvBtn">Télécharger CSV</button>
+    <button id="downloadQrBtn">Télécharger QR Code</button>
+  </div>
 
-        <!-- Zone QR Code -->
-        <div id="qrcode"></div>
-    </main>
+  <div id="qrcode"></div>
+</main>
 
-    <!-- Footer -->
-    <footer>
-        Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-    </footer>
+<footer>
+  Equipe EPS Lycée Vauban - LUXEMBOURG - JB
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="summary.js"></script>
 </body>
 </html>
