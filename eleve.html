@@ -3,57 +3,127 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RunStats – Élèves</title>
-  <link rel="stylesheet" href="eleve.css" />
+  <title>RunStats – Saisie Élèves</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e9f2ff;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+
+    form {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 500px;
+      margin: 0 auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    input, select {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 1rem;
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #219150;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.9rem;
+      color: #666;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>RunStats – Saisie des élèves</h1>
-  </header>
 
-  <main>
-    <form id="studentForm">
-      <div class="eleve-container">
-        <fieldset class="eleve-bleu">
-          <legend>Élève 1</legend>
-          <input type="text" id="prenom1" placeholder="Prénom" required />
-          <input type="text" id="nom1" placeholder="Nom" required />
-          <input type="text" id="classe1" placeholder="Classe" required />
-          <select id="sexe1" required>
-            <option value="">Choisir</option>
-            <option value="F">Fille</option>
-            <option value="M">Garçon</option>
-            <option value="A">Autre</option>
-          </select>
-          <input type="number" id="temps1" placeholder="Temps (min)" required />
-          <input type="number" id="longueur1" placeholder="Longueur tour (m)" required />
-          <input type="number" id="vma1" placeholder="VMA réelle (facultatif)" />
-        </fieldset>
+  <h2>Saisie des informations des élèves</h2>
 
-        <fieldset class="eleve-vert">
-          <legend>Élève 2</legend>
-          <input type="text" id="prenom2" placeholder="Prénom" required />
-          <input type="text" id="nom2" placeholder="Nom" required />
-          <input type="text" id="classe2" placeholder="Classe" required />
-          <select id="sexe2" required>
-            <option value="">Choisir</option>
-            <option value="F">Fille</option>
-            <option value="M">Garçon</option>
-            <option value="A">Autre</option>
-          </select>
-          <input type="number" id="temps2" placeholder="Temps (min)" required />
-          <input type="number" id="longueur2" placeholder="Longueur tour (m)" required />
-          <input type="number" id="vma2" placeholder="VMA réelle (facultatif)" />
-        </fieldset>
-      </div>
-      <button type="submit">Démarrer la course</button>
-    </form>
-  </main>
+  <form id="eleveForm">
+    <input type="text" id="nom1" placeholder="Nom élève 1" required>
+    <input type="text" id="prenom1" placeholder="Prénom élève 1" required>
+    <input type="text" id="classe1" placeholder="Classe élève 1" required>
+    <select id="sexe1" required>
+      <option value="">Sexe élève 1</option>
+      <option value="F">Fille</option>
+      <option value="G">Garçon</option>
+      <option value="A">Autre</option>
+    </select>
+
+    <hr style="margin: 20px 0;">
+
+    <input type="text" id="nom2" placeholder="Nom élève 2" required>
+    <input type="text" id="prenom2" placeholder="Prénom élève 2" required>
+    <input type="text" id="classe2" placeholder="Classe élève 2" required>
+    <select id="sexe2" required>
+      <option value="">Sexe élève 2</option>
+      <option value="F">Fille</option>
+      <option value="G">Garçon</option>
+      <option value="A">Autre</option>
+    </select>
+
+    <hr style="margin: 20px 0;">
+
+    <label for="longueur">Longueur d’un tour (en mètres) :</label><br>
+    <input type="number" id="longueur" placeholder="Ex: 200" required>
+
+    <br>
+    <button type="submit">Valider et démarrer</button>
+  </form>
 
   <footer>
     RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB
   </footer>
 
-  <script src="eleve.js"></script>
+  <script>
+    document.getElementById('eleveForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const eleve1 = {
+        nom: document.getElementById('nom1').value,
+        prenom: document.getElementById('prenom1').value,
+        classe: document.getElementById('classe1').value,
+        sexe: document.getElementById('sexe1').value
+      };
+
+      const eleve2 = {
+        nom: document.getElementById('nom2').value,
+        prenom: document.getElementById('prenom2').value,
+        classe: document.getElementById('classe2').value,
+        sexe: document.getElementById('sexe2').value
+      };
+
+      const longueur = document.getElementById('longueur').value;
+
+      sessionStorage.setItem('eleve1', JSON.stringify(eleve1));
+      sessionStorage.setItem('eleve2', JSON.stringify(eleve2));
+      sessionStorage.setItem('longueurTour', longueur);
+
+      window.location.href = 'course.html';
+    });
+  </script>
 </body>
 </html>
