@@ -1,75 +1,85 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>RunStats - Élèves</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="eleve">
+<body>
+    <header>
+        <h1>RunStats</h1>
+        <p>Equipe EPS Lycée Vauban - Luxembourg</p>
+    </header>
+
     <div class="container">
-        <h1>RunStats - Saisie Élèves</h1>
+        <!-- Élève 1 -->
+        <form id="eleve1" class="eleve-form">
+            <h2>Élève 1</h2>
+            <label for="nom1">Nom :</label>
+            <input type="text" id="nom1" required />
 
-        <!-- Conteneur élèves côte à côte -->
-        <div class="eleves-container">
-            <!-- Bloc Élève 1 -->
-            <div class="bloc-eleve eleve1">
-                <h2>Élève 1</h2>
-                <input type="text" id="nom1" placeholder="Nom">
-                <input type="text" id="prenom1" placeholder="Prénom">
-                <input type="text" id="classe1" placeholder="Classe">
-                <select id="sexe1">
-                    <option value="">Choisir</option>
-                    <option value="Fille">Fille</option>
-                    <option value="Garçon">Garçon</option>
-                </select>
-            </div>
+            <label for="prenom1">Prénom :</label>
+            <input type="text" id="prenom1" required />
 
-            <!-- Bloc Élève 2 -->
-            <div class="bloc-eleve eleve2">
-                <h2>Élève 2</h2>
-                <input type="text" id="nom2" placeholder="Nom">
-                <input type="text" id="prenom2" placeholder="Prénom">
-                <input type="text" id="classe2" placeholder="Classe">
-                <select id="sexe2">
-                    <option value="">Choisir</option>
-                    <option value="Fille">Fille</option>
-                    <option value="Garçon">Garçon</option>
-                </select>
-            </div>
-        </div>
+            <label for="classe1">Classe :</label>
+            <input type="text" id="classe1" required />
 
-        <!-- Paramètres course -->
-        <div class="bloc-param">
-            <h2>Paramètres</h2>
-            <input type="number" id="duree" placeholder="Durée (minutes)">
-            <input type="number" id="distanceTour" placeholder="Distance d'un tour (m)">
-            <input type="number" id="vma" placeholder="VMA connue ? (km/h) - optionnel">
-        </div>
+            <label for="sexe1">Sexe :</label>
+            <select id="sexe1" required>
+                <option value="" selected>Choisir</option>
+                <option value="fille">Fille</option>
+                <option value="garcon">Garçon</option>
+            </select>
+        </form>
 
-        <!-- Boutons -->
-        <div class="boutons">
-            <button class="btn-start" onclick="startCourse()">Démarrer</button>
-            <button class="btn-reset" onclick="resetData()">Reset</button>
-        </div>
+        <!-- Élève 2 -->
+        <form id="eleve2" class="eleve-form">
+            <h2>Élève 2</h2>
+            <label for="nom2">Nom :</label>
+            <input type="text" id="nom2" required />
 
-        <!-- Minuteur et course -->
-        <div id="courseSection" class="hidden">
-            <div id="timer">00:00</div>
-            <button class="btn-tour" onclick="addTour()">+ Tour</button>
-            <div id="infosCourse"></div>
-        </div>
+            <label for="prenom2">Prénom :</label>
+            <input type="text" id="prenom2" required />
 
-        <!-- Résultats -->
-        <div id="resultSection" class="hidden">
-            <h2>Résultats finaux</h2>
-            <button onclick="generateQR()">Partager en QR Code</button>
-            <button onclick="exportCSV()">Exporter en CSV</button>
-            <div id="qrcode"></div>
-        </div>
+            <label for="classe2">Classe :</label>
+            <input type="text" id="classe2" required />
+
+            <label for="sexe2">Sexe :</label>
+            <select id="sexe2" required>
+                <option value="" selected>Choisir</option>
+                <option value="fille">Fille</option>
+                <option value="garcon">Garçon</option>
+            </select>
+        </form>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <section class="course-info" id="courseInfo">
+        <label for="dureeCourse">Durée de la course (minutes) :</label>
+        <input type="number" id="dureeCourse" min="1" required />
+
+        <label for="distanceTour">Distance d’un tour (mètres) :</label>
+        <input type="number" id="distanceTour" min="1" required />
+
+        <label for="vmaKnown">VMA connue (optionnel, km/h) :</label>
+        <input type="number" step="0.1" id="vmaKnown" min="0" />
+
+        <div style="text-align:center;">
+            <button id="startBtn" type="button">Démarrer</button>
+            <button id="lapBtn" type="button" disabled>+ Tour</button>
+            <button id="resetBtn" type="button">Reset</button>
+        </div>
+    </section>
+
+    <section id="timerSection" style="display:none; text-align:center;">
+        <div class="timer" id="timerDisplay">00:00</div>
+        <div id="courseData"></div>
+    </section>
+
+    <footer>
+        Equipe EPS Lycée Vauban - LUXEMBOURG - JB
+    </footer>
+
     <script src="eleve.js"></script>
 </body>
 </html>
