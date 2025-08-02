@@ -1,49 +1,113 @@
-.summary-container {
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 15px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+/* Réinitialisation */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* Corps de page */
+body {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+/* HEADER */
+header {
+  text-align: center;
+  padding: 20px;
+  background-color: #333;
+  color: #fff;
+}
+
+header h1 {
+  font-size: 2.5rem;
+}
+
+header h2 {
+  font-size: 1rem;
+  font-weight: normal;
+  color: #ddd;
+}
+
+/* CONTENU PRINCIPAL */
+.summary-container {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+/* Tableau résultats */
+.results {
+  width: 100%;
+  max-width: 900px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 20px;
+}
+
+.results h3 {
+  text-align: center;
+  margin-bottom: 15px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 1rem;
-}
-
-thead tr {
-  background-color: #4CAF50;
-  color: white;
-}
-
-th, td {
-  padding: 12px;
-  border: 1px solid #ddd;
   text-align: center;
 }
 
-.buttons-container {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
-button {
-  padding: 12px 24px;
-  font-size: 1.1rem;
-  border-radius: 10px;
-  border: none;
+table thead {
   background-color: #4CAF50;
   color: white;
-  cursor: pointer;
-  transition: background-color 0.3s;
 }
 
-button:hover {
+table th, table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Boutons export */
+.export-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.export-buttons button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  color: white;
+  background-color: #4CAF50;
+  transition: background 0.3s;
+}
+
+.export-buttons button:hover {
   background-color: #45a049;
+}
+
+/* QR Code */
+.qrcode-container {
+  margin-top: 20px;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 10px;
+  background: #222;
+  color: #fff;
+  font-size: 0.9rem;
 }
