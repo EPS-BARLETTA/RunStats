@@ -18,7 +18,7 @@ header {
 
 main {
   flex: 1;
-  padding: 30px 20px;
+  padding: 20px;
   max-width: 800px;
   margin: auto;
   background-color: #fff;
@@ -29,9 +29,9 @@ main {
 
 .circular-timer {
   position: relative;
-  width: 200px;
-  height: 200px;
-  margin: 30px auto 20px;
+  width: 160px;
+  height: 160px;
+  margin: 20px auto 15px;
 }
 
 .circular-timer svg {
@@ -60,7 +60,7 @@ main {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: bold;
 }
 
@@ -70,13 +70,12 @@ main {
 }
 
 @keyframes clignote {
-  0% { opacity: 1; }
-  50% { opacity: 0.2; }
-  100% { opacity: 1; }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
 }
 
 .course-controls {
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 .course-controls button {
@@ -87,7 +86,7 @@ main {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .course-controls button:hover {
@@ -95,7 +94,7 @@ main {
 }
 
 .info-eleve, #fin-course {
-  margin-top: 25px;
+  margin-top: 20px;
   padding: 15px;
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -103,16 +102,28 @@ main {
   text-align: left;
 }
 
-.info-eleve p, #fin-course p {
-  margin: 8px 0;
-}
-
-#fin-course h2 {
-  margin-bottom: 10px;
-}
-
 #fin-course button {
   margin: 5px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  background-color: #2ecc71;
+  color: white;
+  cursor: pointer;
+}
+
+#fin-course button:hover {
+  background-color: #27ae60;
+}
+
+#passerCoureur2Btn {
+  background-color: #e67e22;
+  display: block;
+  margin: 15px auto 0;
+}
+
+#passerCoureur2Btn:hover {
+  background-color: #d35400;
 }
 
 .hidden {
