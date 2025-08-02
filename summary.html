@@ -13,28 +13,11 @@
   </header>
 
   <main>
-    <section id="resultsSection">
+    <section class="download-section">
       <h3>Bilan des courses</h3>
-      <table id="resultsTable" border="1" cellspacing="0" cellpadding="5">
-        <thead>
-          <tr>
-            <th>Élève</th>
-            <th>Durée (min)</th>
-            <th>Distance (m)</th>
-            <th>Vitesse moyenne (km/h)</th>
-            <th>VMA estimée (km/h)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Rempli par JS -->
-        </tbody>
-      </table>
-    </section>
-
-    <section id="downloadSection" style="margin-top: 20px;">
-      <button id="downloadCsvBtn">Télécharger CSV</button>
-      <button id="downloadQrBtn">Télécharger QR Code</button>
-      <div id="qrCodeContainer" style="margin-top: 15px;"></div>
+      <button id="downloadCSV">Télécharger CSV</button>
+      <button id="downloadQR">Télécharger QR Code</button>
+      <div id="qrCodeContainer"></div>
     </section>
   </main>
 
@@ -42,7 +25,6 @@
     Équipe EPS Lycée Vauban - LUXEMBOURG - JB
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
   <script src="summary.js"></script>
 </body>
 </html>
