@@ -2,10 +2,9 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RunStats - Course</title>
   <link rel="stylesheet" href="course.css" />
-  <script defer src="course.js"></script>
 </head>
 <body>
   <header>
@@ -13,34 +12,41 @@
     <h2>Course</h2>
   </header>
 
-  <main class="course-container">
-    <!-- Nom élève affiché dynamiquement -->
-    <h3 id="runnerName"></h3>
+  <main>
+    <section class="runner-info">
+      <h3 id="runnerName">Élève</h3>
+      <p><strong>Classe :</strong> <span id="runnerClasse"></span></p>
+      <p><strong>Sexe :</strong> <span id="runnerSexe"></span></p>
+    </section>
 
-    <!-- Bouton ajout tour -->
-    <button id="addLapBtn">+ Tour</button>
+    <section class="timer-section">
+      <button id="addLapBtn">+ Tour</button>
+      <div id="timerCircle">
+        <span id="timerDisplay">00:00</span>
+      </div>
+      <div class="stats">
+        <div><strong>Distance totale :</strong> <span id="totalDistance">0</span> m</div>
+        <div><strong>Vitesse moyenne :</strong> <span id="avgSpeed">0</span> km/h</div>
+        <div><strong>VMA estimée :</strong> <span id="vmaEstimate">--</span> km/h</div>
+      </div>
+    </section>
 
-    <!-- Minuteur -->
-    <div id="timer" class="timer">00:00</div>
+    <section class="add-fraction">
+      <p>Ajouter une fraction de tour :</p>
+      <button class="fractionBtn" data-fraction="0.25">1/4 tour</button>
+      <button class="fractionBtn" data-fraction="0.5">1/2 tour</button>
+      <button class="fractionBtn" data-fraction="0.75">3/4 tour</button>
+    </section>
 
-    <!-- Stats -->
-    <div class="stats">
-      <p>Distance totale : <span id="totalDistance">0</span> m</p>
-      <p>Vitesse moyenne : <span id="avgSpeed">0</span> km/h</p>
-      <p>VMA estimée : <span id="vmaEst">0</span> km/h</p>
-    </div>
-
-    <!-- Boutons pour fractions -->
-    <div class="fractions">
-      <button data-fraction="0.25">+ 1/4 tour</button>
-      <button data-fraction="0.5">+ 1/2 tour</button>
-      <button data-fraction="0.75">+ 3/4 tour</button>
-    </div>
-
-    <!-- Bouton fin course -->
-    <button id="finishBtn">Terminer la course</button>
+    <section id="endCourseSection" style="display:none;">
+      <button id="endCourseBtn">Terminer la course</button>
+    </section>
   </main>
 
-  <footer>Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+  <footer>
+    Équipe EPS Lycée Vauban - LUXEMBOURG - JB
+  </footer>
+
+  <script src="course.js"></script>
 </body>
 </html>
