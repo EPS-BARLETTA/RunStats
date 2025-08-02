@@ -1,4 +1,4 @@
-/* Reset */
+/* Réinitialisation */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -6,143 +6,184 @@
   font-family: Arial, sans-serif;
 }
 
+/* Corps */
 body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background: #f5f5f5;
+  color: #222;
 }
 
+/* Header */
 header {
-  text-align: center;
-  padding: 20px;
   background-color: #333;
-  color: #fff;
+  color: white;
+  padding: 15px;
+  text-align: center;
 }
 
 header h1 {
-  font-size: 2.2rem;
+  font-size: 2.5rem;
+  margin-bottom: 5px;
 }
 
 header h2 {
-  font-size: 1rem;
   font-weight: normal;
+  font-size: 1.1rem;
   color: #ddd;
 }
 
-/* Contenu principal */
-.course-container {
+/* Main */
+main {
   flex: 1;
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Infos coureur */
+.runner-info {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 15px 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.runner-info h3 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.runner-info p {
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+/* Timer section */
+.timer-section {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px;
-}
-
-/* Nom coureur */
-#runnerName {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-/* Minuteur */
-.timer {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  border: 5px solid #4CAF50;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.5rem;
-  font-weight: bold;
-  background: white;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-
-/* Clignotement pour les 10 dernières secondes */
-.blink {
-  animation: blink 1s step-start infinite;
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
+  gap: 15px;
 }
 
 /* Bouton + Tour */
 #addLapBtn {
-  padding: 10px 20px;
-  font-size: 1.2rem;
-  background-color: #2196F3;
-  color: #fff;
+  padding: 10px 25px;
+  font-size: 1.3rem;
+  background-color: #4CAF50;
   border: none;
-  border-radius: 8px;
+  color: white;
+  border-radius: 10px;
   cursor: pointer;
+  width: 120px;
+  transition: background-color 0.3s ease;
 }
 
 #addLapBtn:hover {
-  background-color: #1976D2;
-}
-
-/* Stats */
-.stats {
-  text-align: center;
-  background: #fff;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  width: 250px;
-}
-
-.stats p {
-  margin: 10px 0;
-  font-size: 1.1rem;
-}
-
-/* Fractions boutons */
-.fractions {
-  display: flex;
-  gap: 10px;
-}
-
-.fractions button {
-  padding: 10px;
-  background-color: #FF9800;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.fractions button:hover {
-  background-color: #F57C00;
-}
-
-/* Fin de course */
-#finishBtn {
-  margin-top: 20px;
-  padding: 12px 25px;
-  font-size: 1.2rem;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-#finishBtn:hover {
   background-color: #45a049;
 }
 
-/* Footer */
+/* Cercle minuteur */
+#timerCircle {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background-color: #e1e1e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  font-weight: bold;
+  color: #333;
+  position: relative;
+}
+
+/* Clignotement (via JS ajout classe) */
+.blink {
+  animation: blinkAnimation 1s step-start 0s infinite;
+}
+
+@keyframes blinkAnimation {
+  50% { opacity: 0; }
+}
+
+/* Stats sous le timer */
+.stats {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #444;
+}
+
+/* Section fractions */
+.add-fraction {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 15px 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.add-fraction p {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+
+.fractionBtn {
+  margin: 0 8px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #2196F3;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.fractionBtn:hover {
+  background-color: #1976d2;
+}
+
+/* Section fin de course */
+#endCourseSection {
+  text-align: center;
+}
+
+#endCourseBtn {
+  padding: 12px 30px;
+  font-size: 1.3rem;
+  background-color: #e53935;
+  border: none;
+  color: white;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#endCourseBtn:hover {
+  background-color: #b71c1c;
+}
+
+/* Pied de page */
 footer {
+  background-color: #222;
+  color: white;
+  font-size: 0.9rem;
   text-align: center;
   padding: 10px;
-  background: #222;
-  color: #fff;
-  font-size: 0.9rem;
+  user-select: none;
 }
