@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RunStats - Course</title>
+  <link rel="stylesheet" href="eleve.css">
+</head>
+<body>
+  <!-- En-tête -->
+  <header class="header">
+    <h1>RunStats</h1>
+    <p>Course</p>
+  </header>
+
+  <!-- Zone minuteur -->
+  <main class="course-container">
+    <h2 id="eleveName"></h2>
+
+    <div class="timer-wrapper">
+      <button id="addLapBtn" class="btn btn-tour">+ Tour</button>
+      <div class="timer-circle">
+        <span id="timerDisplay">00:00</span>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat">
+        <h3>Distance totale</h3>
+        <p id="distanceTotale">0 m</p>
+      </div>
+      <div class="stat">
+        <h3>Vitesse moyenne</h3>
+        <p id="vitesseMoyenne">0 km/h</p>
+      </div>
+      <div class="stat">
+        <h3>Estimation VMA</h3>
+        <p id="estimationVMA">-</p>
+      </div>
+    </div>
+
+    <!-- Ajout fraction tour -->
+    <div class="fraction-buttons">
+      <button class="btn btn-fraction" data-fraction="0.25">+ 1/4 Tour</button>
+      <button class="btn btn-fraction" data-fraction="0.5">+ 1/2 Tour</button>
+      <button class="btn btn-fraction" data-fraction="0.75">+ 3/4 Tour</button>
+    </div>
+
+    <!-- Bouton fin course -->
+    <button id="endCourseBtn" class="btn btn-primary">Fin de la course</button>
+  </main>
+
+  <!-- Pied de page -->
+  <footer class="footer">
+    Équipe EPS Lycée Vauban - LUXEMBOURG - JB
+  </footer>
+
+  <script src="course.js"></script>
+</body>
+</html>
+
