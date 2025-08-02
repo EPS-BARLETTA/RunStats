@@ -1,213 +1,175 @@
-/* RESET DE BASE */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Arial', sans-serif;
-}
+/* eleve.css */
 
 body {
-  background-color: #f8f9fa;
-  color: #333;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f5f5f5;
+  margin: 0; padding: 0;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* TITRES GÉNÉRAUX */
-header.header {
+header {
+  background: #2c3e50;
+  color: white;
+  padding: 20px 10px;
   text-align: center;
-  padding: 20px;
-  background: #ffffff;
-  border-bottom: 2px solid #ddd;
+  user-select: none;
 }
 
-header.header h1 {
-  font-size: 2.5rem;
-  color: #2b7a78;
-  margin-bottom: 5px;
+header h1 {
+  margin: 0;
+  font-size: 2.8rem;
 }
 
-header.header p {
-  font-size: 1rem;
-  color: #666;
+header h2 {
+  margin: 5px 0 0 0;
+  font-weight: 400;
+  font-size: 1.2rem;
+  opacity: 0.7;
 }
 
-/* CONTENEUR PRINCIPAL */
 main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-grow: 1;
   padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
 }
 
-/* FORMULAIRE ÉLÈVES */
-.eleve-container {
+.eleves-container {
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
+  gap: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
   width: 100%;
   max-width: 900px;
 }
 
 .eleve-card {
-  flex: 1;
-  background-color: #e0f7e9; /* par défaut vert clair */
-  border-radius: 15px;
+  box-sizing: border-box;
+  flex: 1 1 350px;
   padding: 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.eleve-card.eleve2 {
-  background-color: #e0f0ff; /* bleu clair */
+.eleve-1 {
+  background-color: #d1f2d8; /* vert clair */
+  border: 2px solid #2e7d32;
+  color: #1b5e20;
 }
 
-.eleve-card h2 {
+.eleve-2 {
+  background-color: #cce7f9; /* bleu clair */
+  border: 2px solid #1565c0;
+  color: #0d47a1;
+}
+
+.eleve-card h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.6rem;
+  font-weight: 600;
   text-align: center;
-  margin-bottom: 10px;
+  user-select: none;
 }
 
-.form-group {
-  margin-bottom: 12px;
+label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  user-select: none;
 }
 
-.form-group label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 5px;
-}
-
-.form-group input,
-.form-group select {
+input[type="text"],
+input[type="number"],
+select {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  padding: 8px 10px;
   font-size: 1rem;
+  border: 1.8px solid #ccc;
+  border-radius: 6px;
+  outline-offset: 2px;
+  transition: border-color 0.3s ease;
 }
 
-/* BOUTONS */
-.btn {
-  display: inline-block;
-  padding: 12px 20px;
-  border-radius: 8px;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: 0.2s;
-  text-align: center;
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+  border-color: #3f51b5;
 }
 
-.btn-primary {
-  background-color: #2b7a78;
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: #23615f;
-}
-
-.btn-secondary {
-  background-color: #cccccc;
+.course-info {
+  max-width: 400px;
+  width: 100%;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-weight: 600;
   color: #333;
 }
 
-.btn-secondary:hover {
-  background-color: #bbbbbb;
+.course-info label {
+  font-weight: 600;
+  user-select: none;
 }
 
-/* MINUTEUR CERCLE */
-.timer-circle {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  border: 8px solid #2b7a78;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #2b7a78;
-  margin: 20px auto;
-  position: relative;
+.course-info input {
+  font-weight: 400;
 }
 
-.timer-circle.blink {
-  animation: blink 1s step-start infinite;
-}
-
-@keyframes blink {
-  50% { opacity: 0.5; }
-}
-
-/* ZONE INFOS COURSE */
-.course-info {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
-  margin-top: 15px;
-}
-
-.course-info p {
-  background: #fff;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  font-size: 1.1rem;
-}
-
-/* ZONE RÉSULTATS (Téléchargement) */
-.resultats {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+#startEleve1 {
+  margin-top: 25px;
+  padding: 16px 25px;
+  font-size: 1.3rem;
+  border-radius: 14px;
+  border: none;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: 0 5px 10px rgba(76,175,80,0.7);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  user-select: none;
+  align-self: center;
+  max-width: 250px;
   width: 100%;
-  max-width: 800px;
-  margin-bottom: 30px;
 }
 
-.resultat-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 15px;
-  border: 1px solid #ddd;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+#startEleve1:hover {
+  background-color: #388e3c;
+  box-shadow: 0 6px 14px rgba(56,142,60,0.9);
 }
 
-.resultat-card h4 {
-  margin-bottom: 8px;
-  color: #2b7a78;
-}
-
-/* QR Section et CSV Section */
-.qr-section, .csv-section {
-  margin: 20px 0;
+footer {
+  background: #2c3e50;
+  color: white;
+  padding: 15px 10px;
   text-align: center;
-}
-
-.qr-section canvas {
-  margin: 10px 0;
-}
-
-/* PIED DE PAGE */
-footer.footer {
-  text-align: center;
-  padding: 10px;
   font-size: 0.9rem;
-  color: #555;
-  border-top: 1px solid #ddd;
-  background-color: #f1f1f1;
+  user-select: none;
 }
 
-/* RESPONSIVE TABLETTE / IPAD */
-@media (max-width: 900px) {
-  .eleve-container {
+/* Responsive pour tablette */
+@media (max-width: 768px) {
+  main {
+    padding: 15px 10px;
+  }
+  .eleves-container {
     flex-direction: column;
     align-items: center;
   }
+  .eleve-card {
+    flex: 1 1 90%;
+  }
+  .course-info {
+    max-width: 90%;
+  }
 }
-
