@@ -1,125 +1,147 @@
-// Variables de base
-let duration = 600; // durée en secondes (10 min par défaut)
-let distanceParTour = 400; // exemple distance d'un tour en mètres
-let toursCount = 0;
-let fractionDistance = 0;
-let startTime = null;
-let timerInterval = null;
-
-const timerDisplay = document.getElementById('timerDisplay');
+// Récupération des éléments DOM
 const timerCircle = document.getElementById('timerCircle');
 const addTourBtn = document.getElementById('addTourBtn');
-const totalDistanceElem = document.getElementById('totalDistance');
-const avgSpeedElem = document.getElementById('avgSpeed');
-const vmaEstimateElem = document.getElementById('vmaEstimate');
-const endCourseSection = document.getElementById('endCourseSection');
-const nextCourseSection = document.getElementById('nextCourseSection');
 const finishCourseBtn = document.getElementById('finishCourseBtn');
-const startNextCourseBtn = document.getElementById('startNextCourseBtn');
-const goToSummaryBtn = document.getElementById('goToSummaryBtn');
-const fractionBtns = document.querySelectorAll('.fractionBtn');
 
-function formatTime(seconds) {
-  const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-  const s = (seconds % 60).toString().padStart(2, '0');
-  return `${m}:${s}`;
+const distTotalElem = document.getElementById('distanceTotal');
+const vitesseMoyElem = document.getElementById('vitesseMoy');
+const vmaEstimeElem = document.getElementById('vmaEstime');
+
+const quartTourBtn = document.getElementById('quartTourBtn');
+const demiTourBtn = document.getElementById('demiTourBtn');
+const troisQuartTourBtn = document.getElementById('troisQuartTourBtn');
+
+const eleveNom = document.getElementById('eleveNom');
+
+// Variables course
+let duree = parseInt(document.getElementById('duree').value, 10) || 10; // minutes
+let distanceTour = parseFloat(document.getElementById('distance').value) || 400; // mètres
+let vmaOptionnelle = parseFloat(document.getElementById('vma').value) || null;
+
+let totalTours = 0;
+let fractionTours = 0; // fraction à ajouter en fin
+let secondesRestantes = duree * 60;
+
+let timerInterval = null;
+
+// Affiche le prénom dans le header
+function afficherNomEleve() {
+  let nomPrenom = eleveNom.textContent || "Élève";
+  document.querySelector('header h1').textContent = `Course : ${nomPrenom}`;
 }
 
-function updateStats() {
-  const totalDist = (toursCount + fractionDistance) * distanceParTour;
-  totalDistanceElem.textContent = totalDist.toFixed(2);
-
-  const elapsedTime = (Date.now() - startTime) / 1000; // en secondes
-  const speedMps = totalDist / elapsedTime; // m/s
-  const speedKph = speedMps * 3.6;
-  avgSpeedElem.textContent = isFinite(speedKph) ? speedKph.toFixed(2) : '0.00';
-
-  // VMA estimée ici = vitesse max atteinte, pour exemple on prend vitesse moyenne + 10%
-  const vma = speedKph * 1.1;
-  vmaEstimateElem.textContent = isFinite(vma) ? vma.toFixed(2) : '0.00';
+// Formatage du timer en mm:ss
+function formatTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 }
 
+// Mise à jour du timer visuel
+function majTimer() {
+  timerCircle.textContent = formatTime(secondesRestantes);
+
+  // Clignotement sur 10 dernières secondes
+  if (secondesRestantes <= 10) {
+    timerCircle.classList.add('blink');
+  } else {
+    timerCircle.classList.remove('blink');
+  }
+}
+
+// Calculs des stats
+function majStats() {
+  const distanceParcourue = (totalTours + fractionTours) * distanceTour; // en mètres
+  distTotalElem.textContent = (distanceParcourue / 1000).toFixed(2); // km
+
+  const tempsHeures = duree / 60; // durée en heures (minutes converties)
+  const vitesseMoy = distanceParcourue / 1000 / tempsHeures; // km/h
+  vitesseMoyElem.textContent = vitesseMoy.toFixed(2);
+
+  // VMA estimée : vitesse max atteinte (si on suppose que vitesse moyenne = 0.9 * VMA)
+  // Ou si vmaOptionnelle est renseignée on l'utilise pour estimation
+  let vmaEstime = vmaOptionnelle || (vitesseMoy / 0.9);
+  vmaEstimeElem.textContent = vmaEstime.toFixed(2);
+}
+
+// Démarrer le minuteur
 function startTimer() {
-  startTime = Date.now();
-  let remaining = duration;
-
-  timerDisplay.textContent = formatTime(remaining);
-  timerCircle.style.backgroundColor = '#4CAF50'; // vert normal
+  afficherNomEleve();
+  majTimer();
+  majStats();
 
   timerInterval = setInterval(() => {
-    const elapsed = Math.floor((Date.now() - startTime) / 1000);
-    remaining = duration - elapsed;
+    secondesRestantes--;
+    majTimer();
 
-    if (remaining < 0) {
+    if (secondesRestantes <= 0) {
       clearInterval(timerInterval);
-      timerDisplay.textContent = '00:00';
-      timerCircle.style.backgroundColor = '#f44336'; // rouge fin
-      onTimerEnd();
-      return;
+      alert("Fin de la course !");
+      // Activation bouton fin course
+      finishCourseBtn.disabled = false;
+      addTourBtn.disabled = true;
+      quartTourBtn.disabled = false;
+      demiTourBtn.disabled = false;
+      troisQuartTourBtn.disabled = false;
     }
-
-    timerDisplay.textContent = formatTime(remaining);
-
-    // Clignotement dernier 10 secondes
-    if (remaining <= 10) {
-      if (Math.floor(Date.now() / 500) % 2 === 0) {
-        timerCircle.style.backgroundColor = '#f44336';
-      } else {
-        timerCircle.style.backgroundColor = '#fff';
-      }
-    }
-
-    updateStats();
-  }, 200);
+  }, 1000);
 }
 
-function onTimerEnd() {
-  // Désactiver bouton + Tour
-  addTourBtn.disabled = true;
-  // Afficher la section pour ajouter fraction de tour
-  endCourseSection.style.display = 'block';
+// Ajouter un tour complet
+function ajouterTour() {
+  totalTours++;
+  majStats();
 }
 
-addTourBtn.addEventListener('click', () => {
-  toursCount++;
-  updateStats();
-});
+// Ajouter fraction de tour en fin de course
+function ajouterFraction(fraction) {
+  fractionTours += fraction;
+  // Empêche de dépasser 1 tour total (logique basique)
+  if (fractionTours > 0.99) {
+    fractionTours = 0.99;
+  }
+  majStats();
+  // Une fois ajouté, désactive les boutons fraction
+  quartTourBtn.disabled = true;
+  demiTourBtn.disabled = true;
+  troisQuartTourBtn.disabled = true;
+}
 
-fractionBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    fractionDistance = parseFloat(btn.dataset.fraction);
-    updateStats();
-  });
-});
+// Fin de la course : préparer transfert données, etc.
+function finirCourse() {
+  // Construire les données à transmettre ou stocker (localStorage/sessionStorage)
+  const eleveData = {
+    nomPrenom: eleveNom.textContent,
+    duree,
+    distanceParcourue: ((totalTours + fractionTours) * distanceTour),
+    vitesseMoyenne: parseFloat(vitesseMoyElem.textContent),
+    vmaEstimee: parseFloat(vmaEstimeElem.textContent)
+  };
+  // Sauvegarder dans sessionStorage pour la page suivante
+  sessionStorage.setItem('eleveCourse', JSON.stringify(eleveData));
+  
+  // Redirection vers la page suivante, par exemple résumé
+  window.location.href = 'summary.html';
+}
 
-finishCourseBtn.addEventListener('click', () => {
-  // Ajouter la fraction à la distance totale
-  toursCount += fractionDistance;
-  fractionDistance = 0;
-  updateStats();
+// Événements
+addTourBtn.addEventListener('click', ajouterTour);
+finishCourseBtn.addEventListener('click', finirCourse);
 
-  endCourseSection.style.display = 'none';
-  nextCourseSection.style.display = 'block';
-});
+quartTourBtn.addEventListener('click', () => ajouterFraction(0.25));
+demiTourBtn.addEventListener('click', () => ajouterFraction(0.5));
+troisQuartTourBtn.addEventListener('click', () => ajouterFraction(0.75));
 
-startNextCourseBtn.addEventListener('click', () => {
-  // Reset tout pour nouvelle course
-  toursCount = 0;
-  fractionDistance = 0;
-  startTime = null;
-  addTourBtn.disabled = false;
-  nextCourseSection.style.display = 'none';
-  endCourseSection.style.display = 'none';
-  timerDisplay.textContent = formatTime(duration);
-  timerCircle.style.backgroundColor = '#4CAF50';
+// Initialisation bouton fin course désactivé au départ
+finishCourseBtn.disabled = true;
 
+// Démarrage automatique du timer au chargement de la page (peut être modifié)
+window.addEventListener('load', () => {
+  // Charger valeurs du formulaire au cas où
+  duree = parseInt(document.getElementById('duree').value, 10) || 10;
+  distanceTour = parseFloat(document.getElementById('distance').value) || 400;
+  vmaOptionnelle = parseFloat(document.getElementById('vma').value) || null;
+  
+  secondesRestantes = duree * 60;
   startTimer();
 });
-
-goToSummaryBtn.addEventListener('click', () => {
-  // Redirection vers la page bilan (à créer)
-  window.location.href = 'summary.html';
-});
-
-// Démarrage automatique du timer à l'ouverture de la page
-startTimer();
