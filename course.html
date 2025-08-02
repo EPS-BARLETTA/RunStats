@@ -8,38 +8,47 @@
 </head>
 <body>
   <header>
-    <h1>RunStats – Suivi de course</h1>
+    <h1>Course – RunStats</h1>
   </header>
 
   <main>
     <section id="chrono-section">
       <div class="circular-timer">
-        <svg>
-          <circle class="track" cx="100" cy="100" r="45"></circle>
-          <circle class="progress" cx="100" cy="100" r="45"></circle>
+        <svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" class="track"/>
+          <circle cx="50" cy="50" r="45" class="progress" id="progressCircle"/>
         </svg>
-        <div id="chronoCenter">03:00</div>
-      </div>
-
-      <button id="ajouterTourBtn">Ajouter<br/>un tour</button>
-
-      <div class="info-eleve">
-        <p><strong>Élève :</strong> <span id="eleve"></span></p>
-        <p><strong>Distance :</strong> <span id="distance"></span> m</p>
-        <p><strong>Vitesse :</strong> <span id="vitesse"></span> m/s</p>
-        <p><strong>VMA estimée :</strong> <span id="vma"></span> km/h</p>
+        <div id="chronoCenter">00:00</div>
       </div>
     </section>
 
-    <div class="course-controls">
-      <button id="startButton">Démarrer la course</button>
-      <button id="nextRunnerBtn" class="hidden">Démarrer la course de <span id="nomSuivant"></span></button>
-      <button id="stopButton" class="hidden">Terminer la course</button>
-    </div>
+    <section class="course-controls">
+      <button id="ajouterTourBtn">Ajouter un tour</button>
+      <p>Tours effectués : <span id="tours">0</span></p>
+    </section>
 
-    <div id="fin-course" class="hidden">
-      <button id="finCourseBtn">Fin de course</button>
-    </div>
+    <section class="info-eleve">
+      <p><strong>Élève :</strong> <span id="nomEleve"></span></p>
+      <p><strong>Distance :</strong> <span id="distance"></span> m</p>
+      <p><strong>Vitesse :</strong> <span id="vitesse"></span> m/s</p>
+      <p><strong>VMA estimée :</strong> <span id="vmaEstimee"></span> km/h</p>
+    </section>
+
+    <section id="fin-course" class="hidden">
+      <h2>Temps écoulé</h2>
+      <p>Ajouter une fraction de tour :</p>
+      <button data-frac="0.25">+ ¼</button>
+      <button data-frac="0.5">+ ½</button>
+      <button data-frac="0.75">+ ¾</button>
+
+      <button id="demarrer2Btn" class="hidden" style="background-color: #e67e22; margin-top: 10px;">
+        Démarrer la course de l’élève 2
+      </button>
+
+      <button id="finCourseBtn" class="hidden" style="background-color: #27ae60; margin-top: 10px;">
+        Fin de course
+      </button>
+    </section>
   </main>
 
   <footer>
