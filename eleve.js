@@ -24,12 +24,10 @@ document.addEventListener("DOMContentLoaded", () => {
       vma: parseFloat(document.getElementById("vma2").value) || null
     };
 
-    // Stockage dans sessionStorage
     sessionStorage.setItem("eleve1Data", JSON.stringify(eleve1));
     sessionStorage.setItem("eleve2Data", JSON.stringify(eleve2));
     sessionStorage.setItem("currentEleve", "1");
 
-    // Rediriger vers la course
     window.location.href = "course.html";
   });
 });
