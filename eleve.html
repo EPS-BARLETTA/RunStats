@@ -3,51 +3,53 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RunStats – Saisie des élèves</title>
+  <title>RunStats – Élèves</title>
   <link rel="stylesheet" href="eleve.css" />
 </head>
 <body>
   <header>
-    <img src="vauban_logo.jpg" alt="Logo Vauban" class="header-logo" />
     <h1>RunStats</h1>
-    <h2>Gestion des courses</h2>
   </header>
 
   <main>
     <form id="studentForm">
-      <section class="card card1">
-        <h3>Élève 1</h3>
-        <input type="text" id="prenom1" placeholder="Prénom" required />
-        <input type="text" id="nom1" placeholder="Nom" required />
-        <input type="text" id="classe1" placeholder="Classe" required />
-        <select id="sexe1" required>
-          <option value="">Sexe</option>
-          <option value="F">Fille</option>
-          <option value="G">Garçon</option>
-        </select>
-        <input type="number" id="temps1" placeholder="Temps (minutes)" min="1" required />
-        <input type="number" id="longueur1" placeholder="Longueur d’un tour (m)" min="10" required />
-        <input type="number" id="vma1" placeholder="VMA (optionnelle)" />
-      </section>
+      <div class="eleve-container">
+        <fieldset>
+          <legend>Élève 1</legend>
+          <input type="text" id="prenom1" placeholder="Prénom" required />
+          <input type="text" id="nom1" placeholder="Nom" required />
+          <input type="text" id="classe1" placeholder="Classe" required />
+          <select id="sexe1">
+            <option value="F">F</option>
+            <option value="M">M</option>
+          </select>
+          <input type="number" id="temps1" placeholder="Temps (min)" required />
+          <input type="number" id="longueur1" placeholder="Longueur tour (m)" required />
+          <input type="number" id="vma1" placeholder="VMA réelle (facultatif)" />
+        </fieldset>
 
-      <section class="card card2">
-        <h3>Élève 2</h3>
-        <input type="text" id="prenom2" placeholder="Prénom" required />
-        <input type="text" id="nom2" placeholder="Nom" required />
-        <input type="text" id="classe2" placeholder="Classe" required />
-        <select id="sexe2" required>
-          <option value="">Sexe</option>
-          <option value="F">Fille</option>
-          <option value="G">Garçon</option>
-        </select>
-        <input type="number" id="temps2" placeholder="Temps (minutes)" min="1" required />
-        <input type="number" id="longueur2" placeholder="Longueur d’un tour (m)" min="10" required />
-        <input type="number" id="vma2" placeholder="VMA (optionnelle)" />
-      </section>
-
-      <button type="submit" id="startCourseBtn">Démarrer la course Élève 1</button>
+        <fieldset>
+          <legend>Élève 2</legend>
+          <input type="text" id="prenom2" placeholder="Prénom" required />
+          <input type="text" id="nom2" placeholder="Nom" required />
+          <input type="text" id="classe2" placeholder="Classe" required />
+          <select id="sexe2">
+            <option value="F">F</option>
+            <option value="M">M</option>
+          </select>
+          <input type="number" id="temps2" placeholder="Temps (min)" required />
+          <input type="number" id="longueur2" placeholder="Longueur tour (m)" required />
+          <input type="number" id="vma2" placeholder="VMA réelle (facultatif)" />
+        </fieldset>
+      </div>
+      <button type="submit">Démarrer la course</button>
     </form>
   </main>
+
+  <footer>
+    <p>&copy; 2025 RunStats – Projet EPS Vauban</p>
+  </footer>
+  <img src="vauban_logo.jpg" alt="Logo Vauban" class="logo-vauban-fixed" />
 
   <script src="eleve.js"></script>
 </body>
