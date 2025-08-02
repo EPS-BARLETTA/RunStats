@@ -8,41 +8,35 @@
 </head>
 <body>
   <header>
-    <h1>RunStats</h1>
-    <h2>Course</h2>
+    <h1 id="pageTitle">RunStats</h1>
+    <h2 id="pageSubtitle">course</h2>
   </header>
 
   <main>
-    <section class="eleves-container">
-      <div class="eleve eleve-1 active" id="eleve1-card">
-        <h2>Élève 1</h2>
-        <p><strong>Nom :</strong> <span id="eleve1-nom">–</span></p>
-        <p><strong>Prénom :</strong> <span id="eleve1-prenom">–</span></p>
-        <p><strong>Classe :</strong> <span id="eleve1-classe">–</span></p>
-        <p><strong>Sexe :</strong> <span id="eleve1-sexe">–</span></p>
-        <span class="status">En course 🏃‍♂️</span>
-      </div>
-      <div class="eleve eleve-2 observer" id="eleve2-card">
-        <h2>Élève 2</h2>
-        <p><strong>Nom :</strong> <span id="eleve2-nom">–</span></p>
-        <p><strong>Prénom :</strong> <span id="eleve2-prenom">–</span></p>
-        <p><strong>Classe :</strong> <span id="eleve2-classe">–</span></p>
-        <p><strong>Sexe :</strong> <span id="eleve2-sexe">–</span></p>
-        <span class="status">Observateur 👀</span>
-      </div>
+    <section id="runnerInfo" class="runner-info">
+      <!-- Info élève courant affichée ici -->
     </section>
 
-    <section class="timer-section">
+    <section id="timerSection" class="timer-section">
       <button id="addTourBtn">+ Tour</button>
-      <div id="timerCircle">00:00</div>
-      <div class="stats">
-        <p><strong>Distance totale :</strong> <span id="distance">0</span> m</p>
-        <p><strong>Vitesse moyenne :</strong> <span id="vitesse">0.00</span> km/h</p>
-        <p><strong>VMA estimée :</strong> <span id="vma">–</span> km/h</p>
+      <div id="timerCircle">
+        <span id="timerDisplay">00:00</span>
+      </div>
+      <div id="statsBox">
+        <p>Distance totale : <span id="totalDistance">0</span> m</p>
+        <p>Vitesse moyenne : <span id="avgSpeed">0</span> km/h</p>
+        <p>VMA estimée : <span id="estimatedVMA">0</span> km/h</p>
       </div>
     </section>
 
-    <button id="finishCourseBtn">Fin de la course</button>
+    <section id="finishingOptions" style="display:none;">
+      <p>Ajouter une fraction de tour :</p>
+      <button class="fractionBtn" data-fraction="0.25">+ 1/4 tour</button>
+      <button class="fractionBtn" data-fraction="0.5">+ 1/2 tour</button>
+      <button class="fractionBtn" data-fraction="0.75">+ 3/4 tour</button>
+      <br /><br />
+      <button id="nextCourseBtn">Lancer la course Élève 2</button>
+    </section>
   </main>
 
   <footer>
