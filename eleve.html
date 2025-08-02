@@ -1,126 +1,82 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>RunStats - Élève</title>
-    <link rel="stylesheet" href="eleve.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RunStats - Élève</title>
+<link rel="stylesheet" href="eleve.css" />
 </head>
 <body>
-    <header>
-        <h1>RunStats</h1>
-        <p>Équipe EPS Lycée Vauban - Luxembourg</p>
-    </header>
+  <header>
+    <h1>RunStats</h1>
+  </header>
 
-    <main>
-        <section id="form-section">
-            <div class="eleve-container">
-                <div class="eleve bleu">
-                    <h2>Élève 1</h2>
-                    <label for="nom1">Nom :</label>
-                    <input type="text" id="nom1" />
-                    <label for="prenom1">Prénom :</label>
-                    <input type="text" id="prenom1" />
-                    <label for="classe1">Classe :</label>
-                    <input type="text" id="classe1" />
-                    <label for="sexe1">Sexe :</label>
-                    <select id="sexe1">
-                        <option value="">Choisir</option>
-                        <option value="fille">Fille</option>
-                        <option value="garcon">Garçon</option>
-                    </select>
-                </div>
+  <main>
+    <section id="saisie-container">
+      <div class="eleve-box eleve1">
+        <h2>Élève 1</h2>
+        <label>Nom: <input type="text" id="nom1" /></label>
+        <label>Prénom: <input type="text" id="prenom1" /></label>
+        <label>Classe: <input type="text" id="classe1" /></label>
+        <label>Sexe:
+          <select id="sexe1">
+            <option value="">Choisir</option>
+            <option value="Fille">Fille</option>
+            <option value="Garçon">Garçon</option>
+          </select>
+        </label>
+      </div>
 
-                <div class="eleve vert">
-                    <h2>Élève 2</h2>
-                    <label for="nom2">Nom :</label>
-                    <input type="text" id="nom2" />
-                    <label for="prenom2">Prénom :</label>
-                    <input type="text" id="prenom2" />
-                    <label for="classe2">Classe :</label>
-                    <input type="text" id="classe2" />
-                    <label for="sexe2">Sexe :</label>
-                    <select id="sexe2">
-                        <option value="">Choisir</option>
-                        <option value="fille">Fille</option>
-                        <option value="garcon">Garçon</option>
-                    </select>
-                </div>
-            </div>
+      <div class="eleve-box eleve2">
+        <h2>Élève 2</h2>
+        <label>Nom: <input type="text" id="nom2" /></label>
+        <label>Prénom: <input type="text" id="prenom2" /></label>
+        <label>Classe: <input type="text" id="classe2" /></label>
+        <label>Sexe:
+          <select id="sexe2">
+            <option value="">Choisir</option>
+            <option value="Fille">Fille</option>
+            <option value="Garçon">Garçon</option>
+          </select>
+        </label>
+      </div>
 
-            <div class="course-info bleu-clair">
-                <label for="duree">Durée (minutes) :</label>
-                <input type="number" id="duree" min="1" />
-                <label for="distance">Distance tour (m) :</label>
-                <input type="number" id="distance" min="1" />
-                <label for="vma">VMA (optionnelle) :</label>
-                <input type="number" id="vma" min="0" step="0.01" />
-            </div>
+      <div class="course-info">
+        <label>Durée (minutes): <input type="number" id="duree" min="1" /></label>
+        <label>Distance (mètres): <input type="number" id="distanceTour" min="1" /></label>
+        <label>VMA (optionnelle): <input type="number" id="vma" step="0.01" min="0" /></label>
+      </div>
 
-            <div class="boutons-saisie">
-                <button id="start-btn" class="blue-btn">Démarrer</button>
-                <button id="reset-btn" class="red-btn">Reset</button>
-            </div>
-        </section>
+      <div class="buttons-start">
+        <button id="demarrer">Démarrer</button>
+        <button id="reset">Reset</button>
+      </div>
+    </section>
 
-        <section id="course-section" class="hidden">
-            <div class="course-controls">
-                <button id="start-course-btn" class="blue-btn">Démarrer</button>
-                <button id="add-tour-btn" class="green-btn">+ Tour</button>
-                <button id="reset-course-btn" class="red-btn">Reset</button>
-            </div>
+    <section id="course-section" style="display:none;">
+      <div class="buttons-course">
+        <button id="plusTour" class="btn-tour">+ Tour</button>
+      </div>
 
-            <div id="timer-container">
-                <div id="countdown-circle">
-                    <span id="countdown">00:00</span>
-                </div>
-            </div>
+      <div id="currentCoureurDisplay">Coureur : 1</div>
 
-            <div class="infos-course">
-                <div class="info bleu">
-                    <h3>Élève courant :</h3>
-                    <p id="eleve-courant"></p>
-                </div>
-                <div class="info mauve">
-                    <h3>Nombre de tours :</h3>
-                    <p id="nombre-tours">0</p>
-                </div>
-                <div class="info orange">
-                    <h3>Distance réalisée (m) :</h3>
-                    <p id="distance-realisee">0</p>
-                </div>
-                <div class="info vert">
-                    <h3>Vitesse (km/h) :</h3>
-                    <p id="vitesse">0</p>
-                </div>
-                <div class="info rouge">
-                    <h3>Estimation VMA (km/h) :</h3>
-                    <p id="vma-estimee">0</p>
-                </div>
-            </div>
+      <div id="minuteur-container">
+        <div id="minuteur"></div>
+      </div>
 
-            <div id="ajout-distance-options" class="hidden">
-                <p>Ajouter une distance supplémentaire :</p>
-                <button class="ajout-btn" data-ajout="0.25">+ 1/4 tour</button>
-                <button class="ajout-btn" data-ajout="0.5">+ 1/2 tour</button>
-                <button class="ajout-btn" data-ajout="0.75">+ 3/4 tour</button>
-                <button id="fin-course-btn" class="blue-btn">Terminer</button>
-            </div>
-        </section>
+      <div class="course-details">
+        <div class="detail-item" id="distanceParcourue">Distance parcourue: 0 m</div>
+        <div class="detail-item" id="vitesse">Vitesse: 0 km/h</div>
+        <div class="detail-item" id="vmaEstimee">VMA estimée: 0 km/h</div>
+        <div class="detail-item" id="nombreTours">Nombre de tours: 0</div>
+      </div>
+    </section>
+  </main>
 
-        <section id="resultats" class="hidden">
-            <h2>Résultats finaux</h2>
-            <div id="resultats-eleves"></div>
-            <button id="export-csv-btn" class="blue-btn">Exporter CSV</button>
-            <div id="qrcode"></div>
-        </section>
-    </main>
+  <footer>
+    <p>Équipe EPS Lycée Vauban - LUXEMBOURG - JB</p>
+  </footer>
 
-    <footer>
-        <p>Équipe EPS Lycée Vauban - LUXEMBOURG - JB</p>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-    <script src="eleve.js"></script>
+<script src="eleve.js"></script>
 </body>
 </html>
