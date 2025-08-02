@@ -1,238 +1,303 @@
-/* Reset et base */
+/* Reset et styles de base */
 * {
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
 }
 
 body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
-    background-color: #f9f9f9;
-    color: #333;
-    min-height: 100vh;
+    background: #f0f4f8;
+    color: #222;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
 }
 
-header, footer {
-    background-color: #007BFF;
-    color: white;
+header {
     text-align: center;
-    padding: 15px 10px;
-}
-
-footer p {
-    margin: 0;
-    font-size: 0.9em;
+    padding: 1rem 0;
+    background-color: #003366;
+    color: white;
+    font-weight: bold;
 }
 
 main {
     flex-grow: 1;
-    padding: 20px;
+    padding: 1rem;
     max-width: 900px;
-    margin: 0 auto;
+    margin: auto;
 }
 
-/* Élèves côte à côte */
-#eleves-container {
+footer {
+    text-align: center;
+    padding: 0.7rem;
+    background-color: #003366;
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+/* Formulaire élève */
+
+.eleve-container {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
 }
 
-.eleve-info {
-    width: 48%;
-    padding: 15px;
-    border-radius: 8px;
-    background-color: #ddd;
+.eleve {
+    padding: 1rem;
+    border-radius: 10px;
+    flex: 1;
+    margin: 0 0.5rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
-.eleve-info label {
+.eleve h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.eleve label {
     display: block;
-    margin-bottom: 10px;
+    margin-top: 0.6rem;
+    font-weight: 600;
 }
 
-.eleve-info input, .eleve-info select {
+.eleve input,
+.eleve select {
     width: 100%;
     padding: 6px;
-    border-radius: 4px;
+    margin-top: 4px;
     border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
 }
 
+/* Couleurs élèves */
 .bleu {
-    background-color: #cce5ff;
-    border: 2px solid #007BFF;
+    background-color: #c7def8;
+    color: #003366;
 }
 
 .vert {
-    background-color: #d4edda;
-    border: 2px solid #28a745;
+    background-color: #c7f8d3;
+    color: #1a5a00;
 }
 
-.course-info-encadre {
-    background-color: #d9eefd;
-    border: 2px solid #007BFF;
-    padding: 15px;
-    border-radius: 8px;
+.bleu-clair {
+    background-color: #d6eaff;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
     display: flex;
-    justify-content: space-around;
-    margin-bottom: 25px;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.course-info-encadre label {
-    display: flex;
-    flex-direction: column;
-    width: 30%;
+.bleu-clair label {
+    font-weight: 700;
 }
 
-.course-info-encadre input {
-    padding: 8px;
-    margin-top: 5px;
-    border-radius: 5px;
-    border: 1px solid #007BFF;
+.bleu-clair input {
+    width: 100px;
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid #888;
 }
 
-#buttons-start {
+/* Boutons section saisie */
+.boutons-saisie {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    margin-bottom: 30px;
+    gap: 15px;
+    margin-bottom: 1rem;
 }
 
-.btn-bleu {
-    background-color: #007BFF;
+.blue-btn {
+    background-color: #007bff;
     color: white;
     border: none;
-    padding: 14px 25px;
-    border-radius: 5px;
-    font-size: 1.2em;
+    padding: 0.7rem 1.5rem;
+    font-size: 1.2rem;
+    border-radius: 10px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.btn-vert {
+.blue-btn:hover {
+    background-color: #0056b3;
+}
+
+.red-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.red-btn:hover {
+    background-color: #a71d2a;
+}
+
+.green-btn {
     background-color: #28a745;
     color: white;
     border: none;
-    padding: 14px 25px;
-    border-radius: 30px;
-    font-size: 1.2em;
+    padding: 0.6rem 1.2rem;
+    font-size: 1.3rem;
+    border-radius: 50px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+    min-width: 90px;
 }
 
-.btn-gris {
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    padding: 14px 25px;
-    border-radius: 5px;
-    font-size: 1.2em;
-    cursor: pointer;
-}
-
+/* Section course */
 .hidden {
     display: none;
 }
 
-/* Section course */
 #course-section {
     text-align: center;
 }
 
-/* Boutons en haut pendant la course */
-#buttons-top {
-    margin-bottom: 15px;
+.course-controls {
     display: flex;
     justify-content: center;
     gap: 20px;
+    margin-bottom: 1rem;
 }
 
-/* Minuteur dans cercle */
-#timer-circle {
-    width: 160px;
-    height: 160px;
-    margin: 0 auto 20px auto;
-    border: 5px solid #007BFF;
-    border-radius: 50%;
-    font-size: 3.5em;
-    color: #007BFF;
+#timer-container {
     display: flex;
     justify-content: center;
+    margin-bottom: 1rem;
+}
+
+#countdown-circle {
+    background-color: #007bff;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    display: flex;
     align-items: center;
-    font-weight: bold;
+    justify-content: center;
+    font-size: 3.5rem;
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 0 15px #0056b3;
     user-select: none;
 }
 
-/* Clignotement quand < 10s */
-#timer-circle.clignote {
-    animation: clignoter 1s infinite;
+.countdown-warning {
+    animation: clignote 1s infinite;
+    color: #ff0000 !important;
 }
 
-@keyframes clignoter {
-    0%, 50%, 100% { color: red; }
-    25%, 75% { color: transparent; }
+@keyframes clignote {
+    0%, 50%, 100% {opacity: 1;}
+    25%, 75% {opacity: 0;}
 }
 
-/* Infos course en dessous */
-.infos-course-container {
+/* Infos course */
+
+.infos-course {
     display: flex;
-    justify-content: space-between;
-    max-width: 900px;
-    margin: 0 auto 20px auto;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+    gap: 1rem;
 }
 
-.eleve-course {
-    width: 48%;
-    padding: 15px;
-    border-radius: 8px;
+.info {
+    flex: 1 1 140px;
+    padding: 1rem;
+    border-radius: 10px;
+    font-weight: 700;
+    color: white;
+    min-width: 130px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
-.encadre-bleu {
-    border: 3px solid #007BFF;
-    background-color: #e6f0ff;
+.info h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
 }
 
+.info p {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+/* Couleurs info */
 .bleu {
-    background-color: #cce5ff;
-    border: 2px solid #007BFF;
+    background-color: #007bff;
+}
+
+.mauve {
+    background-color: #9b59b6;
+}
+
+.orange {
+    background-color: #e67e22;
 }
 
 .vert {
-    background-color: #d4edda;
-    border: 2px solid #28a745;
+    background-color: #28a745;
 }
 
-/* Nombre de tours */
-.nombre-tours {
-    font-size: 1.3em;
-    margin-bottom: 20px;
-    font-weight: bold;
+.rouge {
+    background-color: #dc3545;
 }
 
-/* Ajout tours partiels */
-#ajout-tours-section {
-    margin-bottom: 20px;
+/* Ajout distance */
+#ajout-distance-options {
+    margin-top: 1rem;
 }
 
-#ajout-tours-section p {
-    margin-bottom: 10px;
+.ajout-btn {
+    background-color: #28a745;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    margin: 0 5px;
+    color: white;
+    border-radius: 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-/* QR code et export */
-#partage-section {
-    margin-top: 30px;
+.ajout-btn:hover {
+    background-color: #1e7e34;
+}
+
+/* Résultats */
+
+#resultats {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+#resultats-eleves {
+    margin: 1rem auto;
+    max-width: 600px;
+    text-align: left;
+    background-color: #e9ecef;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    font-size: 1.1rem;
 }
 
 #qrcode {
-    margin-top: 15px;
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
 }
 
-/* Responsive */
-@media (max-width: 700px) {
-    #eleves-container, .infos-course-container {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .eleve-info, .eleve-course {
-        width: 100%;
-    }
-}
