@@ -3,29 +3,74 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Résumé – RunStats</title>
-  <link rel="stylesheet" href="summary.css" />
+  <title>RunStats – Résumé</title>
+  <link rel="stylesheet" href="eleve.css" />
+  <style>
+    main {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .result-container {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .eleve-bleu, .eleve-vert {
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .actions {
+      margin-top: 30px;
+    }
+
+    #qrcode {
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>Résumé des résultats</h1>
+    <h1>Résumé des performances</h1>
   </header>
 
   <main>
-    <div class="resume-container" id="resumeContent"></div>
+    <div class="result-container">
+      <fieldset class="eleve-bleu" id="resume1">
+        <legend>Élève 1</legend>
+        <p><strong>Nom :</strong> <span id="nom1"></span></p>
+        <p><strong>Classe :</strong> <span id="classe1"></span></p>
+        <p><strong>Sexe :</strong> <span id="sexe1"></span></p>
+        <p><strong>Distance :</strong> <span id="distance1"></span> m</p>
+        <p><strong>Vitesse :</strong> <span id="vitesse1"></span> m/s</p>
+        <p><strong>VMA estimée :</strong> <span id="vma1"></span> km/h</p>
+      </fieldset>
 
-    <div class="qr-container">
-      <h2>QR Code</h2>
-      <div id="qrCode"></div>
+      <fieldset class="eleve-vert" id="resume2">
+        <legend>Élève 2</legend>
+        <p><strong>Nom :</strong> <span id="nom2"></span></p>
+        <p><strong>Classe :</strong> <span id="classe2"></span></p>
+        <p><strong>Sexe :</strong> <span id="sexe2"></span></p>
+        <p><strong>Distance :</strong> <span id="distance2"></span> m</p>
+        <p><strong>Vitesse :</strong> <span id="vitesse2"></span> m/s</p>
+        <p><strong>VMA estimée :</strong> <span id="vma2"></span> km/h</p>
+      </fieldset>
     </div>
 
-    <div class="download-zone">
-      <button id="downloadBtn">Télécharger CSV</button>
+    <div class="actions">
+      <button id="downloadCSV">Télécharger en CSV</button>
+      <div id="qrcode"></div>
     </div>
   </main>
 
   <footer>
-    <p>&copy; 2025 RunStats – Projet EPS Vauban</p>
+    RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
