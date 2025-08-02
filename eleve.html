@@ -1,77 +1,85 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RunStats - Gestion des courses</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="eleve.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RunStats - Gestion des courses</title>
+    <link rel="stylesheet" href="eleve.css">
+    <script src="eleve.js" defer></script>
 </head>
 <body>
-  <header>
-    <h1>RunStats</h1>
-    <h2>gestion des courses</h2>
-  </header>
 
-  <main class="eleve-container">
-    <!-- Élève 1 -->
-    <section class="eleve-card eleve-1">
-      <h3>Élève 1</h3>
-      <label>Nom :</label>
-      <input type="text" id="nom1" placeholder="Nom">
-      <label>Prénom :</label>
-      <input type="text" id="prenom1" placeholder="Prénom">
-      <label>Classe :</label>
-      <input type="text" id="classe1" placeholder="Classe">
-      <label>Sexe :</label>
-      <select id="sexe1">
-        <option value="">Choisir</option>
-        <option value="fille">Fille</option>
-        <option value="garçon">Garçon</option>
-        <option value="autre">Autre</option>
-      </select>
-      <label>VMA (optionnel) :</label>
-      <input type="number" id="vma1" placeholder="km/h">
-    </section>
+    <!-- Titre principal -->
+    <header>
+        <h1>RunStats</h1>
+        <h2>gestion des courses</h2>
+    </header>
 
-    <!-- Élève 2 -->
-    <section class="eleve-card eleve-2">
-      <h3>Élève 2</h3>
-      <label>Nom :</label>
-      <input type="text" id="nom2" placeholder="Nom">
-      <label>Prénom :</label>
-      <input type="text" id="prenom2" placeholder="Prénom">
-      <label>Classe :</label>
-      <input type="text" id="classe2" placeholder="Classe">
-      <label>Sexe :</label>
-      <select id="sexe2">
-        <option value="">Choisir</option>
-        <option value="fille">Fille</option>
-        <option value="garçon">Garçon</option>
-        <option value="autre">Autre</option>
-      </select>
-      <label>VMA (optionnel) :</label>
-      <input type="number" id="vma2" placeholder="km/h">
-    </section>
+    <!-- Formulaire Élèves -->
+    <main>
+        <div class="eleves-container">
 
-    <!-- Infos course -->
-    <section class="course-info">
-      <h3>Informations course</h3>
-      <label>Durée (minutes) :</label>
-      <input type="number" id="duree" placeholder="Ex : 6">
-      <label>Distance d’un tour (mètres) :</label>
-      <input type="number" id="distance" placeholder="Ex : 200">
-      <label>Nombre de tours prévus (optionnel) :</label>
-      <input type="number" id="tours" placeholder="Ex : 10">
-    </section>
+            <!-- Élève 1 -->
+            <div class="eleve-card eleve-1">
+                <h3>Élève 1</h3>
+                <label>Nom :</label>
+                <input type="text" id="nom1" placeholder="Nom"><br>
+                <label>Prénom :</label>
+                <input type="text" id="prenom1" placeholder="Prénom"><br>
+                <label>Classe :</label>
+                <input type="text" id="classe1" placeholder="Classe"><br>
+                <label>Sexe :</label>
+                <select id="sexe1">
+                    <option value="">Choisir</option>
+                    <option value="Fille">Fille</option>
+                    <option value="Garçon">Garçon</option>
+                    <option value="Autre">Autre</option>
+                </select><br>
+                <label>VMA (optionnel) :</label>
+                <input type="number" id="vma1" placeholder="km/h"><br>
+            </div>
 
-    <!-- Bouton -->
-    <button id="startCourseBtn">Démarrer la course Élève 1</button>
-  </main>
+            <!-- Élève 2 -->
+            <div class="eleve-card eleve-2">
+                <h3>Élève 2</h3>
+                <label>Nom :</label>
+                <input type="text" id="nom2" placeholder="Nom"><br>
+                <label>Prénom :</label>
+                <input type="text" id="prenom2" placeholder="Prénom"><br>
+                <label>Classe :</label>
+                <input type="text" id="classe2" placeholder="Classe"><br>
+                <label>Sexe :</label>
+                <select id="sexe2">
+                    <option value="">Choisir</option>
+                    <option value="Fille">Fille</option>
+                    <option value="Garçon">Garçon</option>
+                    <option value="Autre">Autre</option>
+                </select><br>
+                <label>VMA (optionnel) :</label>
+                <input type="number" id="vma2" placeholder="km/h"><br>
+            </div>
 
-  <footer>
-    Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-  </footer>
-  <script src="eleve.js"></script>
+        </div>
+
+        <!-- Informations course -->
+        <div class="course-info">
+            <label>Durée (minutes) :</label>
+            <input type="number" id="duree" placeholder="Durée"><br>
+            <label>Distance par tour (m) :</label>
+            <input type="number" id="distance" placeholder="Distance"><br>
+            <label>Nombre de tours :</label>
+            <input type="number" id="tours" placeholder="Tours">
+        </div>
+
+        <!-- Bouton démarrer -->
+        <button id="startEleve1">Démarrer la course Élève 1</button>
+
+    </main>
+
+    <!-- Pied de page -->
+    <footer>
+        <p>Équipe EPS Lycée Vauban - LUXEMBOURG - JB</p>
+    </footer>
+
 </body>
 </html>
