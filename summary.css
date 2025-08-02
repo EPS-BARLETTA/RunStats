@@ -1,12 +1,12 @@
 /* Réinitialisation */
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
   font-family: Arial, sans-serif;
 }
 
-/* Corps de page */
+/* Corps */
 body {
   display: flex;
   flex-direction: column;
@@ -14,7 +14,7 @@ body {
   background: #f5f5f5;
 }
 
-/* HEADER */
+/* Header */
 header {
   text-align: center;
   padding: 20px;
@@ -23,7 +23,7 @@ header {
 }
 
 header h1 {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
 }
 
 header h2 {
@@ -32,78 +32,69 @@ header h2 {
   color: #ddd;
 }
 
-/* CONTENU PRINCIPAL */
-.summary-container {
-  flex: 1;
+/* Section résultats */
+.results-section {
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-}
-
-/* Tableau résultats */
-.results {
-  width: 100%;
-  max-width: 900px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  padding: 20px;
-}
-
-.results h3 {
   text-align: center;
-  margin-bottom: 15px;
+}
+
+.results-section h3 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
 }
 
 table {
-  width: 100%;
+  width: 90%;
+  margin: 0 auto;
   border-collapse: collapse;
-  text-align: center;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-table thead {
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
   background-color: #4CAF50;
-  color: white;
+  color: #fff;
 }
 
-table th, table td {
-  padding: 10px;
-  border: 1px solid #ddd;
+tr:last-child td {
+  border-bottom: none;
 }
 
-tbody tr:nth-child(even) {
-  background-color: #f2f2f2;
+/* Section téléchargement */
+.download-section {
+  text-align: center;
+  margin: 30px 0;
 }
 
-/* Boutons export */
-.export-buttons {
-  display: flex;
-  gap: 15px;
-}
-
-.export-buttons button {
+.download-section button {
+  margin: 10px;
   padding: 12px 20px;
+  font-size: 1rem;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
   cursor: pointer;
+  background-color: #2196F3;
   color: white;
-  background-color: #4CAF50;
   transition: background 0.3s;
 }
 
-.export-buttons button:hover {
-  background-color: #45a049;
+.download-section button:hover {
+  background-color: #1976D2;
 }
 
 /* QR Code */
-.qrcode-container {
+.qr-container {
   margin-top: 20px;
 }
 
-/* FOOTER */
+/* Footer */
 footer {
   text-align: center;
   padding: 10px;
