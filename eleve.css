@@ -1,6 +1,6 @@
 body {
   font-family: 'Segoe UI', sans-serif;
-  background-color: #f0f8ff;
+  background-color: #eef6fc;
   margin: 0;
   padding: 0;
   color: #333;
@@ -15,7 +15,7 @@ header {
 
 main {
   padding: 30px;
-  max-width: 900px;
+  max-width: 1000px;
   margin: auto;
   background-color: #ffffff;
   border-radius: 12px;
@@ -39,9 +39,20 @@ form {
 fieldset {
   flex: 1;
   min-width: 250px;
-  border: 2px solid #ccc;
   border-radius: 10px;
   padding: 20px;
+  border: 2px solid #ccc;
+  background-color: #f9f9f9;
+}
+
+.eleve-bleu {
+  border-color: #0077cc;
+  background-color: #e6f1fc;
+}
+
+.eleve-vert {
+  border-color: #27ae60;
+  background-color: #eafaf1;
 }
 
 legend {
@@ -52,9 +63,11 @@ legend {
 input, select {
   display: block;
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   padding: 10px;
   font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
 button[type="submit"] {
@@ -66,26 +79,19 @@ button[type="submit"] {
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-button:hover {
+button[type="submit"]:hover {
   background-color: #005fa3;
 }
 
 footer {
   text-align: center;
-  padding: 15px;
+  padding: 20px;
   font-size: 0.9rem;
   background-color: #f3f3f3;
   color: #555;
   margin-top: 40px;
   border-top: 1px solid #ccc;
-}
-
-.logo-vauban-fixed {
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
-  width: 80px;
-  opacity: 0.8;
 }
