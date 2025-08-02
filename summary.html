@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RunStats – Résumé</title>
+  <title>Résumé – RunStats</title>
   <link rel="stylesheet" href="summary.css" />
 </head>
 <body>
@@ -12,33 +12,23 @@
   </header>
 
   <main>
-    <section id="resultats">
-      <table>
-        <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Classe</th>
-            <th>Sexe</th>
-            <th>Distance (m)</th>
-            <th>Vitesse (m/s)</th>
-            <th>VMA estimée (km/h)</th>
-            <th>VMA réelle</th>
-          </tr>
-        </thead>
-        <tbody id="table-body">
-          <!-- Données JS -->
-        </tbody>
-      </table>
-    </section>
+    <div class="resume-container" id="resumeContent"></div>
 
-    <section id="telechargements">
-      <button id="downloadCSV">Télécharger CSV</button>
-      <div id="qr"></div>
-    </section>
+    <div class="qr-container">
+      <h2>QR Code</h2>
+      <div id="qrCode"></div>
+    </div>
+
+    <div class="download-zone">
+      <button id="downloadBtn">Télécharger CSV</button>
+    </div>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/qrious/dist/qrious.min.js"></script>
+  <footer>
+    <p>&copy; 2025 RunStats – Projet EPS Vauban</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
   <script src="summary.js"></script>
 </body>
 </html>
