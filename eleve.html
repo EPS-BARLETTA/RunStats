@@ -12,6 +12,7 @@
   </header>
 
   <main>
+    <!-- Saisie infos élèves -->
     <section id="saisie-container">
       <div class="eleve-box eleve1">
         <h2>Élève 1</h2>
@@ -41,27 +42,31 @@
         </label>
       </div>
 
+      <!-- Durée, distance, vma -->
       <div class="course-info">
         <label>Durée (minutes): <input type="number" id="duree" min="1" /></label>
-        <label>Distance (mètres): <input type="number" id="distanceTour" min="1" /></label>
-        <label>VMA (optionnelle): <input type="number" id="vma" step="0.01" min="0" /></label>
+        <label>Distance tour (mètres): <input type="number" id="distanceTour" min="1" /></label>
+        <label>VMA (optionnelle km/h): <input type="number" id="vma" step="0.01" min="0" /></label>
       </div>
 
       <div class="buttons-start">
-        <button id="demarrer">Démarrer</button>
+        <button id="demarrer">Démarrer la course 1</button>
         <button id="reset">Reset</button>
       </div>
     </section>
 
+    <!-- Section course - timer, infos et boutons -->
     <section id="course-section" style="display:none;">
-      <div class="buttons-course">
-        <button id="plusTour" class="btn-tour">+ Tour</button>
-      </div>
-
-      <div id="currentCoureurDisplay">Coureur : 1</div>
+      <div id="currentCoureurDisplay" class="current-coureur"></div>
 
       <div id="minuteur-container">
         <div id="minuteur"></div>
+      </div>
+
+      <div class="buttons-course">
+        <button id="plusTour">+ Tour</button>
+        <button id="exportCsv" style="display:none;">Exporter CSV</button>
+        <button id="genQRCode" style="display:none;">Afficher QR Code</button>
       </div>
 
       <div class="course-details">
@@ -70,6 +75,12 @@
         <div class="detail-item" id="vmaEstimee">VMA estimée: 0 km/h</div>
         <div class="detail-item" id="nombreTours">Nombre de tours: 0</div>
       </div>
+
+      <!-- Container pour QR code -->
+      <div id="qrCodeContainer" style="margin-top:20px;"></div>
+
+      <!-- Boutons rajout tours fraction -->
+      <div id="toursAdditionnelsContainer" style="margin-top:20px;"></div>
     </section>
   </main>
 
@@ -77,6 +88,8 @@
     <p>Équipe EPS Lycée Vauban - LUXEMBOURG - JB</p>
   </footer>
 
-<script src="eleve.js"></script>
+  <!-- Librairie QRCode -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script src="eleve.js"></script>
 </body>
 </html>
