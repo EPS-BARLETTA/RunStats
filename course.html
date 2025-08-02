@@ -2,50 +2,35 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RunStats - Course</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RunStats – Course</title>
   <link rel="stylesheet" href="course.css" />
 </head>
 <body>
   <header>
-    <h1>RunStats</h1>
-    <h2>Course</h2>
+    <h1>Course – RunStats</h1>
   </header>
 
   <main>
-    <section class="runner-info">
-      <h3 id="runnerName">Élève</h3>
-      <p><strong>Classe :</strong> <span id="runnerClasse"></span></p>
-      <p><strong>Sexe :</strong> <span id="runnerSexe"></span></p>
+    <section class="info-eleve">
+      <p><strong>Élève :</strong> <span id="nomEleve"></span></p>
+      <p><strong>Temps :</strong> <span id="tempsRestant"></span></p>
     </section>
 
-    <section class="timer-section">
-      <button id="addLapBtn">+ Tour</button>
-      <div id="timerCircle">
-        <span id="timerDisplay">00:00</span>
-      </div>
-      <div class="stats">
-        <div><strong>Distance totale :</strong> <span id="totalDistance">0</span> m</div>
-        <div><strong>Vitesse moyenne :</strong> <span id="avgSpeed">0</span> km/h</div>
-        <div><strong>VMA estimée :</strong> <span id="vmaEstimate">--</span> km/h</div>
-      </div>
+    <section class="course-controls">
+      <p>Tours effectués : <span id="tours">0</span></p>
+      <button id="ajouterTourBtn">Ajouter un tour</button>
     </section>
 
-    <section class="add-fraction">
+    <section id="fin-course" class="hidden">
+      <h2>Temps écoulé</h2>
       <p>Ajouter une fraction de tour :</p>
-      <button class="fractionBtn" data-fraction="0.25">1/4 tour</button>
-      <button class="fractionBtn" data-fraction="0.5">1/2 tour</button>
-      <button class="fractionBtn" data-fraction="0.75">3/4 tour</button>
-    </section>
-
-    <section id="endCourseSection" style="display:none;">
-      <button id="endCourseBtn">Terminer la course</button>
+      <button data-frac="0.25">+ ¼</button>
+      <button data-frac="0.5">+ ½</button>
+      <button data-frac="0.75">+ ¾</button>
+      <button id="terminerBtn">Terminer la course</button>
     </section>
   </main>
-
-  <footer>
-    Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-  </footer>
 
   <script src="course.js"></script>
 </body>
