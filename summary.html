@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RunStats - Zone de téléchargement</title>
   <link rel="stylesheet" href="summary.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
   <header>
@@ -13,26 +14,35 @@
   </header>
 
   <main>
-    <section class="bilan-container">
-      <h3>Bilan des coureurs</h3>
-      <div id="bilan-eleves">
-        <!-- Les infos des élèves seront affichées ici par JS -->
-      </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Classe</th>
+          <th>Sexe</th>
+          <th>Distance (m)</th>
+          <th>Vitesse (m/s)</th>
+          <th>VMA estimée (km/h)</th>
+        </tr>
+      </thead>
+      <tbody id="resultsBody">
+        <!-- Les données des élèves s'affichent ici -->
+      </tbody>
+    </table>
 
-      <div class="buttons">
-        <button id="downloadCSV">Télécharger CSV</button>
-        <button id="downloadQR">Afficher QR Code</button>
-      </div>
+    <div class="buttons">
+      <button id="downloadCsv">Télécharger CSV</button>
+      <button id="downloadQr">Afficher QR Code</button>
+    </div>
 
-      <div id="qrCodeContainer" class="qr-code"></div>
-    </section>
+    <div id="qrCodeContainer" style="margin-top:20px; text-align:center;"></div>
   </main>
 
   <footer>
     Équipe EPS Lycée Vauban - LUXEMBOURG - JB
   </footer>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="summary.js"></script>
 </body>
 </html>
