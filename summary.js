@@ -1,72 +1,71 @@
 // Récupérer les données des deux élèves depuis localStorage
-const eleve1 = JSON.parse(localStorage.getItem('eleve1Data'));
-const eleve2 = JSON.parse(localStorage.getItem('eleve2Data'));
+const eleve1 = JSON.parse(localStorage.getItem('eleve1'));
+const eleve2 = JSON.parse(localStorage.getItem('eleve2'));
 
-// Remplir les champs dans le DOM
-if (eleve1) {
-  document.getElementById('nom1').textContent = eleve1.nom || '';
-  document.getElementById('prenom1').textContent = eleve1.prenom || '';
-  document.getElementById('classe1').textContent = eleve1.classe || '';
-  document.getElementById('sexe1').textContent = eleve1.sexe || '';
-  document.getElementById('distance1').textContent = eleve1.distance.toFixed(2);
-  document.getElementById('vitesse1').textContent = eleve1.vitesse.toFixed(2);
-  document.getElementById('vma1').textContent = eleve1.vma ? eleve1.vma.toFixed(2) : 'N/A';
+const resultsTableBody = document.querySelector('#resultsTable tbody');
+const qrcodeContainer = document.getElementById('qrcode');
+const downloadCsvBtn = document.getElementById('downloadCsvBtn');
+const downloadQrBtn = document.getElementById('downloadQrBtn');
+
+// Fonction pour ajouter une ligne au tableau
+function addRow(eleve) {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${eleve.nom}</td>
+    <td>${eleve.prenom}</td>
+    <td>${eleve.classe}</td>
+    <td>${eleve.sexe}</td>
+    <td>${eleve.distance.toFixed(2)}</td>
+    <td>${eleve.vitesse.toFixed(2)}</td>
+    <td>${eleve.vma.toFixed(2)}</td>
+  `;
+  resultsTableBody.appendChild(tr);
 }
 
-if (eleve2) {
-  document.getElementById('nom2').textContent = eleve2.nom || '';
-  document.getElementById('prenom2').textContent = eleve2.prenom || '';
-  document.getElementById('classe2').textContent = eleve2.classe || '';
-  document.getElementById('sexe2').textContent = eleve2.sexe || '';
-  document.getElementById('distance2').textContent = eleve2.distance.toFixed(2);
-  document.getElementById('vitesse2').textContent = eleve2.vitesse.toFixed(2);
-  document.getElementById('vma2').textContent = eleve2.vma ? eleve2.vma.toFixed(2) : 'N/A';
-}
+// Remplir le tableau avec les données
+if (eleve1) addRow(eleve1);
+if (eleve2) addRow(eleve2);
 
 // Fonction pour générer CSV
-function generateCSV() {
-  const headers = ['Nom', 'Prénom', 'Classe', 'Sexe', 'Distance (m)', 'Vitesse (km/h)', 'Estimation VMA (km/h)'];
-  const rows = [
-    [eleve1.nom, eleve1.prenom, eleve1.classe, eleve1.sexe, eleve1.distance.toFixed(2), eleve1.vitesse.toFixed(2), eleve1.vma ? eleve1.vma.toFixed(2) : 'N/A'],
-    [eleve2.nom, eleve2.prenom, eleve2.classe, eleve2.sexe, eleve2.distance.toFixed(2), eleve2.vitesse.toFixed(2), eleve2.vma ? eleve2.vma.toFixed(2) : 'N/A']
-  ];
-
-  let csvContent = headers.join(';') + '\n';
+function generateCSV(data) {
+  const headers = ['Nom', 'Prénom', 'Classe', 'Sexe', 'Distance réalisée (m)', 'Vitesse moyenne (km/h)', 'VMA estimée (km/h)'];
+  const rows = data.map(e => [
+    e.nom, e.prenom, e.classe, e.sexe,
+    e.distance.toFixed(2),
+    e.vitesse.toFixed(2),
+    e.vma.toFixed(2)
+  ]);
+  let csvContent = headers.join(',') + '\n';
   rows.forEach(row => {
-    csvContent += row.join(';') + '\n';
+    csvContent += row.join(',') + '\n';
   });
+  return csvContent;
+}
 
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+// Télécharger le CSV
+downloadCsvBtn.addEventListener('click', () => {
+  const data = [eleve1, eleve2].filter(Boolean);
+  const csv = generateCSV(data);
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
-
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'runstats_resultats.csv';
-  document.body.appendChild(a);
+  a.download = 'RunStats_results.csv';
   a.click();
-  document.body.removeChild(a);
   URL.revokeObjectURL(url);
-}
+});
 
-// Fonction pour générer QR code
-function generateQRCode() {
-  const qrcodeContainer = document.getElementById('qrcode');
-  qrcodeContainer.innerHTML = ''; // Clear previous QR if any
+// Générer et afficher QR code
+downloadQrBtn.addEventListener('click', () => {
+  qrcodeContainer.innerHTML = ''; // Reset QR code container
+  const data = [eleve1, eleve2].filter(Boolean);
+  const summaryText = data.map(e => 
+    `${e.prenom} ${e.nom} - Classe: ${e.classe} - Sexe: ${e.sexe} - Distance: ${e.distance.toFixed(2)}m - Vitesse: ${e.vitesse.toFixed(2)} km/h - VMA: ${e.vma.toFixed(2)} km/h`
+  ).join('\n');
 
-  const text = `
-Élève 1: ${eleve1.prenom} ${eleve1.nom}, Classe: ${eleve1.classe}, Sexe: ${eleve1.sexe}, Distance: ${eleve1.distance.toFixed(2)}m, Vitesse: ${eleve1.vitesse.toFixed(2)}km/h, VMA: ${eleve1.vma ? eleve1.vma.toFixed(2) : 'N/A'}km/h
-Élève 2: ${eleve2.prenom} ${eleve2.nom}, Classe: ${eleve2.classe}, Sexe: ${eleve2.sexe}, Distance: ${eleve2.distance.toFixed(2)}m, Vitesse: ${eleve2.vitesse.toFixed(2)}km/h, VMA: ${eleve2.vma ? eleve2.vma.toFixed(2) : 'N/A'}km/h
-  `.trim();
-
-  const qr = new QRious({
-    element: qrcodeContainer,
-    value: text,
-    size: 250,
-    backgroundAlpha: 0,
-    foreground: '#333'
+  new QRCode(qrcodeContainer, {
+    text: summaryText,
+    width: 200,
+    height: 200
   });
-}
-
-// Événements sur les boutons
-document.getElementById('downloadCSV').addEventListener('click', generateCSV);
-document.getElementById('generateQR').addEventListener('click', generateQRCode);
+});
