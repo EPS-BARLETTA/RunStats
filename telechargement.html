@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RunStats - Zone de téléchargement</title>
+  <link rel="stylesheet" href="eleve.css">
+</head>
+<body>
+  <!-- En-tête -->
+  <header class="header">
+    <h1>RunStats</h1>
+    <p>Zone de téléchargement</p>
+  </header>
+
+  <!-- Résultats -->
+  <main class="telechargement-container">
+    <h2>Bilan des deux élèves</h2>
+    <div id="resultatsContainer" class="resultats"></div>
+
+    <!-- QR Code -->
+    <div class="qr-section">
+      <h3>QR Code</h3>
+      <div id="qrcode"></div>
+      <button id="downloadQrBtn" class="btn btn-primary">Télécharger QR Code</button>
+    </div>
+
+    <!-- CSV -->
+    <div class="csv-section">
+      <h3>Fichier CSV</h3>
+      <button id="downloadCsvBtn" class="btn btn-primary">Télécharger CSV</button>
+    </div>
+  </main>
+
+  <!-- Pied de page -->
+  <footer class="footer">
+    Équipe EPS Lycée Vauban - LUXEMBOURG - JB
+  </footer>
+
+  <!-- Librairie QRCode -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="telechargement.js"></script>
+</body>
+</html>
