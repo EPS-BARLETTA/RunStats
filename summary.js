@@ -1,105 +1,106 @@
-// Récupérer les données stockées (localStorage ou sessionStorage)
-const eleve1 = JSON.parse(localStorage.getItem('eleve1'));
-const eleve2 = JSON.parse(localStorage.getItem('eleve2'));
+// summary.js
 
-const tbody = document.querySelector('#resultsTable tbody');
-
-function kmh(distanceMeters, durationSeconds) {
-  if (durationSeconds === 0) return 0;
-  return ((distanceMeters / 1000) / (durationSeconds / 3600)).toFixed(2);
+// Fonction pour récupérer les données des coureurs depuis sessionStorage
+function getRunnersData() {
+  const eleve1 = JSON.parse(sessionStorage.getItem('eleve1'));
+  const eleve2 = JSON.parse(sessionStorage.getItem('eleve2'));
+  return [eleve1, eleve2];
 }
 
-function remplirTable() {
-  if (!eleve1 || !eleve2) {
-    tbody.innerHTML = '<tr><td colspan="7">Pas de données disponibles.</td></tr>';
-    return;
-  }
+// Fonction pour remplir le tableau bilan avec les données
+function displayBilan() {
+  const [eleve1, eleve2] = getRunnersData();
+  const tbody = document.querySelector('#bilanTable tbody');
+  tbody.innerHTML = '';
 
-  const rows = [eleve1, eleve2].map(eleve => {
-    const vitesse = kmh(eleve.distanceTotale, eleve.duree);
-    return `
-      <tr>
-        <td>${eleve.nom}</td>
-        <td>${eleve.prenom}</td>
-        <td>${eleve.classe}</td>
-        <td>${eleve.sexe}</td>
-        <td>${eleve.distanceTotale.toFixed(2)}</td>
-        <td>${vitesse}</td>
-        <td>${eleve.vma ? eleve.vma : 'N/A'}</td>
-      </tr>
+  [eleve1, eleve2].forEach((eleve) => {
+    if (!eleve) return;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${eleve.nom} ${eleve.prenom}</td>
+      <td>${eleve.classe}</td>
+      <td>${eleve.sexe}</td>
+      <td>${eleve.distance.toFixed(3)}</td>
+      <td>${eleve.vitesse.toFixed(2)}</td>
+      <td>${eleve.vma.toFixed(2)}</td>
     `;
-  }).join('');
-
-  tbody.innerHTML = rows;
+    tbody.appendChild(tr);
+  });
 }
 
+// Générer un CSV à partir des données
 function generateCSV() {
-  if (!eleve1 || !eleve2) {
-    alert('Pas de données disponibles.');
-    return;
-  }
-  const header = ['Nom', 'Prénom', 'Classe', 'Sexe', 'Distance réalisée (m)', 'Vitesse moyenne (km/h)', 'VMA estimée (km/h)'];
-  const rows = [eleve1, eleve2].map(eleve => {
-    const vitesse = kmh(eleve.distanceTotale, eleve.duree);
-    return [
-      eleve.nom,
-      eleve.prenom,
+  const [eleve1, eleve2] = getRunnersData();
+  let csvContent = "data:text/csv;charset=utf-8,";
+  csvContent += "Nom Prénom,Classe,Sexe,Distance réalisée (km),Vitesse moyenne (km/h),VMA estimée (km/h)\r\n";
+
+  [eleve1, eleve2].forEach(eleve => {
+    if (!eleve) return;
+    const row = [
+      `${eleve.nom} ${eleve.prenom}`,
       eleve.classe,
       eleve.sexe,
-      eleve.distanceTotale.toFixed(2),
-      vitesse,
-      eleve.vma ? eleve.vma : 'N/A'
+      eleve.distance.toFixed(3),
+      eleve.vitesse.toFixed(2),
+      eleve.vma.toFixed(2),
     ];
+    csvContent += row.join(",") + "\r\n";
   });
 
-  let csvContent = header.join(',') + '\n';
-  rows.forEach(r => {
-    csvContent += r.join(',') + '\n';
-  });
-
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'bilan_RunStats.csv';
-  a.click();
-  URL.revokeObjectURL(url);
+  return encodeURI(csvContent);
 }
 
-function generateQR() {
+// Créer et déclencher le téléchargement du CSV
+function downloadCSV() {
+  const encodedUri = generateCSV();
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "runstats_bilan.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// Générer un QR code avec le résumé des deux coureurs (format JSON string)
+function downloadQR() {
+  const [eleve1, eleve2] = getRunnersData();
   if (!eleve1 || !eleve2) {
-    alert('Pas de données disponibles.');
+    alert("Données manquantes pour générer le QR code.");
     return;
   }
-  // On prépare un résumé au format texte simple
-  const data = [
-    eleve1, eleve2
-  ].map(eleve => {
-    const vitesse = kmh(eleve.distanceTotale, eleve.duree);
-    return `${eleve.prenom} ${eleve.nom} (${eleve.classe}, ${eleve.sexe})\nDistance: ${eleve.distanceTotale.toFixed(2)} m\nVitesse moyenne: ${vitesse} km/h\nVMA estimée: ${eleve.vma ? eleve.vma : 'N/A'} km/h`;
-  }).join('\n\n');
 
-  const canvas = document.getElementById('qrCanvas');
-  canvas.style.display = 'block';
+  const data = {
+    eleve1,
+    eleve2
+  };
 
-  QRCode.toCanvas(canvas, data, { width: 250 }, function (error) {
+  const jsonData = JSON.stringify(data);
+
+  // Créer un canvas temporaire pour générer le QR
+  const canvas = document.createElement("canvas");
+
+  QRCode.toCanvas(canvas, jsonData, { width: 300 }, function (error) {
     if (error) {
-      alert('Erreur génération QR code : ' + error);
+      alert("Erreur lors de la génération du QR code.");
+      console.error(error);
       return;
     }
-    // Une fois généré, on propose de sauvegarder l'image
-    canvas.toBlob(function(blob) {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'bilan_RunStats_QR.png';
-      a.click();
-      URL.revokeObjectURL(url);
-    });
+
+    // Convertir le canvas en image téléchargeable
+    const imgData = canvas.toDataURL("image/png");
+
+    const link = document.createElement("a");
+    link.href = imgData;
+    link.download = "runstats_bilan_qrcode.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   });
 }
 
-document.getElementById('downloadCSV').addEventListener('click', generateCSV);
-document.getElementById('downloadQR').addEventListener('click', generateQR);
+// Event listeners
+document.getElementById("downloadCSV").addEventListener("click", downloadCSV);
+document.getElementById("downloadQR").addEventListener("click", downloadQR);
 
-remplirTable();
+// Au chargement de la page, afficher le bilan
+window.onload = displayBilan;
