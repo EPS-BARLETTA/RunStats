@@ -1,97 +1,73 @@
-// Récupérer les données stockées dans sessionStorage (ou localStorage selon ton implémentation)
-const eleve1Data = JSON.parse(sessionStorage.getItem('eleve1Data')) || {};
-const eleve2Data = JSON.parse(sessionStorage.getItem('eleve2Data')) || {};
+// Récupération des données stockées dans le localStorage
+const eleve1Data = JSON.parse(localStorage.getItem('eleve1Data'));
+const eleve2Data = JSON.parse(localStorage.getItem('eleve2Data'));
 
-// Fonction pour calculer vitesse moyenne km/h
-function calcVitesseMoyenne(distanceM, dureeSec) {
-  if (!dureeSec || dureeSec === 0) return 0;
-  return ((distanceM / 1000) / (dureeSec / 3600)).toFixed(2);
-}
+const downloadCSVBtn = document.getElementById('downloadCSV');
+const downloadQRBtn = document.getElementById('downloadQR');
+const qrCodeContainer = document.getElementById('qrCodeContainer');
 
-// Fonction pour insérer les données dans le tableau
-function afficherResultats() {
-  const tbody = document.querySelector('#resultsTable tbody');
-  tbody.innerHTML = '';
+// Fonction pour générer le CSV à partir des données des deux élèves
+function generateCSV() {
+  const headers = ['Nom', 'Prénom', 'Classe', 'Sexe', 'Distance (m)', 'Vitesse moyenne (km/h)', 'VMA estimée (km/h)'];
+  const rows = [eleve1Data, eleve2Data].map(eleve => [
+    eleve.nom,
+    eleve.prenom,
+    eleve.classe,
+    eleve.sexe,
+    eleve.distance.toFixed(2),
+    eleve.vitesseMoyenne.toFixed(2),
+    eleve.vma.toFixed(2),
+  ]);
 
-  [eleve1Data, eleve2Data].forEach((eleve, idx) => {
-    if (!eleve.nom) return; // ignorer si pas de données
-    const dureeMin = (eleve.dureeSec / 60).toFixed(2);
-    const vitesseMoy = calcVitesseMoyenne(eleve.distanceTotale, eleve.dureeSec);
-    const vma = eleve.vmaEstimee ? eleve.vmaEstimee.toFixed(2) : '-';
-
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${eleve.prenom} ${eleve.nom} (${eleve.classe}) - ${eleve.sexe}</td>
-      <td>${dureeMin}</td>
-      <td>${eleve.distanceTotale.toFixed(2)}</td>
-      <td>${vitesseMoy}</td>
-      <td>${vma}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-// Génération et affichage QR code avec les données CSV encodées
-function genererQRCode(csvData) {
-  const container = document.getElementById('qrCodeContainer');
-  container.innerHTML = '';
-  QRCode.toCanvas(csvData, { width: 200, margin: 2 }, (error, canvas) => {
-    if (error) {
-      container.innerText = "Erreur génération QR Code";
-      console.error(error);
-      return;
-    }
-    container.appendChild(canvas);
-  });
-}
-
-// Conversion des données en CSV
-function convertirCSV() {
-  const entetes = ['Nom', 'Prénom', 'Classe', 'Sexe', 'Durée(min)', 'Distance(m)', 'Vitesse moyenne(km/h)', 'VMA estimée(km/h)'];
-  const lignes = [entetes.join(';')];
-
-  [eleve1Data, eleve2Data].forEach(eleve => {
-    if (!eleve.nom) return;
-    const dureeMin = (eleve.dureeSec / 60).toFixed(2);
-    const vitesseMoy = calcVitesseMoyenne(eleve.distanceTotale, eleve.dureeSec);
-    const vma = eleve.vmaEstimee ? eleve.vmaEstimee.toFixed(2) : '-';
-
-    const ligne = [
-      eleve.nom,
-      eleve.prenom,
-      eleve.classe,
-      eleve.sexe,
-      dureeMin,
-      eleve.distanceTotale.toFixed(2),
-      vitesseMoy,
-      vma
-    ].join(';');
-    lignes.push(ligne);
+  let csvContent = headers.join(',') + '\n';
+  rows.forEach(row => {
+    csvContent += row.join(',') + '\n';
   });
 
-  return lignes.join('\n');
+  return csvContent;
 }
 
-// Téléchargement du CSV
-function telechargerCSV() {
-  const csv = convertirCSV();
+// Fonction pour déclencher le téléchargement du CSV
+function downloadCSV() {
+  const csv = generateCSV();
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
+
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'RunStats_Bilan.csv';
+  a.download = 'RunStats_bilan.csv';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
 
-// Event listeners pour les boutons
-document.getElementById('downloadCsvBtn').addEventListener('click', telechargerCSV);
-document.getElementById('downloadQrBtn').addEventListener('click', () => {
-  const csv = convertirCSV();
-  genererQRCode(csv);
+// Fonction pour générer un QR code (utilise la librairie QRCode.js)
+function generateQRCode(data) {
+  qrCodeContainer.innerHTML = ''; // Nettoyer la zone
+
+  // On crée un objet QRCode (il faut inclure qrcode.min.js dans ton projet)
+  new QRCode(qrCodeContainer, {
+    text: data,
+    width: 180,
+    height: 180,
+  });
+}
+
+// Fonction pour générer les données text à encoder en QR code
+function generateQRData() {
+  const eleves = [eleve1Data, eleve2Data];
+  return eleves.map(eleve =>
+    `Nom: ${eleve.nom}, Prénom: ${eleve.prenom}, Classe: ${eleve.classe}, Sexe: ${eleve.sexe}, Distance: ${eleve.distance.toFixed(2)} m, Vitesse Moyenne: ${eleve.vitesseMoyenne.toFixed(2)} km/h, VMA estimée: ${eleve.vma.toFixed(2)} km/h`
+  ).join('\n\n');
+}
+
+// Événements
+downloadCSVBtn.addEventListener('click', () => {
+  downloadCSV();
 });
 
-// Initialisation affichage
-afficherResultats();
+downloadQRBtn.addEventListener('click', () => {
+  const data = generateQRData();
+  generateQRCode(data);
+});
