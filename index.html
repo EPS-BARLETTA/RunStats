@@ -1,51 +1,60 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion Course d'Endurance</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RunStats - Accueil</title>
+<link rel="stylesheet" href="style.css" />
+<style>
+  body {
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    height: 100vh; margin: 0; background: #e6f0ff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  h1 { font-size: 3em; margin: 0; color: #003366; }
+  h2 { font-weight: 400; margin: 0 0 40px; color: #0059b3; }
+  .buttons {
+    display: flex; gap: 40px;
+  }
+  button {
+    font-size: 1.5em; cursor: pointer; border: none; color: white;
+    transition: transform 0.2s ease;
+  }
+  button:hover {
+    transform: scale(1.1);
+  }
+  #btnEleve {
+    background: #007acc; /* couleur élève */
+    width: 120px; height: 120px;
+    border-radius: 50%;
+  }
+  #btnProf {
+    background: #cc6600; /* couleur prof */
+    width: 140px; height: 140px;
+    border-radius: 12px;
+  }
+  footer {
+    position: fixed; bottom: 10px; text-align: center; width: 100%;
+    font-weight: 600; color: #003366;
+  }
+</style>
 </head>
 <body>
-    <header>Course d'Endurance - Gestion</header>
+  <h1>RunStats</h1>
+  <h2>Équipe EPS Lycée Vauban - Luxembourg</h2>
+  <div class="buttons">
+    <button id="btnEleve" aria-label="Page Élèves">Élèves</button>
+    <button id="btnProf" aria-label="Page Professeurs">Professeurs</button>
+  </div>
+  <footer>Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
 
-    <main>
-        <!-- Section infos course -->
-        <section id="infos-course">
-            <h2>Paramètres de la Course</h2>
-            <label>Durée (minutes) :
-                <input type="number" id="duree-course" value="20">
-            </label>
-            <label>Distance d'un tour (mètres) :
-                <input type="number" id="distance-tour" value="400">
-            </label>
-            <button id="start-course">Démarrer la Course</button>
-            <button id="stop-course" disabled>Arrêter la Course</button>
-            <div id="timer">00:00</div>
-        </section>
-
-        <!-- Section QR code -->
-        <section id="qr-section">
-            <h2>QR Code d'Inscription</h2>
-            <div id="qrcode"></div>
-        </section>
-
-        <!-- Boutons de gestion -->
-        <div class="button-group">
-            <button id="add-eleve-btn">Ajouter Élève</button>
-            <button id="reset-eleves-btn">Réinitialiser Élèves</button>
-            <button id="save-data-btn">Sauvegarder Données</button>
-        </div>
-
-        <!-- Conteneur élèves -->
-        <section id="eleves-container"></section>
-    </main>
-
-    <footer>
-        © 2025 Gestion Course Endurance
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
-    <script src="script.js"></script>
+  <script>
+    document.getElementById('btnEleve').addEventListener('click', () => {
+      window.location.href = 'eleve.html';
+    });
+    document.getElementById('btnProf').addEventListener('click', () => {
+      window.location.href = 'profs.html';
+    });
+  </script>
 </body>
 </html>
