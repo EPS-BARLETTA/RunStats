@@ -1,58 +1,51 @@
-// eleve.js
+document.getElementById('startCourseBtn').addEventListener('click', () => {
+  // Récupération des données élève 1
+  const prenom1 = document.getElementById('prenom1').value.trim();
+  const nom1 = document.getElementById('nom1').value.trim();
+  const classe1 = document.getElementById('classe1').value.trim();
+  const sexe1 = document.getElementById('sexe1').value;
 
-document.addEventListener('DOMContentLoaded', () => {
-  const startBtn = document.getElementById('startEleve1');
+  // Récupération des données élève 2
+  const prenom2 = document.getElementById('prenom2').value.trim();
+  const nom2 = document.getElementById('nom2').value.trim();
+  const classe2 = document.getElementById('classe2').value.trim();
+  const sexe2 = document.getElementById('sexe2').value;
 
-  startBtn.addEventListener('click', () => {
-    // Récupérer données élève 1
-    const eleve1 = {
-      nom: document.getElementById('eleve1Nom').value.trim(),
-      prenom: document.getElementById('eleve1Prenom').value.trim(),
-      classe: document.getElementById('eleve1Classe').value.trim(),
-      sexe: document.getElementById('eleve1Sexe').value,
-    };
+  // Course info
+  const duree = Number(document.getElementById('duree').value);
+  const distanceTour = Number(document.getElementById('distanceTour').value);
+  const vma = Number(document.getElementById('vma').value) || null;
 
-    // Récupérer données élève 2
-    const eleve2 = {
-      nom: document.getElementById('eleve2Nom').value.trim(),
-      prenom: document.getElementById('eleve2Prenom').value.trim(),
-      classe: document.getElementById('eleve2Classe').value.trim(),
-      sexe: document.getElementById('eleve2Sexe').value,
-    };
+  // Validation simple
+  if (!prenom1 || !nom1 || !classe1 || !sexe1) {
+    alert("Merci de remplir tous les champs de l'élève 1.");
+    return;
+  }
+  if (!prenom2 || !nom2 || !classe2 || !sexe2) {
+    alert("Merci de remplir tous les champs de l'élève 2.");
+    return;
+  }
+  if (!duree || duree <= 0) {
+    alert("Merci de renseigner une durée valide (>0).");
+    return;
+  }
+  if (!distanceTour || distanceTour <= 0) {
+    alert("Merci de renseigner une distance de tour valide (>0).");
+    return;
+  }
 
-    // Infos course
-    const course = {
-      duree: parseInt(document.getElementById('courseDuree').value),
-      distance: parseFloat(document.getElementById('courseDistance').value),
-      tours: parseInt(document.getElementById('courseTours').value),
-      vma: document.getElementById('courseVma').value ? parseFloat(document.getElementById('courseVma').value) : null
-    };
+  // Préparer données pour la page course.html
+  const courseData = {
+    eleve1: { prenom: prenom1, nom: nom1, classe: classe1, sexe: sexe1 },
+    eleve2: { prenom: prenom2, nom: nom2, classe: classe2, sexe: sexe2 },
+    duree, // en minutes
+    distanceTour,
+    vma,
+  };
 
-    // Validation simple
-    if (!eleve1.prenom || !eleve1.nom || !eleve1.classe || eleve1.sexe === 'choisir') {
-      alert("Veuillez remplir tous les champs de l'élève 1.");
-      return;
-    }
-    if (!eleve2.prenom || !eleve2.nom || !eleve2.classe || eleve2.sexe === 'choisir') {
-      alert("Veuillez remplir tous les champs de l'élève 2.");
-      return;
-    }
-    if (isNaN(course.duree) || course.duree <= 0 || isNaN(course.distance) || course.distance <= 0 || isNaN(course.tours) || course.tours <= 0) {
-      alert("Veuillez renseigner correctement la durée, la distance et le nombre de tours.");
-      return;
-    }
+  // Stocker dans sessionStorage pour récupérer sur la page course.html
+  sessionStorage.setItem('courseData', JSON.stringify(courseData));
 
-    // Stocker dans localStorage
-    localStorage.setItem('eleve1', JSON.stringify(eleve1));
-    localStorage.setItem('eleve2', JSON.stringify(eleve2));
-    localStorage.setItem('course', JSON.stringify(course));
-    localStorage.setItem('currentEleve', 'eleve1');
-    localStorage.setItem('eleve1DistanceTotal', course.distance * course.tours);
-    localStorage.setItem('eleve2DistanceTotal', 0);
-    localStorage.setItem('eleve1Tours', course.tours);
-    localStorage.setItem('eleve2Tours', 0);
-
-    // Redirection vers la page de course (minuteur)
-    window.location.href = "course.html";
-  });
+  // Redirection vers course.html pour démarrer la course élève 1
+  window.location.href = 'course.html?eleve=1';
 });
