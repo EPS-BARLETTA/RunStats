@@ -1,179 +1,48 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>RunStats - Course</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #f5f5f5;
-    margin: 0; padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  h1, h3 {
-    margin: 0;
-    text-align: center;
-  }
-  h1 {
-    font-size: 2.5rem;
-    margin-bottom: 5px;
-  }
-  h3 {
-    font-weight: normal;
-    color: #555;
-    margin-bottom: 20px;
-  }
-  .timer-container {
-    background: #fff;
-    border-radius: 100%;
-    width: 180px;
-    height: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 4rem;
-    font-weight: bold;
-    color: #333;
-    box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    margin-bottom: 15px;
-  }
-  .timer-blink {
-    animation: blink 1s steps(2, start) infinite;
-    color: red;
-  }
-  @keyframes blink {
-    50% { visibility: hidden; }
-  }
-  button {
-    padding: 10px 20px;
-    margin-bottom: 20px;
-    font-size: 1.1rem;
-    border-radius: 10px;
-    border: none;
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-    width: 150px;
-  }
-  button:hover {
-    background-color: #45a049;
-  }
-  .stats {
-    background: white;
-    padding: 15px 20px;
-    border-radius: 12px;
-    width: 300px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    font-size: 1.1rem;
-    color: #333;
-  }
-  .stats div {
-    margin-bottom: 10px;
-  }
-  footer {
-    margin-top: 30px;
-    text-align: center;
-    color: #555;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RunStats - Course</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <header>
+    <h1>RunStats</h1>
+    <h2>Course</h2>
+  </header>
 
-<h1>RunStats</h1>
-<h3>Course</h3>
+  <main>
+    <section class="timer-section">
+      <button id="addTourBtn">+ Tour</button>
+      <div id="timerCircle">
+        <span id="timerDisplay">00:00</span>
+      </div>
+      <div class="stats">
+        <div><strong>Distance totale :</strong> <span id="totalDistance">0.00</span> m</div>
+        <div><strong>Vitesse moyenne :</strong> <span id="avgSpeed">0.00</span> km/h</div>
+        <div><strong>VMA estimée :</strong> <span id="vmaEstimate">0.00</span> km/h</div>
+      </div>
+    </section>
 
-<button id="addLapBtn">+ Tour</button>
+    <section id="endCourseSection" style="display:none;">
+      <p>Ajouter une fraction de tour à la distance totale :</p>
+      <button class="fractionBtn" data-fraction="0.25">+ 1/4 tour</button>
+      <button class="fractionBtn" data-fraction="0.5">+ 1/2 tour</button>
+      <button class="fractionBtn" data-fraction="0.75">+ 3/4 tour</button>
+      <button id="finishCourseBtn">Terminer la course</button>
+    </section>
 
-<div class="timer-container" id="timerDisplay">--:--</div>
+    <section id="nextCourseSection" style="display:none;">
+      <button id="startNextCourseBtn">Démarrer la course suivante</button>
+      <button id="goToSummaryBtn">Voir bilan & télécharger</button>
+    </section>
+  </main>
 
-<div class="stats">
-  <div>Distance totale parcourue: <span id="totalDistance">0</span> m</div>
-  <div>Vitesse moyenne: <span id="avgSpeed">0</span> m/s</div>
-  <div>VMA estimée: <span id="vma">-</span> m/s</div>
-</div>
+  <footer>
+    Équipe EPS Lycée Vauban - LUXEMBOURG - JB
+  </footer>
 
-<footer>
-  Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-</footer>
-
-<script>
-  // Récupérer durée et distance depuis sessionStorage
-  const durationSec = parseInt(sessionStorage.getItem('courseDuration'));
-  const totalDistanceGoal = parseFloat(sessionStorage.getItem('courseDistance'));
-
-  if (!durationSec || !totalDistanceGoal) {
-    alert('Erreur : données de la course manquantes.');
-    window.location.href = 'eleve.html';
-  }
-
-  let timeLeft = durationSec;
-  let timerInterval = null;
-  let laps = 0;
-  let totalDistance = 0;
-
-  const timerDisplay = document.getElementById('timerDisplay');
-  const addLapBtn = document.getElementById('addLapBtn');
-  const totalDistanceSpan = document.getElementById('totalDistance');
-  const avgSpeedSpan = document.getElementById('avgSpeed');
-  const vmaSpan = document.getElementById('vma');
-
-  // Fonction de mise à jour du timer
-  function updateTimer() {
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      timerDisplay.textContent = "00:00";
-      addLapBtn.disabled = true;
-      alert("Temps écoulé, fin de la course !");
-      // Ici tu peux ajouter la transition vers la page suivante
-      return;
-    }
-
-    // Format mm:ss
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
-    timerDisplay.textContent = 
-      (minutes < 10 ? '0' + minutes : minutes) + ':' + 
-      (seconds < 10 ? '0' + seconds : seconds);
-
-    // Clignotement dernières 10 secondes
-    if(timeLeft <= 10) {
-      timerDisplay.classList.add('timer-blink');
-    } else {
-      timerDisplay.classList.remove('timer-blink');
-    }
-
-    timeLeft--;
-  }
-
-  // Fonction mise à jour stats
-  function updateStats() {
-    totalDistanceSpan.textContent = totalDistance.toFixed(1);
-    const elapsedTime = durationSec - timeLeft;
-    const avgSpeed = elapsedTime > 0 ? totalDistance / elapsedTime : 0;
-    avgSpeedSpan.textContent = avgSpeed.toFixed(2);
-    // Estimation simple VMA = vitesse max atteinte sur un tour = vitesse moyenne * 1.1 (exemple)
-    vmaSpan.textContent = elapsedTime > 0 ? (avgSpeed * 1.1).toFixed(2) : '-';
-  }
-
-  // Fonction ajout tour (suppose un tour = distanceGoal / nombreTours ?)
-  addLapBtn.addEventListener('click', () => {
-    // On ajoute une fraction de la distance en fonction du temps écoulé
-    // Ici on simplifie: 1 tour = distance totale divisée par 4 (à ajuster selon besoin)
-    const lapDistance = totalDistanceGoal / 4; 
-    totalDistance += lapDistance;
-    updateStats();
-  });
-
-  // Démarrer timer automatiquement au chargement
-  timerDisplay.textContent = '--:--';
-  updateTimer();
-  timerInterval = setInterval(updateTimer, 1000);
-
-  updateStats();
-</script>
-
+  <script src="course.js"></script>
 </body>
 </html>
