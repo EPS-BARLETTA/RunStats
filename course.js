@@ -1,101 +1,132 @@
-// Récupérer les infos depuis localStorage
-const currentRunner = localStorage.getItem("currentRunner"); // "runner1" ou "runner2"
-const runnerData = JSON.parse(localStorage.getItem(currentRunner));
-const courseSettings = JSON.parse(localStorage.getItem("courseSettings"));
+// course.js
 
-// Sélection des éléments
-const runnerNameEl = document.getElementById("runnerName");
-const timerEl = document.getElementById("timer");
-const addLapBtn = document.getElementById("addLapBtn");
-const totalDistanceEl = document.getElementById("totalDistance");
-const averageSpeedEl = document.getElementById("averageSpeed");
-const vmaEstimationEl = document.getElementById("vmaEstimation");
-const finishBtn = document.getElementById("finishBtn");
-
-// Variables
-let totalDistance = 0;
-let lapCount = 0;
-let timeRemaining = courseSettings.duration; // en secondes
+// Variables globales
+let duration = 0;       // en secondes, durée de la course
+let distancePerLap = 0; // en mètres
+let totalLaps = 0;
+let fractionToAdd = 0;
+let timeLeft = 0;       // en secondes
 let timerInterval = null;
-const lapDistance = courseSettings.distance; // distance par tour en mètres
 
-// Afficher nom coureur
-runnerNameEl.textContent = `${runnerData.prenom} ${runnerData.nom}`;
+const timerCircle = document.getElementById("timerCircle");
+const addLapBtn = document.getElementById("addLapBtn");
+const distanceTotalEl = document.getElementById("distanceTotal");
+const avgSpeedEl = document.getElementById("avgSpeed");
+const vmaEstEl = document.getElementById("vmaEst");
+const fractionSection = document.getElementById("fractionSection");
+const endCourseSection = document.getElementById("endCourseSection");
+const endCourseBtn = document.getElementById("endCourseBtn");
 
-// Fonction format temps
-function formatTime(sec) {
-  const minutes = Math.floor(sec / 60);
-  const seconds = sec % 60;
-  return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+// Récupérer les données passées par URL
+function getParams() {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    elevePrenom: params.get("elevePrenom"),
+    duration: Number(params.get("duration")),
+    distancePerLap: Number(params.get("distancePerLap")),
+  };
 }
 
-// Mise à jour stats
-function updateStats() {
-  totalDistanceEl.textContent = totalDistance.toFixed(2);
-  const timeInHours = (courseSettings.duration - timeRemaining) / 3600;
-  const avgSpeed = timeInHours > 0 ? (totalDistance / 1000) / timeInHours : 0; // km/h
-  averageSpeedEl.textContent = avgSpeed.toFixed(2);
-  // Estimation VMA : vitesse max sur le test
-  vmaEstimationEl.textContent = avgSpeed.toFixed(2);
+function formatTime(seconds) {
+  const m = Math.floor(seconds / 60).toString().padStart(2,"0");
+  const s = (seconds % 60).toString().padStart(2,"0");
+  return `${m}:${s}`;
 }
 
-// Ajouter un tour complet
-addLapBtn.addEventListener("click", () => {
-  lapCount++;
-  totalDistance += lapDistance;
-  updateStats();
-});
-
-// Ajouter fractions de tour à la fin
-document.querySelectorAll(".fractions button").forEach(button => {
-  button.addEventListener("click", () => {
-    const fraction = parseFloat(button.dataset.value);
-    totalDistance += lapDistance * fraction;
-    updateStats();
-  });
-});
-
-// Minuteur
 function startTimer() {
-  timerEl.textContent = formatTime(timeRemaining);
-
+  timeLeft = duration;
+  updateTimerDisplay();
   timerInterval = setInterval(() => {
-    timeRemaining--;
+    timeLeft--;
+    updateTimerDisplay();
 
-    // Clignotement les 10 dernières secondes
-    if (timeRemaining <= 10) {
-      timerEl.classList.add("blink");
+    if (timeLeft <= 10) {
+      timerCircle.classList.add("blink");
+    } else {
+      timerCircle.classList.remove("blink");
     }
 
-    timerEl.textContent = formatTime(timeRemaining);
-
-    if (timeRemaining <= 0) {
+    if (timeLeft <= 0) {
       clearInterval(timerInterval);
-      timerEl.textContent = "0:00";
-      timerEl.classList.remove("blink");
-      finishBtn.disabled = false;
+      timerCircle.classList.remove("blink");
+      // Afficher section fin de course
+      fractionSection.style.display = "block";
+      endCourseSection.style.display = "block";
+      addLapBtn.disabled = true;
     }
   }, 1000);
 }
 
-// Fin de course
-finishBtn.addEventListener("click", () => {
-  // Sauvegarder résultats du coureur
-  runnerData.distance = totalDistance.toFixed(2);
-  runnerData.vitesse = averageSpeedEl.textContent;
-  runnerData.vma = vmaEstimationEl.textContent;
+function updateTimerDisplay() {
+  timerCircle.textContent = formatTime(timeLeft);
+}
 
-  localStorage.setItem(currentRunner, JSON.stringify(runnerData));
+// Calculer stats
+function updateStats() {
+  // Distance totale en mètres
+  const totalDistance = (totalLaps + fractionToAdd) * distancePerLap;
 
-  if (currentRunner === "runner1") {
-    // Passer au second coureur
-    localStorage.setItem("currentRunner", "runner2");
-    window.location.href = "course.html";
-  } else {
-    // Les deux courses terminées -> passer au bilan
-    window.location.href = "summary.html";
-  }
-});
+  // Temps écoulé en heures
+  const elapsedTimeH = (duration - timeLeft) / 3600;
 
-// Lancer le minuteur dès chargement
+  // Vitesse moyenne km/h
+  const avgSpeed = elapsedTimeH > 0 ? (totalDistance / 1000) / elapsedTimeH : 0;
+
+  // Estimation VMA (vitesse max aérobie) : vitesse moyenne * facteur (ici 1.1)
+  const vmaEst = avgSpeed * 1.1;
+
+  distanceTotalEl.textContent = totalDistance.toFixed(2) + " m";
+  avgSpeedEl.textContent = avgSpeed.toFixed(2) + " km/h";
+  vmaEstEl.textContent = vmaEst.toFixed(2) + " km/h";
+}
+
+function addLap() {
+  if (timeLeft <= 0) return; // Ne rien faire si temps écoulé
+  totalLaps++;
+  updateStats();
+}
+
+// Ajouter fraction
+function addFraction(fraction) {
+  fractionToAdd += fraction;
+  updateStats();
+  // Cacher options fractions après ajout
+  fractionSection.style.display = "none";
+  endCourseSection.style.display = "block";
+}
+
+// Fin de course -> bouton
+function endCourse() {
+  // Sauvegarder les données dans localStorage ou passer à la page suivante
+  // Ici on redirige vers une page bilan (summary.html) en passant les données
+  const params = new URLSearchParams();
+  params.set("totalLaps", totalLaps);
+  params.set("fractionToAdd", fractionToAdd);
+  params.set("duration", duration);
+  params.set("distancePerLap", distancePerLap);
+  // Tu peux ajouter aussi le prénom etc
+  // Exemple:
+  params.set("elevePrenom", elevePrenom);
+
+  window.location.href = "summary.html?" + params.toString();
+}
+
+// Initialisation
+const { elevePrenom, duration: d, distancePerLap: dist } = getParams();
+duration = d;
+distancePerLap = dist;
+
+document.getElementById("runnerName").textContent = elevePrenom;
+fractionSection.style.display = "none";
+endCourseSection.style.display = "none";
+
+updateStats();
 startTimer();
+
+addLapBtn.addEventListener("click", addLap);
+
+document.getElementById("fractionQuarter").addEventListener("click", () => addFraction(0.25));
+document.getElementById("fractionHalf").addEventListener("click", () => addFraction(0.5));
+document.getElementById("fractionThreeQuarters").addEventListener("click", () => addFraction(0.75));
+
+endCourseBtn.addEventListener("click", endCourse);
