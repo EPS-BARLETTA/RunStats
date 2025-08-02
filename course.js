@@ -5,7 +5,7 @@ let chronoElement = document.getElementById("chronoCenter");
 let circle = document.getElementById("progressCircle");
 let duree;
 let longueurTour;
-let currentEleve;
+let currentEleve = "1"; // par défaut
 
 function formatChrono(ms) {
   const sec = Math.floor(ms / 1000);
@@ -22,7 +22,7 @@ function updateAffichage() {
   const vitesse = distance / secondes;
   const vmaEstimee = vitesse * 3.6;
 
-  document.getElementById("chronoCenter").textContent = formatChrono(elapsed);
+  chronoElement.textContent = formatChrono(elapsed);
   document.getElementById("distance").textContent = distance.toFixed(0);
   document.getElementById("vitesse").textContent = vitesse.toFixed(2);
   document.getElementById("vmaEstimee").textContent = vmaEstimee.toFixed(1);
@@ -49,11 +49,16 @@ function commencerCourse() {
 
 function chargerEleve() {
   currentEleve = sessionStorage.getItem("currentEleve") || "1";
-  const eleveKey = currentEleve === "1" ? "eleve1Data" : "eleve2Data";
-  const stored = sessionStorage.getItem(eleveKey);
-  if (!stored) return window.location.href = "eleve.html";
 
-  eleveData = JSON.parse(stored);
+  const eleveKey = currentEleve === "1" ? "eleve1Data" : "eleve2Data";
+  const data = sessionStorage.getItem(eleveKey);
+
+  if (!data) {
+    alert("Les données de l'élève sont manquantes. Veuillez remplir le formulaire.");
+    return;
+  }
+
+  eleveData = JSON.parse(data);
 
   document.getElementById("nomEleve").textContent = `${eleveData.prenom} ${eleveData.nom}`;
   duree = eleveData.temps;
