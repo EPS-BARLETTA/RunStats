@@ -15,10 +15,13 @@ const lapBtn = document.getElementById("lapBtn");
 const nextBtn = document.getElementById("nextBtn");
 const summaryBtn = document.getElementById("summaryBtn");
 
+const progressCircle = document.querySelector(".progress");
+
 const eleve1 = JSON.parse(sessionStorage.getItem("eleve1"));
 const eleve2 = JSON.parse(sessionStorage.getItem("eleve2"));
 const longueur = parseFloat(sessionStorage.getItem("longueurTour"));
 const duree = parseFloat(sessionStorage.getItem("dureeCourse"));
+const totalSeconds = duree * 60;
 
 function formatTime(seconds) {
   const min = Math.floor(seconds / 60).toString().padStart(2, "0");
@@ -28,7 +31,7 @@ function formatTime(seconds) {
 
 function updateAffichage() {
   const distance = nombreTours * longueur;
-  const tempsEcoule = duree * 60 - tempsRestant;
+  const tempsEcoule = totalSeconds - tempsRestant;
   const tempsHeures = tempsEcoule / 3600;
   const vitesse = tempsHeures > 0 ? (distance / 1000) / tempsHeures : 0;
   const vma = vitesse * 1.15;
@@ -57,7 +60,7 @@ function terminerCourse() {
   clearInterval(timerInterval);
   isRunning = false;
   lapBtn.disabled = true;
-  timerDisplay.classList.remove("clignote");
+  progressCircle.classList.remove("danger");
 
   enregistrerStats();
 
@@ -69,19 +72,28 @@ function terminerCourse() {
 }
 
 function demarrerChrono() {
-  tempsRestant = duree * 60;
+  tempsRestant = totalSeconds;
   isRunning = true;
   lapBtn.disabled = false;
   timerDisplay.textContent = formatTime(tempsRestant);
+
+  const radius = 90;
+  const circumference = 2 * Math.PI * radius;
+
+  progressCircle.style.strokeDasharray = `${circumference}`;
+  progressCircle.style.strokeDashoffset = `0`;
 
   timerInterval = setInterval(() => {
     tempsRestant--;
     timerDisplay.textContent = formatTime(tempsRestant);
 
+    const percent = tempsRestant / totalSeconds;
+    progressCircle.style.strokeDashoffset = `${circumference * (1 - percent)}`;
+
     if (tempsRestant <= 10) {
-      timerDisplay.classList.add("clignote");
+      progressCircle.classList.add("danger");
     } else {
-      timerDisplay.classList.remove("clignote");
+      progressCircle.classList.remove("danger");
     }
 
     updateAffichage();
