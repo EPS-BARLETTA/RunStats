@@ -42,7 +42,7 @@ function updateAffichage() {
 function enregistrerStats() {
   const eleve = coureurActuel === 1 ? eleve1 : eleve2;
   const distance = nombreTours * longueur;
-  const vitesse = (distance / 1000) / (duree / 60); // ⚠️ ici on convertit bien en heures
+  const vitesse = (distance / 1000) / (duree / 60);
   const vma = vitesse * 1.15;
 
   stats.push({
@@ -57,6 +57,7 @@ function terminerCourse() {
   clearInterval(timerInterval);
   isRunning = false;
   lapBtn.disabled = true;
+  timerDisplay.classList.remove("clignote");
 
   enregistrerStats();
 
@@ -76,6 +77,13 @@ function demarrerChrono() {
   timerInterval = setInterval(() => {
     tempsRestant--;
     timerDisplay.textContent = formatTime(tempsRestant);
+
+    if (tempsRestant <= 10) {
+      timerDisplay.classList.add("clignote");
+    } else {
+      timerDisplay.classList.remove("clignote");
+    }
+
     updateAffichage();
 
     if (tempsRestant <= 0) {
@@ -108,9 +116,7 @@ summaryBtn.addEventListener("click", () => {
   window.location.href = "resume.html";
 });
 
-// Init au chargement
 window.onload = () => {
-  const coureur = eleve1;
-  document.getElementById("title").innerText = `Course de ${coureur.prenom} ${coureur.nom}`;
+  document.getElementById("title").innerText = `Course de ${eleve1.prenom} ${eleve1.nom}`;
   demarrerChrono();
 };
