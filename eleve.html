@@ -19,10 +19,9 @@
 
     .container {
       display: flex;
-      flex-wrap: wrap;
       justify-content: center;
-      gap: 20px;
-      margin-bottom: 20px;
+      gap: 40px;
+      flex-wrap: wrap;
     }
 
     .eleve-box {
@@ -32,12 +31,11 @@
       border-radius: 15px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       background-color: #d0e8ff;
-      color: #333;
-      min-height: 280px;
+      min-height: 300px;
     }
 
     .eleve-box:nth-child(2) {
-      background-color: #fbd4e8;
+      background-color: #d4fbd4;
     }
 
     .eleve-box h3 {
@@ -57,25 +55,12 @@
     }
 
     .parametres {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 20px;
+      margin-top: 30px;
     }
 
-    .box-param {
-      flex: 1 1 180px;
-      padding: 20px;
-      background-color: #ffffff;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      min-height: 280px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
+    .parametres input {
+      width: 200px;
+      margin: 10px;
     }
 
     button {
@@ -103,12 +88,9 @@
   <div class="container">
     <div class="eleve-box">
       <h3>Élève 1</h3>
-      <div class="input-group">
-        <input type="text" id="nom1" placeholder="Nom">
-      </div>
-      <div class="input-group">
-        <input type="text" id="prenom1" placeholder="Prénom">
-      </div>
+      <div class="input-group"><input type="text" id="nom1" placeholder="Nom"></div>
+      <div class="input-group"><input type="text" id="prenom1" placeholder="Prénom"></div>
+      <div class="input-group"><input type="text" id="classe1" placeholder="Classe"></div>
       <div class="input-group">
         <select id="sexe1">
           <option value="">Choisir le sexe</option>
@@ -121,12 +103,9 @@
 
     <div class="eleve-box">
       <h3>Élève 2</h3>
-      <div class="input-group">
-        <input type="text" id="nom2" placeholder="Nom">
-      </div>
-      <div class="input-group">
-        <input type="text" id="prenom2" placeholder="Prénom">
-      </div>
+      <div class="input-group"><input type="text" id="nom2" placeholder="Nom"></div>
+      <div class="input-group"><input type="text" id="prenom2" placeholder="Prénom"></div>
+      <div class="input-group"><input type="text" id="classe2" placeholder="Classe"></div>
       <div class="input-group">
         <select id="sexe2">
           <option value="">Choisir le sexe</option>
@@ -136,14 +115,11 @@
         </select>
       </div>
     </div>
+  </div>
 
-    <div class="box-param">
-      <label for="distance">Distance d'un tour (m)</label>
-      <input type="number" id="distance" min="1" placeholder="Ex: 200">
-      <br><br>
-      <label for="duree">Durée de la course (min)</label>
-      <input type="number" id="duree" min="1" placeholder="Ex: 3">
-    </div>
+  <div class="parametres">
+    <input type="number" id="duree" placeholder="Durée de la course (min)">
+    <input type="number" id="distance" placeholder="Distance d'un tour (m)">
   </div>
 
   <button onclick="valider()">Valider et démarrer</button>
@@ -157,17 +133,21 @@
       const eleve1 = {
         nom: document.getElementById("nom1").value,
         prenom: document.getElementById("prenom1").value,
+        classe: document.getElementById("classe1").value,
         sexe: document.getElementById("sexe1").value
       };
       const eleve2 = {
         nom: document.getElementById("nom2").value,
         prenom: document.getElementById("prenom2").value,
+        classe: document.getElementById("classe2").value,
         sexe: document.getElementById("sexe2").value
       };
       const distance = document.getElementById("distance").value;
       const duree = document.getElementById("duree").value;
 
-      if (!eleve1.nom || !eleve1.prenom || !eleve1.sexe || !eleve2.nom || !eleve2.prenom || !eleve2.sexe || !distance || !duree) {
+      if (!eleve1.nom || !eleve1.prenom || !eleve1.classe || !eleve1.sexe ||
+          !eleve2.nom || !eleve2.prenom || !eleve2.classe || !eleve2.sexe ||
+          !distance || !duree) {
         alert("Veuillez remplir tous les champs.");
         return;
       }
@@ -180,5 +160,6 @@
       window.location.href = "course.html";
     }
   </script>
+
 </body>
 </html>
