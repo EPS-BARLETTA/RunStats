@@ -29,8 +29,8 @@ function formatTime(seconds) {
 function updateAffichage() {
   const distance = nombreTours * longueur;
   const tempsEcoule = duree * 60 - tempsRestant;
-  const tempsMin = tempsEcoule / 60;
-  const vitesse = tempsMin > 0 ? (distance / 1000) / tempsMin : 0;
+  const tempsHeures = tempsEcoule / 3600;
+  const vitesse = tempsHeures > 0 ? (distance / 1000) / tempsHeures : 0;
   const vma = vitesse * 1.15;
 
   lapsDisplay.textContent = nombreTours;
@@ -42,7 +42,7 @@ function updateAffichage() {
 function enregistrerStats() {
   const eleve = coureurActuel === 1 ? eleve1 : eleve2;
   const distance = nombreTours * longueur;
-  const vitesse = (distance / 1000) / duree;
+  const vitesse = (distance / 1000) / (duree / 60); // ⚠️ ici on convertit bien en heures
   const vma = vitesse * 1.15;
 
   stats.push({
