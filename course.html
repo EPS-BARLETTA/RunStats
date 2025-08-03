@@ -24,7 +24,7 @@
       margin: 30px auto;
       border-radius: 12px;
       width: 90%;
-      max-width: 400px;
+      max-width: 450px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
@@ -32,20 +32,32 @@
       font-size: 48px;
       font-weight: bold;
       background-color: #d0e8ff;
-      padding: 15px 30px;
+      padding: 20px;
       border-radius: 20px;
       margin-bottom: 20px;
     }
 
-    #laps {
-      font-size: 28px;
-      margin: 10px 0;
+    #lapBtn {
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-bottom: 20px;
     }
 
-    button {
+    .stats {
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    .controls button {
       padding: 12px 20px;
       font-size: 16px;
-      margin: 10px;
+      margin: 8px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
@@ -56,13 +68,23 @@
       color: white;
     }
 
-    #lapBtn {
-      background-color: #27ae60;
+    #endBtn {
+      background-color: #e67e22;
       color: white;
     }
 
-    #endBtn {
-      background-color: #e67e22;
+    #nextBtn, #summaryBtn {
+      display: none;
+      margin-top: 10px;
+    }
+
+    #nextBtn {
+      background-color: #8e44ad;
+      color: white;
+    }
+
+    #summaryBtn {
+      background-color: #34495e;
       color: white;
     }
 
@@ -79,11 +101,21 @@
 
   <div class="course-container">
     <div id="timer">00:00</div>
-    <p>Nombre de tours : <span id="laps">0</span></p>
+    <button id="lapBtn" disabled>Tour +</button>
 
-    <button id="startBtn">Démarrer la course</button>
-    <button id="lapBtn" disabled>Ajouter un tour</button>
-    <button id="endBtn">Fin de la course</button>
+    <div class="stats">
+      <p>Tours : <span id="laps">0</span></p>
+      <p>Distance : <span id="distance">0</span> m</p>
+      <p>Vitesse : <span id="vitesse">0</span> km/h</p>
+      <p>Estimation VMA : <span id="vma">0</span> km/h</p>
+    </div>
+
+    <div class="controls">
+      <button id="startBtn">Démarrer la course</button>
+      <button id="endBtn">Fin de la course</button>
+      <button id="nextBtn">Passer au coureur 2</button>
+      <button id="summaryBtn">Aller au résumé</button>
+    </div>
   </div>
 
   <footer>
