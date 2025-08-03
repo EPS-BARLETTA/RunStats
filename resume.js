@@ -1,46 +1,53 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const d1 = JSON.parse(sessionStorage.getItem('dataC1'));
-  const d2 = JSON.parse(sessionStorage.getItem('dataC2'));
+window.onload = function () {
+  const eleve1 = JSON.parse(sessionStorage.getItem("eleve1"));
+  const eleve2 = JSON.parse(sessionStorage.getItem("eleve2"));
+  const stats = JSON.parse(sessionStorage.getItem("stats"));
 
-  if (!d1 || !d2) {
-    document.getElementById('resume').innerHTML = `<p style="color:red;">Aucune donnée disponible. Veuillez relancer une course.</p>`;
+  if (!eleve1 || !eleve2 || !stats) {
+    document.getElementById("results").innerHTML = "<p>Données indisponibles. Veuillez relancer une course.</p>";
     return;
   }
 
-  const container = document.getElementById('resume');
-  container.innerHTML = `
-    <h2>Résultats</h2>
-    <div class="result-wrapper">
-      <div class="result-box"><h3>${d1.prenom} ${d1.nom}</h3>
-        <p>Distance : ${d1.distance} m</p>
-        <p>Vitesse : ${d1.vitesse} km/h</p>
-        <p>VMA estimée : ${d1.vmaEstimee} km/h</p>
-      </div>
-      <div class="result-box"><h3>${d2.prenom} ${d2.nom}</h3>
-        <p>Distance : ${d2.distance} m</p>
-        <p>Vitesse : ${d2.vitesse} km/h</p>
-        <p>VMA estimée : ${d2.vmaEstimee} km/h</p>
-      </div>
-    </div>
-    <div id="qrcode"></div>
-    <button id="downloadCSV">Télécharger le CSV</button>
-  `;
+  const results = [stats[0], stats[1]];
+  const container = document.getElementById("results");
 
-  new QRCode(document.getElementById('qrcode'), {
-    text: JSON.stringify([d1, d2]),
-    width: 180,
-    height: 180
+  results.forEach((result, index) => {
+    const box = document.createElement("div");
+    box.className = "eleve-box";
+
+    box.innerHTML = `
+      <h3>${result.nom} ${result.prenom}</h3>
+      <p><strong>Classe :</strong> ${result.classe}</p>
+      <p><strong>Sexe :</strong> ${result.sexe}</p>
+      <p><strong>Distance :</strong> ${result.distance} m</p>
+      <p><strong>Vitesse :</strong> ${result.vitesse.toFixed(2)} km/h</p>
+      <p><strong>Estimation VMA :</strong> ${result.vma.toFixed(2)} km/h</p>
+    `;
+
+    container.appendChild(box);
   });
 
-  document.getElementById('downloadCSV').addEventListener('click', () => {
-    let csv = "Nom,Prénom,Classe,Sexe,Distance,Vitesse,VMA estimée\n";
-    [d1, d2].forEach(p => {
-      csv += `${p.nom},${p.prenom},${p.classe},${p.sexe},${p.distance},${p.vitesse},${p.vmaEstimee}\n`;
-    });
-    const blob = new Blob([csv], { type: "text/csv" });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'resultats.csv';
+  // QR Code
+  const qrData = results.map(e => `${e.nom} ${e.prenom} - ${e.vitesse.toFixed(1)} km/h - ${e.distance} m`).join('\n');
+  QRCode.toCanvas(document.createElement('canvas'), qrData, { width: 200 }, (err, canvas) => {
+    if (!err) document.getElementById("qrcode").appendChild(canvas);
+  });
+
+  // CSV
+  document.getElementById("downloadCSV").addEventListener("click", function () {
+    const csvRows = [
+      "Nom,Prénom,Classe,Sexe,Distance (m),Vitesse (km/h),VMA estimée (km/h)",
+      ...results.map(e =>
+        `${e.nom},${e.prenom},${e.classe},${e.sexe},${e.distance},${e.vitesse.toFixed(2)},${e.vma.toFixed(2)}`
+      )
+    ];
+    const csvContent = "data:text/csv;charset=utf-8," + csvRows.join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "runstats_donnees.csv");
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
   });
-});
+};
