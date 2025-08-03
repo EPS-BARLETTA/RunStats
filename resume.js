@@ -25,7 +25,7 @@ window.onload = function () {
 
   resultsDiv.innerHTML = stats.map(displayResult).join("");
 
-  // Génération du QR code avec données compressées
+  // Générer le QR code avec les résultats
   const qrText = stats
     .map(e => `${e.nom} ${e.prenom}: ${e.vitesse.toFixed(1)}km/h, ${e.distance}m`)
     .join("\n");
@@ -34,9 +34,9 @@ window.onload = function () {
     if (!err) document.getElementById("qrcode").appendChild(canvas);
   });
 
-  // Téléchargement CSV
+  // Générer le fichier CSV
   document.getElementById("downloadCSV").addEventListener("click", () => {
-    const headers = ["Nom", "Prénom", "Classe", "Sexe", "Distance (m)", "Vitesse (km/h)", "VMA estimée (km/h)"];
+    const headers = ["Nom", "Prénom", "Classe", "Sexe", "Distance (m)", "Vitesse (km/h)", "VMA (km/h)"];
     const rows = stats.map(e =>
       [e.nom, e.prenom, e.classe, e.sexe, e.distance, e.vitesse.toFixed(2), e.vma.toFixed(2)]
     );
