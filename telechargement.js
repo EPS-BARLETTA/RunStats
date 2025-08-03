@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const resultats1 = JSON.parse(localStorage.getItem("resultats1"));
   const resultats2 = JSON.parse(localStorage.getItem("resultats2"));
 
-  // Afficher dans la page
+  // Afficher les résultats dans la page
   const resultatsContainer = document.getElementById("resultatsContainer");
 
   function formatResultats(eleve, num) {
@@ -24,10 +24,27 @@ document.addEventListener("DOMContentLoaded", () => {
     ${formatResultats(resultats2, 2)}
   `;
 
-  // Générer QR code
-  const qrData = `Résultats:
-Élève 1: ${resultats1.prenom} ${resultats1.nom}, ${resultats1.distance}m, ${resultats1.vitesse}, VMA ${resultats1.vmaEstimee}
-Élève 2: ${resultats2.prenom} ${resultats2.nom}, ${resultats2.distance}m, ${resultats2.vitesse}, VMA ${resultats2.vmaEstimee}`;
+  // ✅ Générer un QR code en JSON compatible ScanProf
+  const qrData = JSON.stringify([
+    {
+      nom: resultats1.nom,
+      prenom: resultats1.prenom,
+      classe: resultats1.classe,
+      sexe: resultats1.sexe,
+      distance: resultats1.distance,
+      vitesse: resultats1.vitesse,
+      vma: resultats1.vmaEstimee
+    },
+    {
+      nom: resultats2.nom,
+      prenom: resultats2.prenom,
+      classe: resultats2.classe,
+      sexe: resultats2.sexe,
+      distance: resultats2.distance,
+      vitesse: resultats2.vitesse,
+      vma: resultats2.vmaEstimee
+    }
+  ]);
 
   const qrContainer = document.getElementById("qrcode");
   const qrcode = new QRCode(qrContainer, {
@@ -36,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
     height: 200,
   });
 
-  // Télécharger QR code en image
+  // Télécharger le QR code en image
   document.getElementById("downloadQrBtn").addEventListener("click", () => {
     const canvas = qrContainer.querySelector("canvas");
     const link = document.createElement("a");
@@ -45,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
     link.click();
   });
 
-  // Télécharger CSV
+  // Télécharger le CSV
   document.getElementById("downloadCsvBtn").addEventListener("click", () => {
     const csvContent = [
       ["Nom", "Prénom", "Classe", "Sexe", "Distance (m)", "Vitesse moyenne", "Estimation VMA"],
