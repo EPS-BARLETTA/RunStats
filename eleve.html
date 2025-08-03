@@ -1,67 +1,92 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RunStats – Saisie Élèves</title>
+  <meta charset="UTF-8">
+  <title>Saisie des élèves - RunStats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
+      background-color: #f4f9ff;
       font-family: Arial, sans-serif;
-      background-color: #e9f2ff;
       margin: 0;
       padding: 20px;
       text-align: center;
     }
 
     h2 {
-      color: #2c3e50;
       margin-bottom: 20px;
     }
 
-    .form-container {
+    .container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 20px;
+      margin-bottom: 20px;
     }
 
     .eleve-box {
-      background-color: #ffffff;
+      flex: 1 1 300px;
+      max-width: 400px;
       padding: 20px;
-      border-radius: 12px;
-      width: 320px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-
-    .eleve-box:nth-child(1) {
-      border-top: 8px solid #3498db;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      background-color: #d0e8ff;
+      color: #333;
+      min-height: 280px;
     }
 
     .eleve-box:nth-child(2) {
-      border-top: 8px solid #27ae60;
+      background-color: #fbd4e8;
+    }
+
+    .eleve-box h3 {
+      margin-top: 0;
+    }
+
+    .input-group {
+      margin: 10px 0;
     }
 
     input, select {
+      padding: 8px;
       width: 90%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: 1px solid #ccc;
       font-size: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
     }
 
-    .bottom-section {
-      margin-top: 30px;
+    .parametres {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .box-param {
+      flex: 1 1 180px;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      min-height: 280px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
     }
 
     button {
-      padding: 12px 24px;
-      font-size: 1rem;
-      background-color: #27ae60;
+      background-color: #3498db;
       color: white;
       border: none;
+      padding: 12px 20px;
+      font-size: 16px;
       border-radius: 8px;
       cursor: pointer;
+      margin-top: 20px;
     }
 
     footer {
@@ -75,28 +100,18 @@
 
   <h2>Saisie des informations des élèves</h2>
 
-  <form id="eleveForm">
-    <div class="form-container">
-      <div class="eleve-box">
-        <h3>Élève 1</h3>
-        <input type="text" id="nom1" placeholder="Nom" required>
-        <input type="text" id="prenom1" placeholder="Prénom" required>
-        <input type="text" id="classe1" placeholder="Classe" required>
-        <select id="sexe1" required>
-          <option value="">Sexe</option>
-          <option value="F">Fille</option>
-          <option value="G">Garçon</option>
-          <option value="A">Autre</option>
-        </select>
+  <div class="container">
+    <div class="eleve-box">
+      <h3>Élève 1</h3>
+      <div class="input-group">
+        <input type="text" id="nom1" placeholder="Nom">
       </div>
-
-      <div class="eleve-box">
-        <h3>Élève 2</h3>
-        <input type="text" id="nom2" placeholder="Nom" required>
-        <input type="text" id="prenom2" placeholder="Prénom" required>
-        <input type="text" id="classe2" placeholder="Classe" required>
-        <select id="sexe2" required>
-          <option value="">Sexe</option>
+      <div class="input-group">
+        <input type="text" id="prenom1" placeholder="Prénom">
+      </div>
+      <div class="input-group">
+        <select id="sexe1">
+          <option value="">Choisir le sexe</option>
           <option value="F">Fille</option>
           <option value="G">Garçon</option>
           <option value="A">Autre</option>
@@ -104,47 +119,66 @@
       </div>
     </div>
 
-    <div class="bottom-section">
-      <input type="number" id="longueur" placeholder="Longueur d’un tour (en m)" required>
-      <br>
-      <input type="number" id="duree" placeholder="Durée de la course (en minutes)" required>
+    <div class="eleve-box">
+      <h3>Élève 2</h3>
+      <div class="input-group">
+        <input type="text" id="nom2" placeholder="Nom">
+      </div>
+      <div class="input-group">
+        <input type="text" id="prenom2" placeholder="Prénom">
+      </div>
+      <div class="input-group">
+        <select id="sexe2">
+          <option value="">Choisir le sexe</option>
+          <option value="F">Fille</option>
+          <option value="G">Garçon</option>
+          <option value="A">Autre</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="box-param">
+      <label for="distance">Distance d'un tour (m)</label>
+      <input type="number" id="distance" min="1" placeholder="Ex: 200">
       <br><br>
-      <button type="submit">Valider et démarrer</button>
+      <label for="duree">Durée de la course (min)</label>
+      <input type="number" id="duree" min="1" placeholder="Ex: 3">
     </div>
-  </form>
+  </div>
+
+  <button onclick="valider()">Valider et démarrer</button>
 
   <footer>
     RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB
   </footer>
 
   <script>
-    document.getElementById('eleveForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-
+    function valider() {
       const eleve1 = {
-        nom: document.getElementById('nom1').value,
-        prenom: document.getElementById('prenom1').value,
-        classe: document.getElementById('classe1').value,
-        sexe: document.getElementById('sexe1').value
+        nom: document.getElementById("nom1").value,
+        prenom: document.getElementById("prenom1").value,
+        sexe: document.getElementById("sexe1").value
       };
-
       const eleve2 = {
-        nom: document.getElementById('nom2').value,
-        prenom: document.getElementById('prenom2').value,
-        classe: document.getElementById('classe2').value,
-        sexe: document.getElementById('sexe2').value
+        nom: document.getElementById("nom2").value,
+        prenom: document.getElementById("prenom2").value,
+        sexe: document.getElementById("sexe2").value
       };
+      const distance = document.getElementById("distance").value;
+      const duree = document.getElementById("duree").value;
 
-      const longueur = document.getElementById('longueur').value;
-      const duree = document.getElementById('duree').value;
+      if (!eleve1.nom || !eleve1.prenom || !eleve1.sexe || !eleve2.nom || !eleve2.prenom || !eleve2.sexe || !distance || !duree) {
+        alert("Veuillez remplir tous les champs.");
+        return;
+      }
 
-      sessionStorage.setItem('eleve1', JSON.stringify(eleve1));
-      sessionStorage.setItem('eleve2', JSON.stringify(eleve2));
-      sessionStorage.setItem('longueurTour', longueur);
-      sessionStorage.setItem('dureeCourse', duree);
+      sessionStorage.setItem("eleve1", JSON.stringify(eleve1));
+      sessionStorage.setItem("eleve2", JSON.stringify(eleve2));
+      sessionStorage.setItem("longueurTour", distance);
+      sessionStorage.setItem("dureeCourse", duree);
 
-      window.location.href = 'course.html';
-    });
+      window.location.href = "course.html";
+    }
   </script>
 </body>
 </html>
