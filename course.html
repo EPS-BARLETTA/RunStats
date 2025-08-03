@@ -18,13 +18,55 @@
       font-size: 1.6rem;
     }
 
-    .info-box {
+    .timer-container {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+    }
+
+    svg circle {
+      fill: none;
+      stroke-width: 10;
+    }
+
+    .bg {
+      stroke: #eee;
+    }
+
+    .progress {
+      stroke: #3498db;
+      transform: rotate(-90deg);
+      transform-origin: center;
+      transition: stroke 0.5s;
+    }
+
+    .danger {
+      stroke: red !important;
+      animation: clignote 1s infinite;
+    }
+
+    @keyframes clignote {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .timer-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    .data-box {
       background-color: #f0f8ff;
       padding: 20px;
       border-radius: 12px;
       width: 90%;
       max-width: 400px;
-      margin: 0 auto 30px auto;
+      margin: 30px auto 20px auto;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
@@ -75,9 +117,17 @@
 
   <h2 id="title">Course en cours</h2>
 
-  <div class="info-box">
-    <div class="data">⏱️ Temps restant : <span id="timer">--:--</span></div>
-    <button id="lapBtn" disabled>+ Tour</button>
+  <div class="timer-container">
+    <svg width="200" height="200">
+      <circle class="bg" r="90" cx="100" cy="100" />
+      <circle class="progress" r="90" cx="100" cy="100" stroke-dasharray="565.48" stroke-dashoffset="0" />
+    </svg>
+    <div class="timer-text" id="timer">--:--</div>
+  </div>
+
+  <button id="lapBtn" disabled>+ Tour</button>
+
+  <div class="data-box">
     <div class="data">Tours : <span id="laps">0</span></div>
     <div class="data">Distance : <span id="distance">0</span> m</div>
     <div class="data">Vitesse : <span id="vitesse">0.00</span> km/h</div>
