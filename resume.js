@@ -3,49 +3,48 @@ window.onload = function () {
   const eleve2 = JSON.parse(sessionStorage.getItem("eleve2"));
   const stats = JSON.parse(sessionStorage.getItem("stats"));
 
-  if (!eleve1 || !eleve2 || !stats) {
-    document.getElementById("results").innerHTML = "<p>Données indisponibles. Veuillez relancer une course.</p>";
+  const resultsDiv = document.getElementById("results");
+
+  if (!eleve1 || !eleve2 || !stats || stats.length < 2) {
+    resultsDiv.innerHTML = "<p>Aucune donnée disponible. Veuillez relancer une course.</p>";
     return;
   }
 
-  const results = [stats[0], stats[1]];
-  const container = document.getElementById("results");
-
-  results.forEach((result, index) => {
-    const box = document.createElement("div");
-    box.className = "eleve-box";
-
-    box.innerHTML = `
-      <h3>${result.nom} ${result.prenom}</h3>
-      <p><strong>Classe :</strong> ${result.classe}</p>
-      <p><strong>Sexe :</strong> ${result.sexe}</p>
-      <p><strong>Distance :</strong> ${result.distance} m</p>
-      <p><strong>Vitesse :</strong> ${result.vitesse.toFixed(2)} km/h</p>
-      <p><strong>Estimation VMA :</strong> ${result.vma.toFixed(2)} km/h</p>
+  const displayResult = (eleve) => {
+    return `
+      <div class="eleve-box">
+        <h3>${eleve.nom} ${eleve.prenom}</h3>
+        <p><strong>Classe :</strong> ${eleve.classe}</p>
+        <p><strong>Sexe :</strong> ${eleve.sexe}</p>
+        <p><strong>Distance :</strong> ${eleve.distance} m</p>
+        <p><strong>Vitesse :</strong> ${eleve.vitesse.toFixed(2)} km/h</p>
+        <p><strong>VMA estimée :</strong> ${eleve.vma.toFixed(2)} km/h</p>
+      </div>
     `;
+  };
 
-    container.appendChild(box);
-  });
+  resultsDiv.innerHTML = stats.map(displayResult).join("");
 
-  // QR Code
-  const qrData = results.map(e => `${e.nom} ${e.prenom} - ${e.vitesse.toFixed(1)} km/h - ${e.distance} m`).join('\n');
-  QRCode.toCanvas(document.createElement('canvas'), qrData, { width: 200 }, (err, canvas) => {
+  // Génération du QR code avec données compressées
+  const qrText = stats
+    .map(e => `${e.nom} ${e.prenom}: ${e.vitesse.toFixed(1)}km/h, ${e.distance}m`)
+    .join("\n");
+
+  QRCode.toCanvas(document.createElement("canvas"), qrText, { width: 200 }, (err, canvas) => {
     if (!err) document.getElementById("qrcode").appendChild(canvas);
   });
 
-  // CSV
-  document.getElementById("downloadCSV").addEventListener("click", function () {
-    const csvRows = [
-      "Nom,Prénom,Classe,Sexe,Distance (m),Vitesse (km/h),VMA estimée (km/h)",
-      ...results.map(e =>
-        `${e.nom},${e.prenom},${e.classe},${e.sexe},${e.distance},${e.vitesse.toFixed(2)},${e.vma.toFixed(2)}`
-      )
-    ];
-    const csvContent = "data:text/csv;charset=utf-8," + csvRows.join("\n");
-    const encodedUri = encodeURI(csvContent);
+  // Téléchargement CSV
+  document.getElementById("downloadCSV").addEventListener("click", () => {
+    const headers = ["Nom", "Prénom", "Classe", "Sexe", "Distance (m)", "Vitesse (km/h)", "VMA estimée (km/h)"];
+    const rows = stats.map(e =>
+      [e.nom, e.prenom, e.classe, e.sexe, e.distance, e.vitesse.toFixed(2), e.vma.toFixed(2)]
+    );
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "runstats_donnees.csv");
+    link.href = URL.createObjectURL(blob);
+    link.download = "donnees_runstats.csv";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
