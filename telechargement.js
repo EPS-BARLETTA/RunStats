@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   resultatsContainer.innerHTML = format(resultats1, 1) + format(resultats2, 2);
 
-  // ✅ QR code compatible ScanProf (format JSON complet)
+  // ✅ Générer QR code au format JSON compatible ScanProf
   const qrData = JSON.stringify([
     {
       nom: resultats1.nom,
@@ -40,8 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
       vma: resultats2.vmaEstimee
     }
   ]);
-
-  console.log("✅ QR JSON généré :", qrData); // debug console
 
   const qrContainer = document.getElementById("qrcode");
   new QRCode(qrContainer, {
