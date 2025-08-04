@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const resultats1 = JSON.parse(localStorage.getItem("resultats1"));
   const resultats2 = JSON.parse(localStorage.getItem("resultats2"));
 
-  // Afficher les résultats dans la page
+  // Affichage des élèves
   const resultatsContainer = document.getElementById("resultatsContainer");
 
   function formatResultats(eleve, num) {
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ${formatResultats(resultats2, 2)}
   `;
 
-  // ✅ Générer un QR code en JSON compatible ScanProf
+  // ✅ Générer QR code au format JSON
   const qrData = JSON.stringify([
     {
       nom: resultats1.nom,
@@ -47,13 +47,13 @@ document.addEventListener("DOMContentLoaded", () => {
   ]);
 
   const qrContainer = document.getElementById("qrcode");
-  const qrcode = new QRCode(qrContainer, {
+  new QRCode(qrContainer, {
     text: qrData,
     width: 200,
     height: 200,
   });
 
-  // Télécharger le QR code en image
+  // Télécharger QR code
   document.getElementById("downloadQrBtn").addEventListener("click", () => {
     const canvas = qrContainer.querySelector("canvas");
     const link = document.createElement("a");
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
     link.click();
   });
 
-  // Télécharger le CSV
+  // Télécharger CSV
   document.getElementById("downloadCsvBtn").addEventListener("click", () => {
     const csvContent = [
       ["Nom", "Prénom", "Classe", "Sexe", "Distance (m)", "Vitesse moyenne", "Estimation VMA"],
