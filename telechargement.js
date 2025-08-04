@@ -1,10 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Récupération des deux élèves
   const resultats1 = JSON.parse(localStorage.getItem("resultats1"));
   const resultats2 = JSON.parse(localStorage.getItem("resultats2"));
 
-  // Affichage
   const resultatsContainer = document.getElementById("resultatsContainer");
+
   function format(eleve, num) {
     return `
       <div class="resultat-card">
@@ -17,9 +16,10 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
   }
+
   resultatsContainer.innerHTML = format(resultats1, 1) + format(resultats2, 2);
 
-  // ✅ Générer QR code JSON compatible ScanProf
+  // ✅ QR code compatible ScanProf (format JSON complet)
   const qrData = JSON.stringify([
     {
       nom: resultats1.nom,
@@ -41,6 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   ]);
 
+  console.log("✅ QR JSON généré :", qrData); // debug console
+
   const qrContainer = document.getElementById("qrcode");
   new QRCode(qrContainer, {
     text: qrData,
@@ -48,7 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
     height: 200
   });
 
-  // Télécharger QR
   document.getElementById("downloadQrBtn").addEventListener("click", () => {
     const canvas = qrContainer.querySelector("canvas");
     const link = document.createElement("a");
@@ -57,15 +58,14 @@ document.addEventListener("DOMContentLoaded", () => {
     link.click();
   });
 
-  // Télécharger CSV
   document.getElementById("downloadCsvBtn").addEventListener("click", () => {
     const csvContent = [
-      ["Nom", "Prénom", "Classe", "Sexe", "Distance (m)", "Vitesse moyenne", "VMA"],
+      ["Nom", "Prénom", "Classe", "Sexe", "Distance (m)", "Vitesse", "VMA"],
       [resultats1.nom, resultats1.prenom, resultats1.classe, resultats1.sexe, resultats1.distance, resultats1.vitesse, resultats1.vmaEstimee],
       [resultats2.nom, resultats2.prenom, resultats2.classe, resultats2.sexe, resultats2.distance, resultats2.vitesse, resultats2.vmaEstimee]
     ]
-    .map(row => row.join(","))
-    .join("\n");
+      .map(row => row.join(","))
+      .join("\n");
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
