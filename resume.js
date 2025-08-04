@@ -16,8 +16,8 @@ window.onload = function () {
     const vitesse = (distance / 1000) / (duree / 60);
     const vma = vitesse * 1.15;
 
-    eleve.vitesse = vitesse;
-    eleve.vma = vma;
+    eleve.vitesse = parseFloat(vitesse.toFixed(2));
+    eleve.vma = parseFloat(vma.toFixed(2));
 
     return `
       <div class="eleve-box">
@@ -25,22 +25,22 @@ window.onload = function () {
         <p><strong>Classe :</strong> ${eleve.classe}</p>
         <p><strong>Sexe :</strong> ${eleve.sexe}</p>
         <p><strong>Distance :</strong> ${distance} m</p>
-        <p><strong>Vitesse :</strong> ${vitesse.toFixed(2)} km/h</p>
-        <p><strong>VMA estimée :</strong> ${vma.toFixed(2)} km/h</p>
+        <p><strong>Vitesse :</strong> ${eleve.vitesse} km/h</p>
+        <p><strong>VMA estimée :</strong> ${eleve.vma} km/h</p>
       </div>
     `;
   };
 
   resultsDiv.innerHTML = stats.map(displayResult).join("");
 
-  const qrText = stats
-    .map(e => `${e.nom} ${e.prenom}: ${(e.vitesse || 0).toFixed(1)}km/h, ${e.distance}m`)
-    .join("\n");
+  // ✅ QR code JSON compatible avec ScanProf
+  const qrData = JSON.stringify(stats);
 
-  QRCode.toCanvas(document.createElement("canvas"), qrText, { width: 200 }, (err, canvas) => {
+  QRCode.toCanvas(document.createElement("canvas"), qrData, { width: 200 }, (err, canvas) => {
     if (!err) document.getElementById("qrcode").appendChild(canvas);
   });
 
+  // ✅ Télécharger CSV
   document.getElementById("downloadCSV").addEventListener("click", () => {
     const headers = ["Nom", "Prénom", "Classe", "Sexe", "Distance (m)", "Vitesse (km/h)", "VMA (km/h)"];
     const rows = stats.map(e =>
