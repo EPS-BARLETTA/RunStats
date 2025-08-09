@@ -1,141 +1,162 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Résumé des performances</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f8ff;
-    padding: 20px;
-    text-align: center;
-  }
-  h2 {
-    margin-bottom: 20px;
-  }
-  table {
-    border-collapse: collapse;
-    margin: 0 auto 20px auto;
-    width: 90%;
-    max-width: 800px;
-  }
-  th, td {
-    border: 1px solid #333;
-    padding: 8px;
-  }
-  th {
-    background-color: #3498db;
-    color: white;
-  }
-  #qrcode {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-  }
-  button {
-    margin: 10px;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    background-color: #3498db;
-    color: white;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #217dbb;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <title>Résumé des performances – RunStats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg:#f0f8ff; --card:#ffffff; --text:#0b2447;
+      --primary:#3498db; --warn:#e67e22; --ok:#2ecc71; --muted:#6b7280;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; padding:20px; background:var(--bg); color:var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    h2{ text-align:center; margin:8px 0 16px; }
+    .card{
+      max-width:980px; margin:0 auto; background:var(--card);
+      border-radius:16px; padding:18px 16px; box-shadow:0 8px 24px rgba(0,0,0,.08);
+    }
+    table{ width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden; }
+    th,td{ padding:10px 12px; border:1px solid #e5e7eb; text-align:center; }
+    th{ background:var(--primary); color:#fff; }
+    tbody tr:nth-child(even){ background:#f8fbff; }
+
+    .qr-wrap{ display:flex; justify-content:center; align-items:center; margin:22px 0 8px; }
+    .hint{ text-align:center; font-size:.9rem; color:var(--muted); margin-top:2px; }
+
+    details.prof {
+      max-width: 520px; margin: 14px auto 8px; background:#fff; border:1px solid #e5e7eb;
+      border-radius:12px; padding:10px 12px;
+    }
+    details.prof summary {
+      cursor:pointer; list-style:none; font-weight:600; color:#0f3d87;
+    }
+    details.prof summary::-webkit-details-marker { display:none; }
+    .prof-actions { display:flex; justify-content:center; margin-top:10px; }
+    .btn{ border:0; border-radius:10px; padding:12px 18px; color:#fff; cursor:pointer; font-size:16px; min-width:240px; }
+    .btn-warn{ background:var(--warn); }
+    .btn-home{ background:var(--ok); display:block; margin:12px auto 0; }
+    footer{ text-align:center; margin-top:18px; color:#666; font-size:.92rem; }
+  </style>
 </head>
 <body>
 
-<h2>Résumé des performances</h2>
-<table id="resultTable">
-  <thead>
-    <tr>
-      <th>Nom</th>
-      <th>Prénom</th>
-      <th>Classe</th>
-      <th>Sexe</th>
-      <th>Distance (m)</th>
-      <th>Vitesse (km/h)</th>
-      <th>VMA (km/h)</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+  <div class="card">
+    <h2>Résumé des performances</h2>
 
-<div id="qrcode"></div>
+    <table id="resultsTable">
+      <thead>
+        <tr>
+          <th>Prénom</th>
+          <th>Nom</th>
+          <th>Classe</th>
+          <th>Sexe</th>
+          <th>Distance (m)</th>
+          <th>Vitesse (km/h)</th>
+          <th>VMA (km/h)</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
 
-<button onclick="adjustDistance()">🔑 Mode Prof</button>
-<button onclick="window.location.href='index.html'">🏠 Accueil</button>
+    <!-- QR bien centré et dégagé -->
+    <div class="qr-wrap"><div id="qrcode"></div></div>
+    <div class="hint">Scannez ce QR avec ScanProf</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script>
-let stats = JSON.parse(sessionStorage.getItem("stats")) || [];
+    <!-- Encadré repliable Mode Prof -->
+    <details class="prof">
+      <summary>🔐 Mode Prof (PIN requis)</summary>
+      <div class="prof-actions">
+        <button class="btn btn-warn" onclick="adjustDistancePrompt()">Ajuster distances</button>
+      </div>
+    </details>
 
-function renderTable() {
-  const tbody = document.querySelector("#resultTable tbody");
-  tbody.innerHTML = "";
-  stats.forEach(eleve => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${eleve.nom}</td>
-      <td>${eleve.prenom}</td>
-      <td>${eleve.classe}</td>
-      <td>${eleve.sexe}</td>
-      <td>${eleve.distance}</td>
-      <td>${eleve.vitesse.toFixed(2)}</td>
-      <td>${eleve.vma.toFixed(2)}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
+    <a class="btn btn-home" href="index.html">🏠 Accueil</a>
 
-function generateQRCode() {
-  document.getElementById("qrcode").innerHTML = "";
-  new QRCode(document.getElementById("qrcode"), {
-    text: JSON.stringify(stats),
-    width: 200,
-    height: 200
-  });
-}
+    <footer>RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+  </div>
 
-function adjustDistance() {
-  const pin = prompt("Code PIN requis :");
-  if (pin !== "57") {
-    alert("Code incorrect");
-    return;
-  }
+  <!-- Générateur de QR (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    // Lecture des stats (issues de course.js)
+    let stats = JSON.parse(sessionStorage.getItem("stats")) || [];
 
-  const index = prompt("Numéro du coureur à ajuster (1 ou 2) :");
-  if (index !== "1" && index !== "2") {
-    alert("Numéro invalide");
-    return;
-  }
+    const tableBody = document.querySelector("#resultsTable tbody");
+    const qrContainer = document.getElementById("qrcode");
 
-  const adjust = parseFloat(prompt("Ajustement en mètres (+ ou -) :"));
-  if (isNaN(adjust)) {
-    alert("Valeur invalide");
-    return;
-  }
+    function renderTable(){
+      tableBody.innerHTML = "";
+      stats.forEach(s => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${s.prenom || ""}</td>
+          <td>${s.nom || ""}</td>
+          <td>${s.classe || ""}</td>
+          <td>${s.sexe || ""}</td>
+          <td>${Number(s.distance||0).toFixed(0)}</td>
+          <td>${Number(s.vitesse||0).toFixed(2)}</td>
+          <td>${Number(s.vma||0).toFixed(2)}</td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
 
-  let eleve = stats[parseInt(index) - 1];
-  eleve.distance += adjust;
-  if (eleve.distance < 0) eleve.distance = 0;
+    function generateQR(){
+      qrContainer.innerHTML = "";
+      // JSON strictement conforme à ScanProf : nom, prenom, classe, sexe, distance, vitesse, vma
+      const payload = stats.map(s => ({
+        nom: s.nom,
+        prenom: s.prenom,
+        classe: s.classe,
+        sexe: s.sexe,
+        distance: Math.round(Number(s.distance||0)),
+        vitesse: Number(Number(s.vitesse||0).toFixed(2)),
+        vma: Number(Number(s.vma||0).toFixed(2))
+      }));
+      const text = JSON.stringify(payload);
+      new QRCode(qrContainer, { text, width: 256, height: 256 });
+    }
 
-  const dureeMinutes = parseFloat(sessionStorage.getItem("dureeCourse"));
-  const vitesse = (eleve.distance / 1000) / (dureeMinutes / 60);
-  eleve.vitesse = vitesse;
-  eleve.vma = vitesse * 1.15;
+    // Mode Prof : PIN 57, choix coureur 1/2, ajustement libre en mètres (positif ou négatif)
+    function adjustDistancePrompt(){
+      const pin = prompt("Code PIN requis :");
+      if(pin !== "57"){ alert("Code incorrect"); return; }
 
-  renderTable();
-  generateQRCode();
-}
+      if(!stats.length){ alert("Aucun résultat à ajuster."); return; }
 
-renderTable();
-generateQRCode();
-</script>
+      const idxStr = prompt("Numéro du coureur à ajuster (1 ou 2) :");
+      if(idxStr !== "1" && idxStr !== "2"){ alert("Numéro invalide"); return; }
+      const idx = parseInt(idxStr, 10) - 1;
+      if(idx < 0 || idx >= stats.length){ alert("Numéro invalide"); return; }
 
+      const deltaStr = prompt("Ajustement en mètres (ex: 25 ou -25) :");
+      const delta = Number(deltaStr);
+      if(Number.isNaN(delta)){ alert("Valeur invalide"); return; }
+
+      const dureeMin = Number(sessionStorage.getItem("dureeCourse") || 0);
+      if(dureeMin <= 0){ alert("Durée de course inconnue."); return; }
+
+      // Mise à jour élève
+      const eleve = stats[idx];
+      eleve.distance = Math.max(0, Number(eleve.distance||0) + delta);
+
+      // Recalculs cohérents
+      eleve.vitesse = (eleve.distance / 1000) / (dureeMin / 60);
+      eleve.vma = eleve.vitesse * 1.15;
+
+      // Persist + refresh
+      sessionStorage.setItem("stats", JSON.stringify(stats));
+      renderTable();
+      generateQR();
+    }
+
+    // Init
+    renderTable();
+    generateQR();
+  </script>
 </body>
 </html>
