@@ -60,9 +60,6 @@
       background-color: #e67e22;
       color: white;
     }
-    #qrcode {
-      margin-top: 20px;
-    }
   </style>
 </head>
 <body>
@@ -87,14 +84,9 @@
   <button id="homeBtn">Accueil</button>
   <button id="exportBtn">Exporter CSV</button>
 
-  <div id="qrcode"></div>
-
-  <!-- Script QR code depuis CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
     let stats = JSON.parse(sessionStorage.getItem("stats")) || [];
     const tableBody = document.querySelector("#resultsTable tbody");
-    const qrContainer = document.getElementById("qrcode");
 
     function renderTable() {
       tableBody.innerHTML = "";
@@ -112,12 +104,11 @@
         `;
         tableBody.appendChild(row);
       });
-      generateQR();
     }
 
     function adjustDistance(index) {
       const pin = prompt("Code PIN requis :");
-      if (pin !== "jb") {
+      if (pin !== "Jb") {
         alert("Code incorrect");
         return;
       }
@@ -138,24 +129,6 @@
 
       sessionStorage.setItem("stats", JSON.stringify(stats));
       renderTable();
-    }
-
-    function generateQR() {
-      qrContainer.innerHTML = "";
-      const jsonData = JSON.stringify(stats.map(s => ({
-        nom: s.nom,
-        prenom: s.prenom,
-        classe: s.classe,
-        sexe: s.sexe,
-        distance: Math.round(s.distance),
-        vitesse: parseFloat(s.vitesse.toFixed(2)),
-        vma: parseFloat(s.vma.toFixed(2))
-      })));
-      new QRCode(qrContainer, {
-        text: jsonData,
-        width: 256,
-        height: 256
-      });
     }
 
     document.getElementById("homeBtn").addEventListener("click", () => {
