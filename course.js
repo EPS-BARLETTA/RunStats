@@ -53,7 +53,6 @@ function enregistrerStats() {
     distance: distance,
     vitesse: vitesse,
     vma: vma,
-    temps: duree * 60
   });
 }
 
@@ -73,10 +72,11 @@ function terminerCourse() {
 
   enregistrerStats();
 
-  // Ouverture de la fenêtre fraction pour ajuster
+  // Demander fraction avant de passer à l'étape suivante
   const eleve = stats[stats.length - 1];
-  ajouterFraction(eleve, longueur).then((eleveModifie) => {
-    stats[stats.length - 1] = eleveModifie;
+  ajouterFraction(eleve, longueur).then((eleveMaj) => {
+    // Mettre à jour les stats avec les valeurs modifiées
+    stats[stats.length - 1] = eleveMaj;
 
     if (coureurActuel === 1) {
       nextBtn.style.display = "inline-block";
