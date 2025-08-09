@@ -66,6 +66,7 @@
   var distance = 0; // m
   var totalSeconds = Math.round(dureeCourse * 60); // compte à rebours
   var intervalId = null;
+  var readyToStartRunner2 = false;
 
   // ----- Initialisation -----
   updateHeader();
@@ -83,16 +84,26 @@
   });
 
   nextBtn.addEventListener("click", function () {
-    // Fin élève 1 : on fige ses valeurs, propose fraction, recalcule, sauve dans stats[0]
-    finalizeCurrentRunner().then(function () {
-      // Passe à l’élève 2
+    if (!readyToStartRunner2) {
+      finalizeCurrentRunner().then(function () {
+        // étape pause: afficher bouton pour lancer la course 2
+        readyToStartRunner2 = true;
+        nextBtn.textContent = "Lancer la course 2";
+      });
+    } else {
+      // démarrer la course 2
+      readyToStartRunner2 = false;
+      nextBtn.textContent = "Suivant";
       currentRunner = 1;
       laps = 0;
       distance = 0;
       totalSeconds = Math.round(dureeCourse * 60);
       resetRunnerDisplay();
+      updateHeader();
       startTimer();
-    });
+      nextBtn.style.display = "none";
+    }
+  });
   });
 
   summaryBtn.addEventListener("click", function () {
@@ -109,9 +120,11 @@
 
   // ----- Fonctions -----
   function updateHeader() {
-    if (titleEl) {
-      titleEl.textContent = currentRunner === 0 ? "Course — Élève 1" : "Course — Élève 2";
-    }
+    var nom = currentRunner === 0 ? (eleve1.nom || "") : (eleve2.nom || "");
+    var prenom = currentRunner === 0 ? (eleve1.prenom || "") : (eleve2.prenom || "");
+    var label = (prenom || nom) ? (prenom + " " + nom).trim() : (currentRunner === 0 ? "Élève 1" : "Élève 2");
+    titleEl.textContent = label;
+  }
   }
 
   function resetRunnerDisplay() {
@@ -155,8 +168,8 @@
     lapsEl.textContent = String(laps);
     distEl.textContent = String(Math.round(distance));
     var elapsedMin = (Math.round(dureeCourse * 60) - totalSeconds) / 60;
-    // vitesse instantanée en km/h
-    var vitesse = elapsedMin > 0 ? (distance / 1000) / elapsedMin : 0;
+    // vitesse instantanée en km/h (km/min * 60)
+    var vitesse = elapsedMin > 0 ? ((distance / 1000) / elapsedMin) * 60 : 0;
     vitEl.textContent = vitesse.toFixed(2);
     // VMA instantanée estimée (normalisée 6 min) sur le temps écoulé
     var vmaInst = elapsedMin > 0 ? vmaEquiv6minSmart(distance, elapsedMin) : 0;
