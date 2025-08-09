@@ -4,14 +4,14 @@ function afficherDonnees(eleve, prefix) {
   document.getElementById(`sexe${prefix}`).textContent = eleve.sexe;
   document.getElementById(`distance${prefix}`).textContent = eleve.distance;
   document.getElementById(`vitesse${prefix}`).textContent = eleve.vitesse.toFixed(2);
-  document.getElementById(`vma${prefix}`).textContent = eleve.vmaEstimee;
+  document.getElementById(`vma${prefix}`).textContent = (eleve.vmaEstimee != null ? eleve.vmaEstimee : eleve.vma);
 }
 
 function genererCSV(eleve1, eleve2) {
   const lignes = [
     ["Prénom", "Nom", "Classe", "Sexe", "Distance", "Vitesse (m/s)", "VMA estimée (km/h)"],
-    [eleve1.prenom, eleve1.nom, eleve1.classe, eleve1.sexe, eleve1.distance, eleve1.vitesse.toFixed(2), eleve1.vmaEstimee],
-    [eleve2.prenom, eleve2.nom, eleve2.classe, eleve2.sexe, eleve2.distance, eleve2.vitesse.toFixed(2), eleve2.vmaEstimee]
+    [eleve1.prenom, eleve1.nom, eleve1.classe, eleve1.sexe, eleve1.distance, eleve1.vitesse.toFixed(2), (eleve1.vmaEstimee != null ? eleve1.vmaEstimee : eleve1.vma)],
+    [eleve2.prenom, eleve2.nom, eleve2.classe, eleve2.sexe, eleve2.distance, eleve2.vitesse.toFixed(2), (eleve2.vmaEstimee != null ? eleve2.vmaEstimee : eleve2.vma)]
   ];
 
   const contenu = lignes.map(l => l.join(";")).join("\n");
