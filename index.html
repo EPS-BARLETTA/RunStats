@@ -1,69 +1,63 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RunStats – Accueil</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #e9f2ff;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .container {
-      text-align: center;
-      background: #ffffff;
-      padding: 40px 30px;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      max-width: 400px;
-      width: 90%;
-    }
-
-    h1 {
-      margin-bottom: 20px;
-      color: #2c3e50;
-    }
-
-    button {
-      margin-top: 20px;
-      padding: 12px 24px;
-      font-size: 1.1rem;
-      background-color: #3498db;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #2980b9;
-    }
-
-    footer {
-      margin-top: 40px;
-      font-size: 0.85rem;
-      color: #666;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>RunStats - Accueil</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    background-color: #dfeeff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
+  }
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+  }
+  .btn {
+    display: block;
+    width: 220px;
+    margin: 10px auto;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+    text-decoration: none;
+  }
+  .btn-scan {
+    background-color: #3498db;
+  }
+  .btn-course {
+    background-color: #2ecc71;
+  }
+  .btn-aide {
+    background-color: #9b59b6;
+  }
+  .btn:hover {
+    opacity: 0.9;
+  }
+  footer {
+    margin-top: 40px;
+    font-size: 0.9rem;
+    color: #666;
+  }
+</style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>Bienvenue sur RunStats</h1>
-    <p>Cliquez ci-dessous pour démarrer</p>
-    <button onclick="window.location.href='eleve.html'">RunStats</button>
-  </div>
+<h1>Bienvenue sur RunStats</h1>
 
-  <footer>
-    RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-  </footer>
+<a href="scanner.html" class="btn btn-scan">📷 Scanner QR Code</a>
+<a href="course.html" class="btn btn-course">🏃 Lancer la course</a>
+<a href="aide.html" class="btn btn-aide">📖 Mode d'emploi</a>
+
+<footer>
+  RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB
+</footer>
 
 </body>
 </html>
