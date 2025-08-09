@@ -6,8 +6,19 @@ const tbody = document.querySelector('#bilan-table tbody');
 const qrContainer = document.getElementById('qr-code');
 
 function kmh(distanceMeters, durationSeconds) {
+  // Helper vitesse (km/h)
+
   // km/h = (distance en m / 1000) / (temps en h)
   return (distanceMeters / 1000) / (durationSeconds / 3600);
+
+function vmaEquiv6min(distance_m, time_s) {
+  if (!isFinite(distance_m) || !isFinite(time_s) || time_s <= 0) return 0;
+  const tMin = Math.max(0.5, time_s / 60);
+  const v = kmh(distance_m, time_s);
+  const a = 0.06;
+  const v6 = v * Math.pow(tMin / 6, a);
+  return Math.round(v6 * 100) / 100;
+}
 }
 
 function afficherBilan() {
@@ -23,7 +34,7 @@ function afficherBilan() {
     // Calcul vitesse moyenne et VMA estimée
     const vitesseMoy = kmh(eleve.distanceTotal, eleve.duree);
     // VMA estimation simplifiée: on ajoute 0.5 km/h à la vitesse moyenne pour simuler l'estimation
-    const vmaEstimee = eleve.vma ? eleve.vma : (vitesseMoy + 0.5).toFixed(2);
+    const vmaEstimee = eleve.vma ? eleve.vma : vmaEquiv6min(eleve.distanceTotal, eleve.duree);
 
     const tr = document.createElement('tr');
     tr.innerHTML = `
@@ -47,7 +58,7 @@ function exportCSV() {
 
   const rows = eleves.map((eleve, i) => {
     const vitesseMoy = kmh(eleve.distanceTotal, eleve.duree);
-    const vmaEstimee = eleve.vma ? eleve.vma : (vitesseMoy + 0.5).toFixed(2);
+    const vmaEstimee = eleve.vma ? eleve.vma : vmaEquiv6min(eleve.distanceTotal, eleve.duree);
 
     return [
       `Élève ${i + 1}`,
@@ -83,7 +94,7 @@ function generateQRCode() {
 
   eleves.forEach((eleve, i) => {
     const vitesseMoy = kmh(eleve.distanceTotal, eleve.duree);
-    const vmaEstimee = eleve.vma ? eleve.vma : (vitesseMoy + 0.5).toFixed(2);
+    const vmaEstimee = eleve.vma ? eleve.vma : vmaEquiv6min(eleve.distanceTotal, eleve.duree);
 
     text += `Élève ${i + 1} - ${eleve.prenom} ${eleve.nom}\n`;
     text += `Classe: ${eleve.classe}, Sexe: ${eleve.sexe}\n`;
