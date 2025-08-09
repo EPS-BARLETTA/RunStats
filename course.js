@@ -48,7 +48,7 @@ function enregistrerStats(distance, vitesse, vma) {
     ...eleve,
     distance: distance,
     vitesse: vitesse,
-    vma: vma,
+    vma: vma // clé correcte pour ScanProf
   });
 }
 
