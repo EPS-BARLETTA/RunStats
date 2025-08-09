@@ -1,120 +1,118 @@
-// fraction.js — fenêtre d'ajout 1/4, 1/2, 3/4 de tour (sobre)
-
+// Helpers locaux
 function kmh(distance_m, time_s) {
-  return (time_s > 0) ? (distance_m / time_s) * 3.6 : 0;
+  if (!isFinite(distance_m) || !isFinite(time_s) || time_s <= 0) return 0;
+  return (distance_m / time_s) * 3.6;
 }
 
 function kmhSmart(distance_m, time_val) {
-  const time_s = (time_val <= 20) ? time_val * 60 : time_val;
+  if (!isFinite(distance_m) || !isFinite(time_val) || time_val <= 0) return 0;
+  const time_s = (time_val <= 20) ? time_val * 60 : time_val; // <=20 => minutes
   return kmh(distance_m, time_s);
 }
 
 function vmaEquiv6min(distance_m, time_s) {
-  if (time_s <= 0) return 0;
+  if (!isFinite(distance_m) || !isFinite(time_s) || time_s <= 0) return 0;
+  const tMin = Math.max(0.5, time_s / 60);
   const v = kmh(distance_m, time_s);
   const a = 0.06;
-  const v6 = v * Math.pow(Math.max(0.5, time_s / 60) / 6, a);
+  const v6 = v * Math.pow(tMin / 6, a);
   return Math.round(v6 * 100) / 100;
 }
 
 function vmaEquiv6minSmart(distance_m, time_val) {
+  if (!isFinite(distance_m) || !isFinite(time_val) || time_val <= 0) return 0;
   const time_s = (time_val <= 20) ? time_val * 60 : time_val;
   return vmaEquiv6min(distance_m, time_s);
 }
 
+// Fonction globale pour afficher la fenêtre d'ajout de fraction
 window.ajouterFraction = function (eleve, longueurTour) {
-  if (!longueurTour || longueurTour <= 0) {
-    longueurTour = parseFloat(sessionStorage.getItem('longueurTour')) || 0;
+  if (!isFinite(longueurTour) || longueurTour <= 0) {
+    try {
+      longueurTour = parseFloat(sessionStorage.getItem('longueurTour')) 
+                  || parseFloat(sessionStorage.getItem('lapLength')) || 0;
+    } catch (e) { longueurTour = 0; }
   }
+  longueurTour = isFinite(longueurTour) ? longueurTour : 0;
 
   return new Promise((resolve) => {
-    // Overlay sombre
     const overlay = document.createElement("div");
-    Object.assign(overlay.style, {
-      position: "fixed",
-      inset: "0",
-      background: "rgba(0,0,0,0.35)",
-      zIndex: "9999",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    });
+    overlay.style.position = "fixed";
+    overlay.style.inset = "0";
+    overlay.style.background = "rgba(0,0,0,0.35)";
+    overlay.style.zIndex = "9999";
+    overlay.style.display = "flex";
+    overlay.style.alignItems = "center";
+    overlay.style.justifyContent = "center";
 
-    // Boîte centrale
     const box = document.createElement("div");
-    Object.assign(box.style, {
-      background: "#fff",
-      padding: "18px",
-      borderRadius: "12px",
-      boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
-      minWidth: "280px",
-      textAlign: "center"
-    });
+    box.style.background = "#fff";
+    box.style.padding = "20px";
+    box.style.borderRadius = "12px";
+    box.style.boxShadow = "0 10px 30px rgba(0,0,0,0.2)";
+    box.style.minWidth = "280px";
+    box.style.maxWidth = "90vw";
+    box.style.textAlign = "center";
 
     const title = document.createElement("div");
     title.textContent = "Ajouter une fraction de tour";
     title.style.fontWeight = "600";
-    title.style.marginBottom = "10px";
+    title.style.marginBottom = "8px";
 
     const subtitle = document.createElement("div");
     subtitle.textContent = `(longueur du tour = ${Math.round(longueurTour)} m)`;
-    Object.assign(subtitle.style, {
-      fontSize: "12px",
-      opacity: "0.7",
-      marginBottom: "12px"
-    });
+    subtitle.style.fontSize = "12px";
+    subtitle.style.opacity = "0.7";
+    subtitle.style.marginBottom = "12px";
 
     const row = document.createElement("div");
-    Object.assign(row.style, {
-      display: "flex",
-      gap: "10px",
-      justifyContent: "center",
-      marginBottom: "12px"
-    });
+    row.style.display = "flex";
+    row.style.gap = "10px";
+    row.style.justifyContent = "center";
+    row.style.marginBottom = "12px";
 
     const mkBtn = (label, frac) => {
       const b = document.createElement("button");
       b.textContent = label;
-      Object.assign(b.style, {
-        padding: "10px 12px",
-        borderRadius: "8px",
-        border: "1px solid #ddd",
-        background: "#f6f7fb",
-        cursor: "pointer",
-        fontSize: "16px"
-      });
-      b.onclick = () => {
-        const ajoutDistance = longueurTour * frac;
+      b.dataset.fraction = String(frac);
+      b.style.padding = "10px 12px";
+      b.style.borderRadius = "10px";
+      b.style.border = "1px solid #ddd";
+      b.style.background = "#f6f7fb";
+      b.style.cursor = "pointer";
+      b.style.fontSize = "16px";
+      b.addEventListener("click", () => {
+        const fraction = parseFloat(b.dataset.fraction);
+        const ajoutDistance = longueurTour * fraction;
         eleve.distance += ajoutDistance;
-        eleve.vitesse = kmhSmart(eleve.distance, eleve.temps);
-        eleve.vma = vmaEquiv6minSmart(eleve.distance, eleve.temps);
+        eleve.vitesse = kmhSmart(eleve.distance, eleve.temps || duree * 60);
+        eleve.vma = vmaEquiv6minSmart(eleve.distance, eleve.temps || duree * 60);
         document.body.removeChild(overlay);
         resolve(eleve);
-      };
+      });
       return b;
     };
 
     const cancel = document.createElement("button");
     cancel.textContent = "Sans ajout";
-    Object.assign(cancel.style, {
-      padding: "8px 10px",
-      borderRadius: "8px",
-      border: "1px solid #ddd",
-      background: "#fff",
-      cursor: "pointer"
-    });
-    cancel.onclick = () => {
+    cancel.style.padding = "8px 10px";
+    cancel.style.borderRadius = "8px";
+    cancel.style.border = "1px solid #ddd";
+    cancel.style.background = "#fff";
+    cancel.style.cursor = "pointer";
+    cancel.addEventListener("click", () => {
       document.body.removeChild(overlay);
       resolve(eleve);
-    };
+    });
 
-    row.append(
-      mkBtn("¼ tour", 0.25),
-      mkBtn("½ tour", 0.5),
-      mkBtn("¾ tour", 0.75)
-    );
+    row.appendChild(mkBtn("¼ tour", 0.25));
+    row.appendChild(mkBtn("½ tour", 0.5));
+    row.appendChild(mkBtn("¾ tour", 0.75));
 
-    box.append(title, subtitle, row, cancel);
+    box.appendChild(title);
+    box.appendChild(subtitle);
+    box.appendChild(row);
+    box.appendChild(cancel);
     overlay.appendChild(box);
     document.body.appendChild(overlay);
   });
