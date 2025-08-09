@@ -42,7 +42,6 @@ function updateAffichage() {
   vmaDisplay.textContent = vma.toFixed(2);
 }
 
-// ➜ Sauvegarde au format ScanProf (clés et types exacts) + 'temps' pour le calcul interne
 function enregistrerStats() {
   const eleve = coureurActuel === 1 ? eleve1 : eleve2;
   const distance = nombreTours * longueur;
@@ -54,10 +53,10 @@ function enregistrerStats() {
     prenom: eleve.prenom,
     classe: eleve.classe,
     sexe: eleve.sexe,
-    distance: Math.round(distance),                 // m entier
-    vitesse: parseFloat(vitesse.toFixed(2)),        // km/h
-    vma: parseFloat(vma.toFixed(2)),                // km/h
-    temps: totalSeconds                             // interne (s) pour fraction.js
+    distance: Math.round(distance),
+    vitesse: parseFloat(vitesse.toFixed(2)),
+    vma: parseFloat(vma.toFixed(2)),
+    temps: totalSeconds // interne, utile pour fraction.js
   });
 }
 
@@ -67,17 +66,14 @@ function terminerCourse() {
   lapBtn.disabled = true;
   progressCircle.classList.remove("danger");
 
-  // 1) On pousse les stats brutes
   enregistrerStats();
 
-  // 2) On propose l'ajout de fraction AVANT d'afficher le bouton suivant
+  // Appel de fraction.js si présent
   const eleve = stats[stats.length - 1];
   if (typeof ajouterFraction === "function") {
     ajouterFraction(eleve, longueur).then((eleveMaj) => {
-      // Met à jour l'entrée avec les valeurs corrigées (distance/vitesse/vma)
       stats[stats.length - 1] = eleveMaj;
 
-      // 3) Affiche le bouton suivant / résumé
       if (coureurActuel === 1) {
         nextBtn.style.display = "inline-block";
       } else {
@@ -85,7 +81,6 @@ function terminerCourse() {
       }
     });
   } else {
-    // Si fraction.js n'est pas chargé, on continue comme avant
     if (coureurActuel === 1) {
       nextBtn.style.display = "inline-block";
     } else {
@@ -147,8 +142,6 @@ nextBtn.addEventListener("click", () => {
 });
 
 summaryBtn.addEventListener("click", () => {
-  // On ne garde que les champs requis par ScanProf dans le storage si tu veux être strict :
-  // (Tu peux aussi garder 'stats' tel quel, ton resume.html sait mapper correctement.)
   sessionStorage.setItem("stats", JSON.stringify(stats));
   window.location.href = "resume.html";
 });
