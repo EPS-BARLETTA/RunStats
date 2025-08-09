@@ -42,75 +42,45 @@ function updateAffichage() {
   vmaDisplay.textContent = vma.toFixed(2);
 }
 
-function enregistrerStats(distance, vitesse, vma) {
+function enregistrerStats() {
   const eleve = coureurActuel === 1 ? eleve1 : eleve2;
+  const distance = nombreTours * longueur;
+  const vitesse = (distance / 1000) / (duree / 60);
+  const vma = vitesse * 1.15;
+
   stats.push({
     ...eleve,
     distance: distance,
     vitesse: vitesse,
-    vma: vma // clé conforme ScanProf
+    vma: vma,
   });
 }
 
-// === Calculs pour ajout tour partiel ===
-function calcVitesseMoyenne(distanceM) {
-  return (distanceM / 1000) / (duree / 60);
-}
-function calcVMA(vitesseKmh) {
-  return vitesseKmh * 1.15;
-}
-function appliquerPartielSurAffichageEtStats(fraction) {
-  const ajout = fraction * longueur;
-  const distanceActuelle = Number(distanceDisplay.textContent) || 0;
-  const distanceTotale = Math.round((distanceActuelle + ajout) * 100) / 100;
-
-  const v = calcVitesseMoyenne(distanceTotale);
-  const vma = calcVMA(v);
-
-  distanceDisplay.textContent = distanceTotale.toFixed(0);
-  vitesseDisplay.textContent = v.toFixed(2);
-  vmaDisplay.textContent = vma.toFixed(2);
-
-  return { distanceTotale, v, vma };
-}
-function ouvrirDialoguePartiel(callbackApresChoix) {
-  const dlg = document.getElementById('partialDialog');
-  if (!dlg) return callbackApresChoix(0);
-
-  const info = document.getElementById('partialDialogInfo');
-  const nom = (coureurActuel === 1 ? eleve1 : eleve2);
-  if (info) info.textContent = `${nom.prenom} ${nom.nom} — longueur de tour : ${longueur} m`;
-
-  const onClose = () => {
-    dlg.removeEventListener('close', onClose);
-    const fraction = Number(dlg.returnValue || 0);
-    callbackApresChoix(fraction);
-  };
-
-  dlg.addEventListener('close', onClose, { once: true });
-  dlg.showModal();
+function changerCouleurFond() {
+  if (coureurActuel === 1) {
+    document.body.style.backgroundColor = "#d0e8ff"; // bleu clair
+  } else {
+    document.body.style.backgroundColor = "#d4fbd4"; // vert clair
+  }
 }
 
-// === Fin de course avec popup ajout tour partiel ===
 function terminerCourse() {
   clearInterval(timerInterval);
   isRunning = false;
   lapBtn.disabled = true;
   progressCircle.classList.remove("danger");
 
-  ouvrirDialoguePartiel((fractionChoisie) => {
-    const { distanceTotale, v, vma } = appliquerPartielSurAffichageEtStats(fractionChoisie);
-    enregistrerStats(distanceTotale, v, vma);
+  enregistrerStats();
 
-    if (coureurActuel === 1) {
-      nextBtn.style.display = "inline-block";
-    } else {
-      summaryBtn.style.display = "inline-block";
-    }
-  });
+  if (coureurActuel === 1) {
+    nextBtn.style.display = "inline-block";
+  } else {
+    summaryBtn.style.display = "inline-block";
+  }
 }
 
 function demarrerChrono() {
+  changerCouleurFond();
   tempsRestant = totalSeconds;
   isRunning = true;
   lapBtn.disabled = false;
@@ -143,7 +113,6 @@ function demarrerChrono() {
   }, 1000);
 }
 
-// === Boutons ===
 lapBtn.addEventListener("click", () => {
   if (!isRunning) return;
   nombreTours++;
@@ -168,7 +137,6 @@ summaryBtn.addEventListener("click", () => {
   window.location.href = "resume.html";
 });
 
-// === Au chargement ===
 window.onload = () => {
   document.getElementById("title").innerText = `Course de ${eleve1.prenom} ${eleve1.nom}`;
   demarrerChrono();
