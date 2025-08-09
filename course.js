@@ -48,12 +48,13 @@ function enregistrerStats() {
   const vitesse = (distance / 1000) / (duree / 60);
   const vma = vitesse * 1.15;
 
-  return {
+  stats.push({
     ...eleve,
     distance: distance,
     vitesse: vitesse,
     vma: vma,
-  };
+    temps: duree * 60
+  });
 }
 
 function changerCouleurFond() {
@@ -70,12 +71,12 @@ function terminerCourse() {
   lapBtn.disabled = true;
   progressCircle.classList.remove("danger");
 
-  // Stocker stats provisoires
-  let data = enregistrerStats();
+  enregistrerStats();
 
-  // Demander la fraction avant de passer à la suite
-  ajouterFraction(data, longueur).then((majData) => {
-    stats.push(majData);
+  // Ouverture de la fenêtre fraction pour ajuster
+  const eleve = stats[stats.length - 1];
+  ajouterFraction(eleve, longueur).then((eleveModifie) => {
+    stats[stats.length - 1] = eleveModifie;
 
     if (coureurActuel === 1) {
       nextBtn.style.display = "inline-block";
