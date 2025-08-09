@@ -1,112 +1,160 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Course</title>
+  <meta charset="UTF-8">
+  <title>Course - RunStats</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    :root {
-      --primary: #1e88e5;
-      --green: #2e7d32;
-      --bg: #f7f8fb;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --card: #ffffff;
-      --shadow: 0 6px 24px rgba(0,0,0,0.08);
-      --radius: 16px;
-    }
-    * { box-sizing: border-box; }
     body {
-      margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: var(--bg); color: var(--text);
-      display: flex; min-height: 100vh; align-items: center; justify-content: center; padding: 16px;
-    }
-    .wrap {
-      width: min(960px, 100%); background: var(--card); border-radius: var(--radius);
-      box-shadow: var(--shadow); padding: 20px;
-    }
-    header {
-      display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px;
-    }
-    #title { font-size: 22px; font-weight: 700; }
-    .actions-top a {
-      text-decoration: none; padding: 10px 12px; border-radius: 10px; background: #eef2ff; color: #3949ab;
-      border: 1px solid #dfe3f6;
+      background-color: #dfeeff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
     }
 
-    .grid {
-      display: grid; gap: 14px; grid-template-columns: repeat(6, 1fr);
+    h2#title {
+      margin-bottom: 30px;
+      font-size: 1.6rem;
     }
-    .card {
-      background: var(--card); border: 1px solid #eef1f5; border-radius: 14px; padding: 14px; text-align: center;
-    }
-    .card h3 { margin: 0 0 6px; font-size: 13px; color: var(--muted); font-weight: 600; letter-spacing: .2px; }
-    .data { font-weight: 800; font-size: clamp(20px, 6vw, 36px); }
-    .timer .data { font-size: clamp(26px, 8vw, 44px); }
 
-    .buttons {
-      margin-top: 10px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    .timer-container {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
     }
-    button {
-      border: 1px solid #e5e7eb; background: #fff; padding: 12px 16px; border-radius: 12px; cursor: pointer;
-      font-size: 16px; box-shadow: 0 2px 0 rgba(0,0,0,0.04);
-    }
-    #lapBtn { background: #f1f8ff; border-color: #dbeafe; }
-    #nextBtn { background: #fff8e1; border-color: #ffecb3; }
-    #summaryBtn { background: #e8f5e9; border-color: #c8e6c9; }
-    button:disabled { opacity: .45; cursor: not-allowed; }
 
-    @media (max-width: 720px) {
-      .grid { grid-template-columns: repeat(2, 1fr); }
+    svg circle {
+      fill: none;
+      stroke-width: 10;
+    }
+
+    .bg {
+      stroke: #eee;
+    }
+
+    .progress {
+      stroke: #3498db;
+      transform: rotate(-90deg);
+      transform-origin: center;
+      transition: stroke 0.5s;
+    }
+
+    .danger {
+      stroke: red !important;
+      animation: clignote 1s infinite;
+    }
+
+    @keyframes clignote {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .timer-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    .data-box {
+      background-color: #f0f8ff;
+      padding: 20px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      margin: 30px auto 20px auto;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .data {
+      margin: 10px 0;
+      font-size: 1.2rem;
+    }
+
+    #lapBtn {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #2ecc71;
+      color: white;
+      font-size: 16px;
+      border: none;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    #nextBtn, #summaryBtn {
+      padding: 12px 20px;
+      font-size: 16px;
+      margin: 20px 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #nextBtn {
+      background-color: #3498db;
+      color: white;
+    }
+
+    #summaryBtn {
+      background-color: #9b59b6;
+      color: white;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.9rem;
+      color: #666;
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <!-- Le JS remplacera par "Prénom Nom" du coureur en cours -->
-      <div id="title">Course</div>
-      <div class="actions-top">
-        <a href="index.html">🏠 Accueil</a>
-      </div>
-    </header>
 
-    <div class="grid">
-      <div class="card timer">
-        <h3>Temps</h3>
-        <div id="timer" class="data">03:00</div>
-      </div>
-      <div class="card">
-        <h3>Tours</h3>
-        <div id="laps" class="data">0</div>
-      </div>
-      <div class="card">
-        <h3>Distance (m)</h3>
-        <div id="distance" class="data">0</div>
-      </div>
-      <div class="card">
-        <h3>Vitesse (km/h)</h3>
-        <div id="vitesse" class="data">0.00</div>
-      </div>
-      <div class="card">
-        <h3>VMA (km/h)</h3>
-        <div id="vma" class="data">0.00</div>
-      </div>
-      <div class="card">
-        <h3>Infos</h3>
-        <div class="data" style="font-size:18px">2 coureurs • ajout fraction en fin</div>
-      </div>
-    </div>
+  <h2 id="title">Course en cours</h2>
 
-    <div class="buttons">
-      <button id="lapBtn">+ 1 tour</button>
-      <button id="nextBtn" style="display:none">Suivant</button>
-      <button id="summaryBtn" style="display:none">Résumé</button>
-    </div>
+  <div class="timer-container">
+    <svg width="200" height="200">
+      <circle class="bg" r="90" cx="100" cy="100" />
+      <circle class="progress" r="90" cx="100" cy="100" stroke-dasharray="565.48" stroke-dashoffset="0" />
+    </svg>
+    <div class="timer-text" id="timer">--:--</div>
   </div>
 
-  <!-- IMPORTANT : charger fraction.js AVANT course.js, et en defer -->
-  <script src="fraction.js" defer></script>
-  <script src="course.js" defer></script>
+  <button id="lapBtn" disabled>+ Tour</button>
+
+  <div class="data-box">
+    <div class="data">Tours : <span id="laps">0</span></div>
+    <div class="data">Distance : <span id="distance">0</span> m</div>
+    <div class="data">Vitesse : <span id="vitesse">0.00</span> km/h</div>
+    <div class="data">Estimation VMA : <span id="vma">0.00</span> km/h</div>
+  </div>
+
+  <button id="nextBtn" style="display:none;">Passer au coureur 2</button>
+  <button id="summaryBtn" style="display:none;">Aller au résumé</button>
+
+  <!-- Dialogue d'ajout de tour partiel -->
+  <dialog id="partialDialog" style="padding:16px;border-radius:12px;max-width:360px">
+    <form method="dialog" style="margin:0">
+      <h3 style="margin:0 0 8px">Ajouter un tour partiel ?</h3>
+      <p id="partialDialogInfo" style="margin:0 0 12px;opacity:.8"></p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start">
+        <button value="0.25">+ 1/4</button>
+        <button value="0.5">+ 1/2</button>
+        <button value="0.75">+ 3/4</button>
+        <button value="0" style="margin-left:auto">Non</button>
+      </div>
+    </form>
+  </dialog>
+
+  <footer>
+    RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB
+  </footer>
+
+  <script src="course.js"></script>
 </body>
 </html>
