@@ -1,4 +1,5 @@
-// Helpers locaux
+// fraction.js — fenêtre d'ajout 1/4, 1/2, 3/4 de tour
+
 function kmh(distance_m, time_s) {
   if (!isFinite(distance_m) || !isFinite(time_s) || time_s <= 0) return 0;
   return (distance_m / time_s) * 3.6;
@@ -6,7 +7,7 @@ function kmh(distance_m, time_s) {
 
 function kmhSmart(distance_m, time_val) {
   if (!isFinite(distance_m) || !isFinite(time_val) || time_val <= 0) return 0;
-  const time_s = (time_val <= 20) ? time_val * 60 : time_val; // <=20 => minutes
+  const time_s = (time_val <= 20) ? time_val * 60 : time_val;
   return kmh(distance_m, time_s);
 }
 
@@ -25,17 +26,16 @@ function vmaEquiv6minSmart(distance_m, time_val) {
   return vmaEquiv6min(distance_m, time_s);
 }
 
-// Fonction globale pour afficher la fenêtre d'ajout de fraction
+// Fonction globale appelée par course.js
 window.ajouterFraction = function (eleve, longueurTour) {
   if (!isFinite(longueurTour) || longueurTour <= 0) {
     try {
-      longueurTour = parseFloat(sessionStorage.getItem('longueurTour')) 
-                  || parseFloat(sessionStorage.getItem('lapLength')) || 0;
+      longueurTour = parseFloat(sessionStorage.getItem('longueurTour')) || 0;
     } catch (e) { longueurTour = 0; }
   }
-  longueurTour = isFinite(longueurTour) ? longueurTour : 0;
 
   return new Promise((resolve) => {
+    // overlay
     const overlay = document.createElement("div");
     overlay.style.position = "fixed";
     overlay.style.inset = "0";
@@ -45,9 +45,10 @@ window.ajouterFraction = function (eleve, longueurTour) {
     overlay.style.alignItems = "center";
     overlay.style.justifyContent = "center";
 
+    // modal
     const box = document.createElement("div");
     box.style.background = "#fff";
-    box.style.padding = "20px";
+    box.style.padding = "18px";
     box.style.borderRadius = "12px";
     box.style.boxShadow = "0 10px 30px rgba(0,0,0,0.2)";
     box.style.minWidth = "280px";
@@ -57,7 +58,7 @@ window.ajouterFraction = function (eleve, longueurTour) {
     const title = document.createElement("div");
     title.textContent = "Ajouter une fraction de tour";
     title.style.fontWeight = "600";
-    title.style.marginBottom = "8px";
+    title.style.marginBottom = "10px";
 
     const subtitle = document.createElement("div");
     subtitle.textContent = `(longueur du tour = ${Math.round(longueurTour)} m)`;
@@ -85,8 +86,10 @@ window.ajouterFraction = function (eleve, longueurTour) {
         const fraction = parseFloat(b.dataset.fraction);
         const ajoutDistance = longueurTour * fraction;
         eleve.distance += ajoutDistance;
+        // Mise à jour vitesse et VMA
         eleve.vitesse = kmhSmart(eleve.distance, eleve.temps || duree * 60);
         eleve.vma = vmaEquiv6minSmart(eleve.distance, eleve.temps || duree * 60);
+        // fermer
         document.body.removeChild(overlay);
         resolve(eleve);
       });
