@@ -72,11 +72,17 @@ function terminerCourse() {
 
   enregistrerStats();
 
-  if (coureurActuel === 1) {
-    nextBtn.style.display = "inline-block";
-  } else {
-    summaryBtn.style.display = "inline-block";
-  }
+  // AJOUT : ouverture de la fenêtre pour ajouter une fraction
+  let indexStats = stats.length - 1;
+  ajouterFraction(stats[indexStats], longueur).then((eleveCorrige) => {
+    stats[indexStats] = eleveCorrige;
+
+    if (coureurActuel === 1) {
+      nextBtn.style.display = "inline-block";
+    } else {
+      summaryBtn.style.display = "inline-block";
+    }
+  });
 }
 
 function demarrerChrono() {
