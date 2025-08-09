@@ -32,8 +32,8 @@ function ajouterFraction(eleve, longueurTour) {
                 const fraction = parseFloat(btn.dataset.fraction);
                 const ajoutDistance = longueurTour * fraction;
                 eleve.distance += ajoutDistance;
-                eleve.vitesse = (eleve.distance / eleve.temps) * 60;
-                eleve.vma = eleve.vitesse * 1.15;
+                eleve.vitesse = kmh(eleve.distance, eleve.temps * 60);
+                eleve.vma = vmaEquiv6min(eleve.distance, eleve.temps * 60);
 
                 document.body.removeChild(choix);
                 resolve(eleve);
@@ -41,4 +41,3 @@ function ajouterFraction(eleve, longueurTour) {
         });
     });
 }
-
