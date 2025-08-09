@@ -1,6 +1,20 @@
 // course.js — 2 coureurs, ajout fraction à la fin de CHAQUE course, recalcul distance/vitesse/VMA
 
 (function () {
+  // === Helpers: vitesse (km/h) & VMA normalisée 6 min ===
+  function kmh(distance_m, time_s) {
+    if (!isFinite(distance_m) || !isFinite(time_s) || time_s <= 0) return 0;
+    return (distance_m / time_s) * 3.6;
+  }
+  function vmaEquiv6min(distance_m, time_s) {
+    if (!isFinite(distance_m) || !isFinite(time_s) || time_s <= 0) return 0;
+    const tMin = Math.max(0.5, time_s / 60);
+    const v = kmh(distance_m, time_s);
+    const a = 0.06;
+    const v6 = v * Math.pow(tMin / 6, a);
+    return Math.round(v6 * 100) / 100;
+  }
+
   // ----- Récup des données de départ -----
   var eleve1 = safeParse(sessionStorage.getItem("eleve1")) || {};
   var eleve2 = safeParse(sessionStorage.getItem("eleve2")) || {};
