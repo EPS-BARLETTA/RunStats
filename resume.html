@@ -17,7 +17,7 @@
     }
     table {
       width: 95%;
-      max-width: 700px;
+      max-width: 800px;
       margin: 0 auto 20px auto;
       border-collapse: collapse;
       background-color: white;
@@ -26,6 +26,7 @@
     th, td {
       padding: 10px;
       border: 1px solid #ccc;
+      text-align: center;
     }
     th {
       background-color: #3498db;
@@ -35,9 +36,8 @@
       background-color: #f2f2f2;
     }
     button {
-      padding: 10px 16px;
-      font-size: 16px;
-      margin: 10px;
+      padding: 6px 10px;
+      font-size: 14px;
       border: none;
       border-radius: 6px;
       cursor: pointer;
@@ -45,10 +45,23 @@
     #homeBtn {
       background-color: #2ecc71;
       color: white;
+      padding: 10px 16px;
+      font-size: 16px;
+      margin: 10px;
     }
     #exportBtn {
       background-color: #9b59b6;
       color: white;
+      padding: 10px 16px;
+      font-size: 16px;
+      margin: 10px;
+    }
+    .adjustBtn {
+      background-color: #e67e22;
+      color: white;
+    }
+    #qrcode {
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -61,44 +74,98 @@
         <th>Prénom</th>
         <th>Nom</th>
         <th>Classe</th>
+        <th>Sexe</th>
         <th>Distance (m)</th>
         <th>Vitesse (km/h)</th>
         <th>VMA (km/h)</th>
+        <th>Action</th>
       </tr>
     </thead>
-    <tbody>
-      <!-- lignes générées en JS -->
-    </tbody>
+    <tbody></tbody>
   </table>
 
   <button id="homeBtn">Accueil</button>
   <button id="exportBtn">Exporter CSV</button>
 
-  <script>
-    const stats = JSON.parse(sessionStorage.getItem("stats")) || [];
-    const tableBody = document.querySelector("#resultsTable tbody");
+  <div id="qrcode"></div>
 
-    stats.forEach(s => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${s.prenom}</td>
-        <td>${s.nom}</td>
-        <td>${s.classe || ""}</td>
-        <td>${Number(s.distance).toFixed(0)}</td>
-        <td>${Number(s.vitesse).toFixed(2)}</td>
-        <td>${Number(s.vma).toFixed(2)}</td>
-      `;
-      tableBody.appendChild(row);
-    });
+  <!-- Script QR code depuis CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    let stats = JSON.parse(sessionStorage.getItem("stats")) || [];
+    const tableBody = document.querySelector("#resultsTable tbody");
+    const qrContainer = document.getElementById("qrcode");
+
+    function renderTable() {
+      tableBody.innerHTML = "";
+      stats.forEach((s, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${s.prenom}</td>
+          <td>${s.nom}</td>
+          <td>${s.classe || ""}</td>
+          <td>${s.sexe || ""}</td>
+          <td>${Number(s.distance).toFixed(0)}</td>
+          <td>${Number(s.vitesse).toFixed(2)}</td>
+          <td>${Number(s.vma_calculee).toFixed(2)}</td>
+          <td><button class="adjustBtn" onclick="adjustDistance(${index})">⚙️ Ajuster</button></td>
+        `;
+        tableBody.appendChild(row);
+      });
+      generateQR();
+    }
+
+    function adjustDistance(index) {
+      const pin = prompt("Code PIN requis :");
+      if (pin !== "jb") {
+        alert("Code incorrect");
+        return;
+      }
+      const choice = prompt("Ajouter :\n1 = +1/4 tour\n2 = +1/2 tour\n3 = +3/4 tour\n0 = Annuler");
+      const fractions = { "1": 0.25, "2": 0.5, "3": 0.75 };
+      if (!fractions[choice]) return;
+
+      const longueur = parseFloat(sessionStorage.getItem("longueurTour")) || 400;
+      const add = fractions[choice] * longueur;
+
+      const distanceTotale = stats[index].distance + add;
+      const vitesse = (distanceTotale / 1000) / (parseFloat(sessionStorage.getItem("dureeCourse")) / 60);
+      const vma_calculee = vitesse * 1.15;
+
+      stats[index].distance = distanceTotale;
+      stats[index].vitesse = vitesse;
+      stats[index].vma_calculee = vma_calculee;
+
+      sessionStorage.setItem("stats", JSON.stringify(stats));
+      renderTable();
+    }
+
+    function generateQR() {
+      qrContainer.innerHTML = "";
+      const jsonData = JSON.stringify(stats.map(s => ({
+        nom: s.nom,
+        prenom: s.prenom,
+        classe: s.classe,
+        sexe: s.sexe,
+        distance: Math.round(s.distance),
+        vitesse: parseFloat(s.vitesse.toFixed(2)),
+        vma_calculee: parseFloat(s.vma_calculee.toFixed(2))
+      })));
+      new QRCode(qrContainer, {
+        text: jsonData,
+        width: 256,
+        height: 256
+      });
+    }
 
     document.getElementById("homeBtn").addEventListener("click", () => {
       window.location.href = "index.html";
     });
 
     document.getElementById("exportBtn").addEventListener("click", () => {
-      let csv = "Prénom;Nom;Classe;Distance (m);Vitesse (km/h);VMA (km/h)\n";
+      let csv = "Prénom;Nom;Classe;Sexe;Distance (m);Vitesse (km/h);VMA (km/h)\n";
       stats.forEach(s => {
-        csv += `${s.prenom};${s.nom};${s.classe || ""};${Number(s.distance).toFixed(0)};${Number(s.vitesse).toFixed(2)};${Number(s.vma).toFixed(2)}\n`;
+        csv += `${s.prenom};${s.nom};${s.classe || ""};${s.sexe || ""};${Number(s.distance).toFixed(0)};${Number(s.vitesse).toFixed(2)};${Number(s.vma_calculee).toFixed(2)}\n`;
       });
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
@@ -108,7 +175,8 @@
       a.click();
       URL.revokeObjectURL(url);
     });
-  </script>
 
+    renderTable();
+  </script>
 </body>
 </html>
