@@ -56,14 +56,6 @@ function enregistrerStats() {
   });
 }
 
-function changerCouleurFond() {
-  if (coureurActuel === 1) {
-    document.body.style.backgroundColor = "#d0e8ff"; // bleu clair
-  } else {
-    document.body.style.backgroundColor = "#d4fbd4"; // vert clair
-  }
-}
-
 function terminerCourse() {
   clearInterval(timerInterval);
   isRunning = false;
@@ -72,11 +64,11 @@ function terminerCourse() {
 
   enregistrerStats();
 
-  // Demander fraction avant de passer à l'étape suivante
-  const eleve = stats[stats.length - 1];
+  // Ajout de la fenêtre fraction avant de passer à l'étape suivante
+  const eleve = coureurActuel === 1 ? stats[0] : stats[1];
   ajouterFraction(eleve, longueur).then((eleveMaj) => {
-    // Mettre à jour les stats avec les valeurs modifiées
-    stats[stats.length - 1] = eleveMaj;
+    // Mettre à jour dans stats
+    stats[coureurActuel - 1] = eleveMaj;
 
     if (coureurActuel === 1) {
       nextBtn.style.display = "inline-block";
@@ -87,7 +79,6 @@ function terminerCourse() {
 }
 
 function demarrerChrono() {
-  changerCouleurFond();
   tempsRestant = totalSeconds;
   isRunning = true;
   lapBtn.disabled = false;
