@@ -1,88 +1,115 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Course - RunStats</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Course</title>
   <style>
-    body { background-color: #dfeeff; font-family: Arial, sans-serif; margin: 0; padding: 20px; text-align: center; }
-    h2#title { color: #1e90ff; margin-bottom: 10px; }
-    .panel { background:#fff; border-radius:8px; padding:14px; max-width:900px; margin:0 auto 16px; box-shadow:0 2px 10px rgba(0,0,0,.06); text-align:left; }
-    .row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
-    .data { font-size: 18px; margin: 8px 0; }
-    #timer { font-size: 28px; font-weight: bold; }
-    #controls { margin: 12px 0; }
-    button { padding: 10px 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
-    #lapBtn { background:#1e90ff; color:#fff; }
-    #nextBtn { background:#ffd166; color:#222; }
-    #summaryBtn { background:#2ecc71; color:#fff; }
+    :root {
+      --primary: #1e88e5;
+      --green: #2e7d32;
+      --red: #c62828;
+      --bg: #f7f8fb;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --card: #ffffff;
+      --shadow: 0 6px 24px rgba(0,0,0,0.08);
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg); color: var(--text);
+      display: flex; min-height: 100vh; align-items: center; justify-content: center; padding: 16px;
+    }
+    .wrap {
+      width: min(960px, 100%); background: var(--card); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 20px;
+    }
+    header {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px;
+    }
+    #title { font-size: 22px; font-weight: 700; }
+    .actions-top a {
+      text-decoration: none; padding: 10px 12px; border-radius: 10px; background: #eef2ff; color: #3949ab;
+      border: 1px solid #dfe3f6;
+    }
 
-    /* --- Modal fraction --- */
-    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.4); display:none; align-items:center; justify-content:center; z-index:999; }
-    .modal { background:#fff; border-radius:10px; padding:16px; width: min(520px, 92vw); box-shadow:0 10px 30px rgba(0,0,0,.2); }
-    .modal h3 { margin: 0 0 8px; color:#1e90ff; }
-    .modal .onlyA, .modal .onlyB { display:none; }
-    .modal label { font-weight:600; }
-    .modal select { width:100%; padding:8px; border:1px solid #ccc; border-radius:6px; }
-    .modal .actions { display:flex; gap:10px; justify-content:flex-end; margin-top:12px; }
-    .btn-cancel { background:#e74c3c; color:#fff; }
-    .btn-validate { background:#2ecc71; color:#fff; }
+    .grid {
+      display: grid; gap: 14px; grid-template-columns: repeat(6, 1fr);
+    }
+    .card {
+      background: var(--card); border: 1px solid #eef1f5; border-radius: 14px; padding: 14px; text-align: center;
+    }
+    .card h3 { margin: 0 0 6px; font-size: 13px; color: var(--muted); font-weight: 600; letter-spacing: .2px; }
+    .data { font-weight: 800; font-size: clamp(20px, 6vw, 36px); }
+
+    /* Timer plus visible */
+    .timer .data { font-size: clamp(26px, 8vw, 44px); }
+
+    .buttons {
+      margin-top: 10px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    }
+    button {
+      border: 1px solid #e5e7eb; background: #fff; padding: 12px 16px; border-radius: 12px; cursor: pointer;
+      font-size: 16px; box-shadow: 0 2px 0 rgba(0,0,0,0.04);
+    }
+    #lapBtn { background: #f1f8ff; border-color: #dbeafe; }
+    #nextBtn { background: #fff8e1; border-color: #ffecb3; }
+    #summaryBtn { background: #e8f5e9; border-color: #c8e6c9; }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+
+    @media (max-width: 720px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
   </style>
 </head>
 <body>
-  <h2 id="title">Course</h2>
+  <div class="wrap">
+    <header>
+      <!-- Le JS mettra ici "Prénom Nom" du coureur en cours -->
+      <div id="title">Course</div>
+      <div class="actions-top">
+        <a href="index.html">🏠 Accueil</a>
+      </div>
+    </header>
 
-  <div class="panel">
-    <div id="controls" class="row">
-      <div class="data">Temps restant : <span id="timer">00:00</span></div>
-      <div class="data">Tours : <span id="laps">0</span></div>
-      <div class="data">Distance : <span id="distance">0</span> m</div>
-      <div class="data">Vitesse : <span id="vitesse">0.00</span> km/h</div>
-      <div class="data">Estimation VMA : <span id="vma">0.00</span> km/h</div>
+    <div class="grid">
+      <div class="card timer">
+        <h3>Temps</h3>
+        <div id="timer" class="data">03:00</div>
+      </div>
+      <div class="card">
+        <h3>Tours</h3>
+        <div id="laps" class="data">0</div>
+      </div>
+      <div class="card">
+        <h3>Distance (m)</h3>
+        <div id="distance" class="data">0</div>
+      </div>
+      <div class="card">
+        <h3>Vitesse (km/h)</h3>
+        <div id="vitesse" class="data">0.00</div>
+      </div>
+      <div class="card">
+        <h3>VMA (km/h)</h3>
+        <div id="vma" class="data">0.00</div>
+      </div>
+      <div class="card">
+        <h3>Infos</h3>
+        <div class="data" style="font-size:18px">2 coureurs • ajout fraction en fin</div>
+      </div>
     </div>
 
-    <div class="row" style="justify-content:center; gap:10px;">
-      <button id="lapBtn" disabled>+ 1 tour</button>
-      <button id="nextBtn" style="display:none;">Passer au coureur 2</button>
-      <button id="summaryBtn" style="display:none;">Aller au résumé</button>
-    </div>
-  </div>
-
-  <footer>
-    RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-  </footer>
-
-  <!-- MODAL pour fraction de tour — appelé automatiquement fin élève 1 puis fin élève 2 -->
-  <div id="fractionModal" class="modal-backdrop" role="dialog" aria-modal="true">
-    <div class="modal">
-      <h3 id="fractionTitle">Ajouter une fraction de tour</h3>
-      <div class="onlyA">
-        <label for="fractionA">Élève 1 — + fraction</label>
-        <select id="fractionA">
-          <option value="0">+ 0</option>
-          <option value="0.25">+ ¼</option>
-          <option value="0.5">+ ½</option>
-          <option value="0.75">+ ¾</option>
-        </select>
-      </div>
-      <div class="onlyB">
-        <label for="fractionB">Élève 2 — + fraction</label>
-        <select id="fractionB">
-          <option value="0">+ 0</option>
-          <option value="0.25">+ ¼</option>
-          <option value="0.5">+ ½</option>
-          <option value="0.75">+ ¾</option>
-        </select>
-      </div>
-      <div class="actions">
-        <button class="btn-cancel" id="fractionCancel">Annuler</button>
-        <button class="btn-validate" id="fractionValidate">Valider</button>
-      </div>
+    <div class="buttons">
+      <button id="lapBtn">+ 1 tour</button>
+      <button id="nextBtn" style="display:none">Suivant</button>
+      <button id="summaryBtn" style="display:none">Résumé</button>
     </div>
   </div>
 
-  <script src="course.js"></script>
-  <!-- Nouveau : gère 1/4–1/2–3/4 par élève, recalcul et navigation -->
+  <!-- IMPORTANT : fraction.js AVANT course.js -->
   <script src="fraction.js"></script>
+  <script src="course.js"></script>
 </body>
 </html>
