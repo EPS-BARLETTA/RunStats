@@ -155,12 +155,11 @@
     lapsEl.textContent = String(laps);
     distEl.textContent = String(Math.round(distance));
     var elapsedMin = (Math.round(dureeCourse * 60) - totalSeconds) / 60;
-    // vitesse instantanée en km/h (km/min * 60)
-    var vitesse = elapsedMin > 0 ? ((distance / 1000) / elapsedMin) * 60 : 0;
+    // vitesse instantanée en km/h
+    var vitesse = elapsedMin > 0 ? (distance / 1000) / elapsedMin : 0;
     vitEl.textContent = vitesse.toFixed(2);
     // VMA instantanée estimée (normalisée 6 min) sur le temps écoulé
     var vmaInst = elapsedMin > 0 ? vmaEquiv6minSmart(distance, elapsedMin) : 0;
-    // si VMA initiale fournie pour l'élève courant, on l'affiche plutôt
     var vmaSource = (currentRunner === 0 ? eleve1.vma : eleve2.vma);
     var vmaAff = (isFinite(vmaSource) && vmaSource > 0) ? vmaSource : vmaInst;
     vmaEl.textContent = (isFinite(vmaAff) ? vmaAff : 0).toFixed(2);
