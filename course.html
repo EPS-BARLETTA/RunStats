@@ -8,7 +8,6 @@
     :root {
       --primary: #1e88e5;
       --green: #2e7d32;
-      --red: #c62828;
       --bg: #f7f8fb;
       --text: #1f2937;
       --muted: #6b7280;
@@ -43,8 +42,6 @@
     }
     .card h3 { margin: 0 0 6px; font-size: 13px; color: var(--muted); font-weight: 600; letter-spacing: .2px; }
     .data { font-weight: 800; font-size: clamp(20px, 6vw, 36px); }
-
-    /* Timer plus visible */
     .timer .data { font-size: clamp(26px, 8vw, 44px); }
 
     .buttons {
@@ -108,8 +105,8 @@
     </div>
   </div>
 
-  <!-- IMPORTANT : fraction.js AVANT course.js -->
-  <script src="fraction.js"></script>
-  <script src="course.js"></script>
+  <!-- IMPORTANT : charger fraction.js AVANT course.js, et en defer -->
+  <script src="fraction.js" defer></script>
+  <script src="course.js" defer></script>
 </body>
 </html>
