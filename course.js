@@ -48,11 +48,11 @@ function enregistrerStats(distance, vitesse, vma) {
     ...eleve,
     distance: distance,
     vitesse: vitesse,
-    vma: vma // clé correcte pour ScanProf
+    vma: vma // clé conforme ScanProf
   });
 }
 
-// === Ajout tour partiel (¼ / ½ / ¾) ===
+// === Calculs pour ajout tour partiel ===
 function calcVitesseMoyenne(distanceM) {
   return (distanceM / 1000) / (duree / 60);
 }
@@ -91,7 +91,7 @@ function ouvrirDialoguePartiel(callbackApresChoix) {
   dlg.showModal();
 }
 
-// === FIN DE COURSE avec popup partiel ===
+// === Fin de course avec popup ajout tour partiel ===
 function terminerCourse() {
   clearInterval(timerInterval);
   isRunning = false;
@@ -143,6 +143,7 @@ function demarrerChrono() {
   }, 1000);
 }
 
+// === Boutons ===
 lapBtn.addEventListener("click", () => {
   if (!isRunning) return;
   nombreTours++;
@@ -167,6 +168,7 @@ summaryBtn.addEventListener("click", () => {
   window.location.href = "resume.html";
 });
 
+// === Au chargement ===
 window.onload = () => {
   document.getElementById("title").innerText = `Course de ${eleve1.prenom} ${eleve1.nom}`;
   demarrerChrono();
