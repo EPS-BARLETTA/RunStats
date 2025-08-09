@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <p>Sexe : ${eleve.sexe}</p>
         <p>Distance : ${eleve.distance} m</p>
         <p>Vitesse : ${eleve.vitesse} km/h</p>
-        <p>VMA : ${eleve.vmaEstimee}</p>
+        <p>VMA : ${(eleve.vmaEstimee != null ? eleve.vmaEstimee : eleve.vma)}</p>
       </div>
     `;
   }
