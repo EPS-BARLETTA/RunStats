@@ -1,62 +1,64 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Mode d'emploi - RunStats</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<title>Mode d’emploi – RunStats</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
+  :root {
+    --bg:#f4f7ff; --card:#ffffff; --text:#0b2447; --accent:#3498db; --ok:#2ecc71; --muted:#6b7280;
+  }
+  * { box-sizing:border-box; }
   body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f8ff;
-    padding: 20px;
-    line-height: 1.6;
+    margin:0; padding:24px; background:var(--bg);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--text);
+    display:flex; min-height:100dvh; align-items:center; justify-content:center;
   }
-  h2 {
-    color: #2c3e50;
-    text-align: center;
+  .card {
+    width:100%; max-width:820px; background:var(--card); border-radius:18px;
+    padding:28px 22px; box-shadow:0 12px 28px rgba(0,0,0,.08);
   }
-  ul {
-    max-width: 600px;
-    margin: auto;
-    background: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  h2 { margin:0 0 8px; font-size:1.7rem; }
+  p.subtitle { margin:0 0 20px; color:var(--muted); }
+  .steps {
+    display:grid; gap:14px; margin:18px 0 6px;
   }
-  li {
-    margin-bottom: 10px;
+  .step {
+    background:#f8fbff; border:1px solid #e5efff; border-radius:14px; padding:14px 16px;
   }
-  button {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    background-color: #3498db;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
+  .step b { color:#0f3d87; }
+  .note {
+    margin-top:16px; padding:12px 14px; background:#fff7e6; border:1px solid #ffe1a6; border-radius:12px;
   }
-  button:hover {
-    background-color: #217dbb;
+  .actions {
+    display:flex; flex-wrap:wrap; gap:12px; margin-top:22px;
   }
+  .btn {
+    border:0; border-radius:12px; padding:14px 18px; color:#fff; cursor:pointer; font-size:1rem;
+  }
+  .btn-home { background:var(--ok); }
+  .btn-form { background:var(--accent); }
 </style>
 </head>
 <body>
+  <div class="card">
+    <h2>📖 Mode d’emploi (élèves)</h2>
+    <p class="subtitle">Merci de lire ces étapes avant de commencer la séance.</p>
 
-<h2>📖 Mode d'emploi - Élèves</h2>
+    <div class="steps">
+      <div class="step"><b>1.</b> Renseigne <b>Nom</b>, <b>Prénom</b>, <b>Classe</b> et, si tu la connais, ta <b>VMA</b> dans la page <i>Saisie élèves</i>.</div>
+      <div class="step"><b>2.</b> Vérifie la <b>durée</b> de la course et la <b>longueur d’un tour</b> (ex. 100m, 200m, 400m) indiquées par l’enseignant.</div>
+      <div class="step"><b>3.</b> Pendant la course, le professeur appuie sur <b>+ Tour</b> à chaque passage.</div>
+      <div class="step"><b>4.</b> À la fin du chrono, les résultats s’affichent. Si besoin d’un ajustement (ex. +25m), le professeur le fera.</div>
+      <div class="step"><b>5.</b> Un <b>QR code</b> récapitulatif est généré en fin de séance pour transmettre les données.</div>
+    </div>
 
-<ul>
-  <li>1️⃣ Renseigne ton <strong>Nom</strong>, <strong>Prénom</strong>, <strong>Classe</strong> et éventuellement ta <strong>VMA</strong>.</li>
-  <li>2️⃣ Indique la <strong>durée de la course</strong> et la <strong>longueur d’un tour</strong> de piste (en mètres).</li>
-  <li>3️⃣ Appuie sur <strong>Lancer la course</strong> et cours jusqu’à la fin du chrono.</li>
-  <li>4️⃣ A chaque tour complété, le professeur clique sur <strong>+ Tour</strong>.</li>
-  <li>5️⃣ Quand le chrono est terminé, les résultats s’affichent dans le résumé final.</li>
-  <li>6️⃣ Un QR code sera généré pour transmettre tes données à l’application de suivi.</li>
-</ul>
+    <div class="note">Conseil : arrive à l’heure au point de départ, et signale vite toute incohérence (tour partiel, erreur de classe, etc.).</div>
 
-<button onclick="window.location.href='index.html'">🏠 Retour à l'accueil</button>
-
+    <div class="actions">
+      <button class="btn btn-home" onclick="location.href='index.html'">🏠 Retour à l’accueil</button>
+      <button class="btn btn-form" onclick="location.href='eleve.html'">📝 Aller à la saisie élèves</button>
+    </div>
+  </div>
 </body>
 </html>
-
