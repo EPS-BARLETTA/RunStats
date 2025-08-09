@@ -1,26 +1,48 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<title>RunStats – Accueil</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<style>
-  :root {
-    --bg:#dfeeff; --txt:#0b2447; --btn:#9b59b6; --btn2:#2ecc71;
-  }
-  * { box-sizing:border-box; }
-  body {
-    margin:0; padding:24px; background:var(--bg);
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--txt);
-    display:flex; min-height:100dvh; align-items:center; justify-content:center;
-  }
-  .wrap {
-    width:100%; max-width:720px; text-align:center;
-    background:#fff; border-radius:16px; padding:28px 22px; box-shadow:0 8px 24px rgba(0,0,0,.08);
-  }
-  h1 { margin:0 0 12px; font-size:1.9rem; }
-  p.lead { margin:0 0 24px; opacity:.8; }
-  .actions { display:grid; gap:12px; margin-top:10px; }
-  .btn {
-    display:block; width:100%; padding:16px 18px; border:0; border-radius:12px; cursor:pointer;
-    font-size:1.05rem; color:#fff; tra
+  <meta charset="UTF-8">
+  <title>RunStats - Accueil</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-color: #dfeeff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      margin-top: 40px;
+      font-size: 2rem;
+    }
+    .btn {
+      display: inline-block;
+      padding: 14px 24px;
+      margin: 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+      text-decoration: none;
+    }
+    .btn-help {
+      background-color: #9b59b6; /* violet clair */
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Bienvenue sur RunStats</h1>
+  <p>Veuillez suivre les instructions avant de commencer la séance.</p>
+
+  <!-- Bouton unique Mode d'emploi -->
+  <a href="aide.html" class="btn btn-help">📖 Mode d'emploi</a>
+
+  <footer style="margin-top:40px; font-size:0.9rem; color:#666;">
+    RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB
+  </footer>
+
+</body>
+</html>
