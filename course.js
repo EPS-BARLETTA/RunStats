@@ -1,7 +1,5 @@
-// course.js — 2 coureurs, ajout fraction à la fin de CHAQUE course, recalcul distance/vitesse/VMA
-
+// course.js — 2 coureurs, fraction en fin de course, pause avant course 2, titre = Prénom Nom
 (function () {
-
   // === Helpers: vitesse (km/h) & VMA normalisée 6 min ===
   function kmh(distance_m, time_s) {
     if (!isFinite(distance_m) || !isFinite(time_s) || time_s <= 0) return 0;
@@ -27,38 +25,36 @@
     return vmaEquiv6min(distance_m, time_s);
   }
 
-  // ----- Récup des données de départ -----
+  // ----- Récup des données de départ (avec garde-fous) -----
   var eleve1 = safeParse(sessionStorage.getItem("eleve1")) || {};
   var eleve2 = safeParse(sessionStorage.getItem("eleve2")) || {};
   var dureeCourse = parseFloat(sessionStorage.getItem("dureeCourse")); // minutes
-  if (!isFinite(dureeCourse) || dureeCourse <= 0) dureeCourse = 6; // fallback 6 minutes
+  if (!isFinite(dureeCourse) || dureeCourse <= 0) dureeCourse = 3; // défaut test
+  var longueurTour = parseFloat(sessionStorage.getItem("longueurTour"));
+  if (!isFinite(longueurTour) || longueurTour <= 0) {
+    longueurTour = parseFloat(sessionStorage.getItem("lapLength"));
+    if (!isFinite(longueurTour) || longueurTour <= 0) longueurTour = 100; // défaut test
+  }
 
-  // On tente de retrouver une "longueur de tour" saisie avant (plusieurs clés possibles)
-  var longueurTour = pickFirstNumber(
-    sessionStorage.getItem("longueurTour"),
-    sessionStorage.getItem("lapLength"),
-    sessionStorage.getItem("distanceParTour"),
-    sessionStorage.getItem("tailleTour"),
-    "400"
-  );
-  if (!isFinite(longueurTour) || longueurTour <= 0) longueurTour = 400;
+  // fallbacks pour titre si ouverture directe
+  eleve1.nom = eleve1.nom || "Élève";
+  eleve1.prenom = eleve1.prenom || "1";
+  eleve2.nom = eleve2.nom || "Élève";
+  eleve2.prenom = eleve2.prenom || "2";
 
-  // Stats des 2 élèves que l’on remplira au fur et à mesure
-  var stats = [
-    { nom: eleve1.nom || "", prenom: eleve1.prenom || "", classe: eleve1.classe || "", sexe: eleve1.sexe || "", distance: 0, vitesse: 0, vma: eleve1.vma || 0 },
-    { nom: eleve2.nom || "", prenom: eleve2.prenom || "", classe: eleve2.classe || "", sexe: eleve2.sexe || "", distance: 0, vitesse: 0, vma: eleve2.vma || 0 }
-  ];
+  // Stats (pour résumé)
+  var stats = [{}, {}];
 
   // ----- Éléments UI -----
-  var titleEl = byId("title");
-  var timerEl = byId("timer");
-  var lapsEl = byId("laps");
-  var distEl = byId("distance");
-  var vitEl = byId("vitesse");
-  var vmaEl = byId("vma");
-  var lapBtn = byId("lapBtn");
-  var nextBtn = byId("nextBtn");
-  var summaryBtn = byId("summaryBtn");
+  var titleEl   = byId("title");
+  var timerEl   = byId("timer");
+  var lapsEl    = byId("laps");
+  var distEl    = byId("distance");
+  var vitEl     = byId("vitesse");
+  var vmaEl     = byId("vma");
+  var lapBtn    = byId("lapBtn");
+  var nextBtn   = byId("nextBtn");
+  var summaryBtn= byId("summaryBtn");
 
   // État courant
   var currentRunner = 0; // 0 => élève 1, 1 => élève 2
@@ -66,7 +62,7 @@
   var distance = 0; // m
   var totalSeconds = Math.round(dureeCourse * 60); // compte à rebours
   var intervalId = null;
-  var readyToStartRunner2 = false;
+  var readyToStartRunner2 = false; // pause après course 1
 
   // ----- Initialisation -----
   updateHeader();
@@ -77,21 +73,23 @@
   nextBtn.style.display = "none";
   summaryBtn.style.display = "none";
 
+  // ----- Handlers -----
   lapBtn.addEventListener("click", function () {
     laps += 1;
     distance = laps * longueurTour;
     updateNumbers();
   });
 
+  // Bouton "Suivant" (pause après fin coureur 1)
   nextBtn.addEventListener("click", function () {
     if (!readyToStartRunner2) {
+      // On finalise coureur 1 (avec fraction) mais on ne lance pas la course 2 tout de suite
       finalizeCurrentRunner().then(function () {
-        // étape pause: afficher bouton pour lancer la course 2
         readyToStartRunner2 = true;
         nextBtn.textContent = "Lancer la course 2";
       });
     } else {
-      // démarrer la course 2
+      // Lancer la course 2
       readyToStartRunner2 = false;
       nextBtn.textContent = "Suivant";
       currentRunner = 1;
@@ -104,41 +102,18 @@
       nextBtn.style.display = "none";
     }
   });
-  });
 
+  // Bouton "Résumé" (fin coureur 2)
   summaryBtn.addEventListener("click", function () {
-    // Fin élève 2 : propose fraction, recalcule, sauve dans stats[1], puis go résumé
     finalizeCurrentRunner().then(function () {
-      // Sauvegarde des stats consolidées et envoi au résumé
+      // Sauvegarde finale des stats & envoi vers le résumé
       sessionStorage.setItem("stats", JSON.stringify(stats));
-      sessionStorage.setItem("eleve1", JSON.stringify(eleve1));
-      sessionStorage.setItem("eleve2", JSON.stringify(eleve2));
-      sessionStorage.setItem("dureeCourse", String(dureeCourse));
-      window.location.href = "resume.html";
+      // Redirection vers la page de résumé (adapter si besoin)
+      window.location.href = "summary.html";
     });
   });
 
-  // ----- Fonctions -----
-  function updateHeader() {
-    var nom = currentRunner === 0 ? (eleve1.nom || "") : (eleve2.nom || "");
-    var prenom = currentRunner === 0 ? (eleve1.prenom || "") : (eleve2.prenom || "");
-    var label = (prenom || nom) ? (prenom + " " + nom).trim() : (currentRunner === 0 ? "Élève 1" : "Élève 2");
-    titleEl.textContent = label;
-  }
-  }
-
-  function resetRunnerDisplay() {
-    updateHeader();
-    timerEl.textContent = formatTime(totalSeconds);
-    lapsEl.textContent = "0";
-    distEl.textContent = "0";
-    vitEl.textContent = "0.00";
-    vmaEl.textContent = "0.00";
-    lapBtn.disabled = false;
-    nextBtn.style.display = currentRunner === 0 ? "none" : "none";
-    summaryBtn.style.display = currentRunner === 1 ? "none" : "none";
-  }
-
+  // ----- Timer -----
   function startTimer() {
     clearInterval(intervalId);
     intervalId = setInterval(function () {
@@ -151,15 +126,15 @@
 
         // Fin de la course pour ce coureur → on affiche le bon bouton
         if (currentRunner === 0) {
-          // proposer fraction pour l’élève 1, puis bouton "Passer au coureur 2"
+          // coureur 1 : montrer "Suivant" (puis “Lancer la course 2” après fraction)
           nextBtn.style.display = "inline-block";
+          nextBtn.textContent = "Suivant";
         } else {
-          // proposer fraction pour l’élève 2, puis bouton "Aller au résumé"
+          // coureur 2 : montrer "Résumé"
           summaryBtn.style.display = "inline-block";
         }
       }
       timerEl.textContent = formatTime(totalSeconds);
-      // pendant la course, la vitesse courante calculée sur le temps écoulé (optionnel)
       updateNumbers();
     }, 1000);
   }
@@ -167,10 +142,14 @@
   function updateNumbers() {
     lapsEl.textContent = String(laps);
     distEl.textContent = String(Math.round(distance));
+
+    // temps écoulé en minutes
     var elapsedMin = (Math.round(dureeCourse * 60) - totalSeconds) / 60;
+
     // vitesse instantanée en km/h (km/min * 60)
     var vitesse = elapsedMin > 0 ? ((distance / 1000) / elapsedMin) * 60 : 0;
     vitEl.textContent = vitesse.toFixed(2);
+
     // VMA instantanée estimée (normalisée 6 min) sur le temps écoulé
     var vmaInst = elapsedMin > 0 ? vmaEquiv6minSmart(distance, elapsedMin) : 0;
     var vmaSource = (currentRunner === 0 ? eleve1.vma : eleve2.vma);
@@ -178,83 +157,98 @@
     vmaEl.textContent = (isFinite(vmaAff) ? vmaAff : 0).toFixed(2);
   }
 
-  // Appelé quand un coureur a terminé (timer à 0 et clic sur Next/Summary)
+  function resetRunnerDisplay() {
+    updateHeader();
+    timerEl.textContent = formatTime(totalSeconds);
+    lapsEl.textContent = "0";
+    distEl.textContent = "0";
+    vitEl.textContent = "0.00";
+    vmaEl.textContent = "0.00";
+    lapBtn.disabled = false;
+    nextBtn.style.display = (currentRunner === 0) ? "none" : "none";
+    summaryBtn.style.display = (currentRunner === 1) ? "none" : "none";
+  }
+
+  function updateHeader() {
+    var nom = currentRunner === 0 ? (eleve1.nom || "") : (eleve2.nom || "");
+    var prenom = currentRunner === 0 ? (eleve1.prenom || "") : (eleve2.prenom || "");
+    var label = (prenom || nom) ? (prenom + " " + nom).trim() : (currentRunner === 0 ? "Élève 1" : "Élève 2");
+    titleEl.textContent = label;
+  }
+
+  // Appelé quand un coureur a terminé (timer à 0 et clic sur Suivant/Résumé)
   function finalizeCurrentRunner() {
     return new Promise(function (resolve) {
-      // Fixe les valeurs finales de la course AVANT fraction
       var runnerIndex = currentRunner;
-      var elapsedMin = dureeCourse; // le chrono était en compte à rebours
-      var vitesse = (distance / 1000) / (elapsedMin > 0 ? elapsedMin : 1); // km/h
-      var vmaEst = runnerIndex === 0 ? (eleve1.vma || vitesse) : (eleve2.vma || vitesse);
+      var elapsedMin = dureeCourse; // on a chronométré en compte à rebours
+      // vitesse finale brute (km/h) sur la durée choisie
+      var vitesseFin = kmhSmart(distance, elapsedMin);
+      // VMA de départ éventuellement fournie
+      var vmaInit = runnerIndex === 0 ? toNum(eleve1.vma) : toNum(eleve2.vma);
+      var vmaEst = isFinite(vmaInit) && vmaInit > 0 ? vmaInit : vmaEquiv6minSmart(distance, elapsedMin);
 
-      // prépare un objet élève pour le passage à ajouterFraction()
+      // Objet élève pour passer à la fenêtre de fraction
       var eleveCalc = {
-        nom: runnerIndex === 0 ? (eleve1.nom || "") : (eleve2.nom || ""),
+        nom:    runnerIndex === 0 ? (eleve1.nom || "")    : (eleve2.nom || ""),
         prenom: runnerIndex === 0 ? (eleve1.prenom || "") : (eleve2.prenom || ""),
         classe: runnerIndex === 0 ? (eleve1.classe || "") : (eleve2.classe || ""),
-        sexe: runnerIndex === 0 ? (eleve1.sexe || "") : (eleve2.sexe || ""),
-        distance: distance,      // m
-        temps: dureeCourse,      // minutes
-        vitesse: vitesse,        // km/h
-        vma: vmaEst              // km/h (si fournie au départ, on la garde ; sinon on met la vitesse)
+        sexe:   runnerIndex === 0 ? (eleve1.sexe || "")   : (eleve2.sexe || ""),
+        distance: distance,          // m
+        temps:    elapsedMin,        // minutes
+        vitesse:  vitesseFin,        // km/h
+        vma:      vmaEst             // km/h
       };
 
-      // Ouvre la UI de fraction (définie dans fraction.js)
-      ajouterFraction(eleveCalc, longueurTour).then(function (eleveMaj) {
-        
-        // Recalcule vitesse & VMA après ajout de fraction
-        eleveMaj.vitesse = kmhSmart(eleveMaj.distance, eleveMaj.temps);
-        eleveMaj.vma = vmaEquiv6minSmart(eleveMaj.distance, eleveMaj.temps);
+      // Ouvre la UI de fraction (définie dans fraction.js, chargé avant)
+      if (typeof window.ajouterFraction !== "function") {
+        console.error("ajouterFraction introuvable — vérifie que fraction.js est chargé avant course.js");
+        // on poursuit quand même
+        afterFraction(eleveCalc);
+        return resolve();
+      }
 
-        // Si une VMA initiale était fournie pour cet élève, on la garde prioritairement
+      window.ajouterFraction(eleveCalc, longueurTour).then(function (eleveMaj) {
+        afterFraction(eleveMaj);
+        resolve();
+      });
+
+      function afterFraction(e) {
+        // Recalcule vitesse & VMA après ajout de fraction
+        e.vitesse = kmhSmart(e.distance, e.temps);
         var vmaSource = (runnerIndex === 0 ? eleve1.vma : eleve2.vma);
-        if (isFinite(vmaSource) && vmaSource > 0) {
-          eleveMaj.vma = vmaSource;
-        }
+        e.vma = (isFinite(vmaSource) && vmaSource > 0) ? vmaSource : vmaEquiv6minSmart(e.distance, e.temps);
 
         // Rafraîchit l'affichage après ajout de fraction
         try {
-          distEl.textContent = String(Math.round(eleveMaj.distance));
-          vitEl.textContent = (eleveMaj.vitesse).toFixed(2);
-          vmaEl.textContent = (eleveMaj.vma).toFixed(2);
-        } catch (e) {}
+          distEl.textContent = String(Math.round(e.distance));
+          vitEl.textContent = (e.vitesse).toFixed(2);
+          vmaEl.textContent = (e.vma).toFixed(2);
+        } catch (err) {}
 
         // Stocke dans stats
         stats[runnerIndex] = {
-          nom: eleveMaj.nom,
-          prenom: eleveMaj.prenom,
-          classe: eleveMaj.classe,
-          sexe: eleveMaj.sexe,
-          distance: Math.round(eleveMaj.distance * 100) / 100,
-          vitesse: Math.round(eleveMaj.vitesse * 100) / 100,
-          vma: Math.round(eleveMaj.vma * 100) / 100
+          nom: e.nom,
+          prenom: e.prenom,
+          classe: e.classe,
+          sexe: e.sexe,
+          distance: Math.round(e.distance * 100) / 100,
+          vitesse:  Math.round(e.vitesse  * 100) / 100,
+          vma:      Math.round(e.vma      * 100) / 100
         };
 
-        // Sauvegarde intermédiaire des stats
-    
-
-        // Sauvegarde intermédiaire des stats (utile si on revient)
+        // Sauvegarde intermédiaire
         sessionStorage.setItem("stats", JSON.stringify(stats));
-
-        resolve();
-      });
+      }
     });
   }
 
   // ----- Utils -----
   function byId(id) { return document.getElementById(id); }
   function safeParse(t) { try { return JSON.parse(t); } catch (e) { return null; } }
-  function pickFirstNumber() {
-    for (var i = 0; i < arguments.length; i++) {
-      var v = parseFloat(arguments[i]);
-      if (isFinite(v) && v > 0) return v;
-    }
-    return NaN;
-  }
+  function toNum(x){ const n = Number(x); return isNaN(n) ? NaN : n; }
   function formatTime(s) {
     var m = Math.floor(s / 60);
     var r = s % 60;
     return String(m).padStart(2, "0") + ":" + String(r).padStart(2, "0");
-    }
-
+  }
 })();
