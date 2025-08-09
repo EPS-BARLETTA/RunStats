@@ -6,7 +6,28 @@
     if (!isFinite(distance_m) || !isFinite(time_s) || time_s <= 0) return 0;
     return (distance_m / time_s) * 3.6;
   }
+  // Auto-détection minutes vs secondes (si <= 20 on suppose minutes)
+  function kmhSmart(distance_m, time_val) {
+    if (!isFinite(distance_m) || !isFinite(time_val) || time_val <= 0) return 0;
+    const time_s = (time_val <= 20) ? time_val * 60 : time_val;
+    return kmh(distance_m, time_s);
+  }
+    if (!isFinite(distance_m) || !isFinite(time_s) || time_s <= 0) return 0;
+    return (distance_m / time_s) * 3.6;
+  }
   function vmaEquiv6min(distance_m, time_s) {
+    if (!isFinite(distance_m) || !isFinite(time_s) || time_s <= 0) return 0;
+    const tMin = Math.max(0.5, time_s / 60);
+    const v = kmh(distance_m, time_s);
+    const a = 0.06;
+    const v6 = v * Math.pow(tMin / 6, a);
+    return Math.round(v6 * 100) / 100;
+  }
+  function vmaEquiv6minSmart(distance_m, time_val) {
+    if (!isFinite(distance_m) || !isFinite(time_val) || time_val <= 0) return 0;
+    const time_s = (time_val <= 20) ? time_val * 60 : time_val;
+    return vmaEquiv6min(distance_m, time_s);
+  }
     if (!isFinite(distance_m) || !isFinite(time_s) || time_s <= 0) return 0;
     const tMin = Math.max(0.5, time_s / 60);
     const v = kmh(distance_m, time_s);
@@ -181,6 +202,14 @@
         // Si l’élève a une VMA fournie initialement, on la garde ; sinon VMA = vitesse
         var vmaSource = (runnerIndex === 0 ? eleve1.vma : eleve2.vma);
         eleveMaj.vma = isFinite(vmaSource) && vmaSource > 0 ? vmaSource : eleveMaj.vitesse;
+
+
+        // Rafraîchit l'affichage à l'écran après ajout de fraction
+        try {
+          distEl.textContent = String(Math.round(eleveMaj.distance));
+          vitEl.textContent = (eleveMaj.vitesse).toFixed(2);
+          vmaEl.textContent = (eleveMaj.vma).toFixed(2);
+        } catch (e) {}
 
         // Stocke dans stats
         stats[runnerIndex] = {
