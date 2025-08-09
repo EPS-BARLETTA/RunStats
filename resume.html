@@ -5,106 +5,89 @@
   <title>Résumé de performance - RunStats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    :root {
+      --blue: #dff0ff;   /* élève 1 */
+      --green: #e8f9e8;  /* élève 2 */
+      --card-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      --brand: #1e90ff;
+    }
     body {
       background-color: #f4f9ff;
       font-family: Arial, sans-serif;
-      padding: 20px;
-      margin: 0;
+      margin: 0; padding: 20px;
       text-align: center;
     }
+    h2 { color: var(--brand); margin: 6px 0 12px; }
+    .wrap { max-width: 1100px; margin: 0 auto; }
 
-    h2 {
-      color: #1e90ff;
-      margin-bottom: 10px;
+    /* Cartes côte à côte */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 0 auto 12px;
     }
-
-    .container {
-      background: white;
-      border-radius: 8px;
-      padding: 15px;
-      max-width: 900px;
-      margin: 0 auto 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    @media (max-width: 860px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    .card {
       text-align: left;
-    }
-
-    .eleve {
-      border-bottom: 1px solid #ddd;
-      padding: 10px 0;
-    }
-
-    .controls {
+      border-radius: 10px;
+      box-shadow: var(--card-shadow);
+      padding: 14px;
       background: #fff;
-      border-radius: 8px;
-      padding: 12px;
-      max-width: 900px;
-      margin: 0 auto 16px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-      text-align: left;
     }
-    .row { display:flex; flex-wrap:wrap; gap:12px; align-items:center; }
-    label { font-weight:600; }
-    input[type="number"], select { padding:6px 8px; border:1px solid #ccc; border-radius:6px; }
+    .card.blue { background: var(--blue); }
+    .card.green { background: var(--green); }
+    .card h3 { margin: 4px 0 8px; }
 
-    #qrcode { margin: 10px 0 16px; }
-
-    #downloadCSV {
-      background-color: #1e90ff;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
+    .qrcode {
+      display: flex;
+      justify-content: center;
+      margin: 12px 0;
     }
-
+    .actions {
+      display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+      margin: 10px 0 6px;
+    }
+    .button {
+      padding: 10px 14px; border: none; border-radius: 8px;
+      font-weight: 600; cursor: pointer; text-decoration: none;
+      background: var(--brand); color: #fff;
+    }
     footer {
-      background-color: #1e90ff;
-      color: white;
-      padding: 10px 0;
-      margin-top: 20px;
+      background: var(--brand); color:#fff; padding: 10px; margin-top: 16px;
     }
+    .kv p { margin: 4px 0; }
+    .kv strong { display: inline-block; min-width: 160px; }
   </style>
 </head>
 <body>
-  <h2>Résumé de la course</h2>
+  <div class="wrap">
+    <h2>Résumé de la course</h2>
 
-  <!-- NOUVEAU : réglage longueur de tour + fractions A/B -->
-  <div class="controls">
-    <div class="row" style="margin-bottom:8px;">
-      <label for="lapLength">Longueur d’un tour (m) :</label>
-      <input id="lapLength" type="number" min="100" step="1" value="400" style="width:90px;">
-      <small>(400 = piste athlé ; ajustez selon votre installation)</small>
+    <div class="grid" id="cards">
+      <div class="card blue" id="cardA">
+        <h3>Élève 1</h3>
+        <div class="kv" id="infoA"></div>
+      </div>
+      <div class="card green" id="cardB">
+        <h3>Élève 2</h3>
+        <div class="kv" id="infoB"></div>
+      </div>
     </div>
-    <div class="row">
-      <label for="fractionA">Fraction de tour élève A :</label>
-      <select id="fractionA">
-        <option value="0">+ 0</option>
-        <option value="0.25">+ ¼</option>
-        <option value="0.5">+ ½</option>
-        <option value="0.75">+ ¾</option>
-      </select>
 
-      <label for="fractionB">Fraction de tour élève B :</label>
-      <select id="fractionB">
-        <option value="0">+ 0</option>
-        <option value="0.25">+ ¼</option>
-        <option value="0.5">+ ½</option>
-        <option value="0.75">+ ¾</option>
-      </select>
+    <div class="qrcode" id="qrcode"></div>
+
+    <div class="actions">
+      <button class="button" id="downloadCSV">📥 Télécharger CSV</button>
+      <a class="button" href="index.html">🏠 Accueil</a>
     </div>
   </div>
 
-  <div class="container" id="results"></div>
+  <footer>RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
 
-  <div id="qrcode"></div>
-
-  <button id="downloadCSV">Télécharger vos données de course</button>
-
-  <footer>
-    RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-  </footer>
-
+  <!-- QRCode lib -->
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1/build/qrcode.min.js"></script>
   <script src="resume.js"></script>
 </body>
