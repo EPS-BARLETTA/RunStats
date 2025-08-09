@@ -19,27 +19,32 @@
       max-width:980px; margin:0 auto; background:var(--card);
       border-radius:16px; padding:18px 16px; box-shadow:0 8px 24px rgba(0,0,0,.08);
     }
-    table{ width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden; }
+    table{
+      width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden;
+    }
     th,td{ padding:10px 12px; border:1px solid #e5e7eb; text-align:center; }
     th{ background:var(--primary); color:#fff; }
     tbody tr:nth-child(even){ background:#f8fbff; }
-
-    .qr-wrap{ display:flex; justify-content:center; align-items:center; margin:22px 0 8px; }
-    .hint{ text-align:center; font-size:.9rem; color:var(--muted); margin-top:2px; }
-
-    details.prof {
-      max-width: 520px; margin: 14px auto 8px; background:#fff; border:1px solid #e5e7eb;
-      border-radius:12px; padding:10px 12px;
+    .qr-wrap{
+      display:flex; justify-content:center; align-items:center;
+      margin:22px 0 8px;
     }
-    details.prof summary {
-      cursor:pointer; list-style:none; font-weight:600; color:#0f3d87;
+    .hint{
+      text-align:center; font-size:.9rem; color:var(--muted); margin-top:2px;
     }
-    details.prof summary::-webkit-details-marker { display:none; }
-    .prof-actions { display:flex; justify-content:center; margin-top:10px; }
-    .btn{ border:0; border-radius:10px; padding:12px 18px; color:#fff; cursor:pointer; font-size:16px; min-width:240px; }
+    .actions{
+      display:flex; flex-direction:column; align-items:center; gap:10px;
+      margin:18px 0 6px;
+    }
+    .btn{
+      border:0; border-radius:10px; padding:12px 18px; color:#fff; cursor:pointer; font-size:16px;
+      min-width:240px;
+    }
     .btn-warn{ background:var(--warn); }
-    .btn-home{ background:var(--ok); display:block; margin:12px auto 0; }
-    footer{ text-align:center; margin-top:18px; color:#666; font-size:.92rem; }
+    .btn-home{ background:var(--ok); }
+    footer{
+      text-align:center; margin-top:18px; color:#666; font-size:.92rem;
+    }
   </style>
 </head>
 <body>
@@ -63,18 +68,16 @@
     </table>
 
     <!-- QR bien centré et dégagé -->
-    <div class="qr-wrap"><div id="qrcode"></div></div>
+    <div class="qr-wrap">
+      <div id="qrcode"></div>
+    </div>
     <div class="hint">Scannez ce QR avec ScanProf</div>
 
-    <!-- Encadré repliable Mode Prof -->
-    <details class="prof">
-      <summary>🔐 Mode Prof (PIN requis)</summary>
-      <div class="prof-actions">
-        <button class="btn btn-warn" onclick="adjustDistancePrompt()">Ajuster distances</button>
-      </div>
-    </details>
-
-    <a class="btn btn-home" href="index.html">🏠 Accueil</a>
+    <!-- Boutons sous le QR pour ne pas gêner la lecture -->
+    <div class="actions">
+      <button class="btn btn-warn" onclick="adjustDistancePrompt()">🔐 Mode Prof</button>
+      <a class="btn btn-home" href="index.html">🏠 Accueil</a>
+    </div>
 
     <footer>RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
   </div>
@@ -106,6 +109,7 @@
     }
 
     function generateQR(){
+      // Nettoyage
       qrContainer.innerHTML = "";
       // JSON strictement conforme à ScanProf : nom, prenom, classe, sexe, distance, vitesse, vma
       const payload = stats.map(s => ({
