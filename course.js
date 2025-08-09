@@ -1,134 +1,206 @@
-let coureurActuel = 1;
-let nombreTours = 0;
-let tempsRestant = 0;
-let timerInterval;
-let isRunning = false;
-let stats = [];
+// course.js — 2 coureurs, ajout fraction à la fin de CHAQUE course, recalcul distance/vitesse/VMA
 
-const timerDisplay = document.getElementById("timer");
-const lapsDisplay = document.getElementById("laps");
-const distanceDisplay = document.getElementById("distance");
-const vitesseDisplay = document.getElementById("vitesse");
-const vmaDisplay = document.getElementById("vma");
+(function () {
+  // ----- Récup des données de départ -----
+  var eleve1 = safeParse(sessionStorage.getItem("eleve1")) || {};
+  var eleve2 = safeParse(sessionStorage.getItem("eleve2")) || {};
+  var dureeCourse = parseFloat(sessionStorage.getItem("dureeCourse")); // minutes
+  if (!isFinite(dureeCourse) || dureeCourse <= 0) dureeCourse = 6; // fallback 6 minutes
 
-const lapBtn = document.getElementById("lapBtn");
-const nextBtn = document.getElementById("nextBtn");
-const summaryBtn = document.getElementById("summaryBtn");
+  // On tente de retrouver une "longueur de tour" saisie avant (plusieurs clés possibles)
+  var longueurTour = pickFirstNumber(
+    sessionStorage.getItem("longueurTour"),
+    sessionStorage.getItem("lapLength"),
+    sessionStorage.getItem("distanceParTour"),
+    sessionStorage.getItem("tailleTour"),
+    "400"
+  );
+  if (!isFinite(longueurTour) || longueurTour <= 0) longueurTour = 400;
 
-const progressCircle = document.querySelector(".progress");
+  // Stats des 2 élèves que l’on remplira au fur et à mesure
+  var stats = [
+    { nom: eleve1.nom || "", prenom: eleve1.prenom || "", classe: eleve1.classe || "", sexe: eleve1.sexe || "", distance: 0, vitesse: 0, vma: eleve1.vma || 0 },
+    { nom: eleve2.nom || "", prenom: eleve2.prenom || "", classe: eleve2.classe || "", sexe: eleve2.sexe || "", distance: 0, vitesse: 0, vma: eleve2.vma || 0 }
+  ];
 
-const eleve1 = JSON.parse(sessionStorage.getItem("eleve1"));
-const eleve2 = JSON.parse(sessionStorage.getItem("eleve2"));
-const longueur = parseFloat(sessionStorage.getItem("longueurTour"));
-const duree = parseFloat(sessionStorage.getItem("dureeCourse"));
-const totalSeconds = duree * 60;
+  // ----- Éléments UI -----
+  var titleEl = byId("title");
+  var timerEl = byId("timer");
+  var lapsEl = byId("laps");
+  var distEl = byId("distance");
+  var vitEl = byId("vitesse");
+  var vmaEl = byId("vma");
+  var lapBtn = byId("lapBtn");
+  var nextBtn = byId("nextBtn");
+  var summaryBtn = byId("summaryBtn");
 
-function formatTime(seconds) {
-  const min = Math.floor(seconds / 60).toString().padStart(2, "0");
-  const sec = (seconds % 60).toString().padStart(2, "0");
-  return `${min}:${sec}`;
-}
+  // État courant
+  var currentRunner = 0; // 0 => élève 1, 1 => élève 2
+  var laps = 0;
+  var distance = 0; // m
+  var totalSeconds = Math.round(dureeCourse * 60); // compte à rebours
+  var intervalId = null;
 
-function updateAffichage() {
-  const distance = nombreTours * longueur;
-  const tempsEcoule = totalSeconds - tempsRestant;
-  const tempsHeures = tempsEcoule / 3600;
-  const vitesse = tempsHeures > 0 ? (distance / 1000) / tempsHeures : 0;
-  const vma = vitesse * 1.15;
+  // ----- Initialisation -----
+  updateHeader();
+  resetRunnerDisplay();
+  startTimer();
 
-  lapsDisplay.textContent = nombreTours;
-  distanceDisplay.textContent = distance.toFixed(0);
-  vitesseDisplay.textContent = vitesse.toFixed(2);
-  vmaDisplay.textContent = vma.toFixed(2);
-}
-
-function enregistrerStats() {
-  const eleve = coureurActuel === 1 ? eleve1 : eleve2;
-  const distance = nombreTours * longueur;
-  const vitesse = (distance / 1000) / (duree / 60);
-  const vma = vitesse * 1.15;
-
-  stats.push({
-    ...eleve,
-    distance: distance,
-    vitesse: vitesse,
-    vma: vma,
-  });
-}
-
-function terminerCourse() {
-  clearInterval(timerInterval);
-  isRunning = false;
-  lapBtn.disabled = true;
-  progressCircle.classList.remove("danger");
-
-  enregistrerStats();
-
-  if (coureurActuel === 1) {
-    nextBtn.style.display = "inline-block";
-  } else {
-    summaryBtn.style.display = "inline-block";
-  }
-}
-
-function demarrerChrono() {
-  tempsRestant = totalSeconds;
-  isRunning = true;
   lapBtn.disabled = false;
-  timerDisplay.textContent = formatTime(tempsRestant);
-
-  const radius = 90;
-  const circumference = 2 * Math.PI * radius;
-
-  progressCircle.style.strokeDasharray = `${circumference}`;
-  progressCircle.style.strokeDashoffset = `0`;
-
-  timerInterval = setInterval(() => {
-    tempsRestant--;
-    timerDisplay.textContent = formatTime(tempsRestant);
-
-    const percent = tempsRestant / totalSeconds;
-    progressCircle.style.strokeDashoffset = `${circumference * (1 - percent)}`;
-
-    if (tempsRestant <= 10) {
-      progressCircle.classList.add("danger");
-    } else {
-      progressCircle.classList.remove("danger");
-    }
-
-    updateAffichage();
-
-    if (tempsRestant <= 0) {
-      terminerCourse();
-    }
-  }, 1000);
-}
-
-lapBtn.addEventListener("click", () => {
-  if (!isRunning) return;
-  nombreTours++;
-  updateAffichage();
-});
-
-nextBtn.addEventListener("click", () => {
-  coureurActuel = 2;
-  nombreTours = 0;
-  document.getElementById("title").innerText = `Course de ${eleve2.prenom} ${eleve2.nom}`;
   nextBtn.style.display = "none";
-  timerDisplay.textContent = "00:00";
-  lapsDisplay.textContent = "0";
-  distanceDisplay.textContent = "0";
-  vitesseDisplay.textContent = "0";
-  vmaDisplay.textContent = "0";
-  demarrerChrono();
-});
+  summaryBtn.style.display = "none";
 
-summaryBtn.addEventListener("click", () => {
-  sessionStorage.setItem("stats", JSON.stringify(stats));
-  window.location.href = "resume.html";
-});
+  lapBtn.addEventListener("click", function () {
+    laps += 1;
+    distance = laps * longueurTour;
+    updateNumbers();
+  });
 
-window.onload = () => {
-  document.getElementById("title").innerText = `Course de ${eleve1.prenom} ${eleve1.nom}`;
-  demarrerChrono();
-};
+  nextBtn.addEventListener("click", function () {
+    // Fin élève 1 : on fige ses valeurs, propose fraction, recalcule, sauve dans stats[0]
+    finalizeCurrentRunner().then(function () {
+      // Passe à l’élève 2
+      currentRunner = 1;
+      laps = 0;
+      distance = 0;
+      totalSeconds = Math.round(dureeCourse * 60);
+      resetRunnerDisplay();
+      startTimer();
+    });
+  });
+
+  summaryBtn.addEventListener("click", function () {
+    // Fin élève 2 : propose fraction, recalcule, sauve dans stats[1], puis go résumé
+    finalizeCurrentRunner().then(function () {
+      // Sauvegarde des stats consolidées et envoi au résumé
+      sessionStorage.setItem("stats", JSON.stringify(stats));
+      sessionStorage.setItem("eleve1", JSON.stringify(eleve1));
+      sessionStorage.setItem("eleve2", JSON.stringify(eleve2));
+      sessionStorage.setItem("dureeCourse", String(dureeCourse));
+      window.location.href = "resume.html";
+    });
+  });
+
+  // ----- Fonctions -----
+  function updateHeader() {
+    if (titleEl) {
+      titleEl.textContent = currentRunner === 0 ? "Course — Élève 1" : "Course — Élève 2";
+    }
+  }
+
+  function resetRunnerDisplay() {
+    updateHeader();
+    timerEl.textContent = formatTime(totalSeconds);
+    lapsEl.textContent = "0";
+    distEl.textContent = "0";
+    vitEl.textContent = "0.00";
+    vmaEl.textContent = "0.00";
+    lapBtn.disabled = false;
+    nextBtn.style.display = currentRunner === 0 ? "none" : "none";
+    summaryBtn.style.display = currentRunner === 1 ? "none" : "none";
+  }
+
+  function startTimer() {
+    clearInterval(intervalId);
+    intervalId = setInterval(function () {
+      totalSeconds -= 1;
+      if (totalSeconds <= 0) {
+        totalSeconds = 0;
+        timerEl.textContent = formatTime(totalSeconds);
+        clearInterval(intervalId);
+        lapBtn.disabled = true;
+
+        // Fin de la course pour ce coureur → on affiche le bon bouton
+        if (currentRunner === 0) {
+          // proposer fraction pour l’élève 1, puis bouton "Passer au coureur 2"
+          nextBtn.style.display = "inline-block";
+        } else {
+          // proposer fraction pour l’élève 2, puis bouton "Aller au résumé"
+          summaryBtn.style.display = "inline-block";
+        }
+      }
+      timerEl.textContent = formatTime(totalSeconds);
+      // pendant la course, la vitesse courante calculée sur le temps écoulé (optionnel)
+      updateNumbers();
+    }, 1000);
+  }
+
+  function updateNumbers() {
+    lapsEl.textContent = String(laps);
+    distEl.textContent = String(Math.round(distance));
+    var elapsedMin = (Math.round(dureeCourse * 60) - totalSeconds) / 60;
+    var vitesse = elapsedMin > 0 ? (distance / 1000) / elapsedMin : 0;
+    vitEl.textContent = vitesse.toFixed(2);
+    // VMA estimée simple : peut rester la VMA de l’élève s’il l’a, sinon estimation = vitesse
+    var vmaEst = (currentRunner === 0 ? (eleve1.vma || vitesse) : (eleve2.vma || vitesse));
+    vmaEl.textContent = (isFinite(vmaEst) ? vmaEst : 0).toFixed(2);
+  }
+
+  // Appelé quand un coureur a terminé (timer à 0 et clic sur Next/Summary)
+  function finalizeCurrentRunner() {
+    return new Promise(function (resolve) {
+      // Fixe les valeurs finales de la course AVANT fraction
+      var runnerIndex = currentRunner;
+      var elapsedMin = dureeCourse; // le chrono était en compte à rebours
+      var vitesse = (distance / 1000) / (elapsedMin > 0 ? elapsedMin : 1); // km/h
+      var vmaEst = runnerIndex === 0 ? (eleve1.vma || vitesse) : (eleve2.vma || vitesse);
+
+      // prépare un objet élève pour le passage à ajouterFraction()
+      var eleveCalc = {
+        nom: runnerIndex === 0 ? (eleve1.nom || "") : (eleve2.nom || ""),
+        prenom: runnerIndex === 0 ? (eleve1.prenom || "") : (eleve2.prenom || ""),
+        classe: runnerIndex === 0 ? (eleve1.classe || "") : (eleve2.classe || ""),
+        sexe: runnerIndex === 0 ? (eleve1.sexe || "") : (eleve2.sexe || ""),
+        distance: distance,      // m
+        temps: dureeCourse,      // minutes
+        vitesse: vitesse,        // km/h
+        vma: vmaEst              // km/h (si fournie au départ, on la garde ; sinon on met la vitesse)
+      };
+
+      // Ouvre la UI de fraction (définie dans fraction.js)
+      ajouterFraction(eleveCalc, longueurTour).then(function (eleveMaj) {
+        // Recalcule vitesse & VMA avec les nouvelles valeurs
+        // vitesse = (distance / 1000) / (temps en h)
+        var v = (eleveMaj.distance / 1000) / (eleveMaj.temps / 60);
+        eleveMaj.vitesse = isFinite(v) ? v : 0;
+
+        // Si l’élève a une VMA fournie initialement, on la garde ; sinon VMA = vitesse
+        var vmaSource = (runnerIndex === 0 ? eleve1.vma : eleve2.vma);
+        eleveMaj.vma = isFinite(vmaSource) && vmaSource > 0 ? vmaSource : eleveMaj.vitesse;
+
+        // Stocke dans stats
+        stats[runnerIndex] = {
+          nom: eleveMaj.nom,
+          prenom: eleveMaj.prenom,
+          classe: eleveMaj.classe,
+          sexe: eleveMaj.sexe,
+          distance: Math.round(eleveMaj.distance * 100) / 100,
+          vitesse: Math.round(eleveMaj.vitesse * 100) / 100,
+          vma: Math.round(eleveMaj.vma * 100) / 100
+        };
+
+        // Sauvegarde intermédiaire des stats (utile si on revient)
+        sessionStorage.setItem("stats", JSON.stringify(stats));
+
+        resolve();
+      });
+    });
+  }
+
+  // ----- Utils -----
+  function byId(id) { return document.getElementById(id); }
+  function safeParse(t) { try { return JSON.parse(t); } catch (e) { return null; } }
+  function pickFirstNumber() {
+    for (var i = 0; i < arguments.length; i++) {
+      var v = parseFloat(arguments[i]);
+      if (isFinite(v) && v > 0) return v;
+    }
+    return NaN;
+  }
+  function formatTime(s) {
+    var m = Math.floor(s / 60);
+    var r = s % 60;
+    return String(m).padStart(2, "0") + ":" + String(r).padStart(2, "0");
+    }
+
+})();
