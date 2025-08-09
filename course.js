@@ -42,6 +42,7 @@ function updateAffichage() {
   vmaDisplay.textContent = vma.toFixed(2);
 }
 
+// ➜ Sauvegarde au format ScanProf (clés et types exacts) + 'temps' pour le calcul interne
 function enregistrerStats() {
   const eleve = coureurActuel === 1 ? eleve1 : eleve2;
   const distance = nombreTours * longueur;
@@ -49,10 +50,14 @@ function enregistrerStats() {
   const vma = vitesse * 1.15;
 
   stats.push({
-    ...eleve,
-    distance: distance,
-    vitesse: vitesse,
-    vma: vma,
+    nom: eleve.nom,
+    prenom: eleve.prenom,
+    classe: eleve.classe,
+    sexe: eleve.sexe,
+    distance: Math.round(distance),                 // m entier
+    vitesse: parseFloat(vitesse.toFixed(2)),        // km/h
+    vma: parseFloat(vma.toFixed(2)),                // km/h
+    temps: totalSeconds                             // interne (s) pour fraction.js
   });
 }
 
@@ -62,20 +67,31 @@ function terminerCourse() {
   lapBtn.disabled = true;
   progressCircle.classList.remove("danger");
 
+  // 1) On pousse les stats brutes
   enregistrerStats();
 
-  // Ajout de la fenêtre fraction avant de passer à l'étape suivante
-  const eleve = coureurActuel === 1 ? stats[0] : stats[1];
-  ajouterFraction(eleve, longueur).then((eleveMaj) => {
-    // Mettre à jour dans stats
-    stats[coureurActuel - 1] = eleveMaj;
+  // 2) On propose l'ajout de fraction AVANT d'afficher le bouton suivant
+  const eleve = stats[stats.length - 1];
+  if (typeof ajouterFraction === "function") {
+    ajouterFraction(eleve, longueur).then((eleveMaj) => {
+      // Met à jour l'entrée avec les valeurs corrigées (distance/vitesse/vma)
+      stats[stats.length - 1] = eleveMaj;
 
+      // 3) Affiche le bouton suivant / résumé
+      if (coureurActuel === 1) {
+        nextBtn.style.display = "inline-block";
+      } else {
+        summaryBtn.style.display = "inline-block";
+      }
+    });
+  } else {
+    // Si fraction.js n'est pas chargé, on continue comme avant
     if (coureurActuel === 1) {
       nextBtn.style.display = "inline-block";
     } else {
       summaryBtn.style.display = "inline-block";
     }
-  });
+  }
 }
 
 function demarrerChrono() {
@@ -131,6 +147,8 @@ nextBtn.addEventListener("click", () => {
 });
 
 summaryBtn.addEventListener("click", () => {
+  // On ne garde que les champs requis par ScanProf dans le storage si tu veux être strict :
+  // (Tu peux aussi garder 'stats' tel quel, ton resume.html sait mapper correctement.)
   sessionStorage.setItem("stats", JSON.stringify(stats));
   window.location.href = "resume.html";
 });
