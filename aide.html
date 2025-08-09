@@ -10,35 +10,29 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
+      line-height: 1.6;
       text-align: center;
     }
-    h2 {
+    h1 {
       color: #3498db;
       margin-bottom: 20px;
     }
-    .instructions {
-      text-align: left;
-      max-width: 700px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      line-height: 1.6;
+    p {
+      max-width: 800px;
+      margin: 10px auto;
     }
-    .important {
+    strong {
       color: #e74c3c;
-      font-weight: bold;
     }
-    .btn {
-      display: inline-block;
+    button {
       margin-top: 30px;
+      padding: 12px 20px;
+      font-size: 16px;
       background-color: #3498db;
       color: white;
-      padding: 12px 20px;
-      text-decoration: none;
+      border: none;
       border-radius: 8px;
-      font-size: 16px;
+      cursor: pointer;
     }
     footer {
       margin-top: 40px;
@@ -49,17 +43,22 @@
 </head>
 <body>
 
-  <h2>📘 Mode d'emploi - RunStats</h2>
+  <h1>📖 Mode d'emploi - RunStats</h1>
 
-  <div class="instructions">
-    <p>1️⃣ Saisissez les informations des deux élèves (nom, prénom, classe, sexe).</p>
-    <p>2️⃣ Entrez la durée de la course en minutes et la distance exacte d’un tour en mètres.</p>
-    <p>3️⃣ Lancez la course et suivez en direct le nombre de tours, la distance, la vitesse et la VMA estimée.</p>
-    <p>4️⃣ À la fin, un QR code s’affiche : il contient les performances des deux élèves.</p>
-    <p class="important">⚠️ En cas d’erreur sur la distance, <strong>il faut le signaler immédiatement au professeur</strong> pour qu’il effectue le changement <strong>avant de scanner le QR code</strong>.</p>
-  </div>
+  <p>Bienvenue sur <strong>RunStats</strong> ! Cette application permet d’enregistrer les performances de deux élèves sur une course chronométrée.</p>
 
-  <a href="eleve.html" class="btn">Accéder à RunStats</a>
+  <p>1️⃣ Remplissez vos <strong>Nom, Prénom, Classe et Sexe</strong> dans les champs prévus.  
+  2️⃣ Entrez la <strong>durée</strong> de la course (en minutes) et la <strong>distance d’un tour</strong> (en mètres).  
+  3️⃣ Cliquez sur <strong>Valider et démarrer</strong>.</p>
+
+  <p>Pendant la course, appuyez sur le bouton <strong>+ Tour</strong> à chaque fois qu’un tour est complété.  
+  La distance, la vitesse et la VMA se mettent à jour automatiquement.</p>
+
+  <p>À la fin, un QR code contenant vos résultats s’affiche. Ce QR code sera scanné par votre enseignant pour enregistrer vos données.</p>
+
+  <p><strong>💡 Si vous avez une modification sur votre distance de course à effectuer, signalez-le à votre enseignant avant qu’il ne scanne votre QR code… sinon il faudra attendre l’année prochaine pour battre votre record ! 😉</strong></p>
+
+  <button onclick="window.location.href='eleve.html'">🚀 Accéder à RunStats</button>
 
   <footer>
     RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB
