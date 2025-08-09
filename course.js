@@ -1,6 +1,7 @@
 // course.js — 2 coureurs, ajout fraction à la fin de CHAQUE course, recalcul distance/vitesse/VMA
 
 (function () {
+
   // === Helpers: vitesse (km/h) & VMA normalisée 6 min ===
   function kmh(distance_m, time_s) {
     if (!isFinite(distance_m) || !isFinite(time_s) || time_s <= 0) return 0;
@@ -12,14 +13,11 @@
     const time_s = (time_val <= 20) ? time_val * 60 : time_val;
     return kmh(distance_m, time_s);
   }
-    if (!isFinite(distance_m) || !isFinite(time_s) || time_s <= 0) return 0;
-    return (distance_m / time_s) * 3.6;
-  }
   function vmaEquiv6min(distance_m, time_s) {
     if (!isFinite(distance_m) || !isFinite(time_s) || time_s <= 0) return 0;
     const tMin = Math.max(0.5, time_s / 60);
     const v = kmh(distance_m, time_s);
-    const a = 0.06;
+    const a = 0.06; // exposant doux
     const v6 = v * Math.pow(tMin / 6, a);
     return Math.round(v6 * 100) / 100;
   }
@@ -27,13 +25,6 @@
     if (!isFinite(distance_m) || !isFinite(time_val) || time_val <= 0) return 0;
     const time_s = (time_val <= 20) ? time_val * 60 : time_val;
     return vmaEquiv6min(distance_m, time_s);
-  }
-    if (!isFinite(distance_m) || !isFinite(time_s) || time_s <= 0) return 0;
-    const tMin = Math.max(0.5, time_s / 60);
-    const v = kmh(distance_m, time_s);
-    const a = 0.06;
-    const v6 = v * Math.pow(tMin / 6, a);
-    return Math.round(v6 * 100) / 100;
   }
 
   // ----- Récup des données de départ -----
@@ -194,17 +185,18 @@
 
       // Ouvre la UI de fraction (définie dans fraction.js)
       ajouterFraction(eleveCalc, longueurTour).then(function (eleveMaj) {
-        // Recalcule vitesse & VMA avec les nouvelles valeurs
-        // vitesse = (distance / 1000) / (temps en h)
-        var v = (eleveMaj.distance / 1000) / (eleveMaj.temps / 60);
-        eleveMaj.vitesse = isFinite(v) ? v : 0;
+        
+        // Recalcule vitesse & VMA après ajout de fraction
+        eleveMaj.vitesse = kmhSmart(eleveMaj.distance, eleveMaj.temps);
+        eleveMaj.vma = vmaEquiv6minSmart(eleveMaj.distance, eleveMaj.temps);
 
-        // Si l’élève a une VMA fournie initialement, on la garde ; sinon VMA = vitesse
+        // Si une VMA initiale était fournie pour cet élève, on la garde prioritairement
         var vmaSource = (runnerIndex === 0 ? eleve1.vma : eleve2.vma);
-        eleveMaj.vma = isFinite(vmaSource) && vmaSource > 0 ? vmaSource : eleveMaj.vitesse;
+        if (isFinite(vmaSource) && vmaSource > 0) {
+          eleveMaj.vma = vmaSource;
+        }
 
-
-        // Rafraîchit l'affichage à l'écran après ajout de fraction
+        // Rafraîchit l'affichage après ajout de fraction
         try {
           distEl.textContent = String(Math.round(eleveMaj.distance));
           vitEl.textContent = (eleveMaj.vitesse).toFixed(2);
@@ -221,6 +213,9 @@
           vitesse: Math.round(eleveMaj.vitesse * 100) / 100,
           vma: Math.round(eleveMaj.vma * 100) / 100
         };
+
+        // Sauvegarde intermédiaire des stats
+    
 
         // Sauvegarde intermédiaire des stats (utile si on revient)
         sessionStorage.setItem("stats", JSON.stringify(stats));
