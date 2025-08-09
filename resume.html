@@ -31,8 +31,9 @@
       color: white;
     }
     #qrcode {
-      text-align: center;
-      margin: 20px auto;
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
     }
     .btn {
       padding: 10px 16px;
@@ -110,7 +111,7 @@
       tbody.appendChild(tr);
     });
 
-    // Génération du QR code JSON
+    // Génération du QR code JSON (agrandi à 250px)
     const qrData = stats.map(e => ({
       nom: e.nom,
       prenom: e.prenom,
@@ -123,8 +124,8 @@
 
     new QRCode(document.getElementById("qrcode"), {
       text: JSON.stringify(qrData),
-      width: 200,
-      height: 200
+      width: 250,
+      height: 250
     });
 
     function adjustDistancePrompt() {
@@ -151,4 +152,3 @@
   </script>
 </body>
 </html>
-
