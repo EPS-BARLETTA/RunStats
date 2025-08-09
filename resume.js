@@ -1,108 +1,101 @@
+// resume.js — affiche élèves côte à côte (Élève 1 bleu clair / Élève 2 vert clair),
+// génère le QR JSON (primordial) et export CSV.
+
 window.onload = function () {
-  const eleve1 = JSON.parse(sessionStorage.getItem("eleve1"));
-  const eleve2 = JSON.parse(sessionStorage.getItem("eleve2"));
-  const statsOriginal = JSON.parse(sessionStorage.getItem("stats")); // stats brutes (2 élèves)
-  const duree = parseFloat(sessionStorage.getItem("dureeCourse"));   // minutes
+  const eleve1 = safeParse(sessionStorage.getItem("eleve1")) || {};
+  const eleve2 = safeParse(sessionStorage.getItem("eleve2")) || {};
+  // stats a normalement été rempli et ajusté (fractions) dans course.js
+  let stats = safeParse(sessionStorage.getItem("stats")) || [];
 
-  const resultsDiv = document.getElementById("results");
-  const lapLengthInput = document.getElementById("lapLength");
-  const fractionASelect = document.getElementById("fractionA");
-  const fractionBSelect = document.getElementById("fractionB");
-
-  if (!eleve1 || !eleve2 || !statsOriginal || statsOriginal.length < 2) {
-    resultsDiv.innerHTML = "<p>Aucune donnée disponible. Veuillez relancer une course.</p>";
-    return;
+  // garde-fous : si pas de stats, on reconstruit un minimum depuis eleve1/eleve2
+  if (!Array.isArray(stats) || stats.length < 2) {
+    stats = [
+      makeRowFromEleve(eleve1),
+      makeRowFromEleve(eleve2),
+    ];
   }
 
-  // Helpers
-  function getLapLength() {
-    const n = Number(lapLengthInput?.value || 400);
-    return isNaN(n) || n <= 0 ? 400 : n;
-  }
-  function extraMetersFromFraction(selectEl) {
-    const frac = Number(selectEl?.value || 0);
-    const extra = getLapLength() * (isNaN(frac) ? 0 : frac);
-    return Math.round(extra * 100) / 100;
-  }
-  function kmh(distanceMeters, dureeMinutes) {
-    if (!dureeMinutes || isNaN(dureeMinutes) || dureeMinutes <= 0) return 0;
-    return (distanceMeters / 1000) / (dureeMinutes / 60);
-  }
-  function round2(x){ return Math.round(x * 100) / 100; }
+  // Affichage cartes
+  renderCard("infoA", stats[0]);
+  renderCard("infoB", stats[1]);
 
-  // Applique les fractions et renvoie une copie ajustée des stats
-  function computeAdjustedStats() {
-    const extraA = extraMetersFromFraction(fractionASelect);
-    const extraB = extraMetersFromFraction(fractionBSelect);
-
-    // On clone pour ne pas modifier les stats originales
-    const s0 = JSON.parse(JSON.stringify(statsOriginal));
-
-    // Élève A = s0[0], Élève B = s0[1] (selon ton flux actuel)
-    if (s0[0]) {
-      const d = Number(s0[0].distance || 0) + extraA;
-      s0[0].distance = round2(d);
-      s0[0].vitesse = round2(kmh(d, duree)); // recalc km/h si durée dispo
-    }
-    if (s0[1]) {
-      const d = Number(s0[1].distance || 0) + extraB;
-      s0[1].distance = round2(d);
-      s0[1].vitesse = round2(kmh(d, duree));
-    }
-    return s0;
-  }
-
-  function render() {
-    const stats = computeAdjustedStats();
-
-    // Affichage HTML
-    const displayResult = (eleve) => {
-      const distance = eleve.distance;
-      const vitesse = eleve.vitesse;
-      return `
-        <div class="eleve">
-          <p><strong>Nom :</strong> ${eleve.nom} ${eleve.prenom}</p>
-          <p><strong>Classe :</strong> ${eleve.classe} | <strong>Sexe :</strong> ${eleve.sexe}</p>
-          <p><strong>Distance :</strong> ${distance} m</p>
-          <p><strong>Vitesse :</strong> ${isNaN(vitesse) ? "—" : vitesse.toFixed(2)} km/h</p>
-          <p><strong>VMA estimée :</strong> ${eleve.vma} km/h</p>
-        </div>
-      `;
-    };
-
-    resultsDiv.innerHTML = stats.map(displayResult).join("");
-
-    // QR code JSON compatible ScanProf (avec distances ajustées)
-    const qrData = JSON.stringify(stats);
-    const qrel = document.getElementById("qrcode");
-    qrel.innerHTML = ""; // reset
-    QRCode.toCanvas(document.createElement("canvas"), qrData, { width: 200 }, (err, canvas) => {
-      if (!err) qrel.appendChild(canvas);
-    });
-
-    // Bouton CSV → exporte les valeurs ajustées
-    const btnCsv = document.getElementById("downloadCSV");
-    btnCsv.onclick = () => {
-      const headers = ["Nom", "Prénom", "Classe", "Sexe", "Distance (m)", "Vitesse (km/h)", "VMA (km/h)"];
-      const rows = stats.map(e =>
-        [e.nom, e.prenom, e.classe, e.sexe, e.distance, isNaN(e.vitesse) ? "" : e.vitesse.toFixed(2), e.vma]
-      );
-      const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "donnees_runstats.csv";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    };
-  }
-
-  // Initial render
-  render();
-
-  // Recalcule dès que l’utilisateur change la longueur de tour ou la fraction
-  [lapLengthInput, fractionASelect, fractionBSelect].forEach(el => {
-    el && el.addEventListener("change", render);
+  // QR code (payload = array de 2 élèves)
+  const qrData = JSON.stringify(stats);
+  const qrWrap = document.getElementById("qrcode");
+  qrWrap.innerHTML = "";
+  QRCode.toCanvas(document.createElement("canvas"), qrData, { width: 220 }, function (err, canvas) {
+    if (!err) qrWrap.appendChild(canvas);
   });
+
+  // CSV
+  document.getElementById("downloadCSV").onclick = function () {
+    const headers = ["nom", "prenom", "classe", "sexe", "distance", "vitesse", "vma"];
+    const rows = stats.map(e => headers.map(h => normalizeCell(e[h])));
+    const csv = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+    downloadFile("donnees_runstats.csv", csv, "text/csv;charset=utf-8;");
+  };
+
+  // Utils
+  function renderCard(containerId, e) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    el.innerHTML = [
+      row("Nom", `${e.nom || ""} ${e.prenom || ""}`.trim()),
+      row("Classe / Sexe", `${e.classe || ""} / ${e.sexe || ""}`.trim()),
+      row("Distance", fmtMeters(e.distance)),
+      row("Vitesse", fmtKmh(e.vitesse)),
+      row("VMA", fmtKmh(e.vma))
+    ].join("");
+  }
+
+  function row(label, value) {
+    return `<p><strong>${escapeHtml(label)} :</strong> ${escapeHtml(String(value))}</p>`;
+  }
+
+  function fmtMeters(v) {
+    const n = toNum(v);
+    return isFinite(n) ? `${round2(n)} m` : "—";
+  }
+  function fmtKmh(v) {
+    const n = toNum(v);
+    return isFinite(n) ? `${round2(n)} km/h` : "—";
+  }
+
+  function round2(x) { return Math.round(Number(x) * 100) / 100; }
+  function toNum(x){ const n = Number(x); return isNaN(n) ? NaN : n; }
+  function normalizeCell(x){
+    if (x == null) return "";
+    const n = Number(x);
+    return isNaN(n) ? String(x) : String(round2(n));
+  }
+
+  function downloadFile(name, content, mime) {
+    const blob = new Blob([content], { type: mime });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      URL.revokeObjectURL(a.href);
+      document.body.removeChild(a);
+    }, 500);
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+                    .replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+  }
+  function safeParse(t) { try { return JSON.parse(t); } catch (e) { return null; } }
+  function makeRowFromEleve(e) {
+    return {
+      nom: e?.nom || "",
+      prenom: e?.prenom || "",
+      classe: e?.classe || "",
+      sexe: e?.sexe || "",
+      distance: toNum(e?.distance) || 0,
+      vitesse: toNum(e?.vitesse) || 0,
+      vma: toNum(e?.vma) || 0
+    };
+  }
 };
