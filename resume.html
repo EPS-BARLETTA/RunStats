@@ -107,7 +107,7 @@
           <td>${s.sexe || ""}</td>
           <td>${Number(s.distance).toFixed(0)}</td>
           <td>${Number(s.vitesse).toFixed(2)}</td>
-          <td>${Number(s.vma_calculee).toFixed(2)}</td>
+          <td>${Number(s.vma).toFixed(2)}</td>
           <td><button class="adjustBtn" onclick="adjustDistance(${index})">⚙️ Ajuster</button></td>
         `;
         tableBody.appendChild(row);
@@ -130,11 +130,11 @@
 
       const distanceTotale = stats[index].distance + add;
       const vitesse = (distanceTotale / 1000) / (parseFloat(sessionStorage.getItem("dureeCourse")) / 60);
-      const vma_calculee = vitesse * 1.15;
+      const vma = vitesse * 1.15;
 
       stats[index].distance = distanceTotale;
       stats[index].vitesse = vitesse;
-      stats[index].vma_calculee = vma_calculee;
+      stats[index].vma = vma;
 
       sessionStorage.setItem("stats", JSON.stringify(stats));
       renderTable();
@@ -149,7 +149,7 @@
         sexe: s.sexe,
         distance: Math.round(s.distance),
         vitesse: parseFloat(s.vitesse.toFixed(2)),
-        vma_calculee: parseFloat(s.vma_calculee.toFixed(2))
+        vma: parseFloat(s.vma.toFixed(2))
       })));
       new QRCode(qrContainer, {
         text: jsonData,
@@ -165,7 +165,7 @@
     document.getElementById("exportBtn").addEventListener("click", () => {
       let csv = "Prénom;Nom;Classe;Sexe;Distance (m);Vitesse (km/h);VMA (km/h)\n";
       stats.forEach(s => {
-        csv += `${s.prenom};${s.nom};${s.classe || ""};${s.sexe || ""};${Number(s.distance).toFixed(0)};${Number(s.vitesse).toFixed(2)};${Number(s.vma_calculee).toFixed(2)}\n`;
+        csv += `${s.prenom};${s.nom};${s.classe || ""};${s.sexe || ""};${Number(s.distance).toFixed(0)};${Number(s.vitesse).toFixed(2)};${Number(s.vma).toFixed(2)}\n`;
       });
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
