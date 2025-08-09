@@ -6,46 +6,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
+      background-color: #f4f9ff;
       font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
       margin: 0;
       padding: 20px;
-      line-height: 1.6;
-    }
-    h1 {
       text-align: center;
-      color: #3498db;
-    }
-    section {
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
     h2 {
-      color: #2c3e50;
-      margin-top: 0;
+      color: #3498db;
+      margin-bottom: 20px;
     }
-    ul {
-      padding-left: 20px;
+    .instructions {
+      text-align: left;
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      line-height: 1.6;
     }
-    .btn-home {
-      display: block;
-      width: fit-content;
-      margin: 30px auto;
-      padding: 12px 20px;
-      font-size: 16px;
-      background-color: #2ecc71;
+    .important {
+      color: #e74c3c;
+      font-weight: bold;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 30px;
+      background-color: #3498db;
       color: white;
-      border: none;
-      border-radius: 8px;
+      padding: 12px 20px;
       text-decoration: none;
-      text-align: center;
+      border-radius: 8px;
+      font-size: 16px;
     }
     footer {
       margin-top: 40px;
-      text-align: center;
       font-size: 0.9rem;
       color: #666;
     }
@@ -53,36 +49,17 @@
 </head>
 <body>
 
-  <h1>📖 Mode d'emploi RunStats</h1>
+  <h2>📘 Mode d'emploi - RunStats</h2>
 
-  <section>
-    <h2>1️⃣ Saisie des informations</h2>
-    <ul>
-      <li>Chaque élève remplit son <strong>Nom</strong>, <strong>Prénom</strong>, <strong>Classe</strong> et <strong>Sexe</strong>.</li>
-      <li>La <strong>VMA</strong> est optionnelle (peut être calculée automatiquement après la course).</li>
-      <li>Le professeur saisit la <strong>durée de la course</strong> et la <strong>longueur d'un tour</strong> (en mètres).</li>
-    </ul>
-  </section>
+  <div class="instructions">
+    <p>1️⃣ Saisissez les informations des deux élèves (nom, prénom, classe, sexe).</p>
+    <p>2️⃣ Entrez la durée de la course en minutes et la distance exacte d’un tour en mètres.</p>
+    <p>3️⃣ Lancez la course et suivez en direct le nombre de tours, la distance, la vitesse et la VMA estimée.</p>
+    <p>4️⃣ À la fin, un QR code s’affiche : il contient les performances des deux élèves.</p>
+    <p class="important">⚠️ En cas d’erreur sur la distance, <strong>il faut le signaler immédiatement au professeur</strong> pour qu’il effectue le changement <strong>avant de scanner le QR code</strong>.</p>
+  </div>
 
-  <section>
-    <h2>2️⃣ Déroulement de la course</h2>
-    <ul>
-      <li>Le chronomètre se lance automatiquement au départ.</li>
-      <li>Le bouton <strong>+ Tour</strong> permet d’ajouter un tour complété.</li>
-      <li>À 10 secondes de la fin, le cercle devient rouge et clignote.</li>
-    </ul>
-  </section>
-
-  <section>
-    <h2>3️⃣ Fin de course</h2>
-    <ul>
-      <li>Les performances (distance, vitesse, VMA) sont affichées pour chaque élève.</li>
-      <li>Un QR Code contenant les données des deux coureurs est généré pour être scanné dans ScanProf.</li>
-      <li>🚨 <strong>En cas d’erreur de mesure</strong>, une rectification de la distance peut être effectuée par le professeur à la fin de la course. <strong>À vous d’aller lui signaler immédiatement pour qu’il effectue le changement avant de scanner votre QR Code</strong>.</li>
-    </ul>
-  </section>
-
-  <a href="saisie.html" class="btn-home">🚀 Accéder à RunStats</a>
+  <a href="eleve.html" class="btn">Accéder à RunStats</a>
 
   <footer>
     RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB
