@@ -34,6 +34,13 @@
       display: flex;
       justify-content: center;
       margin: 20px 0;
+      padding: 10px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
     }
     .btn {
       padding: 10px 16px;
@@ -79,7 +86,6 @@
 
   <div id="qrcode"></div>
 
-  <!-- Boutons déplacés plus bas -->
   <div style="margin-top: 30px;">
     <button onclick="adjustDistancePrompt()" class="btn btn-prof">🔐 Mode Prof</button>
   </div>
@@ -111,7 +117,6 @@
       tbody.appendChild(tr);
     });
 
-    // Génération du QR code JSON (agrandi à 250px)
     const qrData = stats.map(e => ({
       nom: e.nom,
       prenom: e.prenom,
@@ -152,3 +157,4 @@
   </script>
 </body>
 </html>
+
