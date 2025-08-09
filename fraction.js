@@ -1,7 +1,12 @@
 // fraction.js
 // Permet d'ajouter 1/4, 1/2 ou 3/4 de tour à un élève et recalculer les valeurs
 
-function ajouterFraction(eleve, longueurTour) {
+window.ajouterFraction = function (eleve, longueurTour) {
+    /* smart longueur fallback */
+    if (!isFinite(longueurTour) || longueurTour <= 0) {
+        try { longueurTour = parseFloat(sessionStorage.getItem('longueurTour')) || parseFloat(sessionStorage.getItem('lapLength')) || 0; } catch(e) {}
+    }
+    longueurTour = isFinite(longueurTour) ? longueurTour : 0;
     return new Promise((resolve) => {
         // Création de la fenêtre de sélection
         const choix = document.createElement("div");
@@ -32,8 +37,8 @@ function ajouterFraction(eleve, longueurTour) {
                 const fraction = parseFloat(btn.dataset.fraction);
                 const ajoutDistance = longueurTour * fraction;
                 eleve.distance += ajoutDistance;
-                eleve.vitesse = kmh(eleve.distance, eleve.temps * 60);
-                eleve.vma = vmaEquiv6min(eleve.distance, eleve.temps * 60);
+                eleve.vitesse = kmhSmart(eleve.distance, eleve.temps);
+                eleve.vma = vmaEquiv6minSmart(eleve.distance, eleve.temps);
 
                 document.body.removeChild(choix);
                 resolve(eleve);
