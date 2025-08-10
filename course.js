@@ -73,7 +73,12 @@ function terminerCourse() {
   if (typeof ajouterFraction === "function") {
     ajouterFraction(eleve, longueur).then((eleveMaj) => {
       stats[stats.length - 1] = eleveMaj;
-
+      // MAJ des affichages après fraction
+      distanceDisplay.textContent = String(eleveMaj.distance);
+      const v = parseFloat(eleveMaj.vitesse ?? 0).toFixed(2);
+      const vv = parseFloat(eleveMaj.vma ?? 0).toFixed(2);
+      vitesseDisplay.textContent = v;
+      vmaDisplay.textContent = vv;
       if (coureurActuel === 1) {
         nextBtn.style.display = "inline-block";
       } else {
