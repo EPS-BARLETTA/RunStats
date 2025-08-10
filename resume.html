@@ -6,79 +6,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      background-color: #f4f9ff;
       font-family: Arial, sans-serif;
-      margin: 0;
       padding: 20px;
       text-align: center;
     }
-
-    h2 {
-      margin-bottom: 20px;
-    }
-
     table {
-      border-collapse: collapse;
       width: 100%;
-      max-width: 600px;
-      margin: 0 auto 20px auto;
+      border-collapse: collapse;
+      margin-top: 20px;
     }
-
     th, td {
       border: 1px solid #ccc;
-      padding: 10px;
-      text-align: center;
+      padding: 8px;
     }
-
     th {
-      background-color: #3498db;
-      color: white;
+      background-color: #f2f2f2;
     }
-
-    /* Couleurs spécifiques */
-    .eleve1 {
-      background-color: #d0e8ff;
-    }
-
-    .eleve2 {
-      background-color: #d4fbd4;
-    }
-
-    #qrcode {
-      margin: 20px auto;
-      display: flex;
-      justify-content: center;
-    }
-
     button {
-      margin: 8px;
+      margin: 10px;
       padding: 10px 15px;
       border: none;
-      border-radius: 6px;
-      font-size: 15px;
+      border-radius: 5px;
       cursor: pointer;
     }
-
-    #profBtn {
-      background-color: #f39c12;
-      color: white;
-    }
-
-    #accueilBtn {
-      background-color: #2ecc71;
-      color: white;
-    }
-
-    footer {
-      margin-top: 40px;
-      font-size: 0.9rem;
-      color: #666;
-    }
+    .btn-home { background-color: #2ecc71; color: white; }
+    .btn-export { background-color: #3498db; color: white; }
+    .btn-prof { background-color: #e67e22; color: white; }
   </style>
 </head>
 <body>
 
-  <h2>Résumé des performances</h2>
+  <h1>Résumé de la course</h1>
+
+  <div id="qrcode"></div>
 
   <table id="resultTable">
     <thead>
@@ -90,77 +50,94 @@
         <th>Distance (m)</th>
         <th>Vitesse (km/h)</th>
         <th>VMA (km/h)</th>
+        <th id="colActions" style="display:none;">Actions</th>
       </tr>
     </thead>
-    <tbody>
-      <!-- Lignes insérées par JS -->
-    </tbody>
+    <tbody></tbody>
   </table>
 
-  <div id="qrcode"></div>
-
   <div>
-    <button id="profBtn">Mode Prof</button>
-    <button id="accueilBtn" onclick="window.location.href='index.html'">Accueil</button>
+    <button class="btn-home" onclick="window.location.href='index.html'">🏠 Accueil</button>
+    <button class="btn-export" onclick="exportCSV()">📄 Export CSV</button>
+    <button class="btn-prof" onclick="activerModeProf()">🔑 Mode Prof</button>
   </div>
-
-  <footer>
-    RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-  </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
     const stats = JSON.parse(sessionStorage.getItem("stats")) || [];
-
     const tbody = document.querySelector("#resultTable tbody");
+    const colActions = document.getElementById("colActions");
+    let modeProfActif = false;
 
-    stats.forEach((eleve, index) => {
-      const tr = document.createElement("tr");
-      tr.classList.add(index === 0 ? "eleve1" : "eleve2");
+    function afficherTableau() {
+      tbody.innerHTML = "";
+      stats.forEach((eleve, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${eleve.nom}</td>
+          <td>${eleve.prenom}</td>
+          <td>${eleve.classe}</td>
+          <td>${eleve.sexe}</td>
+          <td>${eleve.distance}</td>
+          <td>${eleve.vitesse.toFixed(2)}</td>
+          <td>${eleve.vma.toFixed(2)}</td>
+          <td class="actions" style="display:${modeProfActif ? 'table-cell' : 'none'}">
+            <button onclick="changerDistance(${index}, 50)">+50</button>
+            <button onclick="changerDistance(${index}, -50)">-50</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
 
-      tr.innerHTML = `
-        <td>${eleve.nom}</td>
-        <td>${eleve.prenom}</td>
-        <td>${eleve.classe}</td>
-        <td>${eleve.sexe}</td>
-        <td>${eleve.distance.toFixed(0)}</td>
-        <td>${eleve.vitesse.toFixed(2)}</td>
-        <td>${eleve.vma.toFixed(2)}</td>
-      `;
-
-      tbody.appendChild(tr);
-    });
-
-    // QR code JSON
-    new QRCode(document.getElementById("qrcode"), {
-      text: JSON.stringify(stats),
-      width: 200,
-      height: 200
-    });
-
-    // Mode prof
-    document.getElementById("profBtn").addEventListener("click", () => {
-      const pin = prompt("Code PIN requis :");
-      if (pin !== "57") {
-        alert("Code incorrect");
-        return;
-      }
-      const index = parseInt(prompt("Modifier distance : Élève 1 ou 2 ?")) - 1;
-      if (isNaN(index) || index < 0 || index > 1) {
-        alert("Numéro invalide");
-        return;
-      }
-      const delta = parseFloat(prompt("Indiquez l'ajustement (+/- en mètres) :"));
-      if (isNaN(delta)) {
-        alert("Valeur invalide");
-        return;
-      }
-      stats[index].distance += delta;
-      stats[index].vitesse = (stats[index].distance / 1000) / (parseFloat(sessionStorage.getItem("dureeCourse")) / 60);
+    function changerDistance(index, valeur) {
+      stats[index].distance += valeur;
+      const tempsHeures = (stats[index].temps || 6*60) / 3600; // fallback 6min
+      stats[index].vitesse = (stats[index].distance / 1000) / tempsHeures;
       stats[index].vma = stats[index].vitesse * 1.15;
       sessionStorage.setItem("stats", JSON.stringify(stats));
-      location.reload();
-    });
+      afficherTableau();
+      genererQRCode();
+    }
+
+    function activerModeProf() {
+      const pin = prompt("Entrez le code PIN :");
+      if (pin === "57") {
+        modeProfActif = true;
+        colActions.style.display = "table-cell";
+        afficherTableau();
+      } else {
+        alert("Code incorrect");
+      }
+    }
+
+    function exportCSV() {
+      let csv = "Nom,Prénom,Classe,Sexe,Distance,Vitesse,VMA\n";
+      stats.forEach(eleve => {
+        csv += `${eleve.nom},${eleve.prenom},${eleve.classe},${eleve.sexe},${eleve.distance},${eleve.vitesse.toFixed(2)},${eleve.vma.toFixed(2)}\n`;
+      });
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "resultats.csv";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function genererQRCode() {
+      document.getElementById("qrcode").innerHTML = "";
+      new QRCode(document.getElementById("qrcode"), {
+        text: JSON.stringify(stats),
+        width: 200,
+        height: 200
+      });
+    }
+
+    afficherTableau();
+    genererQRCode();
   </script>
+
 </body>
 </html>
