@@ -2,61 +2,91 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>RunStats — Aide & Mode d’emploi</title>
+  <title>RunStats — Mode d’emploi (élève)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root{--ink:#111;--muted:#555;--border:#e5e7eb;--card:#fff;--bg:#fafafa;--accent:#0066ff}
+    :root{
+      --ink:#111; --muted:#555; --border:#e5e7eb; --card:#fff; --bg:#fafafa; --accent:#0066ff;
+    }
     *{box-sizing:border-box}
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;color:var(--ink);background:var(--bg)}
-    header,footer{text-align:center;padding:14px 16px}
-    header h1{margin:8px 0 0;font-size:22px}
-    header p{margin:6px 0 0;color:var(--muted)}
-    .wrap{max-width:900px;margin:12px auto 40px;padding:0 12px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px}
-    h2{margin:10px 0 6px;font-size:18px}
-    ol,ul{margin:8px 0 10px 22px}
-    .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
-    a.btn{text-decoration:none;background:var(--accent);color:#fff;font-weight:800;padding:12px 16px;border-radius:10px;display:inline-flex;align-items:center;gap:10px}
-    a.secondary{background:#fff;color:var(--ink);border:1px solid var(--border)}
+    header,footer{text-align:center;padding:22px 16px}
+    header h1{margin:6px 0 8px;font-size:26px}
+    header p{margin:0;color:var(--muted)}
+    .wrap{max-width:920px;margin:0 auto 44px;padding:0 16px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px 18px}
+    .sec{margin:14px 0 0}
+    .sec h2{margin:0 0 8px;font-size:20px;text-align:center}
+    .sec p{margin:6px 0;color:#222;line-height:1.55}
+    .bul{margin:6px auto 2px;max-width:760px;padding-left:20px}
+    .bul li{margin:6px 0}
+    .hint{color:var(--muted);font-size:14px;margin-top:4px;text-align:center}
+    .cta{display:flex;justify-content:center;margin-top:16px}
+    .btn{display:inline-block;text-decoration:none;font-weight:800;background:var(--accent);color:#fff;padding:13px 18px;border-radius:12px}
+    .btn.secondary{background:#fff;color:#111;border:1px solid var(--border)}
     footer{font-size:12px;color:#666;border-top:1px solid var(--border);background:#fff;position:sticky;bottom:0}
-    code{background:#f3f4f6;padding:2px 6px;border-radius:6px}
+    .step{font-weight:700}
   </style>
 </head>
 <body>
   <header>
-    <h1>Aide & Mode d’emploi</h1>
-    <p>Utilisation pas-à-pas de RunStats en cours d’EPS.</p>
+    <h1>Mode d’emploi — RunStats</h1>
+    <p>Guide simple pour l’élève pendant la séance d’EPS</p>
   </header>
 
   <div class="wrap">
     <div class="card">
-      <h2>1) Saisie des élèves (2 coureurs)</h2>
-      <ul>
-        <li>Renseigner pour chacun : <strong>Nom</strong>, <strong>Prénom</strong>, <strong>Classe</strong>, <strong>Sexe</strong>, <strong>Durée (min)</strong>, <strong>Longueur d’un tour (m)</strong>.</li>
-        <li>Les deux élèves s’affichent <strong>côte à côte</strong> (bleu/vert).</li>
-      </ul>
+      <div class="sec">
+        <h2>1) Préparation</h2>
+        <ul class="bul">
+          <li>Avec le prof, vérifie que tu as bien : <span class="step">Nom, Prénom, Classe, Sexe</span>.</li>
+          <li>La <span class="step">durée totale</span> et la <span class="step">longueur d’un tour</span> sont communes aux deux coureurs (le prof les indique une seule fois).</li>
+          <li>Couleurs : <strong>Bleu</strong> = élève 1 ; <strong>Vert</strong> = élève 2.</li>
+        </ul>
+      </div>
 
-      <h2>2) Course 1 puis Course 2</h2>
-      <ul>
-        <li>Lancez la <strong>Course 1</strong> pour l’élève 1 (minuteur, clignote sur les 10 dernières secondes).</li>
-        <li>L’autre élève appuie sur <em>Tour</em> à chaque passage. La <em>vitesse</em> et la <em>VMA</em> s’actualisent.</li>
-        <li>À la fin, ajoutez une <strong>fraction</strong> (¼, ½, ¾) si besoin : tout est mis à jour.</li>
-        <li>Puis lancez la <strong>Course 2</strong> (fond vert), même principe.</li>
-      </ul>
+      <div class="sec">
+        <h2>2) Saisie</h2>
+        <ul class="bul">
+          <li>Renseigne pour chaque élève : <em>Nom, Prénom, Classe, Sexe</em>.</li>
+          <li>Le prof saisit ensuite la <em>durée (minutes)</em> et la <em>longueur d’un tour (mètres)</em> une seule fois.</li>
+          <li>Appuie sur <strong>“Lancer la course”</strong>.</li>
+        </ul>
+      </div>
 
-      <h2>3) Résumé & QR</h2>
-      <ul>
-        <li>La page <strong>Résumé</strong> affiche 2 blocs (bleu/vert) : <em>Nom, Prénom, Classe, Distance, Vitesse, VMA</em>.</li>
-        <li>Un <strong>QR code</strong> est généré au format <strong>compatible ScanProf</strong> :
-          <code>[{nom, prenom, classe, sexe, distance, vitesse, vma}, {…}]</code>.
-        </li>
-        <li><strong>Mode Prof</strong> (PIN <code>57</code>) : ajuste la distance (± mètres) → recalcul immédiat + QR mis à jour.</li>
-        <li>Export en <strong>CSV</strong> et bouton <strong>Accueil</strong>.</li>
-      </ul>
+      <div class="sec">
+        <h2>3) Course 1 (élève 1)</h2>
+        <ul class="bul">
+          <li>Le minuteur démarre automatiquement (fond <strong>bleu</strong>).</li>
+          <li><span class="step">Rôle de l’observateur (élève 2)</span> : appuie sur <strong>+1 tour</strong> à chaque passage du coureur.</li>
+          <li>Les valeurs <em>Distance</em>, <em>Vitesse</em> et <em>VMA</em> se mettent à jour en direct.</li>
+          <li>Les <strong>10 dernières secondes</strong>, le temps clignote : prépare-toi à arrêter.</li>
+          <li>À la fin, une fenêtre propose d’ajouter une <strong>fraction de tour</strong> : <em>+¼</em>, <em>+½</em> ou <em>+¾</em> selon la position du coureur.</li>
+        </ul>
+      </div>
+
+      <div class="sec">
+        <h2>4) Course 2 (élève 2)</h2>
+        <ul class="bul">
+          <li>Clique sur <strong>“Passer au coureur 2”</strong> (fond <strong>vert</strong>).</li>
+          <li>L’élève 1 devient observateur et appuie sur <strong>+1 tour</strong> à chaque passage.</li>
+          <li>À la fin, ajoute la fraction si besoin (même principe que la course 1).</li>
+          <li>Ensuite, clique sur <strong>“Aller au résumé”</strong>.</li>
+        </ul>
+      </div>
+
+      <div class="sec">
+        <h2>5) Résumé</h2>
+        <ul class="bul">
+          <li>Deux blocs s’affichent (bleu / vert) avec : <em>Nom, Prénom, Classe, Distance, Vitesse, VMA</em>.</li>
+          <li>Le prof peut corriger une distance (PIN <strong>57</strong>) → tout se recalcule (Vitesse, VMA) et le QR interne est mis à jour.</li>
+          <li>Possibilité d’<strong>exporter en CSV</strong> et de revenir à l’<strong>Accueil</strong>.</li>
+        </ul>
+        <p class="hint">Astuce : si quelque chose ne s’actualise pas, recharge la page (Ctrl/Cmd + Shift + R).</p>
+      </div>
 
       <div class="cta">
-        <a class="btn" href="./eleve.html">🚀 Lancer la saisie (2 élèves)</a>
-        <a class="btn secondary" href="./qr-compatible.html">🧪 Tester un QR de démo</a>
+        <a class="btn" href="./eleve.html">🚀 Commencer la saisie (2 élèves)</a>
       </div>
     </div>
   </div>
