@@ -137,13 +137,25 @@
   <button id="nextBtn" style="display:none;">Passer au coureur 2</button>
   <button id="summaryBtn" style="display:none;">Aller au résumé</button>
 
+  <!-- Dialogue d'ajout de tour partiel -->
+  <dialog id="partialDialog" style="padding:16px;border-radius:12px;max-width:360px">
+    <form method="dialog" style="margin:0">
+      <h3 style="margin:0 0 8px">Ajouter un tour partiel ?</h3>
+      <p id="partialDialogInfo" style="margin:0 0 12px;opacity:.8"></p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start">
+        <button value="0.25">+ 1/4</button>
+        <button value="0.5">+ 1/2</button>
+        <button value="0.75">+ 3/4</button>
+        <button value="0" style="margin-left:auto">Non</button>
+      </div>
+    </form>
+  </dialog>
+
   <footer>
     RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB
   </footer>
 
-  <!-- Charger d'abord course.js -->
-  <script src="course.js"></script>
-  <!-- Charger ensuite fraction.js pour que la fonction soit dispo -->
   <script src="fraction.js"></script>
+  <script src="course.js"></script>
 </body>
 </html>
