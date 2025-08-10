@@ -2,74 +2,194 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>RunStats — Aide & Mode d’emploi</title>
+  <title>RunStats — Mode d’emploi (élève)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root{--ink:#111;--muted:#555;--border:#e5e7eb;--card:#fff;--bg:#fafafa;--accent:#0066ff}
+    :root{
+      --ink:#0b1220; --muted:#5b6573; --bg:#0f172a; /* fond sombre chic */
+      --card:#0b1220; --soft:#111a2e; --border:#1e293b;
+      --accent:#7c3aed; --accent2:#22c55e; --accent3:#38bdf8; --accent4:#f59e0b; --accent5:#ef4444;
+      --chipBlue:#2563eb; --chipGreen:#16a34a;
+    }
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;color:var(--ink);background:var(--bg)}
-    header,footer{text-align:center;padding:14px 16px}
-    header h1{margin:8px 0 0;font-size:22px}
-    header p{margin:6px 0 0;color:var(--muted)}
-    .wrap{max-width:900px;margin:12px auto 40px;padding:0 12px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px}
-    h2{margin:10px 0 6px;font-size:18px}
-    ol,ul{margin:8px 0 10px 22px}
-    .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;justify-content:center}
-    a.btn{text-decoration:none;background:var(--accent);color:#fff;font-weight:800;padding:12px 16px;border-radius:10px;display:inline-flex;align-items:center;gap:10px}
-    a.secondary{background:#fff;color:var(--ink);border:1px solid var(--border)}
-    .note{margin:10px 0;padding:10px;border:1px dashed var(--border);border-radius:10px;background:#fffbe6}
-    footer{font-size:12px;color:#666;border-top:1px solid var(--border);background:#fff;position:sticky;bottom:0}
-    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f3f4f6;border:1px solid var(--border);padding:2px 6px;border-radius:6px}
+    html,body{margin:0}
+    body{
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;
+      color:#e6ecff;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(124,58,237,.35), transparent 60%),
+        radial-gradient(1200px 600px at 110% 10%, rgba(56,189,248,.25), transparent 60%),
+        linear-gradient(180deg,#0f172a 0%, #0b1220 100%);
+    }
+
+    header,footer{text-align:center;padding:22px 16px}
+    header h1{margin:0 0 8px;font-size:28px;letter-spacing:.2px}
+    header p{margin:0;color:#b8c1d9}
+
+    .wrap{max-width:980px;margin:0 auto 44px;padding:0 16px}
+
+    /* Blocs étapes super visuels */
+    .steps{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px}
+    @media(min-width:860px){.steps{grid-template-columns:1fr 1fr}}
+
+    .step{
+      position:relative; display:flex; gap:14px; align-items:flex-start;
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+      border:1px solid var(--border); border-radius:16px; padding:16px;
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+      backdrop-filter: blur(4px);
+    }
+    .step::before{
+      content:""; position:absolute; left:0; top:0; bottom:0; width:10px; border-radius:16px 0 0 16px;
+      background:var(--stripe,linear-gradient(180deg,#7c3aed,#22c55e));
+    }
+    .s1{ --stripe:linear-gradient(180deg,#38bdf8,#7c3aed) }
+    .s2{ --stripe:linear-gradient(180deg,#7c3aed,#f59e0b) }
+    .s3{ --stripe:linear-gradient(180deg,#22c55e,#38bdf8) }
+    .s4{ --stripe:linear-gradient(180deg,#f59e0b,#22c55e) }
+    .s5{ --stripe:linear-gradient(180deg,#ef4444,#7c3aed) }
+
+    .icon{
+      flex:0 0 56px; height:56px; border-radius:14px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:28px; color:#0b1220;
+      background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(255,255,255,.8));
+      border:1px solid #e6ecff1a;
+      box-shadow:0 8px 20px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.25);
+    }
+
+    .content{flex:1}
+    .content h2{margin:0 0 8px;font-size:18px;letter-spacing:.2px;color:#fff}
+    .content p{margin:6px 0;color:#c7d2fe;line-height:1.55}
+    .content ul{margin:8px 0 0 20px;padding:0}
+    .content li{margin:6px 0;line-height:1.55;color:#e6ecff}
+
+    /* Étiquettes coureurs */
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .chip{
+      padding:6px 10px;border-radius:999px;font-weight:900;font-size:12.5px;
+      background:#0b1220;border:1px solid #2b3550; color:#e6ecff;
+      display:inline-flex; align-items:center; gap:8px;
+      box-shadow:0 6px 16px rgba(0,0,0,.25);
+    }
+    .dot{width:10px;height:10px;border-radius:50%}
+    .blue{background:var(--chipBlue)}
+    .green{background:var(--chipGreen)}
+
+    /* encart important */
+    .callout{
+      margin-top:10px;border-radius:12px;padding:12px 14px;
+      background:linear-gradient(180deg, rgba(245,158,11,.2), rgba(245,158,11,.1));
+      border:1px solid #f59e0b55; color:#ffe9c2;
+    }
+
+    /* CTA */
+    .cta{display:flex;justify-content:center;gap:12px;margin-top:22px;flex-wrap:wrap}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      text-decoration:none;font-weight:900;letter-spacing:.2px;
+      background:linear-gradient(135deg,#7c3aed,#a78bfa); color:#fff;
+      padding:14px 22px;border-radius:14px; border:1px solid #a78bfa55;
+      box-shadow:0 12px 30px rgba(124,58,237,.35);
+      transition:transform .08s ease, filter .15s ease;
+    }
+    .btn:hover{transform:translateY(-1px); filter:brightness(1.05)}
+    .btn.secondary{
+      background:transparent; border:1px solid #aab4d91f; color:#dbe6ff; box-shadow:none;
+    }
+    .btn.secondary:hover{background:#ffffff0a}
+
+    footer{font-size:12px;color:#b8c1d9;border-top:1px solid #243247;background:#0b1220}
+    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#111a2e;border:1px solid #243247;padding:2px 6px;border-radius:6px;color:#e6ecff}
   </style>
 </head>
 <body>
   <header>
-    <h1>Aide & Mode d’emploi</h1>
-    <p>Utilisation pas-à-pas de RunStats en cours d’EPS.</p>
+    <h1>Mode d’emploi — RunStats</h1>
+    <p>Lis ces étapes rapides, puis clique sur « Démarrer ».</p>
   </header>
 
   <div class="wrap">
-    <div class="card">
-      <h2>1) Préparation</h2>
-      <ul>
-        <li>Vérifie : <strong>Nom</strong>, <strong>Prénom</strong>, <strong>Classe</strong>, <strong>Sexe</strong>.</li>
-        <li>La <strong>durée (minutes)</strong> et la <strong>longueur d’un tour (m)</strong> sont communes aux 2 coureurs.</li>
-        <li>Couleurs pendant la course : <strong>bleu</strong> = coureur 1, <strong>vert</strong> = coureur 2.</li>
-      </ul>
-
-      <h2>2) Saisie</h2>
-      <ul>
-        <li>Saisir l’identité des <strong>2 coureurs</strong> (les champs restent blancs, fonds bleu/vert pour repère).</li>
-        <li>Saisir <strong>une seule fois</strong> la durée et la longueur d’un tour (valables pour les deux).</li>
-        <li>Cliquer sur <strong>“Lancer la course”</strong>.</li>
-      </ul>
-
-      <h2>3) Course 1 (coureur 1)</h2>
-      <ul>
-        <li>Minuteur <strong>rond</strong> (fond <strong>bleu</strong>) qui se <em>réduit</em>. Les 10 dernières secondes : <strong>clignote rouge</strong>.</li>
-        <li><strong>Observateur (coureur 2)</strong> : cliquer <span class="kbd">+ 1 tour</span> à <strong>chaque passage</strong>.</li>
-        <li>Les valeurs <em>Distance</em>, <em>Vitesse</em>, <em>VMA</em> s’actualisent automatiquement.</li>
-        <li>À la fin, choisir une <strong>fraction de tour</strong> si besoin : <em>+¼</em>, <em>+½</em>, <em>+¾</em>.</li>
-      </ul>
-
-      <h2>4) Course 2 (coureur 2)</h2>
-      <ul>
-        <li>Clique sur <strong>“Passer au coureur 2”</strong> (fond <strong>vert</strong>) et répète le même principe.</li>
-        <li>À la fin, ajoute la fraction si nécessaire puis <strong>“Aller au résumé”</strong>.</li>
-      </ul>
-
-      <h2>5) Résumé</h2>
-      <ul>
-        <li>Deux blocs (bleu/vert) montrent : <em>Nom</em>, <em>Prénom</em>, <em>Classe</em>, <em>Distance</em>, <em>Vitesse</em>, <em>VMA</em>.</li>
-        <li>Un QR est généré pour le scan de l’enseignant (<em>ScanProf</em>).</li>
-      </ul>
-      <div class="note"><strong>Important :</strong> si ta <strong>distance réalisée</strong> doit être ajustée, préviens l’enseignant <strong>à la fin des deux courses</strong> pour qu’il/elle corrige <strong>avant le scan</strong>.</div>
-
-      <div class="cta">
-        <a class="btn" href="./eleve.html">🚀 Commencer</a>
-        <a class="btn secondary" href="./index.html">🏠 Accueil</a>
+    <div class="steps">
+      <!-- 1. Préparation -->
+      <div class="step s1">
+        <div class="icon">🎒</div>
+        <div class="content">
+          <h2>1) Prépare-toi</h2>
+          <ul>
+            <li>Avoir : <strong>Nom</strong>, <strong>Prénom</strong>, <strong>Classe</strong>, <strong>Sexe</strong>.</li>
+            <li>La <strong>durée (min)</strong> et la <strong>longueur d’un tour (m)</strong> sont fixées pour tous.</li>
+          </ul>
+          <div class="chips">
+            <span class="chip"><span class="dot blue"></span> COUREUR&nbsp;1 (fond bleu)</span>
+            <span class="chip"><span class="dot green"></span> COUREUR&nbsp;2 (fond vert)</span>
+          </div>
+        </div>
       </div>
+
+      <!-- 2. Saisie -->
+      <div class="step s2">
+        <div class="icon">✍️</div>
+        <div class="content">
+          <h2>2) Saisie</h2>
+          <ul>
+            <li>Remplis l’identité des <strong>2 coureurs</strong>.</li>
+            <li>Vérifie la <strong>durée</strong> et la <strong>longueur de tour</strong> (communes aux deux).</li>
+            <li>Appuie sur <strong>«&nbsp;Lancer la course&nbsp;»</strong>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 3. Course 1 -->
+      <div class="step s3">
+        <div class="icon">🏃‍♂️</div>
+        <div class="content">
+          <h2>3) Course 1 (coureur 1)</h2>
+          <ul>
+            <li>Minuteur <strong>rond</strong> (fond <strong>bleu</strong>) qui se <strong>réduit</strong>.</li>
+            <li><strong>Observateur (coureur 2)</strong> : clique <span class="kbd">+ 1 tour</span> <strong>à chaque passage</strong>.</li>
+            <li>Distance, Vitesse et VMA se mettent à jour.</li>
+            <li>Fin : choisis la <strong>fraction de tour</strong> (<em>+¼</em>, <em>+½</em>, <em>+¾</em>).</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 4. Course 2 -->
+      <div class="step s4">
+        <div class="icon">🔁</div>
+        <div class="content">
+          <h2>4) Course 2 (coureur 2)</h2>
+          <ul>
+            <li>Clique <strong>«&nbsp;Passer au coureur 2&nbsp;»</strong> (fond <strong>vert</strong>).</li>
+            <li>Le coureur 1 devient observateur et clique <span class="kbd">+ 1 tour</span> à chaque passage.</li>
+            <li>Fin : ajoute la fraction si nécessaire, puis <strong>«&nbsp;Aller au résumé&nbsp;»</strong>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 5. Résumé & Scan -->
+      <div class="step s5" style="grid-column:1/-1;max-width:760px;justify-self:center">
+        <div class="icon">📋</div>
+        <div class="content">
+          <h2>5) Résumé & scan</h2>
+          <ul>
+            <li>2 blocs (bleu / vert) : <em>Nom, Prénom, Classe, Distance, Vitesse, VMA</em>.</li>
+            <li>Un QR est prêt pour le <strong>scan</strong> par l’enseignant.</li>
+          </ul>
+          <div class="callout">
+            <strong>Important :</strong> si ta <strong>distance réalisée</strong> est à ajuster,
+            préviens l’enseignant <strong>à la fin des deux courses</strong> pour corriger <strong>avant le scan</strong>.
+          </div>
+          <p class="content" style="margin:8px 0 0;color:#a9b6d9">
+            Astuce : si l’écran ne s’actualise pas, rafraîchis (Ctrl/Cmd + Shift + R).
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta">
+      <a class="btn" href="./eleve.html">🚀 Démarrer</a>
+      <a class="btn secondary" href="./index.html">🏠 Accueil</a>
     </div>
   </div>
 
