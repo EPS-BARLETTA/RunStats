@@ -1,3 +1,4 @@
+<!-- Remplace ton eleve.html actuel par ceci si tu veux tout prêt -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -5,20 +6,22 @@
   <title>RunStats — Saisie des élèves</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root{--bleu:#e6f0ff;--vert:#e6ffe6;--border:#e5e7eb}
+    :root{--bleu:#cce5ff;--vert:#d4edda;--grey:#eef2f7;--border:#e5e7eb}
     *{box-sizing:border-box}
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;background:#fafafa;color:#111}
     header,footer{text-align:center;padding:16px}
     .wrap{max-width:980px;margin:0 auto 40px;padding:0 12px}
     .grid{display:grid;grid-template-columns:1fr;gap:14px}
     @media(min-width:860px){.grid{grid-template-columns:1fr 1fr}}
-    .card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+    .card{background:#fff;border:2px solid var(--border);border-radius:14px;overflow:hidden}
+    .c1{border-color:var(--bleu)}
+    .c2{border-color:var(--vert)}
     .cardHeader{padding:12px 14px;font-weight:800;border-bottom:1px solid var(--border)}
-    .c1 .cardHeader{background:var(--bleu)}
-    .c2 .cardHeader{background:var(--vert)}
     .cardBody{padding:14px}
     label{display:block;font-weight:600;margin:10px 0 6px}
     input,select{width:100%;padding:10px;border:1px solid var(--border);border-radius:10px}
+    .params{background:#fff;border:2px solid var(--grey);border-radius:14px;overflow:hidden}
+    .params .cardHeader{background:var(--grey)}
     .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;justify-content:center}
     button{appearance:none;border:1px solid var(--border);background:#111;color:#fff;font-weight:700;padding:12px 16px;border-radius:12px;cursor:pointer}
     a.btn{display:inline-block;text-decoration:none;border:1px solid var(--border);padding:12px 16px;border-radius:12px;background:#fff}
@@ -27,52 +30,37 @@
 <body>
   <header>
     <h1>Saisie des 2 élèves</h1>
-    <p>Identité de chaque élève + paramètres de course communs.</p>
+    <p>Identité de chaque coureur + paramètres communs.</p>
   </header>
 
   <div class="wrap">
     <form id="studentForm">
       <div class="grid">
         <div class="card c1">
-          <div class="cardHeader">Élève 1 (bleu)</div>
+          <div class="cardHeader">Coureur 1</div>
           <div class="cardBody">
-            <label for="prenom1">Prénom</label>
-            <input id="prenom1" required />
-            <label for="nom1">Nom</label>
-            <input id="nom1" required />
-            <label for="classe1">Classe</label>
-            <input id="classe1" required />
+            <label for="prenom1">Prénom</label><input id="prenom1" required />
+            <label for="nom1">Nom</label><input id="nom1" required />
+            <label for="classe1">Classe</label><input id="classe1" required />
             <label for="sexe1">Sexe</label>
-            <select id="sexe1" required>
-              <option value="">—</option>
-              <option value="F">F</option>
-              <option value="M">M</option>
-            </select>
+            <select id="sexe1" required><option value="">—</option><option value="F">F</option><option value="M">M</option></select>
           </div>
         </div>
 
         <div class="card c2">
-          <div class="cardHeader">Élève 2 (vert)</div>
+          <div class="cardHeader">Coureur 2</div>
           <div class="cardBody">
-            <label for="prenom2">Prénom</label>
-            <input id="prenom2" required />
-            <label for="nom2">Nom</label>
-            <input id="nom2" required />
-            <label for="classe2">Classe</label>
-            <input id="classe2" required />
+            <label for="prenom2">Prénom</label><input id="prenom2" required />
+            <label for="nom2">Nom</label><input id="nom2" required />
+            <label for="classe2">Classe</label><input id="classe2" required />
             <label for="sexe2">Sexe</label>
-            <select id="sexe2" required>
-              <option value="">—</option>
-              <option value="F">F</option>
-              <option value="M">M</option>
-            </select>
+            <select id="sexe2" required><option value="">—</option><option value="F">F</option><option value="M">M</option></select>
           </div>
         </div>
       </div>
 
-      <!-- Paramètres communs -->
-      <div class="card" style="margin-top:14px">
-        <div class="cardHeader">Paramètres de course (communs aux 2 élèves)</div>
+      <div class="params" style="margin-top:14px">
+        <div class="cardHeader">Paramètres de course (communs)</div>
         <div class="cardBody">
           <div class="grid" style="grid-template-columns:1fr 1fr">
             <div>
@@ -99,28 +87,16 @@
   <script>
     document.getElementById("studentForm").addEventListener("submit", (e) => {
       e.preventDefault();
-
       const communs = {
-        temps: parseFloat(document.getElementById("temps").value),             // minutes
-        longueurTour: parseFloat(document.getElementById("longueur").value)    // mètres
+        temps: parseFloat(document.getElementById("temps").value),
+        longueurTour: parseFloat(document.getElementById("longueur").value)
       };
-
       const eleve1 = {
-        prenom: document.getElementById("prenom1").value.trim(),
-        nom: document.getElementById("nom1").value.trim(),
-        classe: document.getElementById("classe1").value.trim(),
-        sexe: document.getElementById("sexe1").value,
-        ...communs
+        prenom: prenom1.value.trim(), nom: nom1.value.trim(), classe: classe1.value.trim(), sexe: sexe1.value, ...communs
       };
-
       const eleve2 = {
-        prenom: document.getElementById("prenom2").value.trim(),
-        nom: document.getElementById("nom2").value.trim(),
-        classe: document.getElementById("classe2").value.trim(),
-        sexe: document.getElementById("sexe2").value,
-        ...communs
+        prenom: prenom2.value.trim(), nom: nom2.value.trim(), classe: classe2.value.trim(), sexe: sexe2.value, ...communs
       };
-
       sessionStorage.setItem("eleve1Data", JSON.stringify(eleve1));
       sessionStorage.setItem("eleve2Data", JSON.stringify(eleve2));
       window.location.href = "course.html";
