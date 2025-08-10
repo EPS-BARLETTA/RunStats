@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>RunStats — Saisie des coureurs</title>
+  <title>RunStats — Saisie des informations</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root{--bleu:#e6f0ff;--vert:#e6ffe6;--grey:#eef2f7;--border:#e5e7eb}
@@ -16,7 +16,7 @@
     .c1{background:var(--bleu);border-color:var(--bleu)}
     .c2{background:var(--vert);border-color:var(--vert)}
     .params{background:#fff;border:2px solid var(--grey);border-radius:14px;overflow:hidden}
-    .cardHeader{padding:12px 14px;font-weight:800;border-bottom:1px solid var(--border)}
+    .cardHeader{padding:12px 14px;font-weight:900;border-bottom:1px solid var(--border);letter-spacing:.5px}
     .cardBody{padding:14px}
     label{display:block;font-weight:600;margin:10px 0 6px}
     input,select{width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:#fff}
@@ -27,32 +27,36 @@
 </head>
 <body>
   <header>
-    <h1>Saisie des 2 coureurs</h1>
-    <p>Identité de chaque coureur + paramètres communs.</p>
+    <h1>Saisie des informations</h1>
+    <p>Identité des deux coureurs + paramètres de course communs.</p>
   </header>
 
   <div class="wrap">
     <form id="studentForm">
       <div class="grid">
         <div class="card c1">
-          <div class="cardHeader">Coureur 1</div>
+          <div class="cardHeader">COUREUR 1</div>
           <div class="cardBody">
             <label for="prenom1">Prénom</label><input id="prenom1" required />
             <label for="nom1">Nom</label><input id="nom1" required />
             <label for="classe1">Classe</label><input id="classe1" required />
             <label for="sexe1">Sexe</label>
-            <select id="sexe1" required><option value="">—</option><option value="F">F</option><option value="M">M</option></select>
+            <select id="sexe1" required>
+              <option value="">—</option><option value="F">F</option><option value="M">M</option>
+            </select>
           </div>
         </div>
 
         <div class="card c2">
-          <div class="cardHeader">Coureur 2</div>
+          <div class="cardHeader">COUREUR 2</div>
           <div class="cardBody">
             <label for="prenom2">Prénom</label><input id="prenom2" required />
             <label for="nom2">Nom</label><input id="nom2" required />
             <label for="classe2">Classe</label><input id="classe2" required />
             <label for="sexe2">Sexe</label>
-            <select id="sexe2" required><option value="">—</option><option value="F">F</option><option value="M">M</option></select>
+            <select id="sexe2" required>
+              <option value="">—</option><option value="F">F</option><option value="M">M</option>
+            </select>
           </div>
         </div>
       </div>
@@ -90,10 +94,18 @@
         longueurTour: parseFloat(document.getElementById("longueur").value)
       };
       const eleve1 = {
-        prenom: prenom1.value.trim(), nom: nom1.value.trim(), classe: classe1.value.trim(), sexe: sexe1.value, ...communs
+        prenom: prenom1.value.trim(),
+        nom: nom1.value.trim(),
+        classe: classe1.value.trim(),
+        sexe: sexe1.value,
+        ...communs
       };
       const eleve2 = {
-        prenom: prenom2.value.trim(), nom: nom2.value.trim(), classe: classe2.value.trim(), sexe: sexe2.value, ...communs
+        prenom: prenom2.value.trim(),
+        nom: nom2.value.trim(),
+        classe: classe2.value.trim(),
+        sexe: sexe2.value,
+        ...communs
       };
       sessionStorage.setItem("eleve1Data", JSON.stringify(eleve1));
       sessionStorage.setItem("eleve2Data", JSON.stringify(eleve2));
