@@ -11,87 +11,42 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
   <style>
     :root{
-      --bleu:#e6f0ff;      /* bloc élève 1 */
-      --vert:#e6ffe6;      /* bloc élève 2 */
-      --accent:#0066ff;    /* boutons primaires */
-      --accent-2:#22aa22;  /* Accueil */
-      --danger:#cc2233;    /* annuler */
-      --ink:#111;
-      --muted:#666;
-      --card:#fff;
-      --border:#e5e7eb;
+      --bleu:#e6f0ff; --vert:#e6ffe6; --accent:#0066ff; --accent-2:#22aa22; --danger:#cc2233;
+      --ink:#111; --muted:#666; --card:#fff; --border:#e5e7eb;
     }
     *{box-sizing:border-box}
-    body{
-      margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      color:var(--ink); background:#fafafa;
-    }
-    header, footer{
-      text-align:center; padding:12px 16px;
-    }
-    header h1{margin:8px 0 0;font-size:22px}
-    header p{margin:6px 0 0;color:var(--muted);font-size:14px}
-    .wrap{
-      max-width:1100px; margin:16px auto; padding:0 12px 40px;
-    }
-    .grid{
-      display:grid; grid-template-columns:1fr; gap:14px;
-    }
+    body{ margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color:var(--ink); background:#fafafa;}
+    header, footer{ text-align:center; padding:12px 16px; }
+    header h1{ margin:8px 0 0; font-size:22px }
+    header p{ margin:6px 0 0; color:var(--muted); font-size:14px }
+    .wrap{ max-width:1100px; margin:16px auto; padding:0 12px 40px; }
+    .grid{ display:grid; grid-template-columns:1fr; gap:14px; }
     @media (min-width:860px){ .grid{ grid-template-columns:1fr 1fr; } }
-
-    .card{
-      background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden;
-    }
-    .cardHeader{
-      padding:12px 14px; font-weight:800; letter-spacing:.2px; font-size:15px;
-      border-bottom:1px solid var(--border);
-    }
+    .card{ background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+    .cardHeader{ padding:12px 14px; font-weight:800; letter-spacing:.2px; font-size:15px; border-bottom:1px solid var(--border); }
     .cardBody{ padding:14px; }
     .bloc--e1 .cardHeader{ background:var(--bleu); }
     .bloc--e2 .cardHeader{ background:var(--vert); }
-
-    dl{ margin:0; display:grid; grid-template-columns: auto 1fr; gap:8px 14px; }
+    dl{ margin:0; display:grid; grid-template-columns:auto 1fr; gap:8px 14px; }
     dt{ color:#334155; font-weight:600; }
     dd{ margin:0; }
     .mono{ font-variant-numeric:tabular-nums; font-feature-settings:"tnum"; }
-
-    .panel{
-      margin-top:16px; display:grid; gap:12px;
-      grid-template-columns: 1fr;
-    }
-    @media (min-width:860px){ .panel{ grid-template-columns: 2fr 1fr; } }
-
-    .qrBox{
-      display:flex; align-items:center; justify-content:center;
-      background:#fff; border:1px dashed var(--border); border-radius:12px; padding:14px; min-height:240px;
-    }
-    .actions{
-      display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 0;
-    }
-    button, .btn{
-      appearance:none; border:1px solid transparent; background:var(--accent); color:#fff; font-weight:700;
-      padding:10px 14px; border-radius:10px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px;
-    }
+    .panel{ margin-top:16px; display:grid; gap:12px; grid-template-columns:1fr; }
+    @media (min-width:860px){ .panel{ grid-template-columns:2fr 1fr; } }
+    .qrBox{ display:flex; align-items:center; justify-content:center; background:#fff; border:1px dashed var(--border); border-radius:12px; padding:14px; min-height:240px; }
+    .actions{ display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 0; }
+    button, .btn{ appearance:none; border:1px solid transparent; background:var(--accent); color:#fff; font-weight:700; padding:10px 14px; border-radius:10px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px; }
     button.secondary{ background:#fff; border-color:var(--border); color:var(--ink); }
-    button.ghost{ background:transparent; border-color:var(--border); color:var(--ink); }
-    .btn-home{ background:var(--accent-2);}
-    .btn-danger{ background:var(--danger);}
+    .btn-home{ background:var(--accent-2); }
+    .btn-danger{ background:var(--danger); }
     .muted{ color:var(--muted); font-size:13px; }
-
-    /* Modal PIN / Mode prof */
-    dialog{
-      border:none; border-radius:14px; padding:0; width:min(560px, 92vw); box-shadow:0 20px 60px rgba(0,0,0,.20);
-    }
+    dialog{ border:none; border-radius:14px; padding:0; width:min(560px, 92vw); box-shadow:0 20px 60px rgba(0,0,0,.20); }
     dialog::backdrop{ background:rgba(0,0,0,.35); }
     .modalHead{ padding:14px 16px; border-bottom:1px solid var(--border); font-weight:800; }
     .modalBody{ padding:16px; }
     .modalFoot{ padding:12px 16px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; }
-
     .formRow{ display:grid; grid-template-columns: 1fr 120px; gap:10px; align-items:center; margin:10px 0; }
-    input[type="number"], input[type="password"]{
-      width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:10px;
-      font-size:15px; background:#fff;
-    }
+    input[type="number"], input[type="password"]{ width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:10px; font-size:15px; background:#fff; }
     .hint{ font-size:12px; color:var(--muted); margin-top:4px; }
     footer{ font-size:12px; color:var(--muted); border-top:1px solid var(--border); background:#fff; position:sticky; bottom:0; }
   </style>
@@ -99,14 +54,10 @@
 <body>
   <header>
     <h1>Résumé des courses</h1>
-    <p>Vérifiez les données des deux élèves. Le QR ci‑dessous est compatible <strong>ScanProf</strong>.</p>
+    <p>Le QR ci‑dessous est compatible <strong>ScanProf</strong>. Vous pouvez corriger les distances via le mode prof.</p>
   </header>
-
   <div class="wrap">
-    <div class="grid" id="elevesGrid">
-      <!-- Blocs élève générés par JS -->
-    </div>
-
+    <div class="grid" id="elevesGrid"></div>
     <div class="panel">
       <div class="card">
         <div class="cardHeader">QR compatible ScanProf</div>
@@ -120,7 +71,6 @@
           </div>
         </div>
       </div>
-
       <div class="card">
         <div class="cardHeader">Données brutes</div>
         <div class="cardBody">
@@ -129,10 +79,8 @@
       </div>
     </div>
   </div>
-
   <footer>RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
 
-  <!-- Modal PIN -->
   <dialog id="pinModal">
     <div class="modalHead">Accès professeur</div>
     <div class="modalBody">
@@ -141,12 +89,11 @@
       <div class="hint">Entrez <strong>57</strong> pour déverrouiller l’ajustement des distances.</div>
     </div>
     <div class="modalFoot">
-      <button class="ghost" id="pinCancel">Annuler</button>
+      <button class="btn btn-danger" id="pinCancel">Annuler</button>
       <button id="pinOk">Valider</button>
     </div>
   </dialog>
 
-  <!-- Modal Ajustements -->
   <dialog id="editModal">
     <div class="modalHead">Ajuster les distances (m)</div>
     <div class="modalBody">
@@ -158,156 +105,128 @@
         <label for="editE2">Élève 2 (m) :</label>
         <input id="editE2" type="number" step="1" />
       </div>
-      <div class="hint">Vous pouvez saisir une valeur libre (ex : +25 ou -35 par rapport au total affiché). La vitesse et la VMA seront recalculées, et le QR mis à jour.</div>
+      <div class="hint">Valeur libre (ex : +25 ou -35 par rapport au total affiché). La vitesse et la VMA seront recalculées, et le QR mis à jour.</div>
     </div>
     <div class="modalFoot">
-      <button class="ghost" id="editCancel">Annuler</button>
-      <button class="btn-danger" id="editReset">Remettre valeurs lues</button>
+      <button class="btn btn-danger" id="editCancel">Annuler</button>
+      <button class="secondary" id="editReset">Remettre valeurs lues</button>
       <button id="editSave">Enregistrer</button>
     </div>
   </dialog>
 
   <script>
-  // ==== Résumé / QR compatible ScanProf =====================================
-  // Hypothèse de stockage local (adapte si besoin) :
-  // localStorage.runstats_eleve1 = JSON.stringify({ nom, prenom, classe, sexe, dureeMin, distanceTourM })
-  // localStorage.runstats_eleve2 = JSON.stringify({ ... })
-  // localStorage.runstats_course1 = JSON.stringify({ tours, fraction: 0|0.25|0.5|0.75, dureeSec, distanceM, vitesseKmh, vmaKmh })
-  // localStorage.runstats_course2 = JSON.stringify({ ... })
-  //
-  // Si tes clés diffèrent, mappe‑les dans la fonction readAll() ci‑dessous.
-
   const PIN_CODE = "57";
-
-  function safeParse(item){
-    try{ return JSON.parse(item); }catch(_){ return null; }
-  }
-
-  // Convertit (distance m, durée s) -> vitesse km/h
-  function computeVitesse(distanceM, dureeSec){
-    if(!distanceM || !dureeSec) return 0;
-    return (distanceM / 1000) / (dureeSec / 3600);
-  }
-
-  // Estimation VMA : ici on prend la vitesse moyenne de la période comme proxy.
-  // (Tu peux brancher ta formule si tu en as une autre dans ton app.)
-  function computeVMA(distanceM, dureeSec){
-    return computeVitesse(distanceM, dureeSec);
-  }
-
+  function safeJSON(s){ try{ return JSON.parse(s); }catch(e){ return null; } }
   function round1(x){ return Math.round((x + Number.EPSILON) * 10) / 10; }
+  function vitesse(distanceM, dureeSec){ if(!distanceM||!dureeSec) return 0; return (distanceM/1000)/(dureeSec/3600); }
+  function vma(distanceM, dureeSec){ return vitesse(distanceM, dureeSec); }
+
+  function readFromSessionStats(){
+    const stats = safeJSON(sessionStorage.getItem("stats")) || [];
+    if(!Array.isArray(stats) || stats.length < 2) return null;
+    const s1 = stats[0], s2 = stats[1];
+    const r1 = {
+      distanceM: Number(s1.distance||0),
+      dureeSec: Number(s1.temps||0),
+      vitesseKmh: Number(s1.vitesse||0),
+      vmaKmh: Number(s1.vma||0),
+    };
+    const r2 = {
+      distanceM: Number(s2.distance||0),
+      dureeSec: Number(s2.temps||0),
+      vitesseKmh: Number(s2.vitesse||0),
+      vmaKmh: Number(s2.vma||0),
+    };
+    const e1 = { nom: String(s1.nom||""), prenom: String(s1.prenom||""), classe: String(s1.classe||""), sexe: String(s1.sexe||"") };
+    const e2 = { nom: String(s2.nom||""), prenom: String(s2.prenom||""), classe: String(s2.classe||""), sexe: String(s2.sexe||"") };
+    return {e1,e2,r1,r2, _source:"session"};
+  }
+
+  function readFromLegacyLocalStorage(){
+    const e1 = safeJSON(localStorage.getItem("runstats_eleve1")) || {};
+    const e2 = safeJSON(localStorage.getItem("runstats_eleve2")) || {};
+    const c1 = safeJSON(localStorage.getItem("runstats_course1")) || {};
+    const c2 = safeJSON(localStorage.getItem("runstats_course2")) || {};
+    function ensure(course, eleve){
+      const tours = Number(course.tours||0);
+      const fraction = Number(course.fraction||0);
+      const tourM = Number(eleve.distanceTourM || eleve.tailleTourM || eleve.longueurTourM || 0);
+      let distanceM = Number(course.distanceM||0);
+      if(!distanceM && tourM){ distanceM = (tours + fraction) * tourM; }
+      const dureeSec = Number(course.dureeSec || (Number(eleve.dureeMin||0)*60) || 0);
+      let vitesseKmh = Number(course.vitesseKmh||0); if(!vitesseKmh) vitesseKmh = vitesse(distanceM, dureeSec);
+      let vmaKmh = Number(course.vmaKmh||0); if(!vmaKmh) vmaKmh = vma(distanceM, dureeSec);
+      return {distanceM:Math.round(distanceM), dureeSec, vitesseKmh, vmaKmh};
+    }
+    const r1 = ensure(c1,e1), r2 = ensure(c2,e2);
+    return {e1,e2,r1,r2, _source:"local"};
+  }
 
   function readAll(){
-    // 1) Élèves
-    const e1 = safeParse(localStorage.getItem("runstats_eleve1")) || {};
-    const e2 = safeParse(localStorage.getItem("runstats_eleve2")) || {};
-
-    // 2) Courses (résultats)
-    const c1 = safeParse(localStorage.getItem("runstats_course1")) || {};
-    const c2 = safeParse(localStorage.getItem("runstats_course2")) || {};
-
-    // Si distanceM n’est pas stockée, on la reconstruit de façon robuste :
-    function ensureMetrics(course, eleve){
-      const tours = Number(course.tours || 0);
-      const fraction = Number(course.fraction || 0); // 0, 0.25, 0.5, 0.75
-      const tourM = Number(eleve.distanceTourM || eleve.tailleTourM || eleve.longueurTourM || 0);
-      let distanceM = Number(course.distanceM || 0);
-      if(!distanceM && tourM){
-        distanceM = (tours + fraction) * tourM;
-      }
-      const dureeSec = Number(course.dureeSec || (Number(eleve.dureeMin || 0) * 60) || 0);
-      let vitesseKmh = Number(course.vitesseKmh || 0);
-      let vmaKmh = Number(course.vmaKmh || 0);
-      if(!vitesseKmh) vitesseKmh = computeVitesse(distanceM, dureeSec);
-      if(!vmaKmh) vmaKmh = computeVMA(distanceM, dureeSec);
-      return {
-        tours, fraction, dureeSec,
-        distanceM: Math.round(distanceM),
-        vitesseKmh, vmaKmh
-      };
-    }
-
-    const r1 = ensureMetrics(c1, e1);
-    const r2 = ensureMetrics(c2, e2);
-
-    return { e1, e2, r1, r2 };
+    return readFromSessionStats() || readFromLegacyLocalStorage();
   }
 
-  function makeScanProfPayload(state){
-    const { e1, e2, r1, r2 } = state;
-    // Sécurise les champs obligatoires et types :
-    const s1 = {
-      nom: String(e1.nom||""),
-      prenom: String(e1.prenom||""),
-      classe: String(e1.classe||""),
-      sexe: (String(e1.sexe||"").toUpperCase()==="F" ? "F" : "M"),
-      distance: Number(r1.distanceM||0),
-      vitesse: Number(round1(r1.vitesseKmh||0)),
-      vma: Number(round1(r1.vmaKmh||0))
+  function makePayload(state){
+    const {e1,e2,r1,r2} = state;
+    const a = {
+      nom:String(e1.nom||""), prenom:String(e1.prenom||""), classe:String(e1.classe||""),
+      sexe:(String(e1.sexe||"").toUpperCase()==="F"?"F":"M"),
+      distance:Number(r1.distanceM||0),
+      vitesse:Number(round1(r1.vitesseKmh||0)),
+      vma:Number(round1(r1.vmaKmh||0))
     };
-    const s2 = {
-      nom: String(e2.nom||""),
-      prenom: String(e2.prenom||""),
-      classe: String(e2.classe||""),
-      sexe: (String(e2.sexe||"").toUpperCase()==="F" ? "F" : "M"),
-      distance: Number(r2.distanceM||0),
-      vitesse: Number(round1(r2.vitesseKmh||0)),
-      vma: Number(round1(r2.vmaKmh||0))
+    const b = {
+      nom:String(e2.nom||""), prenom:String(e2.prenom||""), classe:String(e2.classe||""),
+      sexe:(String(e2.sexe||"").toUpperCase()==="F"?"F":"M"),
+      distance:Number(r2.distanceM||0),
+      vitesse:Number(round1(r2.vitesseKmh||0)),
+      vma:Number(round1(r2.vmaKmh||0))
     };
-    return [s1, s2];
+    return [a,b];
   }
 
   function renderBlocks(state){
     const { e1, e2, r1, r2 } = state;
-    const fmt = (x)=> isFinite(x)? x.toLocaleString("fr-FR") : "-";
-    const fmt1 = (x)=> isFinite(x)? round1(x).toLocaleString("fr-FR") : "-";
-    const grid = document.getElementById("elevesGrid");
-    grid.innerHTML = `
+    const fmt = x=> isFinite(x)? x.toLocaleString("fr-FR") : "-";
+    const fmt1 = x=> isFinite(x)? round1(x).toLocaleString("fr-FR") : "-";
+    document.getElementById("elevesGrid").innerHTML = \`
       <div class="card bloc--e1">
         <div class="cardHeader">Élève 1</div>
         <div class="cardBody">
           <dl>
-            <dt>Nom</dt><dd>${(e1.nom||"-")}</dd>
-            <dt>Prénom</dt><dd>${(e1.prenom||"-")}</dd>
-            <dt>Classe</dt><dd>${(e1.classe||"-")}</dd>
-            <dt>Sexe</dt><dd>${(e1.sexe||"-")}</dd>
-            <dt>Distance</dt><dd class="mono"><strong id="valE1D">${fmt(r1.distanceM)}</strong> m</dd>
-            <dt>Vitesse</dt><dd class="mono">${fmt1(r1.vitesseKmh)} km/h</dd>
-            <dt>VMA</dt><dd class="mono">${fmt1(r1.vmaKmh)} km/h</dd>
+            <dt>Nom</dt><dd>\${e1.nom||"-"}</dd>
+            <dt>Prénom</dt><dd>\${e1.prenom||"-"}</dd>
+            <dt>Classe</dt><dd>\${e1.classe||"-"}</dd>
+            <dt>Sexe</dt><dd>\${e1.sexe||"-"}</dd>
+            <dt>Distance</dt><dd class="mono"><strong id="valE1D">\${fmt(r1.distanceM)}</strong> m</dd>
+            <dt>Vitesse</dt><dd class="mono">\${fmt1(r1.vitesseKmh)} km/h</dd>
+            <dt>VMA</dt><dd class="mono">\${fmt1(r1.vmaKmh)} km/h</dd>
           </dl>
         </div>
       </div>
-
       <div class="card bloc--e2">
         <div class="cardHeader">Élève 2</div>
         <div class="cardBody">
           <dl>
-            <dt>Nom</dt><dd>${(e2.nom||"-")}</dd>
-            <dt>Prénom</dt><dd>${(e2.prenom||"-")}</dd>
-            <dt>Classe</dt><dd>${(e2.classe||"-")}</dd>
-            <dt>Sexe</dt><dd>${(e2.sexe||"-")}</dd>
-            <dt>Distance</dt><dd class="mono"><strong id="valE2D">${fmt(r2.distanceM)}</strong> m</dd>
-            <dt>Vitesse</dt><dd class="mono">${fmt1(r2.vitesseKmh)} km/h</dd>
-            <dt>VMA</dt><dd class="mono">${fmt1(r2.vmaKmh)} km/h</dd>
+            <dt>Nom</dt><dd>\${e2.nom||"-"}</dd>
+            <dt>Prénom</dt><dd>\${e2.prenom||"-"}</dd>
+            <dt>Classe</dt><dd>\${e2.classe||"-"}</dd>
+            <dt>Sexe</dt><dd>\${e2.sexe||"-"}</dd>
+            <dt>Distance</dt><dd class="mono"><strong id="valE2D">\${fmt(r2.distanceM)}</strong> m</dd>
+            <dt>Vitesse</dt><dd class="mono">\${fmt1(r2.vitesseKmh)} km/h</dd>
+            <dt>VMA</dt><dd class="mono">\${fmt1(r2.vmaKmh)} km/h</dd>
           </dl>
         </div>
-      </div>
-    `;
+      </div>\`;
   }
 
-  let qrcode = null;
+  let qrcode=null;
   function renderQR(state){
-    const payload = makeScanProfPayload(state);
-    const text = JSON.stringify(payload);
+    const text = JSON.stringify(makePayload(state));
     const qrBox = document.getElementById("qrBox");
     qrBox.innerHTML = "";
     if(!qrcode){
-      qrcode = new QRCode(qrBox, {
-        text,
-        width: 256,
-        height: 256,
-        correctLevel: QRCode.CorrectLevel.M
-      });
+      qrcode = new QRCode(qrBox, { text, width:256, height:256, correctLevel:QRCode.CorrectLevel.M });
     }else{
       qrcode.makeCode(text);
     }
@@ -315,84 +234,78 @@
   }
 
   function renderRaw(state){
-    document.getElementById("rawData").textContent = JSON.stringify(state, null, 2);
+    const _s = {...state};
+    document.getElementById("rawData").textContent = JSON.stringify(_s, null, 2);
   }
 
   function exportCSV(state){
     const rows = [["nom","prenom","classe","sexe","distance","vitesse","vma"]];
-    for(const o of makeScanProfPayload(state)){
-      rows.push([o.nom,o.prenom,o.classe,o.sexe, String(o.distance), String(o.vitesse), String(o.vma)]);
+    for(const o of makePayload(state)){
+      rows.push([o.nom,o.prenom,o.classe,o.sexe,String(o.distance),String(o.vitesse),String(o.vma)]);
     }
     const csv = rows.map(r=>r.map(v=>{
       const s = String(v??"");
-      return /[",;\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s;
+      return /[",;\n]/.test(s) ? \""+s.replace(/\"/g,'\"\"')+"\"" : s;
     }).join(";")).join("\n");
     const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = "runstats-resume.csv";
-    document.body.appendChild(a); a.click(); a.remove();
-    URL.revokeObjectURL(url);
+    const a = document.createElement("a"); a.href=url; a.download="runstats-resume.csv";
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
   }
 
   function recalcFromDistances(state, d1, d2){
-    const s = JSON.parse(JSON.stringify(state)); // clone
-    if(isFinite(d1)){ s.r1.distanceM = Math.round(d1); s.r1.vitesseKmh = computeVitesse(s.r1.distanceM, s.r1.dureeSec); s.r1.vmaKmh = computeVMA(s.r1.distanceM, s.r1.dureeSec); }
-    if(isFinite(d2)){ s.r2.distanceM = Math.round(d2); s.r2.vitesseKmh = computeVitesse(s.r2.distanceM, s.r2.dureeSec); s.r2.vmaKmh = computeVMA(s.r2.distanceM, s.r2.dureeSec); }
+    const s = JSON.parse(JSON.stringify(state));
+    const dur1 = Number(s.r1.dureeSec||0), dur2 = Number(s.r2.dureeSec||0);
+    if(isFinite(d1)){ s.r1.distanceM = Math.round(d1); s.r1.vitesseKmh = vitesse(s.r1.distanceM, dur1); s.r1.vmaKmh = vma(s.r1.distanceM, dur1); }
+    if(isFinite(d2)){ s.r2.distanceM = Math.round(d2); s.r2.vitesseKmh = vitesse(s.r2.distanceM, dur2); s.r2.vmaKmh = vma(s.r2.distanceM, dur2); }
     return s;
   }
 
-  // ----- boot
-  let STATE = readAll();
-  renderBlocks(STATE);
-  renderQR(STATE);
-  renderRaw(STATE);
+  function persistEditsIfSession(state){
+    if(state._source !== "session") return;
+    // réécrit sessionStorage.stats pour conserver les corrections
+    const [a,b] = makePayload(state);
+    const stats = [
+      { nom:a.nom, prenom:a.prenom, classe:a.classe, sexe:a.sexe, distance:a.distance, vitesse:a.vitesse, vma:a.vma, temps: state.r1.dureeSec||0 },
+      { nom:b.nom, prenom:b.prenom, classe:b.classe, sexe:b.sexe, distance:b.distance, vitesse:b.vitesse, vma:b.vma, temps: state.r2.dureeSec||0 }
+    ];
+    sessionStorage.setItem("stats", JSON.stringify(stats));
+  }
 
-  // Boutons
+  // Boot
+  let STATE = readAll();
+  if(!STATE){ document.getElementById("elevesGrid").innerHTML = "<p class='muted'>Aucune donnée trouvée. Revenez via <em>Résumé</em> après une course.</p>"; }
+  else { renderBlocks(STATE); renderQR(STATE); renderRaw(STATE); }
+
   document.getElementById("btnCSV").addEventListener("click", ()=> exportCSV(STATE));
 
-  // PIN flow
   const pinModal = document.getElementById("pinModal");
   const pinInput = document.getElementById("pinInput");
   const editModal = document.getElementById("editModal");
   const editE1 = document.getElementById("editE1");
   const editE2 = document.getElementById("editE2");
 
-  document.getElementById("btnProf").addEventListener("click", ()=>{
-    pinInput.value = "";
-    pinModal.showModal();
-    setTimeout(()=>pinInput.focus(), 50);
-  });
+  document.getElementById("btnProf").addEventListener("click", ()=>{ pinInput.value=""; pinModal.showModal(); setTimeout(()=>pinInput.focus(),50);} );
   document.getElementById("pinCancel").addEventListener("click", ()=> pinModal.close());
   document.getElementById("pinOk").addEventListener("click", ()=>{
     if(pinInput.value.trim() === PIN_CODE){
       pinModal.close();
-      // Préremplit avec distances actuelles
-      editE1.value = String(STATE.r1.distanceM||0);
-      editE2.value = String(STATE.r2.distanceM||0);
-      editModal.showModal();
-      setTimeout(()=>editE1.focus(), 50);
-    }else{
-      alert("PIN incorrect.");
-    }
+      editE1.value = String(STATE?.r1?.distanceM||0);
+      editE2.value = String(STATE?.r2?.distanceM||0);
+      editModal.showModal(); setTimeout(()=>editE1.focus(),50);
+    } else { alert("PIN incorrect."); }
   });
 
   document.getElementById("editCancel").addEventListener("click", ()=> editModal.close());
   document.getElementById("editReset").addEventListener("click", ()=>{
-    editE1.value = String(readAll().r1.distanceM||0);
-    editE2.value = String(readAll().r2.distanceM||0);
+    const fresh = readAll(); editE1.value = String(fresh?.r1?.distanceM||0); editE2.value = String(fresh?.r2?.distanceM||0);
   });
   document.getElementById("editSave").addEventListener("click", ()=>{
-    const d1 = Number(editE1.value);
-    const d2 = Number(editE2.value);
+    const d1 = Number(editE1.value), d2 = Number(editE2.value);
     if(!isFinite(d1) || !isFinite(d2)){ alert("Valeurs invalides."); return; }
     STATE = recalcFromDistances(STATE, d1, d2);
-    // On peut aussi persister si tu veux :
-    // localStorage.setItem("runstats_course1", JSON.stringify({ ...safeParse(localStorage.runstats_course1), distanceM: STATE.r1.distanceM }));
-    // localStorage.setItem("runstats_course2", JSON.stringify({ ...safeParse(localStorage.runstats_course2), distanceM: STATE.r2.distanceM }));
-    renderBlocks(STATE);
-    renderQR(STATE);
-    renderRaw(STATE);
+    persistEditsIfSession(STATE);
+    renderBlocks(STATE); renderQR(STATE); renderRaw(STATE);
     editModal.close();
   });
   </script>
