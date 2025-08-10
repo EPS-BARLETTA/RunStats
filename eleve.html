@@ -8,8 +8,8 @@
     :root{--bleu:#e6f0ff;--vert:#e6ffe6;--border:#e5e7eb}
     *{box-sizing:border-box}
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;background:#fafafa;color:#111}
-    header,footer{text-align:center;padding:14px 16px}
-    .wrap{max-width:1000px;margin:8px auto 40px;padding:0 12px}
+    header,footer{text-align:center;padding:16px}
+    .wrap{max-width:980px;margin:0 auto 40px;padding:0 12px}
     .grid{display:grid;grid-template-columns:1fr;gap:14px}
     @media(min-width:860px){.grid{grid-template-columns:1fr 1fr}}
     .card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden}
@@ -19,15 +19,15 @@
     .cardBody{padding:14px}
     label{display:block;font-weight:600;margin:10px 0 6px}
     input,select{width:100%;padding:10px;border:1px solid var(--border);border-radius:10px}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    button{appearance:none;border:1px solid var(--border);background:#111;color:#fff;font-weight:700;padding:10px 14px;border-radius:10px;cursor:pointer}
-    a.btn{display:inline-block;text-decoration:none;border:1px solid var(--border);padding:10px 14px;border-radius:10px;background:#fff}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;justify-content:center}
+    button{appearance:none;border:1px solid var(--border);background:#111;color:#fff;font-weight:700;padding:12px 16px;border-radius:12px;cursor:pointer}
+    a.btn{display:inline-block;text-decoration:none;border:1px solid var(--border);padding:12px 16px;border-radius:12px;background:#fff}
   </style>
 </head>
 <body>
   <header>
     <h1>Saisie des 2 élèves</h1>
-    <p>Complétez les informations puis lancez la course.</p>
+    <p>Identité de chaque élève + paramètres de course communs.</p>
   </header>
 
   <div class="wrap">
@@ -48,10 +48,6 @@
               <option value="F">F</option>
               <option value="M">M</option>
             </select>
-            <label for="temps1">Durée (minutes)</label>
-            <input id="temps1" type="number" min="1" step="1" required />
-            <label for="longueur1">Longueur d’un tour (m)</label>
-            <input id="longueur1" type="number" min="1" step="1" required />
           </div>
         </div>
 
@@ -70,10 +66,23 @@
               <option value="F">F</option>
               <option value="M">M</option>
             </select>
-            <label for="temps2">Durée (minutes)</label>
-            <input id="temps2" type="number" min="1" step="1" required />
-            <label for="longueur2">Longueur d’un tour (m)</label>
-            <input id="longueur2" type="number" min="1" step="1" required />
+          </div>
+        </div>
+      </div>
+
+      <!-- Paramètres communs -->
+      <div class="card" style="margin-top:14px">
+        <div class="cardHeader">Paramètres de course (communs aux 2 élèves)</div>
+        <div class="cardBody">
+          <div class="grid" style="grid-template-columns:1fr 1fr">
+            <div>
+              <label for="temps">Durée (minutes)</label>
+              <input id="temps" type="number" min="1" step="1" required />
+            </div>
+            <div>
+              <label for="longueur">Longueur d’un tour (m)</label>
+              <input id="longueur" type="number" min="1" step="1" required />
+            </div>
           </div>
         </div>
       </div>
@@ -91,13 +100,17 @@
     document.getElementById("studentForm").addEventListener("submit", (e) => {
       e.preventDefault();
 
+      const communs = {
+        temps: parseFloat(document.getElementById("temps").value),             // minutes
+        longueurTour: parseFloat(document.getElementById("longueur").value)    // mètres
+      };
+
       const eleve1 = {
         prenom: document.getElementById("prenom1").value.trim(),
         nom: document.getElementById("nom1").value.trim(),
         classe: document.getElementById("classe1").value.trim(),
         sexe: document.getElementById("sexe1").value,
-        temps: parseFloat(document.getElementById("temps1").value),         // minutes
-        longueurTour: parseFloat(document.getElementById("longueur1").value) // mètres
+        ...communs
       };
 
       const eleve2 = {
@@ -105,8 +118,7 @@
         nom: document.getElementById("nom2").value.trim(),
         classe: document.getElementById("classe2").value.trim(),
         sexe: document.getElementById("sexe2").value,
-        temps: parseFloat(document.getElementById("temps2").value),         // minutes
-        longueurTour: parseFloat(document.getElementById("longueur2").value) // mètres
+        ...communs
       };
 
       sessionStorage.setItem("eleve1Data", JSON.stringify(eleve1));
