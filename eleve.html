@@ -21,6 +21,7 @@
     input,select{width:100%;padding:10px;border:1px solid var(--border);border-radius:10px}
     .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
     button{appearance:none;border:1px solid var(--border);background:#111;color:#fff;font-weight:700;padding:10px 14px;border-radius:10px;cursor:pointer}
+    a.btn{display:inline-block;text-decoration:none;border:1px solid var(--border);padding:10px 14px;border-radius:10px;background:#fff}
   </style>
 </head>
 <body>
@@ -79,6 +80,7 @@
 
       <div class="actions">
         <button type="submit">🚀 Lancer la course</button>
+        <a class="btn" href="index.html">🏠 Accueil</a>
       </div>
     </form>
   </div>
@@ -109,7 +111,6 @@
 
       sessionStorage.setItem("eleve1Data", JSON.stringify(eleve1));
       sessionStorage.setItem("eleve2Data", JSON.stringify(eleve2));
-
       window.location.href = "course.html";
     });
   </script>
