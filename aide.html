@@ -5,28 +5,21 @@
   <title>RunStats — Aide & Mode d’emploi</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root{
-      --ink:#111; --muted:#555; --border:#e5e7eb; --card:#fff; --bg:#fafafa; --accent:#0066ff;
-    }
+    :root{--ink:#111;--muted:#555;--border:#e5e7eb;--card:#fff;--bg:#fafafa;--accent:#0066ff}
     *{box-sizing:border-box}
-    body{ margin:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif; color:var(--ink); background:var(--bg);}
-    header, footer{ text-align:center; padding:14px 16px;}
-    header h1{ margin:8px 0 0; font-size:22px;}
-    header p{ margin:6px 0 0; color:var(--muted); }
-    .wrap{ max-width:900px; margin:12px auto 40px; padding:0 12px;}
-    .card{ background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; }
-    h2{ margin:10px 0 6px; font-size:18px;}
-    ol, ul{ margin:8px 0 10px 22px; }
-    .cta{
-      display:flex; gap:12px; flex-wrap:wrap; margin-top:14px;
-    }
-    a.btn{
-      text-decoration:none; background:var(--accent); color:#fff; font-weight:800; padding:12px 16px;
-      border-radius:10px; display:inline-flex; align-items:center; gap:10px;
-    }
-    a.secondary{ background:#fff; color:var(--ink); border:1px solid var(--border); }
-    footer{ font-size:12px; color:#666; border-top:1px solid var(--border); background:#fff; position:sticky; bottom:0;}
-    code{ background:#f3f4f6; padding:2px 6px; border-radius:6px;}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;color:var(--ink);background:var(--bg)}
+    header,footer{text-align:center;padding:14px 16px}
+    header h1{margin:8px 0 0;font-size:22px}
+    header p{margin:6px 0 0;color:var(--muted)}
+    .wrap{max-width:900px;margin:12px auto 40px;padding:0 12px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px}
+    h2{margin:10px 0 6px;font-size:18px}
+    ol,ul{margin:8px 0 10px 22px}
+    .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+    a.btn{text-decoration:none;background:var(--accent);color:#fff;font-weight:800;padding:12px 16px;border-radius:10px;display:inline-flex;align-items:center;gap:10px}
+    a.secondary{background:#fff;color:var(--ink);border:1px solid var(--border)}
+    footer{font-size:12px;color:#666;border-top:1px solid var(--border);background:#fff;position:sticky;bottom:0}
+    code{background:#f3f4f6;padding:2px 6px;border-radius:6px}
   </style>
 </head>
 <body>
@@ -37,31 +30,33 @@
 
   <div class="wrap">
     <div class="card">
-      <h2>1) Saisie des élèves</h2>
+      <h2>1) Saisie des élèves (2 coureurs)</h2>
       <ul>
-        <li>Dans <strong>Élèves</strong>, renseignez pour <em>deux élèves</em> : <em>Nom, Prénom, Classe, Sexe</em>, la <em>durée</em> (en minutes) et la <em>distance d’un tour</em> (en mètres).</li>
-        <li>Les deux élèves s’affichent <strong>côte à côte</strong> avec des couleurs distinctes (bleu / vert).</li>
+        <li>Renseigner pour chacun : <strong>Nom</strong>, <strong>Prénom</strong>, <strong>Classe</strong>, <strong>Sexe</strong>, <strong>Durée (min)</strong>, <strong>Longueur d’un tour (m)</strong>.</li>
+        <li>Les deux élèves s’affichent <strong>côte à côte</strong> (bleu/vert).</li>
       </ul>
 
       <h2>2) Course 1 puis Course 2</h2>
       <ul>
-        <li>Lancez la <strong>Course 1</strong> pour l’élève 1 (minuteur avec clignotement sur les 10 dernières secondes).</li>
-        <li>L’élève 2 appuie sur <em>Tour</em> à chaque passage pour incrémenter la distance. Les <em>vitesse</em> et <em>VMA</em> s’actualisent en direct.</li>
-        <li>À la fin, saisissez la <strong>fraction</strong> (¼, ½, ¾ de tour) si besoin : les métriques se mettent à jour.</li>
-        <li>Un bouton <strong>Lancer la Course 2</strong> apparaît : même principe en inversant les rôles (fond de page vert pour rappeler l’élève 2).</li>
+        <li>Lancez la <strong>Course 1</strong> pour l’élève 1 (minuteur, clignote sur les 10 dernières secondes).</li>
+        <li>L’autre élève appuie sur <em>Tour</em> à chaque passage. La <em>vitesse</em> et la <em>VMA</em> s’actualisent.</li>
+        <li>À la fin, ajoutez une <strong>fraction</strong> (¼, ½, ¾) si besoin : tout est mis à jour.</li>
+        <li>Puis lancez la <strong>Course 2</strong> (fond vert), même principe.</li>
       </ul>
 
       <h2>3) Résumé & QR</h2>
       <ul>
-        <li>Dans <strong>Résumé</strong>, vous voyez deux blocs (bleu/vert) avec <em>Nom, Prénom, Classe, Distance, Vitesse, VMA</em>.</li>
-        <li>Un <strong>QR code</strong> est généré au <strong>format compatible ScanProf</strong> (tableau JSON à 2 objets, champs : <code>nom, prenom, classe, sexe, distance, vitesse, vma</code>).</li>
-        <li>Le <strong>Mode Prof</strong> (PIN <code>57</code>) permet d’ajuster la distance (± libre). Le QR et les valeurs sont mis à jour automatiquement.</li>
-        <li>Export possible en <strong>CSV</strong>, bouton <strong>Accueil</strong> en bas.</li>
+        <li>La page <strong>Résumé</strong> affiche 2 blocs (bleu/vert) : <em>Nom, Prénom, Classe, Distance, Vitesse, VMA</em>.</li>
+        <li>Un <strong>QR code</strong> est généré au format <strong>compatible ScanProf</strong> :
+          <code>[{nom, prenom, classe, sexe, distance, vitesse, vma}, {…}]</code>.
+        </li>
+        <li><strong>Mode Prof</strong> (PIN <code>57</code>) : ajuste la distance (± mètres) → recalcul immédiat + QR mis à jour.</li>
+        <li>Export en <strong>CSV</strong> et bouton <strong>Accueil</strong>.</li>
       </ul>
 
       <div class="cta">
-        <a class="btn" href="./eleve.html">🚀 Lancer RunStats (saisie des élèves)</a>
-        <a class="btn secondary" href="./resume.html">🧾 Voir un exemple de Résumé</a>
+        <a class="btn" href="./eleve.html">🚀 Lancer la saisie (2 élèves)</a>
+        <a class="btn secondary" href="./qr-compatible.html">🧪 Tester un QR de démo</a>
       </div>
     </div>
   </div>
