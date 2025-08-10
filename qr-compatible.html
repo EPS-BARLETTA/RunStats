@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>QR compatible ScanProf — Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+  <style>
+    body{font-family:system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif; margin:0; padding:20px;}
+    .qr{ display:flex; align-items:center; justify-content:center; padding:12px; border:1px dashed #e5e7eb; border-radius:12px; }
+    pre{ background:#f6f8fa; padding:12px; border-radius:10px; overflow:auto;}
+  </style>
+</head>
+<body>
+  <h1>QR compatible ScanProf — Test</h1>
+  <p>Scannez ce QR avec <strong>ScanProf</strong>.</p>
+  <div id="q" class="qr">QR…</div>
+  <pre id="p"></pre>
+  <script>
+    // Exemple EXACT au format requis :
+    const payload = [
+      { "nom":"Martin","prenom":"Julie","classe":"4C","sexe":"F","distance":580,"vitesse":13.5,"vma":15.2 },
+      { "nom":"Dupont","prenom":"Lucas","classe":"4C","sexe":"M","distance":610,"vitesse":14.2,"vma":16.3 }
+    ];
+    const s = JSON.stringify(payload);
+    document.getElementById("p").textContent = s;
+    new QRCode(document.getElementById("q"), { text:s, width:256, height:256, correctLevel:QRCode.CorrectLevel.M });
+  </script>
+</body>
+</html>
