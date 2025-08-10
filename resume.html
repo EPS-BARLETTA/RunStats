@@ -1,86 +1,400 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Résumé - RunStats</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>RunStats — Résumé</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- QRCode library (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f8f9fa;
-      text-align: center;
+    :root{
+      --bleu:#e6f0ff;      /* bloc élève 1 */
+      --vert:#e6ffe6;      /* bloc élève 2 */
+      --accent:#0066ff;    /* boutons primaires */
+      --accent-2:#22aa22;  /* Accueil */
+      --danger:#cc2233;    /* annuler */
+      --ink:#111;
+      --muted:#666;
+      --card:#fff;
+      --border:#e5e7eb;
     }
-    h2 {
-      margin-bottom: 20px;
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color:var(--ink); background:#fafafa;
     }
-    table {
-      width: 100%;
-      max-width: 800px;
-      margin: auto;
-      border-collapse: collapse;
-      background: white;
+    header, footer{
+      text-align:center; padding:12px 16px;
     }
-    th, td {
-      padding: 8px;
-      border: 1px solid #ccc;
-      text-align: center;
+    header h1{margin:8px 0 0;font-size:22px}
+    header p{margin:6px 0 0;color:var(--muted);font-size:14px}
+    .wrap{
+      max-width:1100px; margin:16px auto; padding:0 12px 40px;
     }
-    th {
-      background-color: #f1f1f1;
+    .grid{
+      display:grid; grid-template-columns:1fr; gap:14px;
     }
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
+    @media (min-width:860px){ .grid{ grid-template-columns:1fr 1fr; } }
+
+    .card{
+      background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden;
     }
-    .buttons {
-      margin: 20px 0;
+    .cardHeader{
+      padding:12px 14px; font-weight:800; letter-spacing:.2px; font-size:15px;
+      border-bottom:1px solid var(--border);
     }
-    button {
-      padding: 10px 15px;
-      margin: 5px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
+    .cardBody{ padding:14px; }
+    .bloc--e1 .cardHeader{ background:var(--bleu); }
+    .bloc--e2 .cardHeader{ background:var(--vert); }
+
+    dl{ margin:0; display:grid; grid-template-columns: auto 1fr; gap:8px 14px; }
+    dt{ color:#334155; font-weight:600; }
+    dd{ margin:0; }
+    .mono{ font-variant-numeric:tabular-nums; font-feature-settings:"tnum"; }
+
+    .panel{
+      margin-top:16px; display:grid; gap:12px;
+      grid-template-columns: 1fr;
     }
-    #btnAccueil { background-color: #28a745; color: white; }
-    #btnCSV { background-color: #007bff; color: white; }
-    #btnProf { background-color: #ffc107; color: black; }
-    #qrcode {
-      margin-top: 20px;
+    @media (min-width:860px){ .panel{ grid-template-columns: 2fr 1fr; } }
+
+    .qrBox{
+      display:flex; align-items:center; justify-content:center;
+      background:#fff; border:1px dashed var(--border); border-radius:12px; padding:14px; min-height:240px;
     }
+    .actions{
+      display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 0;
+    }
+    button, .btn{
+      appearance:none; border:1px solid transparent; background:var(--accent); color:#fff; font-weight:700;
+      padding:10px 14px; border-radius:10px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+    }
+    button.secondary{ background:#fff; border-color:var(--border); color:var(--ink); }
+    button.ghost{ background:transparent; border-color:var(--border); color:var(--ink); }
+    .btn-home{ background:var(--accent-2);}
+    .btn-danger{ background:var(--danger);}
+    .muted{ color:var(--muted); font-size:13px; }
+
+    /* Modal PIN / Mode prof */
+    dialog{
+      border:none; border-radius:14px; padding:0; width:min(560px, 92vw); box-shadow:0 20px 60px rgba(0,0,0,.20);
+    }
+    dialog::backdrop{ background:rgba(0,0,0,.35); }
+    .modalHead{ padding:14px 16px; border-bottom:1px solid var(--border); font-weight:800; }
+    .modalBody{ padding:16px; }
+    .modalFoot{ padding:12px 16px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; }
+
+    .formRow{ display:grid; grid-template-columns: 1fr 120px; gap:10px; align-items:center; margin:10px 0; }
+    input[type="number"], input[type="password"]{
+      width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:10px;
+      font-size:15px; background:#fff;
+    }
+    .hint{ font-size:12px; color:var(--muted); margin-top:4px; }
+    footer{ font-size:12px; color:var(--muted); border-top:1px solid var(--border); background:#fff; position:sticky; bottom:0; }
   </style>
 </head>
 <body>
+  <header>
+    <h1>Résumé des courses</h1>
+    <p>Vérifiez les données des deux élèves. Le QR ci‑dessous est compatible <strong>ScanProf</strong>.</p>
+  </header>
 
-  <h2>Résumé des performances</h2>
+  <div class="wrap">
+    <div class="grid" id="elevesGrid">
+      <!-- Blocs élève générés par JS -->
+    </div>
 
-  <div class="buttons">
-    <button id="btnAccueil">🏠 Accueil</button>
-    <button id="btnCSV">💾 Exporter CSV</button>
-    <button id="btnProf">🔑 Mode Prof</button>
+    <div class="panel">
+      <div class="card">
+        <div class="cardHeader">QR compatible ScanProf</div>
+        <div class="cardBody">
+          <div id="qrBox" class="qrBox"><span class="muted">Génération du QR…</span></div>
+          <div class="muted" id="qrPreview" style="margin-top:10px; word-break:break-all;"></div>
+          <div class="actions">
+            <button id="btnProf">🔐 Mode prof (PIN)</button>
+            <button id="btnCSV" class="secondary">⬇️ Export CSV</button>
+            <a class="btn btn-home" href="./index.html">🏠 Accueil</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="cardHeader">Données brutes</div>
+        <div class="cardBody">
+          <pre id="rawData" style="white-space:pre-wrap; word-break:break-word; margin:0; font-size:12px;"></pre>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <table id="recapTable">
-    <thead>
-      <tr>
-        <th>Nom</th>
-        <th>Prénom</th>
-        <th>Classe</th>
-        <th>Sexe</th>
-        <th>Distance (m)</th>
-        <th>Vitesse (km/h)</th>
-        <th>VMA (km/h)</th>
-      </tr>
-    </thead>
-    <tbody>
-    </tbody>
-  </table>
+  <footer>RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
 
-  <div id="qrcode"></div>
+  <!-- Modal PIN -->
+  <dialog id="pinModal">
+    <div class="modalHead">Accès professeur</div>
+    <div class="modalBody">
+      <label>Code PIN :</label>
+      <input id="pinInput" type="password" inputmode="numeric" autocomplete="one-time-code" placeholder="••" />
+      <div class="hint">Entrez <strong>57</strong> pour déverrouiller l’ajustement des distances.</div>
+    </div>
+    <div class="modalFoot">
+      <button class="ghost" id="pinCancel">Annuler</button>
+      <button id="pinOk">Valider</button>
+    </div>
+  </dialog>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <script src="resume.js"></script>
+  <!-- Modal Ajustements -->
+  <dialog id="editModal">
+    <div class="modalHead">Ajuster les distances (m)</div>
+    <div class="modalBody">
+      <div class="formRow">
+        <label for="editE1">Élève 1 (m) :</label>
+        <input id="editE1" type="number" step="1" />
+      </div>
+      <div class="formRow">
+        <label for="editE2">Élève 2 (m) :</label>
+        <input id="editE2" type="number" step="1" />
+      </div>
+      <div class="hint">Vous pouvez saisir une valeur libre (ex : +25 ou -35 par rapport au total affiché). La vitesse et la VMA seront recalculées, et le QR mis à jour.</div>
+    </div>
+    <div class="modalFoot">
+      <button class="ghost" id="editCancel">Annuler</button>
+      <button class="btn-danger" id="editReset">Remettre valeurs lues</button>
+      <button id="editSave">Enregistrer</button>
+    </div>
+  </dialog>
+
+  <script>
+  // ==== Résumé / QR compatible ScanProf =====================================
+  // Hypothèse de stockage local (adapte si besoin) :
+  // localStorage.runstats_eleve1 = JSON.stringify({ nom, prenom, classe, sexe, dureeMin, distanceTourM })
+  // localStorage.runstats_eleve2 = JSON.stringify({ ... })
+  // localStorage.runstats_course1 = JSON.stringify({ tours, fraction: 0|0.25|0.5|0.75, dureeSec, distanceM, vitesseKmh, vmaKmh })
+  // localStorage.runstats_course2 = JSON.stringify({ ... })
+  //
+  // Si tes clés diffèrent, mappe‑les dans la fonction readAll() ci‑dessous.
+
+  const PIN_CODE = "57";
+
+  function safeParse(item){
+    try{ return JSON.parse(item); }catch(_){ return null; }
+  }
+
+  // Convertit (distance m, durée s) -> vitesse km/h
+  function computeVitesse(distanceM, dureeSec){
+    if(!distanceM || !dureeSec) return 0;
+    return (distanceM / 1000) / (dureeSec / 3600);
+  }
+
+  // Estimation VMA : ici on prend la vitesse moyenne de la période comme proxy.
+  // (Tu peux brancher ta formule si tu en as une autre dans ton app.)
+  function computeVMA(distanceM, dureeSec){
+    return computeVitesse(distanceM, dureeSec);
+  }
+
+  function round1(x){ return Math.round((x + Number.EPSILON) * 10) / 10; }
+
+  function readAll(){
+    // 1) Élèves
+    const e1 = safeParse(localStorage.getItem("runstats_eleve1")) || {};
+    const e2 = safeParse(localStorage.getItem("runstats_eleve2")) || {};
+
+    // 2) Courses (résultats)
+    const c1 = safeParse(localStorage.getItem("runstats_course1")) || {};
+    const c2 = safeParse(localStorage.getItem("runstats_course2")) || {};
+
+    // Si distanceM n’est pas stockée, on la reconstruit de façon robuste :
+    function ensureMetrics(course, eleve){
+      const tours = Number(course.tours || 0);
+      const fraction = Number(course.fraction || 0); // 0, 0.25, 0.5, 0.75
+      const tourM = Number(eleve.distanceTourM || eleve.tailleTourM || eleve.longueurTourM || 0);
+      let distanceM = Number(course.distanceM || 0);
+      if(!distanceM && tourM){
+        distanceM = (tours + fraction) * tourM;
+      }
+      const dureeSec = Number(course.dureeSec || (Number(eleve.dureeMin || 0) * 60) || 0);
+      let vitesseKmh = Number(course.vitesseKmh || 0);
+      let vmaKmh = Number(course.vmaKmh || 0);
+      if(!vitesseKmh) vitesseKmh = computeVitesse(distanceM, dureeSec);
+      if(!vmaKmh) vmaKmh = computeVMA(distanceM, dureeSec);
+      return {
+        tours, fraction, dureeSec,
+        distanceM: Math.round(distanceM),
+        vitesseKmh, vmaKmh
+      };
+    }
+
+    const r1 = ensureMetrics(c1, e1);
+    const r2 = ensureMetrics(c2, e2);
+
+    return { e1, e2, r1, r2 };
+  }
+
+  function makeScanProfPayload(state){
+    const { e1, e2, r1, r2 } = state;
+    // Sécurise les champs obligatoires et types :
+    const s1 = {
+      nom: String(e1.nom||""),
+      prenom: String(e1.prenom||""),
+      classe: String(e1.classe||""),
+      sexe: (String(e1.sexe||"").toUpperCase()==="F" ? "F" : "M"),
+      distance: Number(r1.distanceM||0),
+      vitesse: Number(round1(r1.vitesseKmh||0)),
+      vma: Number(round1(r1.vmaKmh||0))
+    };
+    const s2 = {
+      nom: String(e2.nom||""),
+      prenom: String(e2.prenom||""),
+      classe: String(e2.classe||""),
+      sexe: (String(e2.sexe||"").toUpperCase()==="F" ? "F" : "M"),
+      distance: Number(r2.distanceM||0),
+      vitesse: Number(round1(r2.vitesseKmh||0)),
+      vma: Number(round1(r2.vmaKmh||0))
+    };
+    return [s1, s2];
+  }
+
+  function renderBlocks(state){
+    const { e1, e2, r1, r2 } = state;
+    const fmt = (x)=> isFinite(x)? x.toLocaleString("fr-FR") : "-";
+    const fmt1 = (x)=> isFinite(x)? round1(x).toLocaleString("fr-FR") : "-";
+    const grid = document.getElementById("elevesGrid");
+    grid.innerHTML = `
+      <div class="card bloc--e1">
+        <div class="cardHeader">Élève 1</div>
+        <div class="cardBody">
+          <dl>
+            <dt>Nom</dt><dd>${(e1.nom||"-")}</dd>
+            <dt>Prénom</dt><dd>${(e1.prenom||"-")}</dd>
+            <dt>Classe</dt><dd>${(e1.classe||"-")}</dd>
+            <dt>Sexe</dt><dd>${(e1.sexe||"-")}</dd>
+            <dt>Distance</dt><dd class="mono"><strong id="valE1D">${fmt(r1.distanceM)}</strong> m</dd>
+            <dt>Vitesse</dt><dd class="mono">${fmt1(r1.vitesseKmh)} km/h</dd>
+            <dt>VMA</dt><dd class="mono">${fmt1(r1.vmaKmh)} km/h</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="card bloc--e2">
+        <div class="cardHeader">Élève 2</div>
+        <div class="cardBody">
+          <dl>
+            <dt>Nom</dt><dd>${(e2.nom||"-")}</dd>
+            <dt>Prénom</dt><dd>${(e2.prenom||"-")}</dd>
+            <dt>Classe</dt><dd>${(e2.classe||"-")}</dd>
+            <dt>Sexe</dt><dd>${(e2.sexe||"-")}</dd>
+            <dt>Distance</dt><dd class="mono"><strong id="valE2D">${fmt(r2.distanceM)}</strong> m</dd>
+            <dt>Vitesse</dt><dd class="mono">${fmt1(r2.vitesseKmh)} km/h</dd>
+            <dt>VMA</dt><dd class="mono">${fmt1(r2.vmaKmh)} km/h</dd>
+          </dl>
+        </div>
+      </div>
+    `;
+  }
+
+  let qrcode = null;
+  function renderQR(state){
+    const payload = makeScanProfPayload(state);
+    const text = JSON.stringify(payload);
+    const qrBox = document.getElementById("qrBox");
+    qrBox.innerHTML = "";
+    if(!qrcode){
+      qrcode = new QRCode(qrBox, {
+        text,
+        width: 256,
+        height: 256,
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }else{
+      qrcode.makeCode(text);
+    }
+    document.getElementById("qrPreview").textContent = text;
+  }
+
+  function renderRaw(state){
+    document.getElementById("rawData").textContent = JSON.stringify(state, null, 2);
+  }
+
+  function exportCSV(state){
+    const rows = [["nom","prenom","classe","sexe","distance","vitesse","vma"]];
+    for(const o of makeScanProfPayload(state)){
+      rows.push([o.nom,o.prenom,o.classe,o.sexe, String(o.distance), String(o.vitesse), String(o.vma)]);
+    }
+    const csv = rows.map(r=>r.map(v=>{
+      const s = String(v??"");
+      return /[",;\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s;
+    }).join(";")).join("\n");
+    const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "runstats-resume.csv";
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function recalcFromDistances(state, d1, d2){
+    const s = JSON.parse(JSON.stringify(state)); // clone
+    if(isFinite(d1)){ s.r1.distanceM = Math.round(d1); s.r1.vitesseKmh = computeVitesse(s.r1.distanceM, s.r1.dureeSec); s.r1.vmaKmh = computeVMA(s.r1.distanceM, s.r1.dureeSec); }
+    if(isFinite(d2)){ s.r2.distanceM = Math.round(d2); s.r2.vitesseKmh = computeVitesse(s.r2.distanceM, s.r2.dureeSec); s.r2.vmaKmh = computeVMA(s.r2.distanceM, s.r2.dureeSec); }
+    return s;
+  }
+
+  // ----- boot
+  let STATE = readAll();
+  renderBlocks(STATE);
+  renderQR(STATE);
+  renderRaw(STATE);
+
+  // Boutons
+  document.getElementById("btnCSV").addEventListener("click", ()=> exportCSV(STATE));
+
+  // PIN flow
+  const pinModal = document.getElementById("pinModal");
+  const pinInput = document.getElementById("pinInput");
+  const editModal = document.getElementById("editModal");
+  const editE1 = document.getElementById("editE1");
+  const editE2 = document.getElementById("editE2");
+
+  document.getElementById("btnProf").addEventListener("click", ()=>{
+    pinInput.value = "";
+    pinModal.showModal();
+    setTimeout(()=>pinInput.focus(), 50);
+  });
+  document.getElementById("pinCancel").addEventListener("click", ()=> pinModal.close());
+  document.getElementById("pinOk").addEventListener("click", ()=>{
+    if(pinInput.value.trim() === PIN_CODE){
+      pinModal.close();
+      // Préremplit avec distances actuelles
+      editE1.value = String(STATE.r1.distanceM||0);
+      editE2.value = String(STATE.r2.distanceM||0);
+      editModal.showModal();
+      setTimeout(()=>editE1.focus(), 50);
+    }else{
+      alert("PIN incorrect.");
+    }
+  });
+
+  document.getElementById("editCancel").addEventListener("click", ()=> editModal.close());
+  document.getElementById("editReset").addEventListener("click", ()=>{
+    editE1.value = String(readAll().r1.distanceM||0);
+    editE2.value = String(readAll().r2.distanceM||0);
+  });
+  document.getElementById("editSave").addEventListener("click", ()=>{
+    const d1 = Number(editE1.value);
+    const d2 = Number(editE2.value);
+    if(!isFinite(d1) || !isFinite(d2)){ alert("Valeurs invalides."); return; }
+    STATE = recalcFromDistances(STATE, d1, d2);
+    // On peut aussi persister si tu veux :
+    // localStorage.setItem("runstats_course1", JSON.stringify({ ...safeParse(localStorage.runstats_course1), distanceM: STATE.r1.distanceM }));
+    // localStorage.setItem("runstats_course2", JSON.stringify({ ...safeParse(localStorage.runstats_course2), distanceM: STATE.r2.distanceM }));
+    renderBlocks(STATE);
+    renderQR(STATE);
+    renderRaw(STATE);
+    editModal.close();
+  });
+  </script>
 </body>
 </html>
