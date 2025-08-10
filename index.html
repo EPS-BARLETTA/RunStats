@@ -6,72 +6,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root{
-      --blue:#1f6fff;          /* fond principal */
-      --blueDark:#1755c7;      /* hover fond */
-      --purple:#7c3aed;        /* bouton */
-      --purpleDark:#642ac9;    /* hover bouton */
-      --ink:#0b1220;
-      --muted:#a7b5d1;
-      --border:#e6e9ef;
+      --ink:#111;           /* noir pour le titre */
+      --btn:#7c3aed;        /* violet bouton */
+      --btnHover:#6d28d9;   /* violet hover */
+      --border:#e5e7eb;
+      --muted:#6b7280;
     }
     *{box-sizing:border-box}
     html,body{height:100%;margin:0}
     body{
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;
-      color:#fff;
-      background:linear-gradient(180deg, var(--blue) 0%, #1258f3 100%);
+      background:#fff; color:var(--ink);
       display:flex; flex-direction:column;
     }
-
-    /* HERO */
     .hero{
-      flex:1;
-      display:flex; align-items:center; justify-content:center;
+      flex:1; display:flex; align-items:center; justify-content:center;
       text-align:center; padding:40px 16px;
     }
-    .heroInner{
-      max-width:920px; margin:auto;
-    }
-    .brand{
-      display:inline-flex; align-items:center; gap:12px;
-      padding:10px 16px; border:1px solid rgba(255,255,255,.25); border-radius:999px;
-      backdrop-filter: blur(4px);
-      font-weight:700; letter-spacing:.4px; color:#eaf1ff;
-    }
+    .inner{max-width:960px; margin:auto}
+    /* Titre principal : plus grand que le bouton */
     h1{
-      margin:16px 0 10px; font-size:44px; line-height:1.1; font-weight:900;
+      margin:0 0 20px;
+      font-weight:900; letter-spacing:.2px;
+      font-size:clamp(42px, 9vw, 88px);
+      color:var(--ink);
     }
-    p.lead{
-      margin:0 auto 24px; max-width:760px; color:#dfe8ff; font-size:18px; line-height:1.55;
-    }
-    .cta{
-      display:inline-flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:center;
-    }
+    /* Bouton démarrer */
     .btn{
       display:inline-flex; align-items:center; justify-content:center;
-      padding:14px 22px; border-radius:12px;
-      font-weight:800; letter-spacing:.2px; text-decoration:none; cursor:pointer;
+      padding:14px 24px; border-radius:12px; border:1px solid transparent;
+      background:var(--btn); color:#fff; text-decoration:none; font-weight:800;
+      letter-spacing:.2px; box-shadow:0 10px 24px rgba(124,58,237,.25);
       transition:transform .08s ease, background .15s ease, box-shadow .15s ease;
-      box-shadow:0 8px 20px rgba(0,0,0,.15);
+      font-size:18px;
     }
-    .btnPrimary{
-      background:var(--purple); color:#fff;
-    }
-    .btnPrimary:hover{ background:var(--purpleDark); transform:translateY(-1px) }
-    .btnSecondary{
-      background:transparent; color:#fff; border:1px solid rgba(255,255,255,.35)
-    }
-    .btnSecondary:hover{ background:rgba(255,255,255,.06); transform:translateY(-1px) }
-
-    /* FOOTER */
+    .btn:hover{ background:var(--btnHover); transform:translateY(-1px) }
+    /* Footer */
     footer{
-      color:#dbe6ff; border-top:1px solid rgba(255,255,255,.15);
-      text-align:center; padding:14px 16px; background:rgba(0,0,0,.06);
+      border-top:1px solid var(--border);
+      text-align:center; padding:14px 16px; color:var(--muted);
+      background:#fafafa;
     }
-
-    /* Small screens */
-    @media (max-width:480px){
-      h1{font-size:34px}
+    /* Petits écrans */
+    @media (max-width:420px){
       .btn{width:100%}
     }
   </style>
@@ -79,17 +56,9 @@
 <body>
 
   <main class="hero">
-    <div class="heroInner">
-      <div class="brand">🏃‍♂️ RunStats</div>
-      <h1>Évalue tes performances en course <br/> simplement et rapidement</h1>
-      <p class="lead">
-        Deux coureurs, un chrono visuel, tours au clic, fraction de tour,
-        calcul automatique de la distance, vitesse et VMA. Résumé final prêt à scanner.
-      </p>
-      <div class="cta">
-        <a class="btn btnPrimary" href="aide.html">🚀 Démarrer</a>
-        <a class="btn btnSecondary" href="aide.html">📖 Mode d’emploi</a>
-      </div>
+    <div class="inner">
+      <h1>RunStats</h1>
+      <a class="btn" href="aide.html">Démarrer</a>
     </div>
   </main>
 
