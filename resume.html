@@ -2,72 +2,162 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Course - RunStats</title>
+  <title>RunStats — Résumé</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Lib QR -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
-    :root{--border:#e5e7eb}
+    :root{--bleu:#cce5ff;--vert:#d4edda;--border:#e5e7eb;--ink:#111;--btn:#111;--btnText:#fff}
     *{box-sizing:border-box}
-    body{background:#dfeeff;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;margin:0;padding:24px}
-    .wrap{max-width:820px;margin:0 auto;text-align:center}
-    h2#title{margin:10px 0 16px}
-    .timerWrap{position:relative;width:240px;height:240px;margin:0 auto 10px}
-    .ring{width:240px;height:240px;transform:rotate(-90deg)}
-    #ringBG{fill:none;stroke:#eef2f7;stroke-width:14}
-    #ringFG{fill:none;stroke:#111;stroke-width:14;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:0;transition:stroke-dashoffset .25s linear}
-    .timerText{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:800}
-    .danger #ringFG{stroke:#e11d48;animation:blink 1s step-start infinite}
-    @keyframes blink{50%{opacity:.25}}
-    .row{display:flex;justify-content:center;gap:18px;flex-wrap:wrap}
-    .data{background:#fff;padding:12px 16px;border-radius:12px;border:1px solid var(--border);min-width:160px}
-    .btns{margin-top:16px}
-    button{padding:12px 16px;border:1px solid var(--border);border-radius:12px;cursor:pointer;background:#111;color:#fff;font-weight:700}
-    #nextBtn,#summaryBtn{display:none}
-    footer{margin-top:24px;opacity:.7;text-align:center}
-    dialog{padding:16px;border-radius:12px;max-width:360px}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;margin:0;color:var(--ink);background:#fafafa}
+    header,footer{text-align:center;padding:16px}
+    .wrap{max-width:980px;margin:0 auto 40px;padding:0 16px}
+    .grid{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;align-items:stretch}
+    .eleve{flex:0 1 420px;background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;text-align:center}
+    .eleve h2{margin:0;padding:12px 14px;font-size:18px}
+    .eleve .body{padding:16px 14px}
+    .bleu h2{background:var(--bleu)}
+    .vert h2{background:var(--vert)}
+    .name{font-size:20px;font-weight:800;margin-bottom:6px}
+    .meta{opacity:.75;margin-bottom:10px}
+    .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;justify-items:center}
+    .metric{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:10px 12px;min-width:100px}
+    .metric .v{font-size:18px;font-weight:800}
+    #qrcodeWrap{display:flex;justify-content:center;margin:18px 0}
+    #qrcode{background:#fff;border:1px dashed var(--border);border-radius:12px;padding:12px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+    button{padding:12px 16px;border:1px solid var(--border);border-radius:12px;cursor:pointer;background:var(--btn);color:var(--btnText);font-weight:700}
+    .btn-csv{background:#0b5ed7}
+    .btn-home{background:#1f9d55}
+    footer{opacity:.7;border-top:1px solid var(--border);background:#fff;position:sticky;bottom:0}
   </style>
 </head>
 <body>
+  <header><h1>Résumé</h1></header>
+
   <div class="wrap">
-    <h2 id="title">Course</h2>
-
-    <div class="timerWrap" id="ringWrap">
-      <svg viewBox="0 0 220 220" class="ring" aria-hidden="true">
-        <circle cx="110" cy="110" r="96" id="ringBG"></circle>
-        <circle cx="110" cy="110" r="96" id="ringFG"></circle>
-      </svg>
-      <div id="timer" class="timerText">00:00</div>
+    <div class="grid">
+      <div id="eleve1" class="eleve bleu">
+        <h2>Élève 1</h2>
+        <div class="body"></div>
+      </div>
+      <div id="eleve2" class="eleve vert">
+        <h2>Élève 2</h2>
+        <div class="body"></div>
+      </div>
     </div>
 
-    <div class="row" style="margin:12px 0 18px">
-      <div class="data">Tours : <span id="laps">0</span></div>
-      <div class="data">Distance : <span id="distance">0</span> m</div>
-      <div class="data">Vitesse : <span id="vitesse">0.00</span> km/h</div>
-      <div class="data">Estimation VMA : <span id="vma">0.00</span> km/h</div>
-    </div>
+    <div id="qrcodeWrap"><div id="qrcode"></div></div>
 
-    <div class="btns">
-      <button id="lapBtn">+ 1 tour</button>
-      <button id="nextBtn">Passer au coureur 2</button>
-      <button id="summaryBtn">Aller au résumé</button>
+    <div class="actions">
+      <button id="btnProf">🔐 Mode Prof</button>
+      <button id="btnCSV" class="btn-csv">⬇️ Export CSV</button>
+      <button class="btn-home" onclick="location.href='index.html'">🏠 Accueil</button>
     </div>
   </div>
 
-  <dialog id="partialDialog">
-    <form method="dialog" style="margin:0">
-      <h3 style="margin:0 0 8px">Ajouter un tour partiel ?</h3>
-      <p id="partialDialogInfo" style="margin:0 0 12px;opacity:.8"></p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start">
-        <button value="0.25">+ 1/4</button>
-        <button value="0.5">+ 1/2</button>
-        <button value="0.75">+ 3/4</button>
-        <button value="0" style="margin-left:auto">Non</button>
-      </div>
-    </form>
-  </dialog>
-
   <footer>RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
 
-  <script src="fraction.js?v=20250810-2"></script>
-  <script src="course.js?v=20250810-2"></script>
+<script>
+window.addEventListener('load', function () {
+  const PIN_CODE = "57";
+
+  let stats = [];
+  try { const s = sessionStorage.getItem("stats"); if (s) stats = JSON.parse(s); } catch(e){}
+  if (!Array.isArray(stats) || stats.length < 2) {
+    document.querySelector('.wrap').insertAdjacentHTML('beforeend',
+      '<p style="text-align:center;margin:20px 0;opacity:.7">Aucune donnée trouvée. Revenez ici après la course.</p>'
+    );
+    return;
+  }
+
+  function blocHTML(e) {
+    return `
+      <div class="name">${(e.prenom||"-")} ${(e.nom||"-")}</div>
+      <div class="meta">Classe : ${(e.classe||"-")} • Sexe : ${(e.sexe||"-")}</div>
+      <div class="metrics">
+        <div class="metric"><div>Distance</div><div class="v">${Number(e.distance||0)} m</div></div>
+        <div class="metric"><div>Vitesse</div><div class="v">${Number(parseFloat(e.vitesse||0).toFixed(2))} km/h</div></div>
+        <div class="metric"><div>VMA</div><div class="v">${Number(parseFloat(e.vma||0).toFixed(2))} km/h</div></div>
+      </div>
+    `;
+  }
+
+  // Map "Fille/Garçon/Autre" => F/M pour ScanProf
+  function mapSexeToScanProf(sexe) {
+    const s = String(sexe||"").toLowerCase();
+    if (s.startsWith("f")) return "F"; // Fille
+    return "M"; // Garçon / Autre (contrainte du format)
+  }
+
+  function payloadScanProf() {
+    return stats.slice(0,2).map(e => ({
+      nom: String(e.nom||""),
+      prenom: String(e.prenom||""),
+      classe: String(e.classe||""),
+      sexe: mapSexeToScanProf(e.sexe),
+      distance: Number(e.distance||0),
+      vitesse: Number(parseFloat(e.vitesse||0).toFixed(2)),
+      vma: Number(parseFloat(e.vma||0).toFixed(2))
+    }));
+  }
+
+  function renderQR() {
+    const el = document.getElementById("qrcode");
+    el.innerHTML = "";
+    const text = JSON.stringify(payloadScanProf());
+    new QRCode(el, { text, width:256, height:256, correctLevel:QRCode.CorrectLevel.M });
+  }
+
+  function render() {
+    document.querySelector('#eleve1 .body').innerHTML = blocHTML(stats[0]);
+    document.querySelector('#eleve2 .body').innerHTML = blocHTML(stats[1]);
+    renderQR();
+  }
+
+  // Mode prof : ajuster distance (± mètres) → recalc vitesse & VMA + MAJ QR
+  document.getElementById("btnProf").addEventListener("click", () => {
+    const pin = prompt("Code PIN :");
+    if (pin !== PIN_CODE) return;
+
+    const idx = prompt("Modifier élève (1 ou 2) :");
+    if (idx !== "1" && idx !== "2") return;
+
+    const delta = prompt("Ajustement distance (+ ou - en mètres) :");
+    const val = Number(delta);
+    if (!isFinite(val)) return;
+
+    const i = Number(idx) - 1;
+    const d = Number(stats[i].distance || 0) + val;
+    stats[i].distance = Math.max(0, Math.round(d));
+
+    // Recalcule avec temps en secondes (déjà stocké dans stats[i].temps)
+    const t = Math.max(1, Number(stats[i].temps || 0));
+    const vit = (stats[i].distance / t) * 3.6; // km/h
+    const vma = vit * 1.15;
+
+    stats[i].vitesse = parseFloat(vit.toFixed(2));
+    stats[i].vma = parseFloat(vma.toFixed(2));
+
+    sessionStorage.setItem("stats", JSON.stringify(stats));
+    render();
+  });
+
+  // Export CSV
+  document.getElementById("btnCSV").addEventListener("click", () => {
+    let csv = "Nom;Prénom;Classe;Sexe;Distance;Vitesse;VMA\n";
+    stats.slice(0,2).forEach(e => {
+      csv += `${e.nom};${e.prenom};${e.classe};${e.sexe};${Number(e.distance||0)};${Number(parseFloat(e.vitesse||0).toFixed(2))};${Number(parseFloat(e.vma||0).toFixed(2))}\n`;
+    });
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "runstats-resume.csv"; a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  render();
+});
+</script>
 </body>
 </html>
