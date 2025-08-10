@@ -1,80 +1,71 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Aide - RunStats</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>RunStats — Aide & Mode d’emploi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      line-height: 1.6;
+    :root{
+      --ink:#111; --muted:#555; --border:#e5e7eb; --card:#fff; --bg:#fafafa; --accent:#0066ff;
     }
-    h1, h2 {
-      color: #2c3e50;
+    *{box-sizing:border-box}
+    body{ margin:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif; color:var(--ink); background:var(--bg);}
+    header, footer{ text-align:center; padding:14px 16px;}
+    header h1{ margin:8px 0 0; font-size:22px;}
+    header p{ margin:6px 0 0; color:var(--muted); }
+    .wrap{ max-width:900px; margin:12px auto 40px; padding:0 12px;}
+    .card{ background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; }
+    h2{ margin:10px 0 6px; font-size:18px;}
+    ol, ul{ margin:8px 0 10px 22px; }
+    .cta{
+      display:flex; gap:12px; flex-wrap:wrap; margin-top:14px;
     }
-    .note {
-      background-color: #f1f8ff;
-      border-left: 4px solid #3498db;
-      padding: 10px;
-      margin: 15px 0;
+    a.btn{
+      text-decoration:none; background:var(--accent); color:#fff; font-weight:800; padding:12px 16px;
+      border-radius:10px; display:inline-flex; align-items:center; gap:10px;
     }
-    a {
-      color: #3498db;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    footer {
-      margin-top: 30px;
-      font-size: 0.9em;
-      color: #666;
-    }
+    a.secondary{ background:#fff; color:var(--ink); border:1px solid var(--border); }
+    footer{ font-size:12px; color:#666; border-top:1px solid var(--border); background:#fff; position:sticky; bottom:0;}
+    code{ background:#f3f4f6; padding:2px 6px; border-radius:6px;}
   </style>
 </head>
 <body>
+  <header>
+    <h1>Aide & Mode d’emploi</h1>
+    <p>Utilisation pas-à-pas de RunStats en cours d’EPS.</p>
+  </header>
 
-<h1>📖 Aide RunStats</h1>
+  <div class="wrap">
+    <div class="card">
+      <h2>1) Saisie des élèves</h2>
+      <ul>
+        <li>Dans <strong>Élèves</strong>, renseignez pour <em>deux élèves</em> : <em>Nom, Prénom, Classe, Sexe</em>, la <em>durée</em> (en minutes) et la <em>distance d’un tour</em> (en mètres).</li>
+        <li>Les deux élèves s’affichent <strong>côte à côte</strong> avec des couleurs distinctes (bleu / vert).</li>
+      </ul>
 
-<p>Bienvenue dans l’application <strong>RunStats</strong> !  
-Elle vous permet de saisir les performances de vos élèves, calculer automatiquement la vitesse et la VMA, puis générer un QR code compatible avec <strong>ScanProf</strong>.</p>
+      <h2>2) Course 1 puis Course 2</h2>
+      <ul>
+        <li>Lancez la <strong>Course 1</strong> pour l’élève 1 (minuteur avec clignotement sur les 10 dernières secondes).</li>
+        <li>L’élève 2 appuie sur <em>Tour</em> à chaque passage pour incrémenter la distance. Les <em>vitesse</em> et <em>VMA</em> s’actualisent en direct.</li>
+        <li>À la fin, saisissez la <strong>fraction</strong> (¼, ½, ¾ de tour) si besoin : les métriques se mettent à jour.</li>
+        <li>Un bouton <strong>Lancer la Course 2</strong> apparaît : même principe en inversant les rôles (fond de page vert pour rappeler l’élève 2).</li>
+      </ul>
 
-<h2>⚡ Lancer une saisie</h2>
-<p>
-Pour démarrer une saisie :  
-<a href="eleve.html"><strong>➡ Accéder à la saisie des élèves</strong></a>
-</p>
+      <h2>3) Résumé & QR</h2>
+      <ul>
+        <li>Dans <strong>Résumé</strong>, vous voyez deux blocs (bleu/vert) avec <em>Nom, Prénom, Classe, Distance, Vitesse, VMA</em>.</li>
+        <li>Un <strong>QR code</strong> est généré au <strong>format compatible ScanProf</strong> (tableau JSON à 2 objets, champs : <code>nom, prenom, classe, sexe, distance, vitesse, vma</code>).</li>
+        <li>Le <strong>Mode Prof</strong> (PIN <code>57</code>) permet d’ajuster la distance (± libre). Le QR et les valeurs sont mis à jour automatiquement.</li>
+        <li>Export possible en <strong>CSV</strong>, bouton <strong>Accueil</strong> en bas.</li>
+      </ul>
 
-<div class="note">
-💡 Astuce : si vous avez une modification sur votre distance de course à effectuer, signalez-le à votre enseignant <strong>avant</strong> qu’il ne scanne votre QR code…  
-Sinon il faudra attendre l’année prochaine pour battre votre record ! 😉
-</div>
+      <div class="cta">
+        <a class="btn" href="./eleve.html">🚀 Lancer RunStats (saisie des élèves)</a>
+        <a class="btn secondary" href="./resume.html">🧾 Voir un exemple de Résumé</a>
+      </div>
+    </div>
+  </div>
 
-<h2>📱 QR Code</h2>
-<ul>
-  <li>Chaque saisie génère un QR code unique contenant les données de l’élève.</li>
-  <li>Ce QR code est lu par l’application <strong>ScanProf</strong> pour centraliser les résultats.</li>
-</ul>
-
-<h2>💾 Export CSV</h2>
-<ul>
-  <li>Vous pouvez exporter toutes les données saisies au format CSV.</li>
-  <li>Ce fichier peut être ouvert dans Excel, LibreOffice, Numbers, etc.</li>
-</ul>
-
-<h2>🔑 Mode Professeur</h2>
-<ul>
-  <li>Un bouton « Mode Prof » permet d’accéder à des réglages avancés (code PIN : <strong>57</strong>).</li>
-  <li>Depuis ce mode, vous pouvez effacer, corriger ou ajuster les distances manuellement.</li>
-</ul>
-
-<h2>🏠 Accueil</h2>
-<p>Le bouton « Accueil » vous ramène à la page principale de RunStats à tout moment.</p>
-
-<footer>
-RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-</footer>
-
+  <footer>RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
 </body>
 </html>
