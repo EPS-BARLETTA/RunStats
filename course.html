@@ -5,35 +5,42 @@
   <title>Course - RunStats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body{background:#dfeeff;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;margin:0;padding:20px;text-align:center}
-    h2#title{margin:10px 0 14px}
-    #timer{font-size:56px;margin:10px 0}
+    :root{--border:#e5e7eb}
+    *{box-sizing:border-box}
+    body{background:#dfeeff;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;margin:0;padding:24px}
+    .wrap{max-width:820px;margin:0 auto;text-align:center}
+    h2#title{margin:10px 0 16px}
+    #timer{font-size:64px;margin:12px 0}
     .row{display:flex;justify-content:center;gap:18px;flex-wrap:wrap}
-    .data{background:#fff;padding:10px 14px;border-radius:10px;border:1px solid #e5e7eb}
-    button{padding:10px 14px;border:1px solid #e5e7eb;border-radius:10px;cursor:pointer;background:#111;color:#fff;font-weight:700}
+    .data{background:#fff;padding:12px 16px;border-radius:12px;border:1px solid var(--border);min-width:160px}
+    .btns{margin-top:16px}
+    button{padding:12px 16px;border:1px solid var(--border);border-radius:12px;cursor:pointer;background:#111;color:#fff;font-weight:700}
     #nextBtn,#summaryBtn{display:none}
-    footer{margin-top:20px;opacity:.7}
+    footer{margin-top:24px;opacity:.7;text-align:center}
+    dialog{padding:16px;border-radius:12px;max-width:360px}
   </style>
 </head>
 <body>
-  <h2 id="title">Course</h2>
-  <div id="timer">00:00</div>
+  <div class="wrap">
+    <h2 id="title">Course</h2>
+    <div id="timer">00:00</div>
 
-  <div class="row" style="margin:10px 0 16px">
-    <div class="data">Tours : <span id="laps">0</span></div>
-    <div class="data">Distance : <span id="distance">0</span> m</div>
-    <div class="data">Vitesse : <span id="vitesse">0.00</span> km/h</div>
-    <div class="data">Estimation VMA : <span id="vma">0.00</span> km/h</div>
-  </div>
+    <div class="row" style="margin:12px 0 18px">
+      <div class="data">Tours : <span id="laps">0</span></div>
+      <div class="data">Distance : <span id="distance">0</span> m</div>
+      <div class="data">Vitesse : <span id="vitesse">0.00</span> km/h</div>
+      <div class="data">Estimation VMA : <span id="vma">0.00</span> km/h</div>
+    </div>
 
-  <div class="row">
-    <button id="lapBtn">+ 1 tour</button>
-    <button id="nextBtn">Passer au coureur 2</button>
-    <button id="summaryBtn">Aller au résumé</button>
+    <div class="btns">
+      <button id="lapBtn">+ 1 tour</button>
+      <button id="nextBtn">Passer au coureur 2</button>
+      <button id="summaryBtn">Aller au résumé</button>
+    </div>
   </div>
 
   <!-- Dialogue d'ajout de tour partiel -->
-  <dialog id="partialDialog" style="padding:16px;border-radius:12px;max-width:360px">
+  <dialog id="partialDialog">
     <form method="dialog" style="margin:0">
       <h3 style="margin:0 0 8px">Ajouter un tour partiel ?</h3>
       <p id="partialDialogInfo" style="margin:0 0 12px;opacity:.8"></p>
@@ -48,8 +55,8 @@
 
   <footer>RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
 
-  <!-- cache-busting pour forcer le rechargement des scripts -->
-  <script src="fraction.js?v=20250810"></script>
-  <script src="course.js?v=20250810"></script>
+  <!-- cache-busting -->
+  <script src="fraction.js?v=20250810-1"></script>
+  <script src="course.js?v=20250810-1"></script>
 </body>
 </html>
