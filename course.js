@@ -1,6 +1,7 @@
-// course.js — robuste + auto-résumé après la course 2
+// course.js — v7 : fraction OK + bouton "Passer au résumé" (pas d'auto-redirection)
 (function(){
-  let coureurActuel = 1;
+  let coureurActuel = 1;   // 1 puis 2
+  let phase = 1;           // 1 = course 1, 2 = course 2
   let nombreTours = 0;
   let timerInterval = null;
   let isRunning = false;
@@ -18,13 +19,16 @@
   const summaryBtn = document.getElementById("summaryBtn");
   const titleEl    = document.getElementById("title");
 
+  // Ajuste le libellé du bouton si besoin
+  if (summaryBtn) summaryBtn.textContent = "Passer au résumé";
+
   // Minuteur rond (si présent)
   const ringFG   = document.getElementById("ringFG");
   const ringWrap = document.getElementById("ringWrap");
   const HAS_RING = !!(ringFG && ringWrap);
   let CIRC = 1;
   if (HAS_RING) {
-    const R = 96; // rayon du cercle dans le SVG
+    const R = 96;
     CIRC = 2 * Math.PI * R;
     ringFG.style.strokeDasharray = String(CIRC);
     ringFG.style.strokeDashoffset = "0";
@@ -62,7 +66,7 @@
       if (on) ringWrap.classList.add("danger");
       else    ringWrap.classList.remove("danger");
     } else {
-      // Fallback visuel si pas d'anneau : clignote le texte en fin
+      // Fallback si pas d'anneau : clignote le texte sur la fin
       timerDisplay.style.visibility = on
         ? (timerDisplay.style.visibility === "hidden" ? "visible" : "hidden")
         : "visible";
@@ -107,7 +111,6 @@
   function demarrerChrono(){
     if(isRunning) return;
     isRunning = true;
-
     clearInterval(timerInterval);
     timerInterval = setInterval(()=>{
       if(totalSeconds - elapsed <= 0){
@@ -136,48 +139,48 @@
       distance: Math.round(distance),
       vitesse: parseFloat(v.toFixed(2)),
       vma: parseFloat(vma.toFixed(2)),
-      temps: Math.max(1, Math.round(duree * 60)) // durée paramétrée en s
+      temps: Math.max(1, Math.round(duree * 60)) // s
     });
   }
 
-  // >>> Fin de course : fraction + enchaînement
   function terminerCourse(){
     clearInterval(timerInterval);
     isRunning = false;
     lapBtn.disabled = true;
     setDanger(false);
 
-    // Enregistre l'état avant fraction
+    // Enregistre l'état (avant fraction)
     enregistrerStats();
+    const idx = stats.length - 1;
+    const eleve = stats[idx];
 
-    const eleve = stats[stats.length - 1];
-
-    // Suite après MAJ (selon coureur)
     const suiteApresMaj = () => {
-      if (coureurActuel === 1) {
-        // Fin course 1 : afficher "Passer au coureur 2"
+      if (phase === 1) {
+        // Fin course 1 : proposer de passer au coureur 2
         nextBtn.style.display = "inline-block";
       } else {
-        // Fin course 2 : enregistrer et aller au résumé automatiquement
-        sessionStorage.setItem("stats", JSON.stringify(stats));
-        setTimeout(() => { window.location.href = "resume.html"; }, 400);
-        // Si tu préfères un bouton à la place :
-        // summaryBtn.style.display = "inline-block";
+        // Fin course 2 : afficher seulement le bouton "Passer au résumé"
+        summaryBtn.style.display = "inline-block";
       }
     };
 
-    // Proposer la fraction si disponible
+    // Fraction (si dispo)
     if (typeof ajouterFraction === "function"){
-      ajouterFraction(eleve, longueur).then((eleveMaj)=>{
-        stats[stats.length - 1] = eleveMaj; // MAJ des résultats finaux
+      try {
+        ajouterFraction(eleve, longueur).then((eleveMaj)=>{
+          // MAJ des résultats finaux
+          stats[idx] = eleveMaj;
 
-        // MAJ visuelle immédiate
-        distanceDisplay.textContent = String(eleveMaj.distance);
-        vitesseDisplay.textContent  = parseFloat(eleveMaj.vitesse || 0).toFixed(2);
-        vmaDisplay.textContent      = parseFloat(eleveMaj.vma || 0).toFixed(2);
+          // MAJ visuelle
+          distanceDisplay.textContent = String(eleveMaj.distance);
+          vitesseDisplay.textContent  = parseFloat(eleveMaj.vitesse || 0).toFixed(2);
+          vmaDisplay.textContent      = parseFloat(eleveMaj.vma || 0).toFixed(2);
 
+          suiteApresMaj();
+        }).catch(()=>suiteApresMaj());
+      } catch {
         suiteApresMaj();
-      });
+      }
     } else {
       suiteApresMaj();
     }
@@ -191,6 +194,8 @@
   });
 
   nextBtn.addEventListener("click", ()=>{
+    // Passage à la phase 2 (coureur 2)
+    phase = 2;
     coureurActuel = 2;
     setUIForRunner();
     demarrerChrono();
@@ -208,6 +213,7 @@
       lapBtn.disabled = true;
       return;
     }
+    phase = 1; coureurActuel = 1;
     setUIForRunner();
     demarrerChrono();
   });
