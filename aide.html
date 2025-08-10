@@ -2,156 +2,74 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>RunStats — Mode d’emploi (élève)</title>
+  <title>RunStats — Aide & Mode d’emploi</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root{
-      --ink:#111; --muted:#5b6573; --bg:#f7f8fb; --card:#fff; --border:#e6e9ef;
-      --blue:#4f8cff; --green:#36b37e; --purple:#7a5cff; --orange:#ff8a3d; --yellow:#f4c430;
-      --chipBlue:#e6f0ff; --chipGreen:#e6ffe6;
-    }
+    :root{--ink:#111;--muted:#555;--border:#e5e7eb;--card:#fff;--bg:#fafafa;--accent:#0066ff}
     *{box-sizing:border-box}
-    html,body{margin:0}
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;color:var(--ink);background:var(--bg)}
-    header,footer{text-align:center;padding:22px 16px}
-    header h1{margin:0 0 6px;font-size:26px}
-    header p{margin:0;color:var(--muted)}
-    .wrap{max-width:980px;margin:0 auto 42px;padding:0 16px}
-    /* grid responsive */
-    .steps{display:grid;grid-template-columns:1fr;gap:14px;margin-top:16px}
-    @media(min-width:860px){.steps{grid-template-columns:1fr 1fr}}
-    /* card step */
-    .step{
-      position:relative; display:flex; gap:14px; align-items:flex-start;
-      background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px 16px 16px 14px;
-      box-shadow:0 2px 8px rgba(22,28,45,.04);
-    }
-    .step::before{
-      content:""; position:absolute; left:0; top:0; bottom:0; width:8px; border-radius:16px 0 0 16px;
-      background:linear-gradient(180deg,var(--stripe1),var(--stripe2));
-    }
-    .step.s1{--stripe1:#5aa3ff;--stripe2:#2b78ff}
-    .step.s2{--stripe1:#8a79ff;--stripe2:#6a50ff}
-    .step.s3{--stripe1:#5aa3ff;--stripe2:#2b78ff}
-    .step.s4{--stripe1:#4ed19b;--stripe2:#2cb47c}
-    .step.s5{--stripe1:#ffb35a;--stripe2:#ff8a3d}
-
-    .icon{
-      flex:0 0 52px; height:52px; border-radius:14px; display:flex; align-items:center; justify-content:center;
-      font-size:26px; background:#f2f4f8; border:1px solid var(--border);
-    }
-    .content{flex:1}
-    .content h2{margin:0 0 6px;font-size:18px}
-    .content p{margin:6px 0;color:#1f2837;line-height:1.5}
-    .content ul{margin:6px 0 0 20px;padding:0}
-    .content li{margin:6px 0;line-height:1.5}
-
-    /* chips coureurs */
-    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-    .chip{padding:6px 10px;border-radius:999px;font-weight:800;font-size:13px;border:1px solid var(--border)}
-    .chip.blue{background:var(--chipBlue)}
-    .chip.green{background:var(--chipGreen)}
-
-    /* callout */
-    .callout{
-      margin-top:8px;background:#fff8e6;border:1px solid #ffe2a6;color:#7a5a17;border-radius:12px;padding:10px 12px;
-    }
-
-    /* CTA */
-    .cta{display:flex;justify-content:center;gap:12px;margin-top:18px;flex-wrap:wrap}
-    .btn{display:inline-block;text-decoration:none;font-weight:900;letter-spacing:.2px;
-         background:var(--blue);color:#fff;padding:13px 18px;border-radius:12px}
-    .btn.secondary{background:#fff;color:#111;border:1px solid var(--border)}
-
-    footer{font-size:12px;color:#7a8494;border-top:1px solid var(--border);background:#fff;position:sticky;bottom:0}
-    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f2f4f8;border:1px solid var(--border);padding:2px 6px;border-radius:6px}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;color:var(--ink);background:var(--bg)}
+    header,footer{text-align:center;padding:14px 16px}
+    header h1{margin:8px 0 0;font-size:22px}
+    header p{margin:6px 0 0;color:var(--muted)}
+    .wrap{max-width:900px;margin:12px auto 40px;padding:0 12px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px}
+    h2{margin:10px 0 6px;font-size:18px}
+    ol,ul{margin:8px 0 10px 22px}
+    .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;justify-content:center}
+    a.btn{text-decoration:none;background:var(--accent);color:#fff;font-weight:800;padding:12px 16px;border-radius:10px;display:inline-flex;align-items:center;gap:10px}
+    a.secondary{background:#fff;color:var(--ink);border:1px solid var(--border)}
+    .note{margin:10px 0;padding:10px;border:1px dashed var(--border);border-radius:10px;background:#fffbe6}
+    footer{font-size:12px;color:#666;border-top:1px solid var(--border);background:#fff;position:sticky;bottom:0}
+    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f3f4f6;border:1px solid var(--border);padding:2px 6px;border-radius:6px}
   </style>
 </head>
 <body>
   <header>
-    <h1>Mode d’emploi — RunStats</h1>
-    <p>Pour bien utiliser l’appli pendant la séance.</p>
+    <h1>Aide & Mode d’emploi</h1>
+    <p>Utilisation pas-à-pas de RunStats en cours d’EPS.</p>
   </header>
 
   <div class="wrap">
-    <div class="steps">
-      <!-- 1. Préparation -->
-      <div class="step s1">
-        <div class="icon">🎒</div>
-        <div class="content">
-          <h2>1) Prépare-toi</h2>
-          <ul>
-            <li>Avoir : <strong>Nom</strong>, <strong>Prénom</strong>, <strong>Classe</strong>, <strong>Sexe</strong>.</li>
-            <li>La <strong>durée (min)</strong> et la <strong>longueur d’un tour (m)</strong> sont définies pour tout le monde.</li>
-          </ul>
-          <div class="chips">
-            <span class="chip blue">COUREUR 1 (fond bleu)</span>
-            <span class="chip green">COUREUR 2 (fond vert)</span>
-          </div>
-        </div>
-      </div>
+    <div class="card">
+      <h2>1) Préparation</h2>
+      <ul>
+        <li>Vérifie : <strong>Nom</strong>, <strong>Prénom</strong>, <strong>Classe</strong>, <strong>Sexe</strong>.</li>
+        <li>La <strong>durée (minutes)</strong> et la <strong>longueur d’un tour (m)</strong> sont communes aux 2 coureurs.</li>
+        <li>Couleurs pendant la course : <strong>bleu</strong> = coureur 1, <strong>vert</strong> = coureur 2.</li>
+      </ul>
 
-      <!-- 2. Saisie -->
-      <div class="step s2">
-        <div class="icon">✍️</div>
-        <div class="content">
-          <h2>2) Saisie</h2>
-          <ul>
-            <li>Remplir l’identité des <strong>2 coureurs</strong>.</li>
-            <li>Vérifier que la <strong>durée</strong> et la <strong>longueur de tour</strong> sont correctes.</li>
-            <li>Appuyer sur <strong>«&nbsp;Lancer la course&nbsp;»</strong>.</li>
-          </ul>
-        </div>
-      </div>
+      <h2>2) Saisie</h2>
+      <ul>
+        <li>Saisir l’identité des <strong>2 coureurs</strong> (les champs restent blancs, fonds bleu/vert pour repère).</li>
+        <li>Saisir <strong>une seule fois</strong> la durée et la longueur d’un tour (valables pour les deux).</li>
+        <li>Cliquer sur <strong>“Lancer la course”</strong>.</li>
+      </ul>
 
-      <!-- 3. Course 1 -->
-      <div class="step s3">
-        <div class="icon">🏃‍♂️</div>
-        <div class="content">
-          <h2>3) Course 1 (coureur 1)</h2>
-          <ul>
-            <li>Minuteur <strong>rond</strong> (fond <strong>bleu</strong>) qui se <strong>réduit</strong>.</li>
-            <li><strong>Observateur (coureur 2)</strong> : clique <span class="kbd">+ 1 tour</span> <strong>à chaque passage</strong>.</li>
-            <li>Les <em>Distance</em>, <em>Vitesse</em>, <em>VMA</em> se mettent à jour.</li>
-            <li>Fin de course : choisir la <strong>fraction de tour</strong> si besoin (<em>+¼</em>, <em>+½</em>, <em>+¾</em>).</li>
-          </ul>
-        </div>
-      </div>
+      <h2>3) Course 1 (coureur 1)</h2>
+      <ul>
+        <li>Minuteur <strong>rond</strong> (fond <strong>bleu</strong>) qui se <em>réduit</em>. Les 10 dernières secondes : <strong>clignote rouge</strong>.</li>
+        <li><strong>Observateur (coureur 2)</strong> : cliquer <span class="kbd">+ 1 tour</span> à <strong>chaque passage</strong>.</li>
+        <li>Les valeurs <em>Distance</em>, <em>Vitesse</em>, <em>VMA</em> s’actualisent automatiquement.</li>
+        <li>À la fin, choisir une <strong>fraction de tour</strong> si besoin : <em>+¼</em>, <em>+½</em>, <em>+¾</em>.</li>
+      </ul>
 
-      <!-- 4. Course 2 -->
-      <div class="step s4">
-        <div class="icon">🔁</div>
-        <div class="content">
-          <h2>4) Course 2 (coureur 2)</h2>
-          <ul>
-            <li>Clique <strong>«&nbsp;Passer au coureur 2&nbsp;»</strong> (fond <strong>vert</strong>).</li>
-            <li>Le coureur 1 devient observateur et clique <span class="kbd">+ 1 tour</span> à chaque passage.</li>
-            <li>Fin de course : ajouter la fraction si nécessaire.</li>
-            <li>Puis cliquer <strong>«&nbsp;Aller au résumé&nbsp;»</strong>.</li>
-          </ul>
-        </div>
-      </div>
+      <h2>4) Course 2 (coureur 2)</h2>
+      <ul>
+        <li>Clique sur <strong>“Passer au coureur 2”</strong> (fond <strong>vert</strong>) et répète le même principe.</li>
+        <li>À la fin, ajoute la fraction si nécessaire puis <strong>“Aller au résumé”</strong>.</li>
+      </ul>
 
-      <!-- 5. Résumé & Scan -->
-      <div class="step s5">
-        <div class="icon">📋</div>
-        <div class="content">
-          <h2>5) Résumé & scan</h2>
-          <ul>
-            <li>2 blocs (bleu / vert) : <em>Nom, Prénom, Classe, Distance, Vitesse, VMA</em>.</li>
-            <li>Un QR est prêt pour le <strong>scan</strong> par l’enseignant.</li>
-          </ul>
-          <div class="callout">
-            <strong>Important :</strong> si ta <strong>distance réalisée</strong> est à ajuster,
-            <u>préviens l’enseignant à la fin des deux courses</u> pour qu’il/elle corrige <u>avant le scan</u>.
-          </div>
-        </div>
-      </div>
-    </div>
+      <h2>5) Résumé</h2>
+      <ul>
+        <li>Deux blocs (bleu/vert) montrent : <em>Nom</em>, <em>Prénom</em>, <em>Classe</em>, <em>Distance</em>, <em>Vitesse</em>, <em>VMA</em>.</li>
+        <li>Un QR est généré pour le scan de l’enseignant (<em>ScanProf</em>).</li>
+      </ul>
+      <div class="note"><strong>Important :</strong> si ta <strong>distance réalisée</strong> doit être ajustée, préviens l’enseignant <strong>à la fin des deux courses</strong> pour qu’il/elle corrige <strong>avant le scan</strong>.</div>
 
-    <div class="cta">
-      <a class="btn" href="./eleve.html">🚀 Commencer</a>
-      <a class="btn secondary" href="./index.html">🏠 Accueil</a>
+      <div class="cta">
+        <a class="btn" href="./eleve.html">🚀 Commencer</a>
+        <a class="btn secondary" href="./index.html">🏠 Accueil</a>
+      </div>
     </div>
   </div>
 
