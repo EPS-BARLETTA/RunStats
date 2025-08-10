@@ -1,101 +1,105 @@
-// resume.js — affiche élèves côte à côte (Élève 1 bleu clair / Élève 2 vert clair),
-// génère le QR JSON (primordial) et export CSV.
+// resume.js
 
-window.onload = function () {
-  const eleve1 = safeParse(sessionStorage.getItem("eleve1")) || {};
-  const eleve2 = safeParse(sessionStorage.getItem("eleve2")) || {};
-  // stats a normalement été rempli et ajusté (fractions) dans course.js
-  let stats = safeParse(sessionStorage.getItem("stats")) || [];
+const stats = JSON.parse(sessionStorage.getItem("stats")) || [];
+const tbody = document.querySelector("#recapTable tbody");
+const btnAccueil = document.getElementById("btnAccueil");
+const btnCSV = document.getElementById("btnCSV");
+const btnProf = document.getElementById("btnProf");
 
-  // garde-fous : si pas de stats, on reconstruit un minimum depuis eleve1/eleve2
-  if (!Array.isArray(stats) || stats.length < 2) {
-    stats = [
-      makeRowFromEleve(eleve1),
-      makeRowFromEleve(eleve2),
-    ];
-  }
+// 🔹 Remplir tableau
+function afficherTableau(editable = false) {
+  tbody.innerHTML = "";
+  stats.forEach((eleve, index) => {
+    const tr = document.createElement("tr");
 
-  // Affichage cartes
-  renderCard("infoA", stats[0]);
-  renderCard("infoB", stats[1]);
+    tr.innerHTML = `
+      <td>${eleve.nom}</td>
+      <td>${eleve.prenom}</td>
+      <td>${eleve.classe}</td>
+      <td>${eleve.sexe}</td>
+      <td ${editable ? 'contenteditable="true"' : ""} data-index="${index}" data-field="distance">${eleve.distance}</td>
+      <td>${eleve.vitesse.toFixed(2)}</td>
+      <td>${eleve.vma.toFixed(2)}</td>
+    `;
 
-  // QR code (payload = array de 2 élèves)
-  const qrData = JSON.stringify(stats);
-  const qrWrap = document.getElementById("qrcode");
-  qrWrap.innerHTML = "";
-  QRCode.toCanvas(document.createElement("canvas"), qrData, { width: 220 }, function (err, canvas) {
-    if (!err) qrWrap.appendChild(canvas);
+    tbody.appendChild(tr);
   });
+}
 
-  // CSV
-  document.getElementById("downloadCSV").onclick = function () {
-    const headers = ["nom", "prenom", "classe", "sexe", "distance", "vitesse", "vma"];
-    const rows = stats.map(e => headers.map(h => normalizeCell(e[h])));
-    const csv = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
-    downloadFile("donnees_runstats.csv", csv, "text/csv;charset=utf-8;");
-  };
+// 🔹 Générer QR Code compatible ScanProf
+function genererQRCode() {
+  const data = stats.map(eleve => ({
+    nom: eleve.nom,
+    prenom: eleve.prenom,
+    classe: eleve.classe,
+    sexe: eleve.sexe,
+    distance: eleve.distance,
+    vitesse: parseFloat(eleve.vitesse.toFixed(2)),
+    vma: parseFloat(eleve.vma.toFixed(2))
+  }));
 
-  // Utils
-  function renderCard(containerId, e) {
-    const el = document.getElementById(containerId);
-    if (!el) return;
-    el.innerHTML = [
-      row("Nom", `${e.nom || ""} ${e.prenom || ""}`.trim()),
-      row("Classe / Sexe", `${e.classe || ""} / ${e.sexe || ""}`.trim()),
-      row("Distance", fmtMeters(e.distance)),
-      row("Vitesse", fmtKmh(e.vitesse)),
-      row("VMA", fmtKmh(e.vma))
-    ].join("");
-  }
+  new QRCode(document.getElementById("qrcode"), {
+    text: JSON.stringify(data),
+    width: 200,
+    height: 200
+  });
+}
 
-  function row(label, value) {
-    return `<p><strong>${escapeHtml(label)} :</strong> ${escapeHtml(String(value))}</p>`;
-  }
+// 🔹 Exporter CSV
+function exporterCSV() {
+  const lignes = [
+    ["Nom", "Prénom", "Classe", "Sexe", "Distance (m)", "Vitesse (km/h)", "VMA (km/h)"],
+    ...stats.map(eleve => [
+      eleve.nom,
+      eleve.prenom,
+      eleve.classe,
+      eleve.sexe,
+      eleve.distance,
+      eleve.vitesse.toFixed(2),
+      eleve.vma.toFixed(2)
+    ])
+  ];
 
-  function fmtMeters(v) {
-    const n = toNum(v);
-    return isFinite(n) ? `${round2(n)} m` : "—";
-  }
-  function fmtKmh(v) {
-    const n = toNum(v);
-    return isFinite(n) ? `${round2(n)} km/h` : "—";
-  }
+  const csvContent = lignes.map(l => l.join(",")).join("\n");
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
 
-  function round2(x) { return Math.round(Number(x) * 100) / 100; }
-  function toNum(x){ const n = Number(x); return isNaN(n) ? NaN : n; }
-  function normalizeCell(x){
-    if (x == null) return "";
-    const n = Number(x);
-    return isNaN(n) ? String(x) : String(round2(n));
-  }
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "resultats.csv";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
 
-  function downloadFile(name, content, mime) {
-    const blob = new Blob([content], { type: mime });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = name;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => {
-      URL.revokeObjectURL(a.href);
-      document.body.removeChild(a);
-    }, 500);
-  }
+// 🔹 Activer mode Prof avec code PIN
+function activerModeProf() {
+  const code = prompt("Entrez le code PIN pour modifier les distances :");
+  if (code === "57") {
+    alert("Mode Prof activé ✅\nVous pouvez modifier les distances dans le tableau.");
+    afficherTableau(true);
 
-  function escapeHtml(s) {
-    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
-                    .replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+    tbody.addEventListener("input", e => {
+      if (e.target.dataset.field === "distance") {
+        const index = e.target.dataset.index;
+        const nouvelleDistance = parseFloat(e.target.innerText) || 0;
+        stats[index].distance = nouvelleDistance;
+        stats[index].vitesse = (nouvelleDistance / 1000) / (stats[index].duree / 60 || 0.2); // recalcul vitesse
+        stats[index].vma = stats[index].vitesse * 1.15;
+      }
+    });
+  } else {
+    alert("Code PIN incorrect ❌");
   }
-  function safeParse(t) { try { return JSON.parse(t); } catch (e) { return null; } }
-  function makeRowFromEleve(e) {
-    return {
-      nom: e?.nom || "",
-      prenom: e?.prenom || "",
-      classe: e?.classe || "",
-      sexe: e?.sexe || "",
-      distance: toNum(e?.distance) || 0,
-      vitesse: toNum(e?.vitesse) || 0,
-      vma: toNum(e?.vma) || 0
-    };
-  }
-};
+}
+
+// 🔹 Boutons
+btnAccueil.addEventListener("click", () => {
+  window.location.href = "index.html";
+});
+btnCSV.addEventListener("click", exporterCSV);
+btnProf.addEventListener("click", activerModeProf);
+
+// 🔹 Init
+afficherTableau();
+genererQRCode();
