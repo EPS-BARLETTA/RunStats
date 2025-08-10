@@ -2,119 +2,168 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Résumé de la course</title>
+<title>RunStats — Résumé</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Lib QR -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-body { font-family: sans-serif; margin: 20px; }
-.eleve { display: inline-block; width: 45%; padding: 10px; margin: 5px; border-radius: 8px; vertical-align: top; }
-.eleve h2 { margin-top: 0; }
-.bleu { background-color: #cce5ff; }
-.vert { background-color: #d4edda; }
-#qrcode { margin-top: 20px; }
-button { margin: 5px; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
-.btn-prof { background-color: orange; color: white; }
-.btn-csv { background-color: #007bff; color: white; }
-.btn-home { background-color: green; color: white; }
-footer { margin-top: 40px; font-size: 14px; opacity: 0.7; }
+  :root{
+    --bleu:#cce5ff; --vert:#d4edda; --border:#e5e7eb; --ink:#111;
+    --btn:#111; --btnText:#fff;
+  }
+  *{box-sizing:border-box}
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;margin:0;color:var(--ink);background:#fafafa}
+  header,footer{text-align:center;padding:16px}
+  .wrap{max-width:980px;margin:0 auto 40px;padding:0 16px}
+  .grid{
+    display:flex; gap:16px; flex-wrap:wrap; justify-content:center; align-items:stretch;
+  }
+  .eleve{
+    flex:0 1 420px; background:#fff; border:1px solid var(--border); border-radius:14px; overflow:hidden;
+  }
+  .eleve h2{margin:0; padding:12px 14px; font-size:18px}
+  .eleve .body{padding:14px}
+  .bleu h2{background:var(--bleu)}
+  .vert h2{background:var(--vert)}
+  .row{margin:6px 0}
+  #qrcodeWrap{display:flex; justify-content:center; margin:18px 0}
+  #qrcode{background:#fff; border:1px dashed var(--border); border-radius:12px; padding:12px}
+  .actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:12px}
+  button{padding:12px 16px; border:1px solid var(--border); border-radius:12px; cursor:pointer; background:var(--btn); color:var(--btnText); font-weight:700}
+  .btn-csv{background:#0b5ed7}
+  .btn-home{background:#1f9d55}
+  footer{opacity:.7; border-top:1px solid var(--border); background:#fff; position:sticky; bottom:0}
 </style>
 </head>
 <body>
+  <header>
+    <h1>Résumé des courses</h1>
+    <p>Données finales des 2 élèves + QR compatible ScanProf.</p>
+  </header>
 
-<h1>Résumé de la course</h1>
-<div id="eleve1" class="eleve bleu"></div>
-<div id="eleve2" class="eleve vert"></div>
+  <div class="wrap">
+    <div class="grid">
+      <div id="eleve1" class="eleve bleu">
+        <h2>Élève 1</h2>
+        <div class="body"></div>
+      </div>
+      <div id="eleve2" class="eleve vert">
+        <h2>Élève 2</h2>
+        <div class="body"></div>
+      </div>
+    </div>
 
-<div id="qrcode"></div>
-<br>
-<button class="btn-prof" id="btnProf">Mode Prof</button>
-<button class="btn-csv" id="btnCSV">Exporter CSV</button>
-<button class="btn-home" onclick="location.href='index.html'">Accueil</button>
+    <div id="qrcodeWrap">
+      <div id="qrcode"></div>
+    </div>
 
-<footer>RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+    <div class="actions">
+      <button id="btnProf">🔐 Mode Prof</button>
+      <button id="btnCSV" class="btn-csv">⬇️ Export CSV</button>
+      <button class="btn-home" onclick="location.href='index.html'">🏠 Accueil</button>
+    </div>
+  </div>
+
+  <footer>RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
 
 <script>
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
   const PIN_CODE = "57";
+
   let stats = [];
-  const storageStats = sessionStorage.getItem("stats");
-  if (storageStats) {
-    stats = JSON.parse(storageStats);
-  }
-  if (!stats.length) {
-    document.body.innerHTML += "<p>Aucune donnée trouvée.</p>";
+  try {
+    const s = sessionStorage.getItem("stats");
+    if (s) stats = JSON.parse(s);
+  } catch(e){}
+
+  if (!Array.isArray(stats) || stats.length < 2) {
+    document.querySelector('.wrap').insertAdjacentHTML('beforeend',
+      '<p style="text-align:center;margin:20px 0;opacity:.7">Aucune donnée trouvée. Revenez ici après la course.</p>'
+    );
     return;
   }
 
-  function afficherEleve(eleve, elementId) {
-    const el = document.getElementById(elementId);
-    el.innerHTML = `
-      <h2>${eleve.nom} ${eleve.prenom}</h2>
-      <p>Classe : ${eleve.classe}</p>
-      <p>Sexe : ${eleve.sexe}</p>
-      <p>Distance : ${eleve.distance} m</p>
-      <p>Vitesse : ${parseFloat(eleve.vitesse).toFixed(2)} km/h</p>
-      <p>VMA : ${parseFloat(eleve.vma).toFixed(2)} km/h</p>
+  function blocHTML(e) {
+    return `
+      <div class="row"><strong>Nom :</strong> ${e.nom || "-"}</div>
+      <div class="row"><strong>Prénom :</strong> ${e.prenom || "-"}</div>
+      <div class="row"><strong>Classe :</strong> ${e.classe || "-"}</div>
+      <div class="row"><strong>Sexe :</strong> ${e.sexe || "-"}</div>
+      <div class="row"><strong>Distance :</strong> ${Number(e.distance||0)} m</div>
+      <div class="row"><strong>Vitesse :</strong> ${Number(parseFloat(e.vitesse||0).toFixed(2))} km/h</div>
+      <div class="row"><strong>VMA :</strong> ${Number(parseFloat(e.vma||0).toFixed(2))} km/h</div>
     `;
   }
 
-  afficherEleve(stats[0], "eleve1");
-  afficherEleve(stats[1], "eleve2");
-
-  function genererQR() {
-    document.getElementById("qrcode").innerHTML = "";
-    const data = stats.map(e => ({
-      nom: e.nom,
-      prenom: e.prenom,
-      classe: e.classe,
-      sexe: e.sexe,
-      distance: Number(e.distance),
-      vitesse: Number(parseFloat(e.vitesse).toFixed(2)),
-      vma: Number(parseFloat(e.vma).toFixed(2))
-    }));
-    new QRCode(document.getElementById("qrcode"), {
-      text: JSON.stringify(data),
-      width: 256,
-      height: 256
-    });
+  function render() {
+    document.querySelector('#eleve1 .body').innerHTML = blocHTML(stats[0]);
+    document.querySelector('#eleve2 .body').innerHTML = blocHTML(stats[1]);
+    renderQR();
   }
-  genererQR();
 
+  function payloadScanProf() {
+    return stats.slice(0,2).map(e => ({
+      nom: String(e.nom||""),
+      prenom: String(e.prenom||""),
+      classe: String(e.classe||""),
+      sexe: (String(e.sexe||"").toUpperCase() === "F" ? "F" : "M"),
+      distance: Number(e.distance||0),
+      vitesse: Number(parseFloat(e.vitesse||0).toFixed(2)),
+      vma: Number(parseFloat(e.vma||0).toFixed(2))
+    }));
+  }
+
+  let qrcode;
+  function renderQR() {
+    const el = document.getElementById("qrcode");
+    el.innerHTML = "";
+    const text = JSON.stringify(payloadScanProf());
+    qrcode = new QRCode(el, { text, width:256, height:256, correctLevel: QRCode.CorrectLevel.M });
+  }
+
+  // Mode prof : ajuster distance pour élève 1 ou 2
   document.getElementById("btnProf").addEventListener("click", () => {
     const pin = prompt("Code PIN :");
-    if (pin === PIN_CODE) {
-      const idx = prompt("Modifier élève (1 ou 2) :");
-      if (idx === "1" || idx === "2") {
-        const modif = prompt("Ajustement distance (+ ou - en mètres) :");
-        const val = parseFloat(modif);
-        if (!isNaN(val)) {
-          stats[idx-1].distance = Number(stats[idx-1].distance) + val;
-          stats[idx-1].vitesse = (stats[idx-1].distance / (stats[idx-1].temps / 60)).toFixed(2);
-          stats[idx-1].vma = (stats[idx-1].vitesse / 0.8).toFixed(2);
-          sessionStorage.setItem("stats", JSON.stringify(stats));
-          afficherEleve(stats[0], "eleve1");
-          afficherEleve(stats[1], "eleve2");
-          genererQR();
-        }
-      }
-    }
+    if (pin !== PIN_CODE) return;
+
+    const idx = prompt("Modifier élève (1 ou 2) :");
+    if (idx !== "1" && idx !== "2") return;
+
+    const delta = prompt("Ajustement distance (+ ou - en mètres) :");
+    const val = Number(delta);
+    if (!isFinite(val)) return;
+
+    const i = Number(idx) - 1;
+    const d = Number(stats[i].distance || 0) + val;
+    stats[i].distance = Math.max(0, Math.round(d));
+
+    // Recalcule avec temps en secondes
+    const t = Math.max(1, Number(stats[i].temps || 0));
+    const vit = (stats[i].distance / t) * 3.6; // km/h
+    const vma = vit * 1.15;
+
+    stats[i].vitesse = vit.toFixed(2);
+    stats[i].vma = vma.toFixed(2);
+
+    sessionStorage.setItem("stats", JSON.stringify(stats));
+    render();
   });
 
+  // Export CSV
   document.getElementById("btnCSV").addEventListener("click", () => {
     let csv = "Nom;Prénom;Classe;Sexe;Distance;Vitesse;VMA\n";
-    stats.forEach(e => {
-      csv += `${e.nom};${e.prenom};${e.classe};${e.sexe};${e.distance};${e.vitesse};${e.vma}\n`;
+    stats.slice(0,2).forEach(e => {
+      csv += `${e.nom};${e.prenom};${e.classe};${e.sexe};${Number(e.distance||0)};${Number(parseFloat(e.vitesse||0).toFixed(2))};${Number(parseFloat(e.vma||0).toFixed(2))}\n`;
     });
-    const blob = new Blob([csv], { type: "text/csv" });
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url;
-    a.download = "resultats.csv";
-    a.click();
+    a.href = url; a.download = "runstats-resume.csv"; a.click();
     URL.revokeObjectURL(url);
   });
+
+  render();
 });
 </script>
-
 </body>
 </html>
