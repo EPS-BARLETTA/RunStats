@@ -1,4 +1,4 @@
-// course.js — complet
+// course.js — avec timer rond
 let coureurActuel = 1;
 let nombreTours = 0;
 let timerInterval = null;
@@ -16,20 +16,26 @@ const nextBtn = document.getElementById("nextBtn");
 const summaryBtn = document.getElementById("summaryBtn");
 const titleEl = document.getElementById("title");
 
-// Données élèves depuis la saisie (sessionStorage)
+// Ring (SVG)
+const ringFG = document.getElementById("ringFG");
+const ringWrap = document.getElementById("ringWrap");
+const R = 96; // rayon du cercle dans le SVG
+const CIRC = 2 * Math.PI * R;
+ringFG.style.strokeDasharray = String(CIRC);
+ringFG.style.strokeDashoffset = "0";
+
 const eleve1 = JSON.parse(sessionStorage.getItem("eleve1Data") || "{}");
 const eleve2 = JSON.parse(sessionStorage.getItem("eleve2Data") || "{}");
 
-const longueur1 = Number(eleve1.longueurTour || eleve1.longueur || eleve1.distanceTour || 0);
-const longueur2 = Number(eleve2.longueurTour || eleve2.longueur || eleve2.distanceTour || 0);
-const duree1Min = Number(eleve1.temps || eleve1.duree || eleve1.dureeMin || 0);
-const duree2Min = Number(eleve2.temps || eleve2.duree || eleve2.dureeMin || 0);
+const longueur1 = Number(eleve1.longueurTour || 0);
+const longueur2 = Number(eleve2.longueurTour || 0);
+const duree1Min = Number(eleve1.temps || 0);
+const duree2Min = Number(eleve2.temps || 0);
 
-// État courant (selon coureurActuel)
 let longueur = longueur1;
-let duree = duree1Min; // en minutes
-let totalSeconds = Math.round(duree * 60);
-let elapsed = 0; // secondes écoulées
+let duree = duree1Min;
+let totalSeconds = Math.max(1, Math.round(duree * 60));
+let elapsed = 0;
 
 function formatTime(s){
   const m = Math.floor(s / 60);
@@ -37,19 +43,21 @@ function formatTime(s){
   return `${String(m).padStart(2,"0")}:${String(r).padStart(2,"0")}`;
 }
 
+function setRingProgress(){
+  const progress = Math.min(1, Math.max(0, elapsed / totalSeconds)); // 0 → 1
+  ringFG.style.strokeDashoffset = String(CIRC * progress);
+}
+
 function setUIForRunner(){
   const e = (coureurActuel === 1) ? eleve1 : eleve2;
   longueur = (coureurActuel === 1) ? longueur1 : longueur2;
   duree = (coureurActuel === 1) ? duree1Min : duree2Min;
   totalSeconds = Math.max(1, Math.round(duree * 60));
-  elapsed = 0;
-  nombreTours = 0;
+  elapsed = 0; nombreTours = 0;
 
-  // Titre + couleurs de fond (bleu élève 1 / vert élève 2)
   titleEl.textContent = `Course de ${e.prenom || ""} ${e.nom || ""}`;
   document.body.style.backgroundColor = (coureurActuel === 1) ? "#dfeeff" : "#e6ffe6";
 
-  // Réinitialise affichage
   timerDisplay.textContent = formatTime(totalSeconds);
   lapsDisplay.textContent = "0";
   distanceDisplay.textContent = "0";
@@ -59,13 +67,15 @@ function setUIForRunner(){
   nextBtn.style.display = "none";
   summaryBtn.style.display = "none";
   lapBtn.disabled = false;
+
+  ringWrap.classList.remove("danger");
+  setRingProgress(); // reset cercle
 }
 
 function updateLiveMetrics(){
-  // Distance courante
-  const distance = nombreTours * longueur; // en mètres
-  const v = (elapsed > 0) ? ( (distance/1000) / (elapsed/3600) ) : 0; // km/h
-  const vma = v * 1.15; // proxy
+  const distance = nombreTours * longueur;
+  const v = (elapsed > 0) ? ( (distance/1000) / (elapsed/3600) ) : 0;
+  const vma = v * 1.15;
 
   lapsDisplay.textContent = String(nombreTours);
   distanceDisplay.textContent = String(Math.round(distance));
@@ -85,13 +95,14 @@ function demarrerChrono(){
     }
     elapsed += 1;
     const restant = totalSeconds - elapsed;
-    timerDisplay.textContent = formatTime(restant);
 
-    // clignote les 10 dernières secondes
+    timerDisplay.textContent = formatTime(restant);
+    setRingProgress();
+
     if(restant <= 10){
-      timerDisplay.style.visibility = (timerDisplay.style.visibility === "hidden") ? "visible" : "hidden";
+      ringWrap.classList.add("danger");
     } else {
-      timerDisplay.style.visibility = "visible";
+      ringWrap.classList.remove("danger");
     }
 
     updateLiveMetrics();
@@ -99,7 +110,6 @@ function demarrerChrono(){
 }
 
 function enregistrerStats(){
-  // enregistre l'élément dans stats avec valeurs actuelles (sans fraction)
   const e = (coureurActuel === 1) ? eleve1 : eleve2;
   const distance = nombreTours * longueur;
   const v = (elapsed > 0) ? ( (distance/1000) / (elapsed/3600) ) : 0;
@@ -110,7 +120,7 @@ function enregistrerStats(){
     distance: Math.round(distance),
     vitesse: parseFloat(v.toFixed(2)),
     vma: parseFloat(vma.toFixed(2)),
-    temps: totalSeconds // durée totale pour cet élève (utile au résumé / corrections)
+    temps: Math.max(1, Math.round(duree * 60)) // durée totale paramétrée
   });
 }
 
@@ -118,62 +128,44 @@ function terminerCourse(){
   clearInterval(timerInterval);
   isRunning = false;
   lapBtn.disabled = true;
-  timerDisplay.style.visibility = "visible"; // au cas où ça clignote
+  ringWrap.classList.remove("danger");
 
-  // 1) on enregistre l'état à la fin du chrono
   enregistrerStats();
 
-  // 2) propose la fraction si fraction.js est présent
   const eleve = stats[stats.length - 1];
   if (typeof ajouterFraction === "function"){
     ajouterFraction(eleve, longueur).then((eleveMaj)=>{
-      // MAJ dans stats
       stats[stats.length - 1] = eleveMaj;
-
-      // MAJ visuelle immédiate
       distanceDisplay.textContent = String(eleveMaj.distance);
       vitesseDisplay.textContent = parseFloat(eleveMaj.vitesse || 0).toFixed(2);
       vmaDisplay.textContent = parseFloat(eleveMaj.vma || 0).toFixed(2);
-
-      // Bouton suivant / résumé
-      if(coureurActuel === 1){
-        nextBtn.style.display = "inline-block";
-      }else{
-        summaryBtn.style.display = "inline-block";
-      }
+      if(coureurActuel === 1){ nextBtn.style.display = "inline-block"; }
+      else{ summaryBtn.style.display = "inline-block"; }
     });
   } else {
-    if(coureurActuel === 1){
-      nextBtn.style.display = "inline-block";
-    }else{
-      summaryBtn.style.display = "inline-block";
-    }
+    if(coureurActuel === 1){ nextBtn.style.display = "inline-block"; }
+    else{ summaryBtn.style.display = "inline-block"; }
   }
 }
 
-// Bouton tour
 lapBtn.addEventListener("click", ()=>{
   if(!isRunning) return;
   nombreTours += 1;
   updateLiveMetrics();
 });
 
-// Passer au coureur 2
 nextBtn.addEventListener("click", ()=>{
   coureurActuel = 2;
   setUIForRunner();
   demarrerChrono();
 });
 
-// Aller au résumé
 summaryBtn.addEventListener("click", ()=>{
   sessionStorage.setItem("stats", JSON.stringify(stats));
   window.location.href = "resume.html";
 });
 
-// Boot
 window.addEventListener("load", ()=>{
-  // S'il manque des données élèves, on évite les erreurs
   if(!eleve1 || !eleve1.prenom || !eleve2 || !eleve2.prenom){
     titleEl.textContent = "Course — données élèves manquantes";
     lapBtn.disabled = true;
