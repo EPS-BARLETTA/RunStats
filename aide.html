@@ -6,23 +6,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root{
-      --ink:#111; --muted:#555; --border:#e5e7eb; --card:#fff; --bg:#fafafa; --accent:#0066ff;
-      --ok:#1f9d55; --warn:#f59e0b; --soft:#f8fafc;
+      --ink:#111; --muted:#555; --border:#e5e7eb; --card:#fff; --bg:#fafafa;
+      --accent:#0066ff; --blue:#e6f0ff; --green:#e6ffe6; --soft:#f8fafc;
     }
     *{box-sizing:border-box}
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;color:var(--ink);background:var(--bg)}
     header,footer{text-align:center;padding:22px 16px}
     header h1{margin:6px 0 8px;font-size:26px}
     header p{margin:0;color:var(--muted)}
-    .wrap{max-width:920px;margin:0 auto 44px;padding:0 16px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px}
-    .sec{margin:16px 0 0}
-    .sec h2{margin:0 0 8px;font-size:20px;text-align:center}
-    .sec p{margin:8px 0;color:#222;line-height:1.55}
-    .bul{margin:8px auto 0;max-width:760px;padding-left:22px}
-    .bul li{margin:6px 0;line-height:1.55}
-    .callout{margin:14px auto 0;max-width:760px;background:#fffbe6;border:1px solid #fde68a;color:#7c5e10;border-radius:12px;padding:12px 14px}
-    .hint{color:var(--muted);font-size:14px;margin:10px 0 0;text-align:center}
+    .wrap{max-width:980px;margin:0 auto 44px;padding:0 16px}
+    .grid{display:grid;grid-template-columns:1fr;gap:14px}
+    @media(min-width:860px){.grid{grid-template-columns:1fr 1fr}}
+    .step{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;display:flex;gap:14px;align-items:flex-start}
+    .icon{flex:0 0 44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;background:var(--soft)}
+    .content h2{margin:0 0 6px;font-size:18px}
+    .content p{margin:6px 0;color:#222;line-height:1.55}
+    .content ul{margin:6px 0 0 20px}
+    .content li{margin:6px 0;line-height:1.55}
+    .callout{border:1px dashed var(--border);background:#fffbe6;border-color:#fde68a;color:#7c5e10;border-radius:12px;padding:12px 14px;margin-top:8px}
+    .hint{color:var(--muted);font-size:14px;margin-top:6px}
+    .mini{display:flex;gap:10px;margin-top:8px}
+    .mini .tag{padding:6px 10px;border-radius:999px;font-weight:700}
+    .tag.blue{background:var(--blue)}
+    .tag.green{background:var(--green)}
     .cta{display:flex;justify-content:center;gap:12px;margin-top:18px;flex-wrap:wrap}
     .btn{display:inline-block;text-decoration:none;font-weight:800;background:var(--accent);color:#fff;padding:13px 18px;border-radius:12px}
     .btn.secondary{background:#fff;color:#111;border:1px solid var(--border)}
@@ -33,81 +39,81 @@
 <body>
   <header>
     <h1>Mode d’emploi — RunStats</h1>
-    <p>Ce guide explique pas à pas ce que fait l’élève pendant la séance.</p>
+    <p>Guide rapide pour l’élève pendant la séance.</p>
   </header>
 
   <div class="wrap">
-    <div class="card">
-      <!-- 1) Préparation -->
-      <div class="sec">
-        <h2>1) Préparation</h2>
-        <ul class="bul">
-          <li>Vérifie que tu as bien : <strong>Nom</strong>, <strong>Prénom</strong>, <strong>Classe</strong>, <strong>Sexe</strong>.</li>
-          <li>Le/La prof indique une seule fois les <strong>paramètres communs</strong> : <em>Durée (minutes)</em> et <em>Longueur d’un tour (m)</em>.</li>
-          <li>Couleurs pendant la course : <strong>bleu</strong> = coureur&nbsp;1, <strong>vert</strong> = coureur&nbsp;2.</li>
-        </ul>
+    <div class="grid">
+      <div class="step">
+        <div class="icon">🎒</div>
+        <div class="content">
+          <h2>1) Prépare-toi</h2>
+          <ul>
+            <li>Assure-toi d’avoir : <strong>Nom</strong>, <strong>Prénom</strong>, <strong>Classe</strong>, <strong>Sexe</strong>.</li>
+            <li>Le/la prof indique une seule fois la <strong>durée (min)</strong> et la <strong>longueur d’un tour (m)</strong> pour tous.</li>
+          </ul>
+          <div class="mini">
+            <div class="tag blue">Coureur 1 (bleu)</div>
+            <div class="tag green">Coureur 2 (vert)</div>
+          </div>
+        </div>
       </div>
 
-      <!-- 2) Saisie -->
-      <div class="sec">
-        <h2>2) Saisie</h2>
-        <ul class="bul">
-          <li>Renseigne pour chaque coureur : <em>Nom, Prénom, Classe, Sexe</em>.</li>
-          <li>Le/La prof saisit les paramètres communs : <em>Durée</em> et <em>Longueur d’un tour</em>.</li>
-          <li>Appuie sur <strong>«&nbsp;Lancer la course&nbsp;»</strong> pour démarrer la course&nbsp;1.</li>
-        </ul>
+      <div class="step">
+        <div class="icon">✍️</div>
+        <div class="content">
+          <h2>2) Saisie</h2>
+          <ul>
+            <li>Renseigne vos identités (deux coureurs).</li>
+            <li>Les <strong>paramètres de course</strong> (durée & longueur de tour) sont <em>communs</em> aux deux.</li>
+            <li>Appuie sur <strong>« Lancer la course »</strong> pour démarrer.</li>
+          </ul>
+        </div>
       </div>
 
-      <!-- 3) Course 1 -->
-      <div class="sec">
-        <h2>3) Course 1 (coureur 1)</h2>
-        <ul class="bul">
-          <li>Le minuteur <strong>rond</strong> démarre automatiquement (fond <strong>bleu</strong>) et l’anneau se <em>réduit</em> jusqu’à 0.</li>
-          <li><strong>Observateur (coureur 2)</strong> : appuie sur <span class="kbd">+ 1 tour</span> à <strong>chaque passage</strong> du coureur.</li>
-          <li>La <em>distance</em>, la <em>vitesse</em> et la <em>VMA</em> s’actualisent en direct.</li>
-          <li>Les <strong>10 dernières secondes</strong>, l’anneau clignote en <strong>rouge</strong> : préparez-vous à la fin.</li>
-          <li>À l’arrêt, choisis la <strong>fraction de tour</strong> si besoin : <em>+¼</em>, <em>+½</em> ou <em>+¾</em>.</li>
-        </ul>
+      <div class="step">
+        <div class="icon">🏃‍♂️</div>
+        <div class="content">
+          <h2>3) Course 1 (coureur 1)</h2>
+          <ul>
+            <li>Le minuteur <strong>rond</strong> démarre (fond <strong>bleu</strong>) et l’anneau se réduit jusqu’à 0.</li>
+            <li><strong>Observateur (coureur 2)</strong> : appuie sur <span class="kbd">+ 1 tour</span> à <strong>chaque passage</strong>.</li>
+            <li>Les valeurs <em>Distance</em>, <em>Vitesse</em>, <em>VMA</em> se mettent à jour automatiquement.</li>
+            <li>Les <strong>10 dernières secondes</strong>, l’anneau clignote en <strong>rouge</strong>.</li>
+            <li>À l’arrêt : choisis la <strong>fraction de tour</strong> si besoin (<em>+¼</em>, <em>+½</em>, <em>+¾</em>).</li>
+          </ul>
+        </div>
       </div>
 
-      <!-- 4) Course 2 -->
-      <div class="sec">
-        <h2>4) Course 2 (coureur 2)</h2>
-        <ul class="bul">
-          <li>Clique sur <strong>«&nbsp;Passer au coureur&nbsp;2&nbsp;»</strong> (fond <strong>vert</strong>).</li>
-          <li>Le coureur 1 devient observateur et appuie sur <span class="kbd">+ 1 tour</span> à chaque passage.</li>
-          <li>À l’arrêt, ajoute la fraction si besoin, comme pour la course&nbsp;1.</li>
-          <li>Puis clique sur <strong>«&nbsp;Aller au résumé&nbsp;»</strong>.</li>
-        </ul>
+      <div class="step">
+        <div class="icon">🔁</div>
+        <div class="content">
+          <h2>4) Course 2 (coureur 2)</h2>
+          <ul>
+            <li>Clique sur <strong>« Passer au coureur 2 »</strong> (fond <strong>vert</strong>), puis même principe.</li>
+            <li>Ajoute la fraction de tour à la fin si nécessaire.</li>
+            <li>Ensuite, clique sur <strong>« Aller au résumé »</strong>.</li>
+          </ul>
+        </div>
       </div>
 
-      <!-- 5) Résumé & QR -->
-      <div class="sec">
-        <h2>5) Résumé & QR</h2>
-        <ul class="bul">
-          <li>Deux blocs (bleu / vert) affichent : <em>Nom, Prénom, Classe, Distance, Vitesse, VMA</em>.</li>
-          <li>Un QR code (interne) regroupe ces données pour l’application de l’enseignant (<em>ScanProf</em>).</li>
-          <li>Le/La prof peut corriger une distance via le <strong>Mode Prof</strong> (PIN <span class="kbd">57</span>) : la <em>vitesse</em> et la <em>VMA</em> sont recalculées et le QR est mis à jour.</li>
-        </ul>
-        <div class="callout"><strong>Important :</strong> si tu dois <strong>ajuster ta distance réalisée</strong>, préviens <strong>l’enseignant à la fin des deux courses</strong> pour qu’il/elle modifie la valeur <strong>avant de scanner</strong>.</div>
-        <p class="hint">Tu peux aussi exporter en <strong>CSV</strong> si besoin.</p>
+      <div class="step">
+        <div class="icon">📋</div>
+        <div class="content">
+          <h2>5) Résumé & Scan</h2>
+          <ul>
+            <li>Vous voyez 2 blocs (bleu / vert) : <em>Nom, Prénom, Classe, Distance, Vitesse, VMA</em>.</li>
+            <li>Un QR code est prêt pour le scan de l’enseignant (<em>ScanProf</em>).</li>
+          </ul>
+          <div class="callout"><strong>Important :</strong> si ta <strong>distance réalisée</strong> doit être ajustée, préviens l’enseignant <strong>à la fin des deux courses</strong> pour qu’il/elle corrige <strong>avant le scan</strong>.</div>
+          <p class="hint">En cas d’affichage figé : rafraîchis la page (Ctrl/Cmd + Shift + R).</p>
+        </div>
       </div>
+    </div>
 
-      <!-- Astuces -->
-      <div class="sec">
-        <h2>💡 Astuces rapides</h2>
-        <ul class="bul">
-          <li>Reste concentré sur le bouton <span class="kbd">+ 1 tour</span> si tu es observateur.</li>
-          <li>Choisis la fraction de tour <em>au plus juste</em> selon la position du coureur sur la piste.</li>
-          <li>Si l’affichage ne paraît pas à jour, <strong>rafraîchis la page</strong> (Ctrl/Cmd&nbsp;+&nbsp;Shift&nbsp;+&nbsp;R).</li>
-        </ul>
-      </div>
-
-      <!-- CTA -->
-      <div class="cta">
-        <a class="btn" href="./eleve.html">🚀 Commencer la saisie (2 coureurs)</a>
-        <a class="btn secondary" href="./index.html">🏠 Retour accueil</a>
-      </div>
+    <div class="cta">
+      <a class="btn" href="./eleve.html">🚀 Commencer la saisie (2 coureurs)</a>
+      <a class="btn secondary" href="./index.html">🏠 Accueil</a>
     </div>
   </div>
 
