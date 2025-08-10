@@ -7,7 +7,12 @@
   <style>
     :root{--bleu:#e6f0ff;--vert:#e6ffe6;--grey:#eef2f7;--border:#e5e7eb}
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;background:#fafafa;color:#111}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;
+      background:#fafafa;color:#111;
+      font-size:18px; /* ↑ police globale légèrement plus grande */
+    }
     header,footer{text-align:center;padding:16px}
     .wrap{max-width:980px;margin:0 auto 40px;padding:0 12px}
     .grid{display:grid;grid-template-columns:1fr;gap:14px}
@@ -16,12 +21,23 @@
     .c1{background:var(--bleu);border-color:var(--bleu)}
     .c2{background:var(--vert);border-color:var(--vert)}
     .params{background:#fff;border:2px solid var(--grey);border-radius:14px;overflow:hidden}
-    .cardHeader{padding:12px 14px;font-weight:900;border-bottom:1px solid var(--border);letter-spacing:.5px}
+    .cardHeader{
+      padding:12px 14px;font-weight:900;border-bottom:1px solid var(--border);
+      letter-spacing:.5px
+    }
     .cardBody{padding:14px}
-    label{display:block;font-weight:600;margin:10px 0 6px}
-    input,select{width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:#fff}
+    /* Labels et saisies en gras */
+    label{display:block;font-weight:800;margin:10px 0 6px}
+    input,select{
+      width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;background:#fff;
+      font-weight:800; /* texte saisi en gras */
+      font-size:1.05rem; /* légèrement plus grand */
+    }
     .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;justify-content:center}
-    button{appearance:none;border:1px solid var(--border);background:#111;color:#fff;font-weight:700;padding:12px 16px;border-radius:12px;cursor:pointer}
+    button{
+      appearance:none;border:1px solid var(--border);background:#111;color:#fff;
+      font-weight:800;padding:12px 16px;border-radius:12px;cursor:pointer
+    }
     a.btn{display:inline-block;text-decoration:none;border:1px solid var(--border);padding:12px 16px;border-radius:12px;background:#fff}
   </style>
 </head>
@@ -37,12 +53,18 @@
         <div class="card c1">
           <div class="cardHeader">COUREUR 1</div>
           <div class="cardBody">
-            <label for="prenom1">Prénom</label><input id="prenom1" required />
-            <label for="nom1">Nom</label><input id="nom1" required />
-            <label for="classe1">Classe</label><input id="classe1" required />
+            <label for="prenom1">Prénom</label>
+            <input id="prenom1" required />
+            <label for="nom1">Nom</label>
+            <input id="nom1" required />
+            <label for="classe1">Classe</label>
+            <input id="classe1" required />
             <label for="sexe1">Sexe</label>
             <select id="sexe1" required>
-              <option value="">—</option><option value="F">F</option><option value="M">M</option>
+              <option value="">—</option>
+              <option value="Fille">Fille</option>
+              <option value="Garçon">Garçon</option>
+              <option value="Autre">Autre</option>
             </select>
           </div>
         </div>
@@ -50,12 +72,18 @@
         <div class="card c2">
           <div class="cardHeader">COUREUR 2</div>
           <div class="cardBody">
-            <label for="prenom2">Prénom</label><input id="prenom2" required />
-            <label for="nom2">Nom</label><input id="nom2" required />
-            <label for="classe2">Classe</label><input id="classe2" required />
+            <label for="prenom2">Prénom</label>
+            <input id="prenom2" required />
+            <label for="nom2">Nom</label>
+            <input id="nom2" required />
+            <label for="classe2">Classe</label>
+            <input id="classe2" required />
             <label for="sexe2">Sexe</label>
             <select id="sexe2" required>
-              <option value="">—</option><option value="F">F</option><option value="M">M</option>
+              <option value="">—</option>
+              <option value="Fille">Fille</option>
+              <option value="Garçon">Garçon</option>
+              <option value="Autre">Autre</option>
             </select>
           </div>
         </div>
@@ -89,24 +117,28 @@
   <script>
     document.getElementById("studentForm").addEventListener("submit", (e) => {
       e.preventDefault();
+
       const communs = {
         temps: parseFloat(document.getElementById("temps").value),
         longueurTour: parseFloat(document.getElementById("longueur").value)
       };
+
       const eleve1 = {
         prenom: prenom1.value.trim(),
         nom: nom1.value.trim(),
         classe: classe1.value.trim(),
-        sexe: sexe1.value,
+        sexe: sexe1.value, // "Fille" | "Garçon" | "Autre"
         ...communs
       };
+
       const eleve2 = {
         prenom: prenom2.value.trim(),
         nom: nom2.value.trim(),
         classe: classe2.value.trim(),
-        sexe: sexe2.value,
+        sexe: sexe2.value, // "Fille" | "Garçon" | "Autre"
         ...communs
       };
+
       sessionStorage.setItem("eleve1Data", JSON.stringify(eleve1));
       sessionStorage.setItem("eleve2Data", JSON.stringify(eleve2));
       window.location.href = "course.html";
