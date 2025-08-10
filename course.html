@@ -8,7 +8,7 @@
     :root{--border:#e5e7eb}
     *{box-sizing:border-box}
     body{
-      background:#dfeeff;
+      background:#dfeeff; /* Coureur 1 par défaut, le JS basculera en vert pour le 2 */
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;
       margin:0; padding:24px;
     }
@@ -33,6 +33,7 @@
            background:#111; color:#fff; font-weight:700}
     #nextBtn,#summaryBtn{display:none}
     footer{margin-top:24px; opacity:.7; text-align:center}
+
     dialog{padding:16px; border-radius:12px; max-width:360px}
   </style>
 </head>
@@ -41,7 +42,7 @@
     <h2 id="title">Course</h2>
 
     <!-- Minuteur rond -->
-    <div class="timerWrap" id="ringWrap">
+    <div class="timerWrap" id="ringWrap" aria-live="polite">
       <svg viewBox="0 0 220 220" class="ring" aria-hidden="true">
         <circle cx="110" cy="110" r="96" id="ringBG"></circle>
         <circle cx="110" cy="110" r="96" id="ringFG"></circle>
@@ -82,7 +83,7 @@
   <footer>RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
 
   <!-- Scripts (avec cache-buster) -->
-  <script src="fraction.js?v=20250810-2"></script>
-  <script src="course.js?v=20250810-3"></script>
+  <script src="fraction.js?v=20250810-5"></script>
+  <script src="course.js?v=20250810-5"></script>
 </body>
 </html>
