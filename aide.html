@@ -2,67 +2,79 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Mode d'emploi - RunStats</title>
+  <title>Aide - RunStats</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      background-color: #f4f9ff;
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
+      margin: 20px;
       line-height: 1.6;
-      text-align: center;
     }
-    h1 {
+    h1, h2 {
+      color: #2c3e50;
+    }
+    .note {
+      background-color: #f1f8ff;
+      border-left: 4px solid #3498db;
+      padding: 10px;
+      margin: 15px 0;
+    }
+    a {
       color: #3498db;
-      margin-bottom: 20px;
+      text-decoration: none;
     }
-    p {
-      max-width: 800px;
-      margin: 10px auto;
-    }
-    strong {
-      color: #e74c3c;
-    }
-    button {
-      margin-top: 30px;
-      padding: 12px 20px;
-      font-size: 16px;
-      background-color: #3498db;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
+    a:hover {
+      text-decoration: underline;
     }
     footer {
-      margin-top: 40px;
-      font-size: 0.9rem;
+      margin-top: 30px;
+      font-size: 0.9em;
       color: #666;
     }
   </style>
 </head>
 <body>
 
-  <h1>📖 Mode d'emploi - RunStats</h1>
+<h1>📖 Aide RunStats</h1>
 
-  <p>Bienvenue sur <strong>RunStats</strong> ! Cette application permet d’enregistrer les performances de deux élèves sur une course chronométrée.</p>
+<p>Bienvenue dans l’application <strong>RunStats</strong> !  
+Elle vous permet de saisir les performances de vos élèves, calculer automatiquement la vitesse et la VMA, puis générer un QR code compatible avec <strong>ScanProf</strong>.</p>
 
-  <p>1️⃣ Remplissez vos <strong>Nom, Prénom, Classe et Sexe</strong> dans les champs prévus.  
-  2️⃣ Entrez la <strong>durée</strong> de la course (en minutes) et la <strong>distance d’un tour</strong> (en mètres).  
-  3️⃣ Cliquez sur <strong>Valider et démarrer</strong>.</p>
+<h2>⚡ Lancer une saisie</h2>
+<p>
+Pour démarrer une saisie :  
+<a href="eleve.html"><strong>➡ Accéder à la saisie des élèves</strong></a>
+</p>
 
-  <p>Pendant la course, appuyez sur le bouton <strong>+ Tour</strong> à chaque fois qu’un tour est complété.  
-  La distance, la vitesse et la VMA se mettent à jour automatiquement.</p>
+<div class="note">
+💡 Astuce : si vous avez une modification sur votre distance de course à effectuer, signalez-le à votre enseignant <strong>avant</strong> qu’il ne scanne votre QR code…  
+Sinon il faudra attendre l’année prochaine pour battre votre record ! 😉
+</div>
 
-  <p>À la fin, un QR code contenant vos résultats s’affiche. Ce QR code sera scanné par votre enseignant pour enregistrer vos données.</p>
+<h2>📱 QR Code</h2>
+<ul>
+  <li>Chaque saisie génère un QR code unique contenant les données de l’élève.</li>
+  <li>Ce QR code est lu par l’application <strong>ScanProf</strong> pour centraliser les résultats.</li>
+</ul>
 
-  <p><strong>💡 Si vous avez une modification sur votre distance de course à effectuer, signalez-le à votre enseignant avant qu’il ne scanne votre QR code… sinon il faudra attendre l’année prochaine pour battre votre record ! 😉</strong></p>
+<h2>💾 Export CSV</h2>
+<ul>
+  <li>Vous pouvez exporter toutes les données saisies au format CSV.</li>
+  <li>Ce fichier peut être ouvert dans Excel, LibreOffice, Numbers, etc.</li>
+</ul>
 
-  <button onclick="window.location.href='eleve.html'">🚀 Accéder à RunStats</button>
+<h2>🔑 Mode Professeur</h2>
+<ul>
+  <li>Un bouton « Mode Prof » permet d’accéder à des réglages avancés (code PIN : <strong>57</strong>).</li>
+  <li>Depuis ce mode, vous pouvez effacer, corriger ou ajuster les distances manuellement.</li>
+</ul>
 
-  <footer>
-    RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB
-  </footer>
+<h2>🏠 Accueil</h2>
+<p>Le bouton « Accueil » vous ramène à la page principale de RunStats à tout moment.</p>
+
+<footer>
+RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB
+</footer>
 
 </body>
 </html>
