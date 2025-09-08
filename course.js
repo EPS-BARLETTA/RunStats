@@ -1,4 +1,4 @@
-// course.js — v8 : Start manuel + respect autostart + résumé correct en fin coureur 2
+// course.js — v9 : Start one-shot par coureur + compat résumé/QR + pas d'autostart forcé
 (function(){
   let coureurActuel = 1;   // 1 puis 2
   let phase = 1;           // 1 = course 1, 2 = course 2
@@ -23,6 +23,7 @@
   const nextBtn    = document.getElementById("nextBtn");
   const summaryBtn = document.getElementById("summaryBtn");
   const titleEl    = document.getElementById("title");
+  const startBtnEl = document.getElementById("startBtn"); // bouton rond dans course.html
 
   if (summaryBtn) summaryBtn.textContent = "Passer au résumé";
 
@@ -76,6 +77,19 @@
     }
   }
 
+  function enableStart(){
+    if (startBtnEl) {
+      startBtnEl.disabled = false;
+      startBtnEl.setAttribute('aria-disabled', 'false');
+    }
+  }
+  function disableStart(){
+    if (startBtnEl) {
+      startBtnEl.disabled = true;
+      startBtnEl.setAttribute('aria-disabled', 'true');
+    }
+  }
+
   function setUIForRunner(){
     const e = (coureurActuel === 1) ? eleve1 : eleve2;
     longueur = (coureurActuel === 1) ? longueur1 : longueur2;
@@ -92,13 +106,16 @@
     vitesseDisplay.textContent  = "0.00";
     vmaDisplay.textContent      = "0.00";
 
-    // Au changement de coureur : pas d'actions parasites
     nextBtn.style.display    = "none";
     summaryBtn.style.display = "none";
     lapBtn.disabled = false;
 
     setDanger(false);
     setRingProgress();
+
+    // Start réactivé au début de chaque coureur, et sera désactivé après clic et en fin de course
+    enableStart();
+    isRunning = false;
   }
 
   function updateLiveMetrics(){
@@ -115,6 +132,7 @@
   function demarrerChrono(){
     if(isRunning) return;
     isRunning = true;
+    disableStart(); // one-shot : désactive Start dès le lancement
     clearInterval(timerInterval);
     timerInterval = setInterval(()=>{
       if(totalSeconds - elapsed <= 0){
@@ -146,13 +164,32 @@
     const v = (elapsed > 0) ? ((distance/1000) / (elapsed/3600)) : 0;
     const vma = v * 1.15;
 
-    stats.push({
+    const record = {
       nom: e.nom, prenom: e.prenom, classe: e.classe, sexe: e.sexe,
       distance: Math.round(distance),
       vitesse: parseFloat(v.toFixed(2)),
       vma: parseFloat(vma.toFixed(2)),
-      temps: Math.max(1, Math.round(duree * 60)) // s
-    });
+      temps: Math.max(1, Math.round(duree * 60)) // s (durée prévue)
+    };
+
+    // Empêche doublons si on a déjà stocké ce coureur (sécurité)
+    if (coureurActuel === 1) {
+      stats[0] = record;
+      // Compat descendante pour resume.html / Mode prof
+      sessionStorage.setItem('result1', JSON.stringify(record));
+      sessionStorage.setItem('eleve1Result', JSON.stringify(record));
+    } else {
+      stats[1] = record;
+      sessionStorage.setItem('result2', JSON.stringify(record));
+      sessionStorage.setItem('eleve2Result', JSON.stringify(record));
+    }
+
+    // Tableau global (beaucoup de résumés l’utilisent)
+    sessionStorage.setItem('stats', JSON.stringify(stats));
+
+    // On s’assure que les données brutes des élèves existent (déjà posées par la saisie)
+    sessionStorage.setItem('eleve1Data', JSON.stringify(eleve1 || {}));
+    sessionStorage.setItem('eleve2Data', JSON.stringify(eleve2 || {}));
   }
 
   function terminerCourse(){
@@ -160,8 +197,8 @@
     isRunning = false;
     lapBtn.disabled = true;
     setDanger(false);
+    disableStart(); // empêche de relancer la même course
 
-    // Enregistre l'état (avant fraction)
     enregistrerStats();
     const idx = stats.length - 1;
     const eleve = stats[idx];
@@ -190,6 +227,16 @@
           vitesseDisplay.textContent  = parseFloat(eleveMaj.vitesse || 0).toFixed(2);
           vmaDisplay.textContent      = parseFloat(eleveMaj.vma || 0).toFixed(2);
 
+          // Remets les clés compatibles avec la MAJ
+          if (phase === 1) {
+            sessionStorage.setItem('result1', JSON.stringify(eleveMaj));
+            sessionStorage.setItem('eleve1Result', JSON.stringify(eleveMaj));
+          } else {
+            sessionStorage.setItem('result2', JSON.stringify(eleveMaj));
+            sessionStorage.setItem('eleve2Result', JSON.stringify(eleveMaj));
+          }
+          sessionStorage.setItem('stats', JSON.stringify(stats));
+
           suiteApresMaj();
         }).catch(()=>suiteApresMaj());
       } catch {
@@ -209,19 +256,31 @@
 
   // NEXT : accéder au coureur 2 sans démarrer
   nextBtn.addEventListener("click", ()=>{
-    // Deux stratégies possibles :
-    // 1) Recharger la page en runner=2&autostart=0 (navigation explicite)
-    //    location.href = 'course.html?runner=2&autostart=0';
-    // 2) Rester sur la même page et juste basculer l'UI (plus fluide) — je choisis celle-ci
+    // Option 1 : recharger avec URL visible
+    // location.href = 'course.html?runner=2&autostart=0';
+
+    // Option 2 : basculer l'UI localement (fluide) — on garde celle-ci
     phase = 2;
     coureurActuel = 2;
-    setUIForRunner();
+    setUIForRunner();     // réactive Start pour le coureur 2
     // NE PAS démarrer ici : attendre le bouton Start
   });
 
   summaryBtn.addEventListener("click", ()=>{
-    sessionStorage.setItem("stats", JSON.stringify(stats));
-    window.location.href = "resume.html"; // adapte si ton fichier de bilan a un autre nom
+    // S'assure que stats, result1/result2 et datas sont bien posés :
+    sessionStorage.setItem("stats", JSON.stringify(stats || []));
+    if (stats[0]) {
+      sessionStorage.setItem("result1", JSON.stringify(stats[0]));
+      sessionStorage.setItem("eleve1Result", JSON.stringify(stats[0]));
+    }
+    if (stats[1]) {
+      sessionStorage.setItem("result2", JSON.stringify(stats[1]));
+      sessionStorage.setItem("eleve2Result", JSON.stringify(stats[1]));
+    }
+    sessionStorage.setItem("eleve1Data", JSON.stringify(eleve1 || {}));
+    sessionStorage.setItem("eleve2Data", JSON.stringify(eleve2 || {}));
+
+    window.location.href = "resume.html"; // adapte si nom différent
   });
 
   // Boot
@@ -229,6 +288,7 @@
     if(!eleve1 || !eleve1.prenom || !eleve2 || !eleve2.prenom){
       titleEl.textContent = "Course — données coureurs manquantes";
       lapBtn.disabled = true;
+      disableStart();
       return;
     }
     // Runner initial depuis l'URL
