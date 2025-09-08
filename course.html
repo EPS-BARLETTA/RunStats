@@ -28,12 +28,40 @@
 
     .row{display:flex; justify-content:center; gap:18px; flex-wrap:wrap}
     .data{background:#fff; padding:12px 16px; border-radius:12px; border:1px solid var(--border); min-width:160px}
+
+    /* Boutons */
     .btns{margin-top:16px}
     button{padding:12px 16px; border:1px solid var(--border); border-radius:12px; cursor:pointer;
            background:#111; color:#fff; font-weight:700}
     #nextBtn,#summaryBtn{display:none}
-    footer{margin-top:24px; opacity:.7; text-align:center}
 
+    /* Ajouts discrets pour répondre à ta demande */
+    .startWrap{
+      width:100%;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      margin:12px 0 18px 0;
+    }
+    .startBtn{
+      width:110px; height:110px;
+      border-radius:9999px; /* rond */
+      border:2px solid currentColor;
+      background:#fff; color:#111;
+      font-size:1.25rem; font-weight:800;
+      box-shadow:0 2px 8px rgba(0,0,0,.08);
+      cursor:pointer;
+    }
+    .startBtn:active{ transform:scale(.98) }
+
+    /* +1 tour agrandi pour le confort */
+    #lapBtn{
+      min-width:140px;
+      min-height:56px;
+      font-size:1.15rem;
+    }
+
+    footer{margin-top:24px; opacity:.7; text-align:center}
     dialog{padding:16px; border-radius:12px; max-width:360px}
   </style>
 </head>
@@ -48,6 +76,11 @@
         <circle cx="110" cy="110" r="96" id="ringFG"></circle>
       </svg>
       <div id="timer" class="timerText">00:00</div>
+    </div>
+
+    <!-- Bouton START (distinct de +1 tour) -->
+    <div class="startWrap">
+      <button id="startBtn" type="button" class="startBtn">Start</button>
     </div>
 
     <!-- Indicateurs -->
@@ -85,5 +118,34 @@
   <!-- Scripts (avec cache-buster) -->
   <script src="fraction.js?v=20250810-7"></script>
   <script src="course.js?v=20250810-7"></script>
+
+  <!-- Petit script d’intégration : Start distinct, Next sans autostart -->
+  <script>
+    (function(){
+      const params = new URLSearchParams(location.search);
+      // On lit autostart mais on ne déclenche rien ici : démarrage uniquement via le bouton Start.
+      const autostart = params.get('autostart') !== '0';
+
+      const startBtn = document.getElementById('startBtn');
+      const nextBtn  = document.getElementById('nextBtn');
+
+      // START : si le code d’origine expose une fonction de départ, on l’appelle.
+      // Sinon on émet un évènement custom que course.js peut écouter si besoin.
+      startBtn?.addEventListener('click', () => {
+        if (typeof window.startCourse === 'function') {
+          window.startCourse();
+        } else {
+          document.dispatchEvent(new CustomEvent('runstats:start'));
+        }
+      });
+
+      // NEXT : accéder au coureur 2 sans démarrer sa course
+      nextBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        try { sessionStorage.setItem('runstats_runner','2'); } catch(_) {}
+        window.location.href = 'course.html?runner=2&autostart=0';
+      });
+    })();
+  </script>
 </body>
 </html>
