@@ -62,11 +62,35 @@
 window.addEventListener('load', function () {
   const PIN_CODE = "57";
 
-  let stats = [];
-  try { const s = sessionStorage.getItem("stats"); if (s) stats = JSON.parse(s); } catch(e){}
-  if (!Array.isArray(stats) || stats.length < 2) {
+  function tryParse(key){
+    try { const s = sessionStorage.getItem(key); return s ? JSON.parse(s) : null; }
+    catch(e){ return null; }
+  }
+
+  // 1) Récupération robuste des résultats
+  let stats = Array.isArray(tryParse("stats")) ? tryParse("stats") : [];
+  const r1 = tryParse("result1") || tryParse("eleve1Result");
+  const r2 = tryParse("result2") || tryParse("eleve2Result");
+
+  // Complète stats[] si nécessaire
+  if (!stats[0] && r1) stats[0] = r1;
+  if (!stats[1] && r2) stats[1] = r2;
+
+  // Normalisation nombres
+  function normalize(e){
+    if (!e) return e;
+    e.distance = Number(e.distance || 0);
+    e.vitesse  = Number(parseFloat(e.vitesse || 0).toFixed(2));
+    e.vma      = Number(parseFloat(e.vma || 0).toFixed(2));
+    e.temps    = Math.max(1, Number(e.temps || 0));
+    return e;
+  }
+  if (stats[0]) stats[0] = normalize(stats[0]);
+  if (stats[1]) stats[1] = normalize(stats[1]);
+
+  if (!stats[0] || !stats[1]) {
     document.querySelector('.wrap').insertAdjacentHTML('beforeend',
-      '<p style="text-align:center;margin:20px 0;opacity:.7">Aucune donnée trouvée. Revenez ici après la course.</p>'
+      '<p style="text-align:center;margin:20px 0;opacity:.7">Aucune donnée complète trouvée. Revenez ici après la fin des deux courses.</p>'
     );
     return;
   }
@@ -83,11 +107,11 @@ window.addEventListener('load', function () {
     `;
   }
 
-  // Map "Fille/Garçon/Autre" => F/M pour ScanProf
+  // Map "Fille/Garçon" => F/M pour ScanProf
   function mapSexeToScanProf(sexe) {
     const s = String(sexe||"").toLowerCase();
     if (s.startsWith("f")) return "F"; // Fille
-    return "M"; // Garçon / Autre (contrainte du format)
+    return "M"; // Garçon
   }
 
   function payloadScanProf() {
@@ -136,10 +160,19 @@ window.addEventListener('load', function () {
     const vit = (stats[i].distance / t) * 3.6; // km/h
     const vma = vit * 1.15;
 
-    stats[i].vitesse = parseFloat(vit.toFixed(2));
-    stats[i].vma = parseFloat(vma.toFixed(2));
+    stats[i].vitesse = Number(vit.toFixed(2));
+    stats[i].vma     = Number(vma.toFixed(2));
 
+    // Persistences cohérentes pour toutes les clés utilisées
     sessionStorage.setItem("stats", JSON.stringify(stats));
+    if (i === 0) {
+      sessionStorage.setItem("result1", JSON.stringify(stats[0]));
+      sessionStorage.setItem("eleve1Result", JSON.stringify(stats[0]));
+    } else {
+      sessionStorage.setItem("result2", JSON.stringify(stats[1]));
+      sessionStorage.setItem("eleve2Result", JSON.stringify(stats[1]));
+    }
+
     render();
   });
 
