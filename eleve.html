@@ -64,7 +64,6 @@
               <option value="">—</option>
               <option value="Fille">Fille</option>
               <option value="Garçon">Garçon</option>
-              <option value="Autre">Autre</option>
             </select>
           </div>
         </div>
@@ -83,7 +82,6 @@
               <option value="">—</option>
               <option value="Fille">Fille</option>
               <option value="Garçon">Garçon</option>
-              <option value="Autre">Autre</option>
             </select>
           </div>
         </div>
@@ -106,7 +104,7 @@
       </div>
 
       <div class="actions">
-        <button type="submit">🚀 Lancer la course</button>
+        <button type="submit">Accéder à la course</button>
         <a class="btn" href="index.html">🏠 Accueil</a>
       </div>
     </form>
@@ -127,7 +125,7 @@
         prenom: prenom1.value.trim(),
         nom: nom1.value.trim(),
         classe: classe1.value.trim(),
-        sexe: sexe1.value, // "Fille" | "Garçon" | "Autre"
+        sexe: sexe1.value, // "Fille" | "Garçon"
         ...communs
       };
 
@@ -135,13 +133,15 @@
         prenom: prenom2.value.trim(),
         nom: nom2.value.trim(),
         classe: classe2.value.trim(),
-        sexe: sexe2.value, // "Fille" | "Garçon" | "Autre"
+        sexe: sexe2.value, // "Fille" | "Garçon"
         ...communs
       };
 
       sessionStorage.setItem("eleve1Data", JSON.stringify(eleve1));
       sessionStorage.setItem("eleve2Data", JSON.stringify(eleve2));
-      window.location.href = "course.html";
+
+      // Accéder à la page course du coureur 1, sans démarrer automatiquement le chrono
+      window.location.href = "course.html?runner=1&autostart=0";
     });
   </script>
 </body>
