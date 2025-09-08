@@ -1,4 +1,4 @@
-// course.js — v7 : fraction OK + bouton "Passer au résumé" (pas d'auto-redirection)
+// course.js — v8 : Start manuel + respect autostart + résumé correct en fin coureur 2
 (function(){
   let coureurActuel = 1;   // 1 puis 2
   let phase = 1;           // 1 = course 1, 2 = course 2
@@ -6,6 +6,11 @@
   let timerInterval = null;
   let isRunning = false;
   let stats = [];
+
+  // --- Paramètres d'URL ---
+  const urlParams = new URLSearchParams(location.search);
+  const URL_RUNNER    = parseInt(urlParams.get('runner') || '1', 10);   // 1 ou 2
+  const URL_AUTOSTART = urlParams.get('autostart') !== '0';             // true = auto
 
   // UI
   const timerDisplay    = document.getElementById("timer");
@@ -19,7 +24,6 @@
   const summaryBtn = document.getElementById("summaryBtn");
   const titleEl    = document.getElementById("title");
 
-  // Ajuste le libellé du bouton si besoin
   if (summaryBtn) summaryBtn.textContent = "Passer au résumé";
 
   // Minuteur rond (si présent)
@@ -43,10 +47,10 @@
   const duree1Min = Number(eleve1.temps || 0);
   const duree2Min = Number(eleve2.temps || 0);
 
-  // État courant
+  // État courant (mis à jour par setUIForRunner)
   let longueur = longueur1;
   let duree    = duree1Min;
-  let totalSeconds = Math.max(1, Math.round(duree * 60));
+  let totalSeconds = 60; // placeholder
   let elapsed  = 0;
 
   function formatTime(s){
@@ -66,7 +70,6 @@
       if (on) ringWrap.classList.add("danger");
       else    ringWrap.classList.remove("danger");
     } else {
-      // Fallback si pas d'anneau : clignote le texte sur la fin
       timerDisplay.style.visibility = on
         ? (timerDisplay.style.visibility === "hidden" ? "visible" : "hidden")
         : "visible";
@@ -89,6 +92,7 @@
     vitesseDisplay.textContent  = "0.00";
     vmaDisplay.textContent      = "0.00";
 
+    // Au changement de coureur : pas d'actions parasites
     nextBtn.style.display    = "none";
     summaryBtn.style.display = "none";
     lapBtn.disabled = false;
@@ -99,7 +103,7 @@
 
   function updateLiveMetrics(){
     const distance = nombreTours * longueur; // m
-    const v = (elapsed > 0) ? ( (distance/1000) / (elapsed/3600) ) : 0; // km/h
+    const v = (elapsed > 0) ? ((distance/1000) / (elapsed/3600)) : 0; // km/h
     const vma = v * 1.15;
 
     lapsDisplay.textContent      = String(nombreTours);
@@ -128,10 +132,18 @@
     }, 1000);
   }
 
+  // Expose une API pour le bouton "Start" (dans course.html)
+  window.startCourse = function(){
+    demarrerChrono();
+  };
+
+  // Permet aussi d'écouter un événement custom si besoin
+  document.addEventListener('runstats:start', () => demarrerChrono());
+
   function enregistrerStats(){
     const e = (coureurActuel === 1) ? eleve1 : eleve2;
     const distance = nombreTours * longueur;
-    const v = (elapsed > 0) ? ( (distance/1000) / (elapsed/3600) ) : 0;
+    const v = (elapsed > 0) ? ((distance/1000) / (elapsed/3600)) : 0;
     const vma = v * 1.15;
 
     stats.push({
@@ -156,10 +168,12 @@
 
     const suiteApresMaj = () => {
       if (phase === 1) {
-        // Fin course 1 : proposer de passer au coureur 2
+        // Fin course 1 : proposer d'aller au coureur 2 (sans démarrer)
         nextBtn.style.display = "inline-block";
+        summaryBtn.style.display = "none";
       } else {
-        // Fin course 2 : afficher seulement le bouton "Passer au résumé"
+        // Fin course 2 : proposer uniquement le résumé / QR
+        nextBtn.style.display = "none";
         summaryBtn.style.display = "inline-block";
       }
     };
@@ -193,17 +207,21 @@
     updateLiveMetrics();
   });
 
+  // NEXT : accéder au coureur 2 sans démarrer
   nextBtn.addEventListener("click", ()=>{
-    // Passage à la phase 2 (coureur 2)
+    // Deux stratégies possibles :
+    // 1) Recharger la page en runner=2&autostart=0 (navigation explicite)
+    //    location.href = 'course.html?runner=2&autostart=0';
+    // 2) Rester sur la même page et juste basculer l'UI (plus fluide) — je choisis celle-ci
     phase = 2;
     coureurActuel = 2;
     setUIForRunner();
-    demarrerChrono();
+    // NE PAS démarrer ici : attendre le bouton Start
   });
 
   summaryBtn.addEventListener("click", ()=>{
     sessionStorage.setItem("stats", JSON.stringify(stats));
-    window.location.href = "resume.html";
+    window.location.href = "resume.html"; // adapte si ton fichier de bilan a un autre nom
   });
 
   // Boot
@@ -213,8 +231,15 @@
       lapBtn.disabled = true;
       return;
     }
-    phase = 1; coureurActuel = 1;
+    // Runner initial depuis l'URL
+    coureurActuel = (URL_RUNNER === 2) ? 2 : 1;
+    phase = (coureurActuel === 2) ? 2 : 1;
+
     setUIForRunner();
-    demarrerChrono();
+
+    // Autostart seulement si demandé (autostart != 0)
+    if (URL_AUTOSTART) {
+      demarrerChrono();
+    }
   });
 })();
