@@ -93,11 +93,13 @@
           <div class="grid" style="grid-template-columns:1fr 1fr">
             <div>
               <label for="temps">Durée (minutes)</label>
-              <input id="temps" type="number" min="1" step="1" required />
+              <input id="temps" type="number" min="1" step="1" required
+                     inputmode="numeric" pattern="[0-9]*" data-digits-only />
             </div>
             <div>
               <label for="longueur">Longueur d’un tour (m)</label>
-              <input id="longueur" type="number" min="1" step="1" required />
+              <input id="longueur" type="number" min="1" step="1" required
+                     inputmode="numeric" pattern="[0-9]*" data-digits-only />
             </div>
           </div>
         </div>
@@ -113,12 +115,28 @@
   <footer>RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
 
   <script>
+    // Helper local pour ne garder que des chiffres
+    const onlyDigits = (v) => (v || "").toString().replace(/[^\d]/g, "");
+
     document.getElementById("studentForm").addEventListener("submit", (e) => {
       e.preventDefault();
 
+      const tempsEl = document.getElementById("temps");
+      const longEl  = document.getElementById("longueur");
+
+      // Ceinture-bretelles : nettoyage avant usage
+      tempsEl.value = onlyDigits(tempsEl.value);
+      longEl.value  = onlyDigits(longEl.value);
+
+      // Si vide après nettoyage, on laisse le navigateur afficher la validation native
+      if (!tempsEl.value || !longEl.value) {
+        if (typeof e.target.reportValidity === "function") e.target.reportValidity();
+        return;
+      }
+
       const communs = {
-        temps: parseFloat(document.getElementById("temps").value),
-        longueurTour: parseFloat(document.getElementById("longueur").value)
+        temps: parseInt(tempsEl.value, 10),
+        longueurTour: parseInt(longEl.value, 10)
       };
 
       const eleve1 = {
@@ -143,6 +161,52 @@
       // Accéder à la page course du coureur 1, sans démarrer automatiquement le chrono
       window.location.href = "course.html?runner=1&autostart=0";
     });
+  </script>
+
+  <!-- Moteur "chiffres uniquement" pour les inputs marqués data-digits-only -->
+  <script>
+    (() => {
+      const SEL = '[data-digits-only]';
+      const onlyDigits = v => (v || '').toString().replace(/[^\d]/g, '');
+
+      // Bloque l'insertion de caractères non numériques
+      document.addEventListener('beforeinput', (e) => {
+        const el = e.target;
+        if (!el || !el.matches?.(SEL)) return;
+        if (e.data && /\D/.test(e.data)) e.preventDefault();
+      }, { capture: true });
+
+      // Nettoie en direct (utile si un caractère passe quand même, ou via clavier physique)
+      document.addEventListener('input', (e) => {
+        const el = e.target;
+        if (!el || !el.matches?.(SEL)) return;
+        const before = el.value;
+        const after  = onlyDigits(before);
+        if (before !== after) {
+          const delta = before.length - after.length;
+          const pos = el.selectionStart;
+          el.value = after;
+          if (pos != null) {
+            const caret = Math.max(0, pos - delta);
+            el.setSelectionRange(caret, caret);
+          }
+        }
+      });
+
+      // Nettoie le collage
+      document.addEventListener('paste', (e) => {
+        const el = e.target;
+        if (!el || !el.matches?.(SEL)) return;
+        e.preventDefault();
+        const text = (e.clipboardData || window.clipboardData).getData('text');
+        const ins  = onlyDigits(text);
+        const start = el.selectionStart ?? el.value.length;
+        const end   = el.selectionEnd ?? el.value.length;
+        el.value = el.value.slice(0, start) + ins + el.value.slice(end);
+        const caret = start + ins.length;
+        el.setSelectionRange(caret, caret);
+      });
+    })();
   </script>
 </body>
 </html>
