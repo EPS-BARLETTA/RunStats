@@ -107,15 +107,87 @@
 
   <div class="wrap">
     <div class="steps">
-      <!-- Étapes 1 à 5 (inchangées) -->
-      <!-- ... ton contenu existant inchangé ... -->
+      <!-- Étape 1 -->
+      <div class="step s1">
+        <div class="icon">🎒</div>
+        <div class="content">
+          <h2>1) Prépare-toi</h2>
+          <ul>
+            <li>Avoir : <strong>Nom</strong>, <strong>Prénom</strong>, <strong>Classe</strong>, <strong>Sexe</strong>.</li>
+            <li>La <strong>durée (min)</strong> et la <strong>longueur d’un tour (m)</strong> sont fixées pour tous.</li>
+          </ul>
+          <div class="chips">
+            <span class="chip"><span class="dot blue"></span> COUREUR 1 (fond bleu)</span>
+            <span class="chip"><span class="dot green"></span> COUREUR 2 (fond vert)</span>
+          </div>
+        </div>
+      </div>
 
-      <!-- Étape 6 : Comprendre le calcul de la VMA -->
+      <!-- Étape 2 -->
+      <div class="step s2">
+        <div class="icon">✍️</div>
+        <div class="content">
+          <h2>2) Saisie</h2>
+          <ul>
+            <li>Remplis l’identité des <strong>2 coureurs</strong>.</li>
+            <li>Vérifie la <strong>durée</strong> et la <strong>longueur de tour</strong> (communes aux deux).</li>
+            <li>Appuie sur <strong>« Lancer la course »</strong>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Étape 3 -->
+      <div class="step s3">
+        <div class="icon">🏃‍♂️</div>
+        <div class="content">
+          <h2>3) Course 1 (coureur 1)</h2>
+          <ul>
+            <li>Minuteur <strong>rond</strong> (fond <strong>bleu</strong>) qui se <strong>réduit</strong>.</li>
+            <li><strong>Observateur (coureur 2)</strong> : clique <span class="kbd">+ 1 tour</span> à chaque passage.</li>
+            <li>Distance, Vitesse et VMA se mettent à jour.</li>
+            <li>Fin : choisis la <strong>fraction de tour</strong> (+¼, +½, +¾).</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Étape 4 -->
+      <div class="step s4">
+        <div class="icon">🔁</div>
+        <div class="content">
+          <h2>4) Course 2 (coureur 2)</h2>
+          <ul>
+            <li>Clique <strong>« Passer au coureur 2 »</strong> (fond vert).</li>
+            <li>Le coureur 1 devient observateur et clique <span class="kbd">+ 1 tour</span> à chaque passage.</li>
+            <li>Fin : ajoute la fraction si nécessaire, puis <strong>« Aller au résumé »</strong>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Étape 5 -->
+      <div class="step s5" style="grid-column:1/-1;max-width:760px;justify-self:center">
+        <div class="icon">📋</div>
+        <div class="content">
+          <h2>5) Résumé & scan</h2>
+          <ul>
+            <li>2 blocs (bleu / vert) : <em>Nom, Prénom, Classe, Distance, Vitesse, VMA</em>.</li>
+            <li>Un QR est prêt pour le <strong>scan</strong> par l’enseignant.</li>
+          </ul>
+          <div class="callout">
+            <strong>Important :</strong> si ta <strong>distance réalisée</strong> est à ajuster,
+            préviens l’enseignant <strong>à la fin des deux courses</strong> pour corriger <strong>avant le scan</strong>.
+          </div>
+          <p style="margin:8px 0 0;color:#a9b6d9">
+            Astuce : si l’écran ne s’actualise pas, rafraîchis (Ctrl/Cmd + Shift + R).
+          </p>
+        </div>
+      </div>
+
+      <!-- Étape 6 -->
       <div class="step s6" style="grid-column:1/-1;max-width:760px;justify-self:center">
         <div class="icon">🧭</div>
         <div class="content">
           <h2>6) Comprendre le calcul de la VMA</h2>
-          <p>RunStats calcule automatiquement la <strong>vitesse moyenne</strong> et la <strong>VMA estimée</strong> à partir de la distance parcourue et du temps du test.</p>
+          <p>RunStats calcule automatiquement la <strong>vitesse moyenne</strong> et la <strong>VMA estimée</strong> à partir de la distance et du temps du test.</p>
           <ul>
             <li>Vitesse (km/h) = (distance / temps) × 3,6</li>
             <li>VMA = vitesse × coefficient</li>
@@ -124,16 +196,14 @@
             <p>🕕 <strong>Si le test dure 5 à 6 minutes</strong> → Coefficient = 1,15<br>
             ⏱️ <strong>Si le test dure moins de 5 minutes</strong> → Coefficient = 1,00</p>
           </div>
-          <p>Ce coefficient (×1,15) correspond à la différence entre la vitesse moyenne sur 6 minutes et la VMA réelle d’un effort maximal.</p>
+          <p>Ce coefficient (× 1,15) correspond à la différence entre la vitesse moyenne sur 6 minutes et la VMA réelle d’un effort maximal.</p>
           <p>Quand tu ajoutes un quart, un demi ou trois-quarts de tour, RunStats recalcule automatiquement la distance, la vitesse et la VMA corrigée selon la durée du test.</p>
-
           <p style="margin-top:10px;color:#c7d2fe;font-size:15px"><strong>Exemples :</strong></p>
           <ul>
             <li>1 min — 123 m → 7,38 km/h → VMA = 7,38 km/h</li>
             <li>1 min + ½ tour (184 m) → 11,07 km/h → VMA = 11,07 km/h</li>
-            <li>6 min — 1230 m → 12,3 km/h → VMA = 14,15 km/h (×1,15)</li>
+            <li>6 min — 1230 m → 12,3 km/h → VMA = 14,15 km/h (× 1,15)</li>
           </ul>
-
           <div class="callout" style="background:linear-gradient(180deg, rgba(34,197,94,.25), rgba(34,197,94,.1));border-color:#22c55e77;color:#eafff1">
             <strong>Professeurs :</strong> cette règle évite la surestimation de la VMA sur les tests courts et garantit la cohérence entre RunStats et ScanProf.
           </div>
@@ -147,6 +217,6 @@
     </div>
   </div>
 
-  <footer>RunStats - Équipe EPS Lycée Vauban - LUXEMBOURG - JB</footer>
+  <footer>RunStats – Équipe EPS Lycée Vauban – LUXEMBOURG – JB</footer>
 </body>
 </html>
